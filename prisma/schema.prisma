@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String                @id @unique @default(uuid())
+  email        String                @unique
+  name         String?
+  password     String
+  profileImage String?
+  roles        Role[] // Array of roles
+  publications Publication[]
+  forums       Forum[]
+  pubComments  PublicationComments[]
+  pubLikes     PublicationLikes[]
+  forumReplies ForumReplies[]
+  forumLikes   ForumLikes[]
+}
+
+enum Role {
+  ADMIN
+  MODERATOR
+  EDITOR
+  STUDENT
+}
+
+model Publication {
+  pubId       String                @id @default(cuid())
+  title       String?               @db.VarChar(255)
+  excerpt     String?               @db.VarChar(255)
+  content     String?               @db.VarChar(65535)
+  authorId    String?
+  author      User?                 @relation(fields: [authorId], references: [id])
+  imageUrl    String?
+  tags        String?
+  category    String?
+  pubComments PublicationComments[]
+  pubLikes    PublicationLikes[]
+  status      PublicationStatus     @default(DRAFT)
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+}
+
+enum PublicationStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  PENDING_REVIEW
+}
+
+model Forum {
+  forumId      String         @id @default(cuid())
+  topicTitle   String?        @db.VarChar(255)
+  description  String?        @db.VarChar(65535)
+  authorId     String?
+  author       User?          @relation(fields: [authorId], references: [id])
+  imageUrl     String?
+  tags         String?
+  category     String?
+  forumReplies ForumReplies[]
+  forumLikes   ForumLikes[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model ForumReplies {
+  commentId  String   @id @default(cuid())
+  forumReply String?
+  forumId    String?
+  forum      Forum?   @relation(fields: [forumId], references: [forumId], onDelete: Cascade)
+  authorId   String?
+  author     User?    @relation(fields: [authorId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model ForumLikes {
+  likeId  String  @id @default(cuid())
+  forumId String
+  userId  String
+  isLiked Boolean @default(false)
+  forum   Forum   @relation(fields: [forumId], references: [forumId], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([forumId, userId])
+}
+
+model PublicationComments {
+  commentId       String       @id @default(cuid())
+  comment_content String?
+  pubId           String?
+  publication     Publication? @relation(fields: [pubId], references: [pubId], onDelete: Cascade)
+  authorId        String?
+  author          User?        @relation(fields: [authorId], references: [id])
+  createdAt       DateTime     @default(now())
+}
+
+model PublicationLikes {
+  likeId      String      @id @default(cuid())
+  pubId       String
+  userId      String
+  isLiked     Boolean     @default(false)
+  publication Publication @relation(fields: [pubId], references: [pubId], onDelete: Cascade)
+  user        User        @relation(fields: [userId], references: [id])
+
+  @@unique([pubId, userId])
+}
