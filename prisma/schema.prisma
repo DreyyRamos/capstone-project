@@ -45,7 +45,7 @@ model Publication {
   authorId    String?
   author      User?                 @relation(fields: [authorId], references: [id])
   imageUrl    String?
-  tags        String?
+  tags        String[]
   category    String?
   pubComments PublicationComments[]
   pubLikes    PublicationLikes[]

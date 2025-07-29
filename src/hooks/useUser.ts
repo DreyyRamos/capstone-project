@@ -1,8 +1,5 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import {
-  fetchCurrentUser,
-  EditCurrentUser,
-} from "@/app/api/(endpoints)/UsersAPI";
+import { fetchCurrentUser, EditCurrentUser } from "@/services/user";
 
 interface User {
   name: string;
@@ -24,8 +21,8 @@ export const useUserQuery = (token: string) => {
     mutationFn: (userData: User) => EditCurrentUser(token, userData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
-      queryClient.invalidateQueries({ queryKey: ["post"] });
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["pub"] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
     },
   });
 

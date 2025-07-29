@@ -26,32 +26,25 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Upload, X, Eye, Save } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-// import { useRole } from "@/contexts/role-context"
+import { usePostQuery } from "@/hooks/usePost";
+import Cookies from "js-cookie";
 
 export default function CreatePublicationPage() {
-  const [title, setTitle] = useState("");
-  const [excerpt, setExcerpt] = useState("");
-  const [content, setContent] = useState("");
-  const [category, setCategory] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    excerpt: "",
+    content: "",
+    imageUrl: null as string | null,
+    category: "",
+  });
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
   const [isDraft, setIsDraft] = useState(true);
-  const [coverImage, setCoverImage] = useState<string | null>(null);
-  // const { user } = useRole()
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const router = useRouter();
-
-  // Redirect if not authenticated
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push("/login?redirect=" + encodeURIComponent("/publications/create"))
-  //   }
-  // }, [user, router])
-
-  // // Don't render if not authenticated
-  // if (!user) {
-  //   return null
-  // }
+  const token = Cookies.get("token") || "";
+  const { createPost, isCreating, createSuccess } = usePostQuery(token);
 
   const categories = [
     "Science",
@@ -78,34 +71,47 @@ export default function CreatePublicationPage() {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // upload this to your server/cloud storage
-      const imageUrl = URL.createObjectURL(file);
-      setCoverImage(imageUrl);
+  // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     // upload this to your server/cloud storage
+  //     const imageUrl = URL.createObjectURL(file);
+  //     setCoverImage(imageUrl);
+  //   }
+  // };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      createPost({
+        ...formData,
+        tags,
+        imageUrl: imageUrl ?? "",
+      });
+    } catch (error: any) {
+      console.error(error);
     }
   };
 
-  const handleSubmit = (publish = false) => {
-    // submit this data to your backend
-    const publicationData = {
-      title,
-      excerpt,
-      content,
-      category,
-      tags,
-      isFeatured,
-      isDraft: !publish,
-      coverImage,
-      // author: user.name,
-      date: new Date().toISOString(),
-    };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    console.log("Submitting publication:", publicationData);
+  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    // Redirect to publications page or show success message
-    router.push("/publications");
+  const handleSelectChange = (value: string) => {
+    setFormData({
+      ...formData,
+      category: value,
+    });
   };
 
   return (
@@ -126,67 +132,68 @@ export default function CreatePublicationPage() {
             </p>
           </div>
         </div>
-
-        <div className="flex items-center gap-2">
+        {/* save to drafat */}
+        {/* <div className="flex items-center gap-2">
           <Button variant="outline" onClick={() => handleSubmit(false)}>
             <Save className="mr-2 h-4 w-4" />
             Save Draft
           </Button>
           <Button onClick={() => handleSubmit(true)}>Publish</Button>
-        </div>
+        </div> */}
       </div>
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Basic Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Basic Information</CardTitle>
+                <CardDescription>
+                  Enter the main details of your publication
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Title *</Label>
+                  <Input
+                    id="title"
+                    placeholder="Enter publication title..."
+                    name="title"
+                    onChange={handleChange}
+                  />
+                </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Basic Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
-              <CardDescription>
-                Enter the main details of your publication
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Title *</Label>
-                <Input
-                  id="title"
-                  placeholder="Enter publication title..."
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="excerpt">Excerpt</Label>
+                  <Textarea
+                    id="excerpt"
+                    placeholder="Brief summary or excerpt (optional)..."
+                    name="excerpt"
+                    onChange={handleTextAreaChange}
+                    rows={3}
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    This will be shown in publication previews and search
+                    results
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
 
-              <div className="space-y-2">
-                <Label htmlFor="excerpt">Excerpt</Label>
-                <Textarea
-                  id="excerpt"
-                  placeholder="Brief summary or excerpt (optional)..."
-                  value={excerpt}
-                  onChange={(e) => setExcerpt(e.target.value)}
-                  rows={3}
-                />
-                <p className="text-sm text-muted-foreground">
-                  This will be shown in publication previews and search results
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Cover Image */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Cover Image</CardTitle>
-              <CardDescription>
-                Upload a cover image for your publication
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {coverImage ? (
+            {/* Cover Image */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Cover Image</CardTitle>
+                <CardDescription>
+                  Upload a cover image for your publication
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* {imageUrl ? (
                 <div className="relative">
                   <img
-                    src={coverImage || "/placeholder.svg"}
+                    src={imageUrl || "/placeholder.svg"}
                     alt="Cover"
                     className="w-full h-48 object-cover rounded-lg"
                   />
@@ -194,7 +201,7 @@ export default function CreatePublicationPage() {
                     variant="destructive"
                     size="sm"
                     className="absolute top-2 right-2"
-                    onClick={() => setCoverImage(null)}
+                    onClick={() => setImageUrl(null)}
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -217,138 +224,160 @@ export default function CreatePublicationPage() {
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              )} */}
+              </CardContent>
+            </Card>
 
-          {/* Content */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Content *</CardTitle>
-              <CardDescription>Write your publication content</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                placeholder="Write your publication content here..."
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                rows={15}
-                className="min-h-[400px]"
-              />
-              <p className="text-sm text-muted-foreground mt-2">
-                You can use basic HTML formatting in your content
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Publication Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Publication Settings</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="category">Category *</Label>
-                <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Featured Publication</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Show this publication prominently
-                  </p>
-                </div>
-                <Switch checked={isFeatured} onCheckedChange={setIsFeatured} />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Save as Draft</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Don't publish immediately
-                  </p>
-                </div>
-                <Switch checked={isDraft} onCheckedChange={setIsDraft} />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Tags */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Tags</CardTitle>
-              <CardDescription>
-                Add tags to help categorize your publication
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Add tag..."
-                  value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleAddTag()}
+            {/* Content */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Content *</CardTitle>
+                <CardDescription>
+                  Write your publication content
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  placeholder="Write your publication content here..."
+                  name="content"
+                  onChange={handleTextAreaChange}
+                  rows={15}
+                  className="min-h-[400px]"
                 />
-                <Button onClick={handleAddTag} size="sm">
-                  Add
-                </Button>
-              </div>
-
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {tags.map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="secondary"
-                      className="flex items-center gap-1"
-                    >
-                      {tag}
-                      <button
-                        onClick={() => handleRemoveTag(tag)}
-                        className="ml-1 hover:text-destructive"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Preview */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button variant="outline" className="w-full bg-transparent">
-                <Eye className="mr-2 h-4 w-4" />
-                Preview
-              </Button>
-              <Button variant="outline" className="w-full bg-transparent">
+                <p className="text-sm text-muted-foreground mt-2">
+                  You can use basic HTML formatting in your content
+                </p>
+              </CardContent>
+              <Button
+                type="submit"
+                variant="outline"
+                className="w-full bg-transparent"
+              >
                 <Save className="mr-2 h-4 w-4" />
-                Save Draft
+                Publish
               </Button>
-            </CardContent>
-          </Card>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Publication Settings */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Publication Settings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category *</Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={handleSelectChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label>Featured Publication</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Show this publication prominently
+                    </p>
+                  </div>
+                  <Switch
+                    checked={isFeatured}
+                    onCheckedChange={setIsFeatured}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label>Save as Draft</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Don't publish immediately
+                    </p>
+                  </div>
+                  <Switch checked={isDraft} onCheckedChange={setIsDraft} />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Tags */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Tags</CardTitle>
+                <CardDescription>
+                  Add tags to help categorize your publication
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Add tag..."
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddTag();
+                      }
+                    }}
+                  />
+                  <Button type="button" onClick={handleAddTag} size="sm">
+                    Add
+                  </Button>
+                </div>
+
+                {tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="flex items-center gap-1"
+                      >
+                        {tag}
+                        <button
+                          onClick={() => handleRemoveTag(tag)}
+                          className="ml-1 hover:text-destructive"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Preview */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Button variant="outline" className="w-full bg-transparent">
+                  <Eye className="mr-2 h-4 w-4" />
+                  Preview
+                </Button>
+                <Button variant="outline" className="w-full bg-transparent">
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Draft
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
