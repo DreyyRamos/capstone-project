@@ -153,7 +153,7 @@ export default function PublicationDetailPage({
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    // show a toast notification here
+    // You could show a toast notification here
   };
 
   return (

@@ -18,10 +18,10 @@ export function middleware(request: NextRequest) {
     protectedRoutes[pathname as keyof typeof protectedRoutes];
 
   if (requiredPermissions) {
-    // get user from session/JWT pag naimplement ko na
+    //  get user from session/JWT
     const userRole = request.headers.get("x-user-role") || "student";
 
-    // Check permissions (verify JWT/session)
+    // Check permissions (simplified - in production, verify JWT/session)
     const hasAccess = checkUserAccess(userRole, requiredPermissions);
 
     if (!hasAccess) {
@@ -36,7 +36,7 @@ function checkUserAccess(
   userRole: string,
   requiredPermissions: string[]
 ): boolean {
-  // Simplified check - use proper permission checking once idedeploy ko na
+  // Simplified check - in production, use proper permission checking
   const rolePermissions = {
     student: ["publications.create"],
     moderator: ["publications.create", "moderation.reports"],

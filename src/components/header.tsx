@@ -23,18 +23,25 @@ import {
   LogIn,
 } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useRole } from "@/contexts/role-context";
-import { RoleSwitcher } from "@/components/role-switcher";
+// import { useRole } from "@/contexts/role-context";
+// import { RoleSwitcher } from "@/components/role-switcher";
 import Link from "next/link";
+import { useUserQuery } from "@/hooks/useUser";
+import Cookies from "js-cookie";
 
 export function Header() {
   const { setTheme, theme } = useTheme();
-  const { user, logout } = useRole();
+
+  const token = Cookies.get("token") || "";
+  const { data: user } = useUserQuery(token);
+  // const { user, logout } = useRole();
+
+  console.log("user", user);
 
   const handleLogout = () => {
-    logout();
+    Cookies.remove("token");
     // Optionally redirect to home page
-    window.location.href = "/";
+    window.location.href = "/login";
   };
 
   return (
@@ -49,7 +56,7 @@ export function Header() {
 
         <div className="flex items-center gap-4">
           {/* Role Switcher - Only show for authenticated users */}
-          {user && <RoleSwitcher />}
+          {/* {user && <RoleSwitcher />} */}
 
           {/* Search */}
           <div className="relative hidden md:block">
@@ -126,14 +133,17 @@ export function Header() {
                   >
                     <Avatar className="h-8 w-8">
                       <AvatarImage
-                        src={user?.avatar || "/placeholder-user.jpg"}
-                        alt={user?.name || "User"}
+                        src={
+                          user?.userData?.profileImage ||
+                          "/placeholder-user.jpg"
+                        }
+                        alt={user?.userData?.firstName || "User"}
                       />
                       <AvatarFallback>
-                        {user?.name
-                          ?.split(" ")
-                          .map((n) => n[0])
-                          .join("") || "U"}
+                        {user?.userData?.firstName}
+                        {/* ?.split(" ")
+                           .map((n) => n[0])
+                           .join("") || "U"} */}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -142,10 +152,10 @@ export function Header() {
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">
-                        {user?.name || "User"}
+                        {user?.userData?.firstName || "User"}
                       </p>
                       <p className="text-xs leading-none text-muted-foreground">
-                        {user?.email || "user@example.com"}
+                        {user?.userData?.email || "user@example.com"}
                       </p>
                     </div>
                   </DropdownMenuLabel>

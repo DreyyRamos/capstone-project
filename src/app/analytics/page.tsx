@@ -42,7 +42,7 @@ import {
 } from "lucide-react";
 
 export default function AnalyticsPage() {
-  // Sample data - this would come from analytics service
+  // Sample data -this would come from your analytics service
   const overviewStats = [
     {
       title: "Total Views",

@@ -33,7 +33,7 @@ export function AuthModal({
   };
 
   const handleRegister = () => {
-    // temporary lang, redirect to sa registration page
+    // this might go to a registration page or contact form
     onClose();
   };
 

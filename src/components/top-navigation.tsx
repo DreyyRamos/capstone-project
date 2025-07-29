@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,13 +10,31 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Separator } from "@/components/ui/separator"
-import { Home, BookOpen, MessageSquare, Users, TrendingUp, FileText, Hash, Menu, ChevronDown, Plus } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
+import {
+  Home,
+  BookOpen,
+  MessageSquare,
+  Users,
+  TrendingUp,
+  FileText,
+  Hash,
+  Menu,
+  ChevronDown,
+  Plus,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
@@ -24,24 +42,32 @@ const navigation = [
   { name: "Forum", href: "/forum", icon: MessageSquare },
   { name: "Users", href: "/users", icon: Users },
   { name: "Analytics", href: "/analytics", icon: TrendingUp },
-]
+];
 
 const quickActions = [
   { name: "New Publication", href: "/publications/create", icon: FileText },
   { name: "Start Discussion", href: "/forum/create", icon: Hash },
-]
+];
 
 const forumCategories = [
-  { name: "General Discussion", count: 45, href: "/forum/category/general-discussion" },
+  {
+    name: "General Discussion",
+    count: 45,
+    href: "/forum/category/general-discussion",
+  },
   { name: "Academic", count: 23, href: "/forum/category/academic" },
-  { name: "Clubs & Activities", count: 18, href: "/forum/category/clubs-activities" },
+  {
+    name: "Clubs & Activities",
+    count: 18,
+    href: "/forum/category/clubs-activities",
+  },
   { name: "Sports", count: 12, href: "/forum/category/sports" },
   { name: "Arts", count: 8, href: "/forum/category/arts" },
-]
+];
 
 export function TopNavigation() {
-  const pathname = usePathname()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <nav className="sticky top-16 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -50,7 +76,7 @@ export function TopNavigation() {
         <div className="hidden lg:flex h-14 items-center justify-between">
           <div className="flex items-center space-x-6">
             {navigation.map((item) => {
-              const isActive = pathname === item.href
+              const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.name}
@@ -59,19 +85,22 @@ export function TopNavigation() {
                     "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors",
                     isActive
                       ? "bg-secondary text-secondary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                   )}
                 >
                   <item.icon className="h-4 w-4" />
                   {item.name}
                 </Link>
-              )
+              );
             })}
 
             {/* Forum Categories Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-1 text-sm font-medium">
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-1 text-sm font-medium"
+                >
                   Categories
                   <ChevronDown className="h-4 w-4" />
                 </Button>
@@ -81,7 +110,10 @@ export function TopNavigation() {
                 <DropdownMenuSeparator />
                 {forumCategories.map((category) => (
                   <DropdownMenuItem key={category.name} asChild>
-                    <Link href={category.href} className="flex items-center justify-between">
+                    <Link
+                      href={category.href}
+                      className="flex items-center justify-between"
+                    >
                       <span>{category.name}</span>
                       <Badge variant="secondary" className="text-xs">
                         {category.count}
@@ -108,7 +140,10 @@ export function TopNavigation() {
                 <DropdownMenuSeparator />
                 {quickActions.map((action) => (
                   <DropdownMenuItem key={action.name} asChild>
-                    <Link href={action.href} className="flex items-center gap-2">
+                    <Link
+                      href={action.href}
+                      className="flex items-center gap-2"
+                    >
                       <action.icon className="h-4 w-4" />
                       {action.name}
                     </Link>
@@ -123,7 +158,7 @@ export function TopNavigation() {
         <div className="flex lg:hidden h-14 items-center justify-between">
           <div className="flex items-center space-x-4">
             {navigation.slice(0, 3).map((item) => {
-              const isActive = pathname === item.href
+              const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.name}
@@ -132,13 +167,13 @@ export function TopNavigation() {
                     "flex items-center gap-1 px-2 py-1 text-sm font-medium rounded-md transition-colors",
                     isActive
                       ? "bg-secondary text-secondary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                   )}
                 >
                   <item.icon className="h-4 w-4" />
                   <span className="hidden sm:inline">{item.name}</span>
                 </Link>
-              )
+              );
             })}
           </div>
 
@@ -153,14 +188,18 @@ export function TopNavigation() {
             <SheetContent side="right" className="w-80">
               <SheetHeader>
                 <SheetTitle>Navigation</SheetTitle>
-                <SheetDescription>Access all sections and features</SheetDescription>
+                <SheetDescription>
+                  Access all sections and features
+                </SheetDescription>
               </SheetHeader>
               <div className="mt-6 space-y-6">
                 {/* Main Navigation */}
                 <div className="space-y-2">
-                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Main</h3>
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                    Main
+                  </h3>
                   {navigation.map((item) => {
-                    const isActive = pathname === item.href
+                    const isActive = pathname === item.href;
                     return (
                       <Link
                         key={item.name}
@@ -170,13 +209,13 @@ export function TopNavigation() {
                           "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors",
                           isActive
                             ? "bg-secondary text-secondary-foreground"
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                         )}
                       >
                         <item.icon className="h-4 w-4" />
                         {item.name}
                       </Link>
-                    )
+                    );
                   })}
                 </div>
 
@@ -227,5 +266,5 @@ export function TopNavigation() {
         </div>
       </div>
     </nav>
-  )
+  );
 }

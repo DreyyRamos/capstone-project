@@ -26,7 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Upload, X, Eye, Save } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRole } from "@/contexts/role-context";
+// import { useRole } from "@/contexts/role-context"
 
 export default function CreatePublicationPage() {
   const [title, setTitle] = useState("");
@@ -38,22 +38,20 @@ export default function CreatePublicationPage() {
   const [isFeatured, setIsFeatured] = useState(false);
   const [isDraft, setIsDraft] = useState(true);
   const [coverImage, setCoverImage] = useState<string | null>(null);
-  const { user } = useRole();
+  // const { user } = useRole()
   const router = useRouter();
 
   // Redirect if not authenticated
-  useEffect(() => {
-    if (!user) {
-      router.push(
-        "/login?redirect=" + encodeURIComponent("/publications/create")
-      );
-    }
-  }, [user, router]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     router.push("/login?redirect=" + encodeURIComponent("/publications/create"))
+  //   }
+  // }, [user, router])
 
-  // Don't render if not authenticated
-  if (!user) {
-    return null;
-  }
+  // // Don't render if not authenticated
+  // if (!user) {
+  //   return null
+  // }
 
   const categories = [
     "Science",
@@ -83,14 +81,14 @@ export default function CreatePublicationPage() {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // upload functionality to your server/cloud storage
+      // upload this to your server/cloud storage
       const imageUrl = URL.createObjectURL(file);
       setCoverImage(imageUrl);
     }
   };
 
   const handleSubmit = (publish = false) => {
-    // submit data to backend
+    // submit this data to your backend
     const publicationData = {
       title,
       excerpt,
@@ -100,7 +98,7 @@ export default function CreatePublicationPage() {
       isFeatured,
       isDraft: !publish,
       coverImage,
-      author: user.name,
+      // author: user.name,
       date: new Date().toISOString(),
     };
 

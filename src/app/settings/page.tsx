@@ -57,7 +57,7 @@ export default function SettingsPage() {
   };
 
   const handleSave = () => {
-    // save to backend once implemented
+    // save to backend
     console.log("Settings saved:", settings);
     // Show success message
   };

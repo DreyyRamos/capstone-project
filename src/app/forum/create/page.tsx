@@ -23,7 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, X, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRole } from "@/contexts/role-context";
+// import { useRole } from "@/contexts/role-context"
 
 export default function CreateForumTopicPage() {
   const [title, setTitle] = useState("");
@@ -31,20 +31,20 @@ export default function CreateForumTopicPage() {
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-  const { user } = useRole();
+  // const { user } = useRole()
   const router = useRouter();
 
   // Redirect if not authenticated
-  useEffect(() => {
-    if (!user) {
-      router.push("/login?redirect=" + encodeURIComponent("/forum/create"));
-    }
-  }, [user, router]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     router.push("/login?redirect=" + encodeURIComponent("/forum/create"))
+  //   }
+  // }, [user, router])
 
-  // Don't render if not authenticated
-  if (!user) {
-    return null;
-  }
+  // // Don't render if not authenticated
+  // if (!user) {
+  //   return null
+  // }
 
   const categories = [
     "General Discussion",
@@ -70,13 +70,13 @@ export default function CreateForumTopicPage() {
   };
 
   const handleSubmit = () => {
-    // submit this data to backend
+    // submit this data to your backend
     const topicData = {
       title,
       content,
       category,
       tags,
-      author: user.name,
+      // author: user.name,
       date: new Date().toISOString(),
     };
 

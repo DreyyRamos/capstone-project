@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,99 +15,91 @@ import {
 import { Eye, EyeOff, BookOpen, Users, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRole } from "@/contexts/role-context";
+import { useQueryClient } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
-  const { setUser } = useRole();
+  const queryClient = useQueryClient();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError("");
 
-    // Simulate login process
+    setLoading(true);
+    setErrorMessage("");
+    setSuccessMessage("");
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      // Mock authentication - this would call auth API
-      if (email && password) {
-        // Set a mock user based on email domain for demo
-        const mockUser = {
-          id: "1",
-          name: email.includes("admin")
-            ? "Admin User"
-            : email.includes("teacher")
-            ? "Teacher User"
-            : "Student User",
-          email: email,
-          role: email.includes("admin")
-            ? ("admin" as const)
-            : email.includes("teacher")
-            ? ("editor" as const)
-            : email.includes("moderator")
-            ? ("moderator" as const)
-            : ("student" as const),
-          avatar: "/placeholder-user.jpg",
-        };
+      const data = await response.json();
 
-        setUser(mockUser);
+      if (response.ok) {
+        const { token, user } = data;
 
-        // Redirect to the page they were trying to access, or home
-        const redirectTo =
-          new URLSearchParams(window.location.search).get("redirect") || "/";
-        router.push(redirectTo);
+        // Set the cookie
+        Cookies.set("token", token, { expires: 1 });
+
+        // Trigger token refresh for immediate UI update
+        window.dispatchEvent(new CustomEvent("tokenRefresh"));
+
+        // Invalidate all queries to force refetch with new auth state
+        await queryClient.invalidateQueries();
+
+        setSuccessMessage("Login successful! Redirecting to homepage...");
+        console.log("User logged in:", user);
+
+        router.push("/");
+
+        // Shorter delay since queries are already invalidated
+        // setTimeout(() => {
+        //   router.push("/");
+        // }, 1000);
       } else {
-        setError("Please enter both email and password");
+        setLoading(false);
+        setErrorMessage(
+          data.message || "Login failed. Please check your email and password."
+        );
       }
-    } catch (err) {
-      setError("Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      setErrorMessage("Login failed. Please try again later.");
+      console.error("Login failed:", error);
     }
   };
 
-  const handleDemoLogin = (role: string) => {
-    const demoUsers = {
-      admin: {
-        id: "1",
-        name: "Admin User",
-        email: "admin@lincolnhigh.edu",
-        role: "admin" as const,
-      },
-      editor: {
-        id: "2",
-        name: "Editor User",
-        email: "editor@lincolnhigh.edu",
-        role: "editor" as const,
-      },
-      moderator: {
-        id: "3",
-        name: "Moderator User",
-        email: "moderator@lincolnhigh.edu",
-        role: "moderator" as const,
-      },
-      student: {
-        id: "4",
-        name: "Student User",
-        email: "student@lincolnhigh.edu",
-        role: "student" as const,
-      },
-    };
-
-    setUser({
-      ...demoUsers[role as keyof typeof demoUsers],
-      avatar: "/placeholder-user.jpg",
-    });
-    const redirectTo =
-      new URLSearchParams(window.location.search).get("redirect") || "/";
-    router.push(redirectTo);
-  };
+  // Show loading spinner while processing
+  // if (loading && !successMessage) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen">
+  //       <div className="text-center">
+  //         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+  //         <p className="mt-2 text-gray-600">Logging in...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen flex">
@@ -136,15 +127,16 @@ export default function LoginPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleLogin} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
+                    name="email"
                     placeholder="your.email@lincolnhigh.edu"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -156,8 +148,9 @@ export default function LoginPage() {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
                       required
                     />
                     <Button
@@ -176,14 +169,21 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {error && (
-                  <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-                    {error}
+                {successMessage && (
+                  <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600 mr-2"></div>
+                    {successMessage}
                   </div>
                 )}
 
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Signing in..." : "Sign In"}
+                {errorMessage && (
+                  <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+                    {errorMessage}
+                  </div>
+                )}
+
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
 
@@ -194,48 +194,6 @@ export default function LoginPage() {
                 >
                   Forgot your password?
                 </Link>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Demo Login Options */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Demo Login</CardTitle>
-              <CardDescription className="text-xs">
-                Quick login for testing different roles
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="grid grid-cols-2 gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoLogin("admin")}
-                >
-                  Admin
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoLogin("editor")}
-                >
-                  Editor
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoLogin("moderator")}
-                >
-                  Moderator
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoLogin("student")}
-                >
-                  Student
-                </Button>
               </div>
             </CardContent>
           </Card>
@@ -310,3 +268,266 @@ export default function LoginPage() {
     </div>
   );
 }
+
+
+
+// "use client";
+
+// import type React from "react";
+
+// import { useState } from "react";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
+// import {
+//   Card,
+//   CardContent,
+//   CardDescription,
+//   CardHeader,
+//   CardTitle,
+// } from "@/components/ui/card";
+// import { Eye, EyeOff, BookOpen, Users, MessageSquare } from "lucide-react";
+// import Link from "next/link";
+// import { useRouter } from "next/navigation";
+// // import { useRole } from "@/contexts/role-context";
+// import Cookies from "js-cookie";
+
+// export default function LoginPage() {
+
+//   const [formData, setFormData] = useState({
+//     email: "",
+//     password: "",
+//   });
+//   const [loading, setLoading] = useState(false);
+//   const [successMessage, setSuccessMessage] = useState("");
+//   const [errorMessage, setErrorMessage] = useState("");
+//   const [showPassword, setShowPassword] = useState(false);
+//   const router = useRouter();
+
+//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setFormData({
+//       ...formData,
+//       [e.target.name]: e.target.value,
+//     });
+//   };
+
+//   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+
+//     // Start loading immediately when form is submitted
+//     setLoading(true);
+//     setErrorMessage(""); // Clear previous errors
+//     setSuccessMessage(""); // Clear previous success messages
+
+//     try {
+//       const response = await fetch("/api/login", {
+//         method: "POST",
+//         headers: {
+//           "Content-type": "application/json",
+//         },
+//         body: JSON.stringify(formData),
+//       });
+
+//       const data = await response.json();
+
+//       if (response.ok) {
+//         const { token, user } = data;
+
+//         // Set the cookie
+//         Cookies.set("token", token, { expires: 1 });
+
+//         // Show success message
+//         setSuccessMessage("Login successful! Redirecting to homepage...");
+
+//         console.log("User logged in:", user);
+
+//         // Wait a bit for the success message to show, then redirect
+//         setTimeout(() => {
+//           router.push("/");
+//         }, 1500); // 1.5 second delay
+//       } else {
+//         // Handle login failure
+//         setLoading(false);
+//         setErrorMessage(
+//           data.message || "Login failed. Please check your email and password."
+//         );
+//       }
+//     } catch (error: any) {
+//       setLoading(false);
+//       setErrorMessage("Login failed. Please try again later.");
+//       console.error("Login failed:", error);
+//     }
+//   };
+
+//   // Show loading spinner while processing
+//   if (loading && !successMessage) {
+//     return (
+//       <div className="flex items-center justify-center min-h-screen">
+//         <div className="text-center">
+//           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+//           <p className="mt-2 text-gray-600">Logging in...</p>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="min-h-screen flex">
+//       {/* Left Side - Login Form */}
+//       <div className="flex-1 flex items-center justify-center p-8">
+//         <div className="w-full max-w-md space-y-6">
+//           <div className="text-center space-y-2">
+//             <div className="flex items-center justify-center gap-2 mb-4">
+//               <div className="h-10 w-10 bg-blue-600 rounded-lg flex items-center justify-center">
+//                 <span className="text-white font-bold">LHS</span>
+//               </div>
+//               <span className="font-bold text-xl">Lincoln High School</span>
+//             </div>
+//             <h1 className="text-2xl font-bold">Welcome back</h1>
+//             <p className="text-muted-foreground">
+//               Sign in to your account to continue
+//             </p>
+//           </div>
+
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>Sign In</CardTitle>
+//               <CardDescription>
+//                 Enter your credentials to access your account
+//               </CardDescription>
+//             </CardHeader>
+//             <CardContent>
+//               <form onSubmit={handleSubmit} className="space-y-4">
+//                 <div className="space-y-2">
+//                   <Label htmlFor="email">Email</Label>
+//                   <Input
+//                     id="email"
+//                     type="email"
+//                     name="email"
+//                     placeholder="your.email@lincolnhigh.edu"
+//                     value={formData.email}
+//                     onChange={handleChange}
+//                     required
+//                   />
+//                 </div>
+
+//                 <div className="space-y-2">
+//                   <Label htmlFor="password">Password</Label>
+//                   <div className="relative">
+//                     <Input
+//                       id="password"
+//                       type={showPassword ? "text" : "password"}
+//                       placeholder="Enter your password"
+//                       name="password"
+//                       value={formData.password}
+//                       onChange={handleChange}
+//                       required
+//                     />
+//                     <Button
+//                       type="button"
+//                       variant="ghost"
+//                       size="sm"
+//                       className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+//                       onClick={() => setShowPassword(!showPassword)}
+//                     >
+//                       {showPassword ? (
+//                         <EyeOff className="h-4 w-4" />
+//                       ) : (
+//                         <Eye className="h-4 w-4" />
+//                       )}
+//                     </Button>
+//                   </div>
+//                 </div>
+
+//                 {errorMessage && (
+//                   <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+//                     {errorMessage}
+//                   </div>
+//                 )}
+
+//                 <Button type="submit" className="w-full" disabled={loading}>
+//                   {loading ? "Signing in..." : "Sign In"}
+//                 </Button>
+//               </form>
+
+//               <div className="mt-4 text-center">
+//                 <Link
+//                   href="/forgot-password"
+//                   className="text-sm text-blue-600 hover:underline"
+//                 >
+//                   Forgot your password?
+//                 </Link>
+//               </div>
+//             </CardContent>
+//           </Card>
+
+//           <div className="text-center text-sm text-muted-foreground">
+//             Don't have an account?{" "}
+//             <Link href="/register" className="text-blue-600 hover:underline">
+//               Contact your administrator
+//             </Link>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Right Side - Features */}
+//       <div className="hidden lg:flex flex-1 bg-blue-50 dark:bg-blue-950/20 items-center justify-center p-8">
+//         <div className="max-w-md space-y-8">
+//           <div className="text-center">
+//             <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-100 mb-4">
+//               Connect with your school community
+//             </h2>
+//             <p className="text-blue-700 dark:text-blue-200">
+//               Access publications, join discussions, and stay updated with
+//               school news
+//             </p>
+//           </div>
+
+//           <div className="space-y-6">
+//             <div className="flex items-start gap-4">
+//               <div className="bg-blue-600 p-2 rounded-lg">
+//                 <BookOpen className="h-5 w-5 text-white" />
+//               </div>
+//               <div>
+//                 <h3 className="font-semibold text-blue-900 dark:text-blue-100">
+//                   School Publications
+//                 </h3>
+//                 <p className="text-sm text-blue-700 dark:text-blue-200">
+//                   Read and create articles, news, and announcements
+//                 </p>
+//               </div>
+//             </div>
+
+//             <div className="flex items-start gap-4">
+//               <div className="bg-blue-600 p-2 rounded-lg">
+//                 <MessageSquare className="h-5 w-5 text-white" />
+//               </div>
+//               <div>
+//                 <h3 className="font-semibold text-blue-900 dark:text-blue-100">
+//                   Discussion Forums
+//                 </h3>
+//                 <p className="text-sm text-blue-700 dark:text-blue-200">
+//                   Participate in academic discussions and get help from peers
+//                 </p>
+//               </div>
+//             </div>
+
+//             <div className="flex items-start gap-4">
+//               <div className="bg-blue-600 p-2 rounded-lg">
+//                 <Users className="h-5 w-5 text-white" />
+//               </div>
+//               <div>
+//                 <h3 className="font-semibold text-blue-900 dark:text-blue-100">
+//                   Community
+//                 </h3>
+//                 <p className="text-sm text-blue-700 dark:text-blue-200">
+//                   Connect with students, teachers, and staff
+//                 </p>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
