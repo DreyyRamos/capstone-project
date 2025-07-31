@@ -27,6 +27,7 @@ import { ArrowLeft, Upload, X, Eye, Save } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePostQuery } from "@/hooks/usePost";
+import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 
 export default function CreatePublicationPage() {
@@ -34,14 +35,14 @@ export default function CreatePublicationPage() {
     title: "",
     excerpt: "",
     content: "",
-    imageUrl: null as string | null,
+    imageUrl: "",
     category: "",
   });
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
   const [isDraft, setIsDraft] = useState(true);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  // const [imageUrl, setImageUrl] = useState<string | null>(null);
   const router = useRouter();
   const token = Cookies.get("token") || "";
   const { createPost, isCreating, createSuccess } = usePostQuery(token);
@@ -71,23 +72,18 @@ export default function CreatePublicationPage() {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file) {
-  //     // upload this to your server/cloud storage
-  //     const imageUrl = URL.createObjectURL(file);
-  //     setCoverImage(imageUrl);
-  //   }
-  // };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       createPost({
         ...formData,
         tags,
-        imageUrl: imageUrl ?? "",
+        imageUrl: formData.imageUrl ?? "",
       });
+
+      if (createSuccess) {
+        router.push("/");
+      }
     } catch (error: any) {
       console.error(error);
     }
@@ -190,41 +186,45 @@ export default function CreatePublicationPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {/* {imageUrl ? (
-                <div className="relative">
-                  <img
-                    src={imageUrl || "/placeholder.svg"}
-                    alt="Cover"
-                    className="w-full h-48 object-cover rounded-lg"
-                  />
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    className="absolute top-2 right-2"
-                    onClick={() => setImageUrl(null)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center relative">
-                  <Upload className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
-                  <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground">
-                      Click to upload or drag and drop
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      PNG, JPG, GIF up to 10MB
-                    </p>
+                {formData.imageUrl ? (
+                  <div className="relative">
+                    <img
+                      src={formData.imageUrl || "/placeholder.svg"}
+                      alt="Cover"
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="absolute top-2 right-2"
+                      onClick={() => setFormData({ ...formData, imageUrl: "" })}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                ) : (
+                  <UploadDropzone
+                    endpoint="imageUploader"
+                    config={{ mode: "auto" }}
+                    onClientUploadComplete={(res) => {
+                      console.log("Files: ", res);
+                      setFormData({ ...formData, imageUrl: res[0].url });
+                    }}
+                    onUploadError={(error) => {
+                      alert(`ERROR! ${error.message}`);
+                    }}
+                    appearance={{
+                      container:
+                        "relative border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center",
+                      uploadIcon: "h-12 w-12 text-muted-foreground/50 mb-4",
+                      label: "text-sm text-muted-foreground",
+                      allowedContent: "text-xs text-muted-foreground",
+                      // Make the button and progress bar transparent
+                      button:
+                        "absolute inset-0 h-full w-full cursor-pointer bg-transparent text-transparent ut-uploading:bg-slate-900/50 ut-uploading:text-white",
+                    }}
                   />
-                </div>
-              )} */}
+                )}
               </CardContent>
             </Card>
 
@@ -252,6 +252,7 @@ export default function CreatePublicationPage() {
                 type="submit"
                 variant="outline"
                 className="w-full bg-transparent"
+                disabled={isCreating}
               >
                 <Save className="mr-2 h-4 w-4" />
                 Publish
