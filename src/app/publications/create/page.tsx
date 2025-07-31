@@ -29,6 +29,7 @@ import { useRouter } from "next/navigation";
 import { usePostQuery } from "@/hooks/usePost";
 import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
+import Tiptap from "@/components/tiptap";
 
 export default function CreatePublicationPage() {
   const [formData, setFormData] = useState({
@@ -100,6 +101,12 @@ export default function CreatePublicationPage() {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+  };
+  const handleContentChange = (richText: string) => {
+    setFormData({
+      ...formData,
+      content: richText, // Set the 'content' field with the new HTML
     });
   };
 
@@ -237,7 +244,11 @@ export default function CreatePublicationPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Textarea
+                <Tiptap
+                  description={formData.content}
+                  onChange={handleContentChange}
+                />
+                {/* <Textarea
                   placeholder="Write your publication content here..."
                   name="content"
                   onChange={handleTextAreaChange}
@@ -246,7 +257,7 @@ export default function CreatePublicationPage() {
                 />
                 <p className="text-sm text-muted-foreground mt-2">
                   You can use basic HTML formatting in your content
-                </p>
+                </p> */}
               </CardContent>
               <Button
                 type="submit"

@@ -25,7 +25,7 @@ export const usePostQuery = (token: string) => {
   // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["pubs"],
-    queryFn: () => fetchAllPubs(token),
+    queryFn: async () => await fetchAllPubs(token),
   });
 
   // Mutation to create a new post

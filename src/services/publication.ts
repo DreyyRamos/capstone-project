@@ -8,7 +8,7 @@ interface Publication {
 }
 
 export const fetchAllPubs = async (token: string) => {
-  const response = await fetch("/api/publications/fetch-publications", {
+  const response = await fetch("/api/publications", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,

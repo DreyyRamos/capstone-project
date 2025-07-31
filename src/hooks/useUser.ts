@@ -12,8 +12,12 @@ export const useUserQuery = (token: string) => {
 
   // Query to fetch user data
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["users", token],
     queryFn: async () => await fetchCurrentUser(token),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
   });
 
   // Mutation to edit user data
