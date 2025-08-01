@@ -2,6 +2,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   fetchAllPubs,
   fetchPubById,
+  fetchFeaturedPubs,
   likePub,
   addCommentPub,
   createPost,
@@ -26,6 +27,10 @@ export const usePostQuery = (token: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["pubs"],
     queryFn: async () => await fetchAllPubs(token),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
   });
 
   // Mutation to create a new post
@@ -33,6 +38,7 @@ export const usePostQuery = (token: string) => {
     mutationFn: (postData: Publication) => createPost(token, postData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
     },
   });
 
@@ -52,6 +58,23 @@ export const usePostQuery = (token: string) => {
     createSuccess: mutation.isSuccess,
     createReset: mutation.reset,
   };
+};
+
+export const useFeaturedPostsQuery = () => {
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    // A unique query key to cache this data separately from all posts
+    queryKey: ["featured-pubs"],
+
+    // The query function is the service you already created
+    queryFn: fetchFeaturedPubs,
+
+    // refetchOnWindowFocus: false,
+    // refetchOnMount: false,
+    // refetchOnReconnect: false,
+    // refetchInterval: false,
+  });
+
+  return { data, isLoading, isError, error, refetch };
 };
 
 // Separate hook for fetching a single post by ID

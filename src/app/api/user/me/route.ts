@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
         lastName: true,
         profileImage: true,
         role: true,
+        notifications: true,
         publications: {
           include: {
             pubLikes: true,

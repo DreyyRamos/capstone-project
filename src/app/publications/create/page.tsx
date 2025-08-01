@@ -37,11 +37,12 @@ export default function CreatePublicationPage() {
     excerpt: "",
     content: "",
     imageUrl: "",
+    isFeatured: false,
     category: "",
   });
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-  const [isFeatured, setIsFeatured] = useState(false);
+  // const [isFeatured, setIsFeatured] = useState(false);
   const [isDraft, setIsDraft] = useState(true);
   // const [imageUrl, setImageUrl] = useState<string | null>(null);
   const router = useRouter();
@@ -71,6 +72,13 @@ export default function CreatePublicationPage() {
 
   const handleRemoveTag = (tagToRemove: string) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
+
+  const handleFeaturedChange = (checked: boolean) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      isFeatured: checked,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -306,8 +314,8 @@ export default function CreatePublicationPage() {
                     </p>
                   </div>
                   <Switch
-                    checked={isFeatured}
-                    onCheckedChange={setIsFeatured}
+                    checked={formData.isFeatured}
+                    onCheckedChange={handleFeaturedChange}
                   />
                 </div>
 

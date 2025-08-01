@@ -1,79 +1,84 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { BookOpen, MessageSquare, TrendingUp, Users, Calendar, Eye } from "lucide-react"
-import Link from "next/link"
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  BookOpen,
+  MessageSquare,
+  TrendingUp,
+  Users,
+  Calendar,
+  Eye,
+} from "lucide-react";
+import Link from "next/link";
+import { useFeaturedPostsQuery } from "@/hooks/usePost";
+
+interface Author {
+  id: string;
+  firstName: string;
+  lastName: string;
+  profileImage: string | null;
+}
+
+interface Publication {
+  pubId: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  imageUrl: string;
+  tags: string[];
+  category: string;
+  createdAt: Date;
+  author: Author;
+}
 
 export default function HomePage() {
-  const featuredPublications = [
-    {
-      id: 1,
-      title: "Annual Science Fair Results",
-      excerpt: "Outstanding achievements from our students in the 2024 Science Fair competition...",
-      author: "Dr. Sarah Johnson",
-      date: "2024-01-15",
-      category: "Science",
-      views: 1250,
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 2,
-      title: "New Library Digital Resources",
-      excerpt: "Exciting new digital resources now available in our school library system...",
-      author: "Maria Rodriguez",
-      date: "2024-01-12",
-      category: "Library",
-      views: 890,
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 3,
-      title: "Student Art Exhibition 2024",
-      excerpt: "Showcasing the incredible artistic talents of our students in this year's exhibition...",
-      author: "James Wilson",
-      date: "2024-01-10",
-      category: "Arts",
-      views: 2100,
-      image: "/placeholder.svg?height=200&width=300",
-    },
-  ]
+  // const recentForumPosts = [
+  //   {
+  //     id: 1,
+  //     title: "Tips for Better Study Habits",
+  //     author: "Alex Chen",
+  //     replies: 23,
+  //     lastActivity: "2 hours ago",
+  //     category: "Academic",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Upcoming School Events Discussion",
+  //     author: "Emma Davis",
+  //     replies: 15,
+  //     lastActivity: "4 hours ago",
+  //     category: "General",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Science Club Meeting Notes",
+  //     author: "Michael Brown",
+  //     replies: 8,
+  //     lastActivity: "6 hours ago",
+  //     category: "Clubs",
+  //   },
+  // ]
 
-  const recentForumPosts = [
-    {
-      id: 1,
-      title: "Tips for Better Study Habits",
-      author: "Alex Chen",
-      replies: 23,
-      lastActivity: "2 hours ago",
-      category: "Academic",
-    },
-    {
-      id: 2,
-      title: "Upcoming School Events Discussion",
-      author: "Emma Davis",
-      replies: 15,
-      lastActivity: "4 hours ago",
-      category: "General",
-    },
-    {
-      id: 3,
-      title: "Science Club Meeting Notes",
-      author: "Michael Brown",
-      replies: 8,
-      lastActivity: "6 hours ago",
-      category: "Clubs",
-    },
-  ]
+  const { data: featuredPublications, isLoading } = useFeaturedPostsQuery();
+
+  if (isLoading) {
+    return <div>Loading publications...</div>; // Or a custom spinner component
+  }
 
   return (
     <div className="space-y-8">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-8">
         <div className="max-w-4xl">
-          <h1 className="text-4xl font-bold mb-4">Welcome to Lincoln High School Publications</h1>
+          <h1 className="text-4xl font-bold mb-4">
+            Welcome to Lincoln High School Publications
+          </h1>
           <p className="text-xl mb-6">
-            Stay connected with the latest news, articles, and discussions from our school community.
+            Stay connected with the latest news, articles, and discussions from
+            our school community.
           </p>
           <div className="flex gap-4">
             <Button asChild size="lg" variant="secondary">
@@ -157,50 +162,61 @@ export default function HomePage() {
             </Button>
           </div>
           <div className="space-y-6">
-            {featuredPublications.map((publication) => (
-              <Card key={publication.id} className="overflow-hidden">
+            {featuredPublications?.map((publication: Publication) => (
+              <Card key={publication.pubId} className="overflow-hidden">
                 <div className="md:flex">
-                  <div className="md:w-1/3">
+                  <div className="md:w-1/3 p-1.5 ">
                     <img
-                      src={publication.image || "/placeholder.svg"}
+                      src={publication.imageUrl || "/placeholder.svg"}
                       alt={publication.title}
-                      className="w-full h-48 md:h-full object-cover"
+                      className="w-full h-48 md:h-full object-cover rounded-md"
                     />
                   </div>
                   <div className="md:w-2/3 p-6">
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="secondary">{publication.category}</Badge>
                       <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Eye className="h-4 w-4" />
-                        {publication.views}
+                        {/* <Eye className="h-4 w-4" />
+                        {publication.views} */}
                       </div>
                     </div>
                     <h3 className="text-xl font-semibold mb-2">
-                      <Link href={`/publications/${publication.id}`} className="hover:text-blue-600">
+                      <Link
+                        href={`/publications/${publication.pubId}`}
+                        className="hover:text-blue-600"
+                      >
                         {publication.title}
                       </Link>
                     </h3>
-                    <p className="text-muted-foreground mb-4">{publication.excerpt}</p>
+                    <p className="text-muted-foreground mb-4">
+                      {publication.excerpt}
+                    </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Avatar className="h-8 w-8">
                           <AvatarFallback>
-                            {publication.author
-                              .split(" ")
+                            {publication.author?.firstName}
+                            {/* .split(" ")
                               .map((n) => n[0])
-                              .join("")}
+                              .join("")} */}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm font-medium">{publication.author}</p>
+                          <p className="text-sm font-medium">
+                            {publication.author?.firstName}
+                          </p>
                           <p className="text-xs text-muted-foreground flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
-                            {new Date(publication.date).toLocaleDateString()}
+                            {new Date(
+                              publication.createdAt
+                            ).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
                       <Button asChild variant="outline" size="sm">
-                        <Link href={`/publications/${publication.id}`}>Read More</Link>
+                        <Link href={`/publications/${publication.pubId}`}>
+                          Read More
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -219,17 +235,22 @@ export default function HomePage() {
             </Button>
           </div>
           <div className="space-y-4">
-            {recentForumPosts.map((post) => (
+            {/* {recentForumPosts.map((post) => (
               <Card key={post.id}>
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-2">
                     <Badge variant="outline" className="text-xs">
                       {post.category}
                     </Badge>
-                    <span className="text-xs text-muted-foreground">{post.lastActivity}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {post.lastActivity}
+                    </span>
                   </div>
                   <h4 className="font-medium mb-2">
-                    <Link href={`/forum/topic/${post.id}`} className="hover:text-blue-600">
+                    <Link
+                      href={`/forum/topic/${post.id}`}
+                      className="hover:text-blue-600"
+                    >
                       {post.title}
                     </Link>
                   </h4>
@@ -239,7 +260,7 @@ export default function HomePage() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            ))} */}
           </div>
 
           <Card className="mt-6">
@@ -247,13 +268,25 @@ export default function HomePage() {
               <CardTitle className="text-lg">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button asChild className="w-full bg-transparent" variant="outline">
+              <Button
+                asChild
+                className="w-full bg-transparent"
+                variant="outline"
+              >
                 <Link href="/publications/create">Create Publication</Link>
               </Button>
-              <Button asChild className="w-full bg-transparent" variant="outline">
+              <Button
+                asChild
+                className="w-full bg-transparent"
+                variant="outline"
+              >
                 <Link href="/forum/create">Start Discussion</Link>
               </Button>
-              <Button asChild className="w-full bg-transparent" variant="outline">
+              <Button
+                asChild
+                className="w-full bg-transparent"
+                variant="outline"
+              >
                 <Link href="/profile">View Profile</Link>
               </Button>
             </CardContent>
@@ -261,5 +294,5 @@ export default function HomePage() {
         </section>
       </div>
     </div>
-  )
+  );
 }

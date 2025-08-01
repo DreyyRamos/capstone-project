@@ -28,6 +28,8 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useUserQuery } from "@/hooks/useUser";
 import Cookies from "js-cookie";
+import { timeAgo } from "@/lib/timeAgo";
+import { useNotificationQuery } from "@/hooks/useNotification";
 
 export function Header() {
   const { setTheme, theme } = useTheme();
@@ -37,6 +39,8 @@ export function Header() {
   // const { user, logout } = useRole();
 
   console.log("user", user);
+
+  const { markAsRead } = useNotificationQuery(token);
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -86,14 +90,36 @@ export function Header() {
                   <Button variant="ghost" size="icon" className="relative">
                     <Bell className="h-4 w-4" />
                     <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                      3
+                      {user?.userData?.notifications?.filter(
+                        (n: any) => !n.isRead
+                      ).length ?? 0}
                     </Badge>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-80">
                   <DropdownMenuLabel>Notifications</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  {user?.userData?.notifications
+                    ?.filter((n: any) => !n.isRead)
+                    .map((notif: any) => (
+                      <DropdownMenuItem key={notif.notifId}>
+                        <Link
+                          href={`/publications/${notif.pubNotifId}`}
+                          onClick={() => markAsRead(notif.notifId)}
+                          className="w-full"
+                        >
+                          <div className="flex flex-col gap-1">
+                            <p className="text-sm font-medium">
+                              {notif.notifTitle}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {notif.notifContent} – {timeAgo(notif.createdAt)}
+                            </p>
+                          </div>
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  {/* <DropdownMenuItem>
                     <div className="flex flex-col gap-1">
                       <p className="text-sm font-medium">
                         New publication published
@@ -120,7 +146,7 @@ export function Header() {
                         Tips for Better Study Habits - 6 hours ago
                       </p>
                     </div>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem>*/}
                 </DropdownMenuContent>
               </DropdownMenu>
 

@@ -30,6 +30,17 @@ export const fetchPubById = async (token: string, postId: string) => {
   return response.json();
 };
 
+export const fetchFeaturedPubs = async () => {
+  const response = await fetch(`/api/publications/isFeatured`, {
+    method: "GET",
+    // headers: {
+    //   Authorization: `Bearer ${token}`,
+    // },
+  });
+  if (!response.ok) throw new Error("Failed to fetch post by id");
+  return response.json();
+};
+
 export const likePub = async (postId: string, token: string) => {
   const res = await fetch(`/api/publications/${postId}/like`, {
     method: "POST",
