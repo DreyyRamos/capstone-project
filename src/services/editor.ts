@@ -1,14 +1,5 @@
-interface Publication {
-  title: string;
-  excerpt: string;
-  content: string;
-  imageUrl: string | null;
-  tags: string[];
-  category: string;
-}
-
-export const fetchAllPubs = async (token: string) => {
-  const response = await fetch("/api/publications", {
+export const fetchToReviewPubs = async (token: string) => {
+  const response = await fetch("/api/publications/editor/toReview", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -72,7 +63,7 @@ export const addCommentPub = async (
   return await res.json();
 };
 
-export const createPost = async (token: string, newData: Publication) => {
+export const createPost = async (token: string, newData: any) => {
   const response = await fetch("/api/publications/create", {
     method: "POST",
     headers: {
@@ -84,17 +75,17 @@ export const createPost = async (token: string, newData: Publication) => {
   return response.json();
 };
 
-export const updatePost = async (
+export const approvePost = async (
   token: string,
-  postId: string,
-  newData: Publication
+  postId: string
+  //   newData: any
 ) => {
-  const response = await fetch(`/api/publications/${postId}`, {
+  const response = await fetch(`/api/publications/editor/toReview/${postId}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(newData),
+    // body: JSON.stringify(postId),
   });
   if (!response.ok) throw new Error("Error in updating post");
   return response.json();

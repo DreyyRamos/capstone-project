@@ -39,6 +39,7 @@ export const usePostQuery = (token: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
     },
   });
 
@@ -78,13 +79,31 @@ export const useFeaturedPostsQuery = () => {
 };
 
 // Separate hook for fetching a single post by ID
-export const usePostByIdQuery = (token: string, postId: string) => {
-  const queryClient = useQueryClient();
+
+export const useFetchOnePostQuery = (postId: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["post", postId],
-    queryFn: () => fetchPubById(token, postId),
-    enabled: !!postId && !!token,
+    queryFn: () => fetchPubById(postId),
+    enabled: !!postId,
   });
+
+  return {
+    data,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
+  };
+};
+
+export const usePostByIdQuery = (token: string, postId: string) => {
+  const queryClient = useQueryClient();
+  // const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+  //   queryKey: ["post", postId],
+  //   queryFn: () => fetchPubById(token, postId),
+  //   enabled: !!postId && !!token,
+  // });
 
   const updateMutation = useMutation({
     mutationFn: (postData: Publication) => updatePost(token, postId, postData),
@@ -93,6 +112,7 @@ export const usePostByIdQuery = (token: string, postId: string) => {
       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
     },
   });
 
@@ -103,6 +123,7 @@ export const usePostByIdQuery = (token: string, postId: string) => {
       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
     },
   });
 
@@ -113,17 +134,18 @@ export const usePostByIdQuery = (token: string, postId: string) => {
       queryClient.invalidateQueries({ queryKey: ["post", postId] });
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
     },
   });
 
   return {
     // Query results
-    data,
-    error,
-    isLoading,
-    isError,
-    isSuccess,
-    refetch,
+    // data,
+    // error,
+    // isLoading,
+    // isError,
+    // isSuccess,
+    // refetch,
 
     // Mutation functions
     updatePost: updateMutation.mutate,

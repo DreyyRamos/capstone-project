@@ -1,23 +1,24 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { authMiddleware } from "../../(middlware)/authMiddleware";
+import { authMiddleware } from "@/app/api/(middlware)/authMiddleware";
 import { NextRequest } from "next/server";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  // const authResult = await authMiddleware(req);
-  // if (authResult instanceof NextResponse) return authResult;
+  const authResult = await authMiddleware(req);
+  if (authResult instanceof NextResponse) return authResult;
   // const { user } = authResult;
 
   const resolvedParams = await params;
   const pubId = resolvedParams.id;
 
   try {
-    const fetchPost = await prisma.publication.findUnique({
+    const fetchToReview = await prisma.publication.findUnique({
       where: {
         pubId: pubId,
+        status: "PENDING_REVIEW",
       },
       include: {
         author: {
@@ -25,6 +26,7 @@ export async function GET(
             id: true,
             firstName: true,
             profileImage: true,
+            role: true,
           },
         },
         pubComments: {
@@ -45,7 +47,7 @@ export async function GET(
       },
     });
 
-    return NextResponse.json(fetchPost);
+    return NextResponse.json(fetchToReview);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -69,7 +71,7 @@ export async function PUT(
   if (!pubId) {
     return NextResponse.json({ error: "Post ID is required" }, { status: 400 });
   }
-  const { title, content, imageUrl } = await req.json();
+  //   const { title, content, imageUrl } = await req.json();
 
   try {
     const updatePost = await prisma.publication.update({
@@ -77,9 +79,10 @@ export async function PUT(
         pubId: pubId,
       },
       data: {
-        title,
-        content,
-        imageUrl,
+        // title,
+        // content,
+        // imageUrl,
+        status: "PUBLISHED",
       },
     });
 

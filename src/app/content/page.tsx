@@ -32,84 +32,116 @@ import {
   Plus,
   Tag,
 } from "lucide-react"
-import Link from "next/link"
+import { useEditorQuery } from "@/hooks/useEditor";
+import Cookies from "js-cookie";
+import Link from "next/link";
+
+interface Publication {
+  title: string;
+  excerpt: string;
+  content: string;
+  imageUrl: string;
+  tags: string[];
+  category: string;
+  status: Status;
+}
+
+enum Status {
+  "DRAFT",
+  "PUBLISHED",
+  "ARCHIVED",
+  "PENDING_REVIEW",
+}
 
 export default function ContentManagerPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [categoryFilter, setCategoryFilter] = useState("all")
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
 
-  const draftPublications = [
-    {
-      id: 1,
-      title: "Winter Sports Season Recap",
-      author: "Coach Martinez",
-      authorRole: "Teacher",
-      lastModified: "2024-01-20T14:30:00Z",
-      category: "Sports",
-      wordCount: 1250,
-      status: "draft",
-      excerpt: "A comprehensive look at our winter sports teams' performances this season...",
-    },
-    {
-      id: 2,
-      title: "New STEM Lab Equipment",
-      author: "Dr. Sarah Johnson",
-      authorRole: "Teacher",
-      lastModified: "2024-01-19T16:45:00Z",
-      category: "Science",
-      wordCount: 890,
-      status: "review",
-      excerpt: "Exciting new equipment has arrived for our STEM laboratory...",
-    },
-    {
-      id: 3,
-      title: "Student Council Elections 2024",
-      author: "Emma Davis",
-      authorRole: "Student",
-      lastModified: "2024-01-18T10:15:00Z",
-      category: "News",
-      wordCount: 650,
-      status: "pending",
-      excerpt: "Information about the upcoming student council elections...",
-    },
-  ]
+  const token = Cookies.get("token") || "";
+  const { data: toReview, isLoading, approve } = useEditorQuery(token);
 
-  const publishedContent = [
-    {
-      id: 4,
-      title: "Annual Science Fair Results",
-      author: "Dr. Sarah Johnson",
-      publishDate: "2024-01-15T09:00:00Z",
-      category: "Science",
-      views: 1250,
-      likes: 45,
-      comments: 12,
-      status: "published",
-    },
-    {
-      id: 5,
-      title: "Student Art Exhibition 2024",
-      author: "James Wilson",
-      publishDate: "2024-01-10T14:00:00Z",
-      category: "Arts",
-      views: 2100,
-      likes: 78,
-      comments: 25,
-      status: "published",
-    },
-    {
-      id: 6,
-      title: "Basketball Team Championship Victory",
-      author: "Coach Martinez",
-      publishDate: "2024-01-08T11:30:00Z",
-      category: "Sports",
-      views: 1850,
-      likes: 92,
-      comments: 34,
-      status: "published",
-    },
-  ]
+  console.log("data to review", toReview);
+
+  const handleApprove = async (postId: string) => {
+    try {
+      await approve(postId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // const draftPublications = [
+  //   {
+  //     id: 1,
+  //     title: "Winter Sports Season Recap",
+  //     author: "Coach Martinez",
+  //     authorRole: "Teacher",
+  //     lastModified: "2024-01-20T14:30:00Z",
+  //     category: "Sports",
+  //     wordCount: 1250,
+  //     status: "draft",
+  //     excerpt: "A comprehensive look at our winter sports teams' performances this season...",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "New STEM Lab Equipment",
+  //     author: "Dr. Sarah Johnson",
+  //     authorRole: "Teacher",
+  //     lastModified: "2024-01-19T16:45:00Z",
+  //     category: "Science",
+  //     wordCount: 890,
+  //     status: "review",
+  //     excerpt: "Exciting new equipment has arrived for our STEM laboratory...",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Student Council Elections 2024",
+  //     author: "Emma Davis",
+  //     authorRole: "Student",
+  //     lastModified: "2024-01-18T10:15:00Z",
+  //     category: "News",
+  //     wordCount: 650,
+  //     status: "pending",
+  //     excerpt: "Information about the upcoming student council elections...",
+  //   },
+  // ]
+
+  // const publishedContent = [
+  //   {
+  //     id: 4,
+  //     title: "Annual Science Fair Results",
+  //     author: "Dr. Sarah Johnson",
+  //     publishDate: "2024-01-15T09:00:00Z",
+  //     category: "Science",
+  //     views: 1250,
+  //     likes: 45,
+  //     comments: 12,
+  //     status: "published",
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "Student Art Exhibition 2024",
+  //     author: "James Wilson",
+  //     publishDate: "2024-01-10T14:00:00Z",
+  //     category: "Arts",
+  //     views: 2100,
+  //     likes: 78,
+  //     comments: 25,
+  //     status: "published",
+  //   },
+  //   {
+  //     id: 6,
+  //     title: "Basketball Team Championship Victory",
+  //     author: "Coach Martinez",
+  //     publishDate: "2024-01-08T11:30:00Z",
+  //     category: "Sports",
+  //     views: 1850,
+  //     likes: 92,
+  //     comments: 34,
+  //     status: "published",
+  //   },
+  // ]
 
   const categories = [
     { name: "Science", count: 12, color: "bg-blue-100 text-blue-800" },
@@ -118,7 +150,7 @@ export default function ContentManagerPage() {
     { name: "News", count: 20, color: "bg-orange-100 text-orange-800" },
     { name: "Academic", count: 10, color: "bg-indigo-100 text-indigo-800" },
     { name: "Events", count: 6, color: "bg-pink-100 text-pink-800" },
-  ]
+  ];
 
   const statusColors = {
     draft: "bg-gray-100 text-gray-800",
@@ -126,15 +158,17 @@ export default function ContentManagerPage() {
     pending: "bg-blue-100 text-blue-800",
     published: "bg-green-100 text-green-800",
     rejected: "bg-red-100 text-red-800",
-  }
+  };
 
   const statusIcons = {
-    draft: Clock,
-    review: Eye,
-    pending: Clock,
-    published: CheckCircle,
-    rejected: XCircle,
-  }
+    DRAFT: Clock,
+    PENDING_REVIEW: Eye,
+    PUBLISHED: Clock,
+    ARCHIVE: CheckCircle,
+    // rejected: XCircle,
+  };
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="space-y-6">
@@ -142,7 +176,9 @@ export default function ContentManagerPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">Content Manager</h1>
-          <p className="text-muted-foreground">Manage publications, drafts, and content categories</p>
+          <p className="text-muted-foreground">
+            Manage publications, drafts, and content categories
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Button asChild variant="outline">
@@ -170,7 +206,9 @@ export default function ContentManagerPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">156</p>
-                <p className="text-sm text-muted-foreground">Total Publications</p>
+                <p className="text-sm text-muted-foreground">
+                  Total Publications
+                </p>
               </div>
             </div>
           </CardContent>
@@ -248,7 +286,10 @@ export default function ContentManagerPage() {
                     <SelectItem value="pending">Pending</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <Select
+                  value={categoryFilter}
+                  onValueChange={setCategoryFilter}
+                >
                   <SelectTrigger className="w-full sm:w-48">
                     <SelectValue placeholder="Filter by category" />
                   </SelectTrigger>
@@ -266,42 +307,60 @@ export default function ContentManagerPage() {
 
           {/* Drafts List */}
           <div className="space-y-4">
-            {draftPublications.map((publication) => {
-              const StatusIcon = statusIcons[publication.status as keyof typeof statusIcons]
+            {toReview?.postToReview?.map((publication: any) => {
+              const StatusIcon =
+                statusIcons[publication.status as keyof typeof statusIcons];
               return (
-                <Card key={publication.id} className="hover:shadow-md transition-shadow">
+                <Card
+                  key={publication.pubId}
+                  className="hover:shadow-md transition-shadow"
+                >
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg font-semibold">{publication.title}</h3>
-                          <Badge className={statusColors[publication.status as keyof typeof statusColors]}>
+                          <h3 className="text-lg font-semibold">
+                            {publication.title}
+                          </h3>
+                          <Badge
+                            className={
+                              statusColors[
+                                publication.status as keyof typeof statusColors
+                              ]
+                            }
+                          >
                             <StatusIcon className="h-3 w-3 mr-1" />
-                            {publication.status}
+                            {publication?.status}
                           </Badge>
-                          <Badge variant="outline">{publication.category}</Badge>
+                          <Badge variant="outline">
+                            {publication.category}
+                          </Badge>
                         </div>
-                        <p className="text-muted-foreground mb-3">{publication.excerpt}</p>
+                        <p className="text-muted-foreground mb-3">
+                          {publication.excerpt}
+                        </p>
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <Avatar className="h-6 w-6">
                               <AvatarFallback className="text-xs">
-                                {publication.author
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")}
+                                {publication?.author?.firstName}
+                                {/* .split(" ")
+                                  .map((n: any) => n[0])
+                                  .join("")} */}
                               </AvatarFallback>
                             </Avatar>
-                            <span>{publication.author}</span>
+                            <span>{publication?.author?.firstName}</span>
                             <Badge variant="secondary" className="text-xs">
-                              {publication.authorRole}
+                              {publication?.author?.role}
                             </Badge>
                           </div>
                           <span className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
-                            {new Date(publication.lastModified).toLocaleDateString()}
+                            {new Date(
+                              publication.updatedAt
+                            ).toLocaleDateString()}
                           </span>
-                          <span>{publication.wordCount} words</span>
+                          {/* <span>{publication.wordCount} words</span> */}
                         </div>
                       </div>
                       <DropdownMenu>
@@ -313,15 +372,22 @@ export default function ContentManagerPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem>
-                            <Eye className="mr-2 h-4 w-4" />
-                            Preview
+                          <DropdownMenuItem asChild>
+                            <Link
+                              href={`/publications/${publication.pubId}`}
+                              className="flex items-center"
+                            >
+                              <Eye className="mr-2 h-4 w-4" />
+                              Preview
+                            </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Edit className="mr-2 h-4 w-4" />
                             Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleApprove(publication.pubId)}
+                          >
                             <CheckCircle className="mr-2 h-4 w-4" />
                             Approve & Publish
                           </DropdownMenuItem>
@@ -335,40 +401,45 @@ export default function ContentManagerPage() {
                     </div>
                   </CardContent>
                 </Card>
-              )
+              );
             })}
           </div>
         </TabsContent>
 
         <TabsContent value="published" className="space-y-6">
           <div className="space-y-4">
-            {publishedContent.map((content) => (
-              <Card key={content.id} className="hover:shadow-md transition-shadow">
+            {/* {publishedContent?.postToReview?.map((content: any) => (
+              <Card
+                key={content.pubId}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-lg font-semibold">{content.title}</h3>
+                        <h3 className="text-lg font-semibold">
+                          {content?.title}
+                        </h3>
                         <Badge className="bg-green-100 text-green-800">
                           <CheckCircle className="h-3 w-3 mr-1" />
                           Published
                         </Badge>
-                        <Badge variant="outline">{content.category}</Badge>
+                        <Badge variant="outline">{content?.category}</Badge>
                       </div>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
                         <div className="flex items-center gap-1">
                           <User className="h-4 w-4" />
-                          <span>{content.author}</span>
+                          <span>{content?.author?.firstName}</span>
                         </div>
                         <span className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
-                          {new Date(content.publishDate).toLocaleDateString()}
+                          {new Date(content.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>{content.views} views</span>
-                        <span>{content.likes} likes</span>
-                        <span>{content.comments} comments</span>
+                        <span>{content?.views} views</span>
+                        <span>{content?.pubLikes} likes</span>
+                        <span>{content?.pubComments} comments</span>
                       </div>
                     </div>
                     <DropdownMenu>
@@ -398,7 +469,7 @@ export default function ContentManagerPage() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            ))} */}
           </div>
         </TabsContent>
 
@@ -406,20 +477,29 @@ export default function ContentManagerPage() {
           <Card>
             <CardHeader>
               <CardTitle>Content Categories</CardTitle>
-              <CardDescription>Manage publication categories and their organization</CardDescription>
+              <CardDescription>
+                Manage publication categories and their organization
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {categories.map((category) => (
-                  <Card key={category.name} className="hover:shadow-md transition-shadow">
+                  <Card
+                    key={category.name}
+                    className="hover:shadow-md transition-shadow"
+                  >
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <h4 className="font-semibold">{category.name}</h4>
-                          <p className="text-sm text-muted-foreground">{category.count} publications</p>
+                          <p className="text-sm text-muted-foreground">
+                            {category.count} publications
+                          </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge className={category.color}>{category.count}</Badge>
+                          <Badge className={category.color}>
+                            {category.count}
+                          </Badge>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="icon">
@@ -453,5 +533,5 @@ export default function ContentManagerPage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

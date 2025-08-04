@@ -119,34 +119,6 @@ export function Header() {
                         </Link>
                       </DropdownMenuItem>
                     ))}
-                  {/* <DropdownMenuItem>
-                    <div className="flex flex-col gap-1">
-                      <p className="text-sm font-medium">
-                        New publication published
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Annual Science Fair Results - 2 hours ago
-                      </p>
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <div className="flex flex-col gap-1">
-                      <p className="text-sm font-medium">
-                        Forum reply received
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Someone replied to your post - 4 hours ago
-                      </p>
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <div className="flex flex-col gap-1">
-                      <p className="text-sm font-medium">New forum topic</p>
-                      <p className="text-xs text-muted-foreground">
-                        Tips for Better Study Habits - 6 hours ago
-                      </p>
-                    </div>
-                  </DropdownMenuItem>*/}
                 </DropdownMenuContent>
               </DropdownMenu>
 

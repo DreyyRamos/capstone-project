@@ -19,7 +19,7 @@ import {
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
-import { usePostByIdQuery } from "@/hooks/usePost";
+import { useFetchOnePostQuery } from "@/hooks/usePost";
 import Cookies from "js-cookie";
 
 type PageProps = {
@@ -30,81 +30,81 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const [newComment, setNewComment] = useState("");
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  // const { isOpen, action, redirectTo, requireAuth, closeModal } =
-  //   useAuthModal();
+  const { isOpen, action, redirectTo, requireAuth, closeModal } =
+    useAuthModal();
 
   const { id } = use(params);
 
   const token = Cookies.get("token") || "";
-  const { data: publication, isLoading, isError } = usePostByIdQuery(token, id);
-  // const comments = [
-  //   {
-  //     id: 1,
-  //     content:
-  //       "Congratulations to all the winners! The projects sound absolutely fascinating, especially Sarah's work on microplastics. It's great to see students tackling such important environmental issues.",
-  //     author: "Jennifer Martinez",
-  //     authorRole: "Parent",
-  //     date: "2024-01-20T10:30:00Z",
-  //     likes: 12,
-  //     replies: [
-  //       {
-  //         id: 11,
-  //         content:
-  //           "I completely agree! As a marine biology teacher, I'm particularly excited about Sarah's research. These are the kinds of projects that can make a real difference.",
-  //         author: "Mr. Thompson",
-  //         authorRole: "Teacher",
-  //         date: "2024-01-20T11:15:00Z",
-  //         likes: 8,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     content:
-  //       "So proud of our students! Michael's sustainable battery project caught my attention - this could have real commercial applications. Has anyone reached out to local tech companies about potential internships?",
-  //     author: "Robert Chen",
-  //     authorRole: "Alumni",
-  //     date: "2024-01-20T14:20:00Z",
-  //     likes: 15,
-  //     replies: [],
-  //   },
-  //   {
-  //     id: 3,
-  //     content:
-  //       "The Science Fair was amazing this year! As a student who participated, I can say the level of competition was incredible. Congratulations to all the winners - you truly deserved it!",
-  //     author: "Alex Rivera",
-  //     authorRole: "Student",
-  //     date: "2024-01-20T16:45:00Z",
-  //     likes: 7,
-  //     replies: [
-  //       {
-  //         id: 31,
-  //         content:
-  //           "What was your project about, Alex? I'd love to hear more about the student perspective!",
-  //         author: "Ms. Johnson",
-  //         authorRole: "Teacher",
-  //         date: "2024-01-20T17:30:00Z",
-  //         likes: 3,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 4,
-  //     content:
-  //       "This is exactly why I love working at Lincoln High. Our students consistently demonstrate such creativity and scientific rigor. Looking forward to seeing how our representatives do at State!",
-  //     author: "Principal Davis",
-  //     authorRole: "Principal",
-  //     date: "2024-01-21T08:00:00Z",
-  //     likes: 24,
-  //     replies: [],
-  //   },
-  // ];
+  const { data: publication, isLoading, isError } = useFetchOnePostQuery(id);
+  const comments = [
+    {
+      id: 1,
+      content:
+        "Congratulations to all the winners! The projects sound absolutely fascinating, especially Sarah's work on microplastics. It's great to see students tackling such important environmental issues.",
+      author: "Jennifer Martinez",
+      authorRole: "Parent",
+      date: "2024-01-20T10:30:00Z",
+      likes: 12,
+      replies: [
+        {
+          id: 11,
+          content:
+            "I completely agree! As a marine biology teacher, I'm particularly excited about Sarah's research. These are the kinds of projects that can make a real difference.",
+          author: "Mr. Thompson",
+          authorRole: "Teacher",
+          date: "2024-01-20T11:15:00Z",
+          likes: 8,
+        },
+      ],
+    },
+    {
+      id: 2,
+      content:
+        "So proud of our students! Michael's sustainable battery project caught my attention - this could have real commercial applications. Has anyone reached out to local tech companies about potential internships?",
+      author: "Robert Chen",
+      authorRole: "Alumni",
+      date: "2024-01-20T14:20:00Z",
+      likes: 15,
+      replies: [],
+    },
+    {
+      id: 3,
+      content:
+        "The Science Fair was amazing this year! As a student who participated, I can say the level of competition was incredible. Congratulations to all the winners - you truly deserved it!",
+      author: "Alex Rivera",
+      authorRole: "Student",
+      date: "2024-01-20T16:45:00Z",
+      likes: 7,
+      replies: [
+        {
+          id: 31,
+          content:
+            "What was your project about, Alex? I'd love to hear more about the student perspective!",
+          author: "Ms. Johnson",
+          authorRole: "Teacher",
+          date: "2024-01-20T17:30:00Z",
+          likes: 3,
+        },
+      ],
+    },
+    {
+      id: 4,
+      content:
+        "This is exactly why I love working at Lincoln High. Our students consistently demonstrate such creativity and scientific rigor. Looking forward to seeing how our representatives do at State!",
+      author: "Principal Davis",
+      authorRole: "Principal",
+      date: "2024-01-21T08:00:00Z",
+      likes: 24,
+      replies: [],
+    },
+  ];
 
-  // const handleLike = () => {
-  //   if (requireAuth("like this publication")) {
-  //     setIsLiked(!isLiked);
-  //   }
-  // };
+  const handleLike = () => {
+    if (requireAuth("like this publication")) {
+      setIsLiked(!isLiked);
+    }
+  };
 
   // const handleBookmark = () => {
   //   if (requireAuth("bookmark this publication")) {
@@ -112,14 +112,14 @@ export default function PublicationDetailPage({ params }: PageProps) {
   //   }
   // };
 
-  // const handleComment = () => {
-  //   if (requireAuth("comment on this publication")) {
-  //     if (newComment.trim()) {
-  //       console.log("Adding comment:", newComment);
-  //       setNewComment("");
-  //     }
-  //   }
-  // };
+  const handleComment = () => {
+    if (requireAuth("comment on this publication")) {
+      if (newComment.trim()) {
+        console.log("Adding comment:", newComment);
+        setNewComment("");
+      }
+    }
+  };
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -131,12 +131,12 @@ export default function PublicationDetailPage({ params }: PageProps) {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* <AuthModal
+      <AuthModal
         isOpen={isOpen}
         onClose={closeModal}
         action={action}
         redirectTo={redirectTo}
-      /> */}
+      />
 
       {/* Back Button */}
       <Button asChild variant="ghost">
@@ -192,7 +192,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
               <Button
                 variant="outline"
                 size="sm"
-                // onClick={handleLike}
+                onClick={handleLike}
                 className={
                   isLiked ? "bg-red-50 text-red-600 border-red-200" : ""
                 }
@@ -259,7 +259,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
 
       {/* Comments Section */}
       <div className="space-y-6">
-        {/* <h2 className="text-2xl font-bold">Comments ({comments.length})</h2> */}
+        <h2 className="text-2xl font-bold">Comments ({comments.length})</h2>
 
         {/* Comment Form */}
         <Card>
@@ -275,12 +275,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
                 <p className="text-sm text-muted-foreground">
                   Be respectful and constructive in your comments
                 </p>
-                <Button
-                  onClick={() => {
-                    console.log("handle comments here");
-                  }}
-                  disabled={!newComment.trim()}
-                >
+                <Button onClick={handleComment} disabled={!newComment.trim()}>
                   Post Comment
                 </Button>
               </div>
@@ -290,7 +285,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
 
         {/* Comments List */}
         <div className="space-y-4">
-          {/* {comments.map((comment) => (
+          {comments.map((comment) => (
             <Card key={comment.id}>
               <CardContent className="p-6">
                 <div className="space-y-4">
@@ -320,7 +315,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => requireAuth("like this comment")}
+                          onClick={handleComment}
                         >
                           <Heart className="mr-1 h-3 w-3" />
                           {comment.likes}
@@ -328,16 +323,16 @@ export default function PublicationDetailPage({ params }: PageProps) {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => requireAuth("reply to this comment")}
+                          onClick={handleComment}
                         >
                           Reply
                         </Button>
                       </div>
                     </div>
-                  </div> */}
+                  </div>
 
-          {/* Replies */}
-          {/* {comment.replies && comment.replies.length > 0 && (
+                  {/* Replies */}
+                  {comment.replies && comment.replies.length > 0 && (
                     <div className="ml-14 space-y-4 border-l-2 border-muted pl-4">
                       {comment.replies.map((reply) => (
                         <div key={reply.id} className="flex items-start gap-4">
@@ -368,7 +363,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => requireAuth("like this reply")}
+                                onClick={handleLike}
                               >
                                 <Heart className="mr-1 h-3 w-3" />
                                 {reply.likes}
@@ -376,9 +371,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() =>
-                                  requireAuth("reply to this comment")
-                                }
+                                onClick={handleComment}
                               >
                                 Reply
                               </Button>
@@ -391,7 +384,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
                 </div>
               </CardContent>
             </Card>
-          ))} */}
+          ))}
         </div>
 
         {/* Load More Comments */}

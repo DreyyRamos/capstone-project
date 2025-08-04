@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
   try {
     const posts = await prisma.publication.findMany({
       orderBy: { createdAt: "desc" },
+      where: { status: "PUBLISHED" },
       include: {
         author: {
           select: {
