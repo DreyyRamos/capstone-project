@@ -110,3 +110,18 @@ export const deletePost = async (token: string, postId: string) => {
   if (!response.ok) throw new Error("Failed to delete post");
   return response.json();
 };
+
+
+export const makeIsFeatured = async (token: string, postId: string) => {
+  const response = await fetch(
+    `/api/publications/isFeatured/makeFeature/${postId}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  if (!response.ok) throw new Error("Failed to delete post");
+  return response.json();
+};

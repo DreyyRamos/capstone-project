@@ -35,11 +35,13 @@ export const usePostQuery = (token: string) => {
 
   // Mutation to create a new post
   const mutation = useMutation({
-    mutationFn: (postData: Publication) => createPost(token, postData),
+    mutationFn: async (postData: Publication) =>
+      await createPost(token, postData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
 
@@ -82,7 +84,7 @@ export const useFeaturedPostsQuery = () => {
 
 export const useFetchOnePostQuery = (postId: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
-    queryKey: ["post", postId],
+    queryKey: ["pub", postId],
     queryFn: () => fetchPubById(postId),
     enabled: !!postId,
   });
@@ -111,7 +113,7 @@ export const usePostByIdQuery = (token: string, postId: string) => {
       // Invalidate both the specific post and the posts list
       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
-      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
     },
   });

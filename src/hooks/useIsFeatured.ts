@@ -1,14 +1,15 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { markAsRead } from "@/services/notification";
+import { makeIsFeatured } from "@/services/publication";
 
-export const useNotificationQuery = (token: string) => {
+export const useIsFeatured = (token: string) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (id: string) => markAsRead(id, token),
+    mutationFn: (id: string) => makeIsFeatured(token, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["pub"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
     },
@@ -24,8 +25,8 @@ export const useNotificationQuery = (token: string) => {
     // refetch,
 
     // Mutation functions
-    markAsRead: mutation.mutate,
-    isCreating: mutation.isPending,
+    makeFeatured: mutation.mutate,
+    isLoading: mutation.isPending,
     createError: mutation.error,
     createSuccess: mutation.isSuccess,
     createReset: mutation.reset,

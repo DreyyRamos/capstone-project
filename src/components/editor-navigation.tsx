@@ -34,9 +34,8 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Publications", href: "/publications", icon: BookOpen },
   { name: "Forum", href: "/forum", icon: MessageSquare },
-  { name: "Analytics", href: "/analytics", icon: TrendingUp },
   { name: "Content Manager", href: "/content", icon: FolderOpen },
-]
+];
 
 const quickActions = [
   { name: "New Publication", href: "/publications/create", icon: FileText },

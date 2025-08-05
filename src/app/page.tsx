@@ -13,7 +13,8 @@ import {
   Eye,
 } from "lucide-react";
 import Link from "next/link";
-import { useFeaturedPostsQuery } from "@/hooks/usePost";
+import { useFeaturedPostsQuery, usePostQuery } from "@/hooks/usePost";
+import Cookies from "js-cookie";
 
 interface Author {
   id: string;
@@ -62,7 +63,13 @@ export default function HomePage() {
   //   },
   // ]
 
+  const token = Cookies.get("token") || "";
+
   const { data: featuredPublications, isLoading } = useFeaturedPostsQuery();
+  const { data: publications, isLoading: publicationLoading } =
+    usePostQuery(token);
+
+  console.log("pubs from usePostQuery", publications);
 
   if (isLoading) {
     return <div>Loading publications...</div>; // Or a custom spinner component
@@ -97,60 +104,51 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <BookOpen className="h-6 w-6 text-blue-600" />
+      {token && (
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-100 rounded-lg">
+                  <BookOpen className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">
+                    {publications?.posts?.length}
+                  </p>
+                  <p className="text-sm text-muted-foreground">Publications</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold">156</p>
-                <p className="text-sm text-muted-foreground">Publications</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-green-100 rounded-lg">
+                  <MessageSquare className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">89</p>
+                  <p className="text-sm text-muted-foreground">Forum Topics</p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <MessageSquare className="h-6 w-6 text-green-600" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-purple-100 rounded-lg">
+                  <Users className="h-6 w-6 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">1,247</p>
+                  <p className="text-sm text-muted-foreground">Active Users</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold">89</p>
-                <p className="text-sm text-muted-foreground">Forum Topics</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <Users className="h-6 w-6 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">1,247</p>
-                <p className="text-sm text-muted-foreground">Active Users</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-orange-100 rounded-lg">
-                <TrendingUp className="h-6 w-6 text-orange-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">12.5k</p>
-                <p className="text-sm text-muted-foreground">Monthly Views</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
+            </CardContent>
+          </Card>
+        </section>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Featured Publications */}

@@ -14,7 +14,7 @@ export const useUserQuery = (token: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["users", token],
     queryFn: async () => await fetchCurrentUser(token),
-    refetchOnWindowFocus: false,
+    // refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchInterval: false,

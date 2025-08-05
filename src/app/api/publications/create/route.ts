@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authMiddleware } from "../../(middlware)/authMiddleware";
 import prisma from "@/lib/prisma"; // Assuming prisma client path
-// import { Role } from "@prisma/client"; // It's good practice to import your enums
+import { Role } from "@/generated/prisma";
 
-enum Role {
-  "ADMIN",
-  "EDITOR",
-  "MODERATOR",
-  "STUDENT"
-}
+// enum Role {
+//   "ADMIN",
+//   "EDITOR",
+//   "MODERATOR",
+//   "STUDENT"
+// }
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
           tags,
           category,
           isFeatured,
-          status: ('PENDING_REVIEW'),
+          status: "PENDING_REVIEW",
           author: {
             connect: { id: authorId },
           },
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
             {
               // Condition 2: Any user whose role array contains 'EDITOR'
               role: {
-                has: "EDITOR",
+                has: Role.EDITOR,
               },
             },
           ],
@@ -72,13 +72,13 @@ export async function POST(req: NextRequest) {
       if (usersToNotify.length > 0) {
         const notificationData = usersToNotify.map((user) => {
           // Check if the user has the EDITOR role
-          const isEditor = user.role.includes("EDITOR");
+          const isEditor = user.role.includes(Role.EDITOR);
 
           // Customize notification content based on the role
           const notifTitle = isEditor
             ? "Publication for Review"
             : "New Publication!";
-            
+
           const notifContent = isEditor
             ? `A new publication titled "${publication.title}" is ready for review.`
             : `A new article titled "${publication.title}" has been posted.`;

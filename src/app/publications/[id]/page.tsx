@@ -13,13 +13,21 @@ import {
   Flag,
   ArrowLeft,
   Clock,
-  Bookmark,
   Eye,
+  Star,
 } from "lucide-react";
+import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
 import { useFetchOnePostQuery } from "@/hooks/usePost";
+import { useTokenUser } from "@/hooks/useTokenUser";
+import { useIsFeatured } from "@/hooks/useIsFeatured";
 import Cookies from "js-cookie";
 
 type PageProps = {
@@ -37,6 +45,9 @@ export default function PublicationDetailPage({ params }: PageProps) {
 
   const token = Cookies.get("token") || "";
   const { data: publication, isLoading, isError } = useFetchOnePostQuery(id);
+  const { makeFeatured, isLoading: isCurrentlyLoading } = useIsFeatured(token);
+  const { user, isAuthenticated } = useTokenUser();
+  const userRoles = user?.roles || user?.role || [];
   const comments = [
     {
       id: 1,
@@ -106,11 +117,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
     }
   };
 
-  // const handleBookmark = () => {
-  //   if (requireAuth("bookmark this publication")) {
-  //     setIsBookmarked(!isBookmarked);
-  //   }
-  // };
+  const handleMakeFeature = (id: string) => {
+    if (requireAuth("feature this publication")) {
+      makeFeatured(id);
+    }
+  };
 
   const handleComment = () => {
     if (requireAuth("comment on this publication")) {
@@ -206,18 +217,46 @@ export default function PublicationDetailPage({ params }: PageProps) {
                 <Share2 className="mr-2 h-4 w-4" />
                 Share
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                // onClick={handleBookmark}
-                className={
-                  isBookmarked ? "bg-blue-50 text-blue-600 border-blue-200" : ""
-                }
-              >
-                <Bookmark
-                  className={`h-4 w-4 ${isBookmarked ? "fill-current" : ""}`}
-                />
-              </Button>
+              {(userRoles?.includes("EDITOR") ||
+                userRoles?.includes("ADMIN")) &&
+                !["DRAFT", "PENDING_REVIEW", "ARCHIVED"].includes(
+                  publication?.status
+                ) && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={isCurrentlyLoading}
+                        onClick={() => {
+                          if (publication?.isFeatured) {
+                            handleMakeFeature(publication.pubId);
+                            toast(
+                              "Publication has been removed from featured!"
+                            );
+                          } else {
+                            handleMakeFeature(publication.pubId);
+                            toast("Publication has been marked as featured!");
+                          }
+                        }}
+                        className={
+                          isBookmarked
+                            ? "bg-blue-50 text-blue-600 border-blue-200"
+                            : ""
+                        }
+                      >
+                        <Star
+                          className={`h-4 w-4 ${
+                            publication?.isFeatured ? "fill-current" : ""
+                          }`}
+                        />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Add to Features</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
               <Button variant="outline" size="sm">
                 <Flag className="h-4 w-4" />
               </Button>

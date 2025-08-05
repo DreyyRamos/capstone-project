@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 // import { RoleProvider } from "@/contexts/role-context";
+import { Toaster } from "@/components/ui/sonner";
 import { RoleBasedLayout } from "@/components/role-based-layout";
 import ReactQueryProvider from "@/utils/ReactQueryProvider";
 
@@ -30,7 +31,8 @@ export default function RootLayout({
         >
           <ReactQueryProvider>
             {/* <RoleProvider> */}
-              <RoleBasedLayout>{children}</RoleBasedLayout>
+            <RoleBasedLayout>{children}</RoleBasedLayout>
+            <Toaster />
             {/* </RoleProvider> */}
           </ReactQueryProvider>
         </ThemeProvider>

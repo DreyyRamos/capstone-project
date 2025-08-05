@@ -18,19 +18,20 @@ export const useEditorQuery = (token: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["to-review"],
     queryFn: async () => await fetchToReviewPubs(token),
-    refetchOnWindowFocus: false,
+    // refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchInterval: false,
   });
 
-  // Mutation to create a new post
+  // Mutation to approve a new post
   const mutation = useMutation({
     mutationFn: async (postId: string) => await approvePost(token, postId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
 

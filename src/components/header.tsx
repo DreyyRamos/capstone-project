@@ -101,6 +101,7 @@ export function Header() {
                   <DropdownMenuSeparator />
                   {user?.userData?.notifications
                     ?.filter((n: any) => !n.isRead)
+                    .reverse()
                     .map((notif: any) => (
                       <DropdownMenuItem key={notif.notifId}>
                         <Link

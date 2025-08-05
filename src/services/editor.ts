@@ -83,9 +83,10 @@ export const approvePost = async (
   const response = await fetch(`/api/publications/editor/toReview/${postId}`, {
     method: "PUT",
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    // body: JSON.stringify(postId),
+    body: JSON.stringify({ status: "PUBLISHED" }),
   });
   if (!response.ok) throw new Error("Error in updating post");
   return response.json();
