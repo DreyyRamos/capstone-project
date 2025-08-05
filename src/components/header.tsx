@@ -23,11 +23,10 @@ import {
   LogIn,
 } from "lucide-react";
 import { useTheme } from "next-themes";
-// import { useRole } from "@/contexts/role-context";
-// import { RoleSwitcher } from "@/components/role-switcher";
 import Link from "next/link";
-import { useUserQuery } from "@/hooks/useUser";
 import Cookies from "js-cookie";
+
+import { useUserQuery } from "@/hooks/useUser";
 import { timeAgo } from "@/lib/timeAgo";
 import { useNotificationQuery } from "@/hooks/useNotification";
 
@@ -36,15 +35,19 @@ export function Header() {
 
   const token = Cookies.get("token") || "";
   const { data: user } = useUserQuery(token);
-  // const { user, logout } = useRole();
+  const { markAsRead, markAllAsRead } = useNotificationQuery(token);
 
-  console.log("user", user);
-
-  const { markAsRead } = useNotificationQuery(token);
+  const handleMarkAllAsRead = () => {
+    if (markAllAsRead) {
+      markAllAsRead.mutate();
+    }
+  };
+  const unreadNotifications =
+    user?.userData?.notifications?.filter((n: any) => !n.isRead) || [];
+  const unreadCount = unreadNotifications.length;
 
   const handleLogout = () => {
     Cookies.remove("token");
-    // Optionally redirect to home page
     window.location.href = "/login";
   };
 
@@ -59,10 +62,6 @@ export function Header() {
         </Link>
 
         <div className="flex items-center gap-4">
-          {/* Role Switcher - Only show for authenticated users */}
-          {/* {user && <RoleSwitcher />} */}
-
-          {/* Search */}
           <div className="relative hidden md:block">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -71,7 +70,6 @@ export function Header() {
             />
           </div>
 
-          {/* Theme Toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -84,26 +82,39 @@ export function Header() {
 
           {user ? (
             <>
-              {/* Notifications */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="relative">
                     <Bell className="h-4 w-4" />
-                    <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                      {user?.userData?.notifications?.filter(
-                        (n: any) => !n.isRead
-                      ).length ?? 0}
-                    </Badge>
+                    {/* Use the pre-calculated count */}
+                    {unreadCount > 0 && (
+                      <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                        {unreadCount}
+                      </Badge>
+                    )}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-80">
-                  <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                  {/* 4. Add a header with the "Mark all as read" button */}
+                  <div className="flex items-center justify-between px-2 py-1.5">
+                    <DropdownMenuLabel className="p-0">
+                      Notifications
+                    </DropdownMenuLabel>
+                    {unreadCount > 0 && (
+                      <Button
+                        variant="link"
+                        className="h-auto p-0 text-xs"
+                        onClick={handleMarkAllAsRead}
+                      >
+                        Mark all as read
+                      </Button>
+                    )}
+                  </div>
                   <DropdownMenuSeparator />
-                  {user?.userData?.notifications
-                    ?.filter((n: any) => !n.isRead)
-                    .reverse()
-                    .map((notif: any) => (
-                      <DropdownMenuItem key={notif.notifId}>
+                  {/* 5. Update the list logic */}
+                  {unreadCount > 0 ? (
+                    unreadNotifications.reverse().map((notif: any) => (
+                      <DropdownMenuItem key={notif.notifId} asChild>
                         <Link
                           href={`/publications/${notif.pubNotifId}`}
                           onClick={() => markAsRead(notif.notifId)}
@@ -119,7 +130,14 @@ export function Header() {
                           </div>
                         </Link>
                       </DropdownMenuItem>
-                    ))}
+                    ))
+                  ) : (
+                    <DropdownMenuItem disabled>
+                      <p className="text-sm text-muted-foreground">
+                        No new notifications
+                      </p>
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
 
@@ -139,10 +157,7 @@ export function Header() {
                         alt={user?.userData?.firstName || "User"}
                       />
                       <AvatarFallback>
-                        {user?.userData?.firstName}
-                        {/* ?.split(" ")
-                           .map((n) => n[0])
-                           .join("") || "U"} */}
+                        {user?.userData?.firstName?.[0] || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -180,7 +195,6 @@ export function Header() {
               </DropdownMenu>
             </>
           ) : (
-            /* Login Button for unauthenticated users */
             <Button asChild>
               <Link href="/login">
                 <LogIn className="mr-2 h-4 w-4" />

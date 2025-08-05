@@ -19,7 +19,7 @@ export const useEditorQuery = (token: string) => {
     queryKey: ["to-review"],
     queryFn: async () => await fetchToReviewPubs(token),
     // refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnReconnect: false,
     refetchInterval: false,
   });

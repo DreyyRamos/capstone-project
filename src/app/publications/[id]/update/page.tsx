@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,12 +26,21 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Upload, X, Eye, Save } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { usePostQuery } from "@/hooks/usePost";
+import {
+  usePostQuery,
+  useFetchOnePostQuery,
+  usePostByIdQuery,
+} from "@/hooks/usePost";
 import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import Tiptap from "@/components/tiptap";
 
-export default function CreatePublicationPage() {
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default function UpdatePublicationPage({ params }: PageProps) {
+  const { id } = use(params);
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -42,12 +51,11 @@ export default function CreatePublicationPage() {
   });
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-  // const [isFeatured, setIsFeatured] = useState(false);
   const [isDraft, setIsDraft] = useState(true);
-  // const [imageUrl, setImageUrl] = useState<string | null>(null);
   const router = useRouter();
   const token = Cookies.get("token") || "";
-  const { createPost, isCreating, createSuccess } = usePostQuery(token);
+  const { data: pubToUpdate } = useFetchOnePostQuery(id);
+  const { updatePost, isUpdating, updateSuccess } = usePostByIdQuery(token, id);
 
   const categories = [
     "Science",
@@ -62,6 +70,20 @@ export default function CreatePublicationPage() {
     "Health",
     "Community",
   ];
+
+  useEffect(() => {
+    if (pubToUpdate) {
+      setFormData({
+        title: pubToUpdate.title || "",
+        excerpt: pubToUpdate.excerpt || "",
+        content: pubToUpdate.content || "",
+        imageUrl: pubToUpdate.imageUrl || "",
+        isFeatured: pubToUpdate.isFeatured ?? false,
+        category: pubToUpdate.category || "",
+      });
+      setTags(pubToUpdate.tags || []);
+    }
+  }, [pubToUpdate]);
 
   const handleAddTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
@@ -84,14 +106,14 @@ export default function CreatePublicationPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      createPost({
+      await updatePost({
         ...formData,
         tags,
         imageUrl: formData.imageUrl ?? "",
       });
 
-      if (createSuccess) {
-        router.push("/");
+      if (updateSuccess) {
+        router.push("/content");
       }
     } catch (error: any) {
       console.error(error);
@@ -171,6 +193,7 @@ export default function CreatePublicationPage() {
                     id="title"
                     placeholder="Enter publication title..."
                     name="title"
+                    value={formData.title}
                     onChange={handleChange}
                   />
                 </div>
@@ -181,6 +204,7 @@ export default function CreatePublicationPage() {
                     id="excerpt"
                     placeholder="Brief summary or excerpt (optional)..."
                     name="excerpt"
+                    value={formData.excerpt}
                     onChange={handleTextAreaChange}
                     rows={3}
                   />
@@ -256,25 +280,15 @@ export default function CreatePublicationPage() {
                   description={formData.content}
                   onChange={handleContentChange}
                 />
-                {/* <Textarea
-                  placeholder="Write your publication content here..."
-                  name="content"
-                  onChange={handleTextAreaChange}
-                  rows={15}
-                  className="min-h-[400px]"
-                />
-                <p className="text-sm text-muted-foreground mt-2">
-                  You can use basic HTML formatting in your content
-                </p> */}
               </CardContent>
               <Button
                 type="submit"
                 variant="outline"
                 className="w-full bg-transparent"
-                disabled={isCreating}
+                disabled={isUpdating}
               >
                 <Save className="mr-2 h-4 w-4" />
-                Publish
+                Update
               </Button>
             </Card>
           </div>
@@ -292,7 +306,6 @@ export default function CreatePublicationPage() {
                   <Select
                     value={formData.category}
                     onValueChange={handleSelectChange}
-                    required
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select category" />

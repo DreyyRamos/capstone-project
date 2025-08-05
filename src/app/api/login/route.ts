@@ -21,6 +21,8 @@ export async function POST(req: Request) {
     const token = signToken({
       id: user.id,
       email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
       role: user.role,
     });
     return NextResponse.json({ user, token }, { status: 200 });

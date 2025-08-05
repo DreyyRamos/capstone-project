@@ -89,13 +89,16 @@ export const updatePost = async (
   postId: string,
   newData: Publication
 ) => {
-  const response = await fetch(`/api/publications/${postId}`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(newData),
-  });
+  const response = await fetch(
+    `/api/publications/editor/toReview/${postId}/update`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(newData),
+    }
+  );
   if (!response.ok) throw new Error("Error in updating post");
   return response.json();
 };
