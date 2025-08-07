@@ -3,6 +3,7 @@ import {
   fetchAllPubs,
   fetchPubById,
   fetchFeaturedPubs,
+  fetchArchivedPubs,
   likePub,
   addCommentPub,
   createPost,
@@ -70,6 +71,23 @@ export const useFeaturedPostsQuery = () => {
 
     // The query function is the service you already created
     queryFn: fetchFeaturedPubs,
+
+    // refetchOnWindowFocus: false,
+    // refetchOnMount: false,
+    // refetchOnReconnect: false,
+    // refetchInterval: false,
+  });
+
+  return { data, isLoading, isError, error, refetch };
+};
+
+export const useArchivedPostsQuery = (token: string) => {
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    // A unique query key to cache this data separately from all posts
+    queryKey: ["archived-pubs"],
+
+    // The query function is the service you already created
+    queryFn: async () => await fetchArchivedPubs(token),
 
     // refetchOnWindowFocus: false,
     // refetchOnMount: false,

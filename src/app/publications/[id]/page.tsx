@@ -22,6 +22,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import LikeButton from "@/components/like-button";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
@@ -132,6 +133,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
     }
   };
 
+  console.log("publication check for like", publication);
+
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
     // You could show a toast notification here
@@ -200,7 +203,9 @@ export default function PublicationDetailPage({ params }: PageProps) {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button
+              <LikeButton post={publication} token={token} />
+              {/* {publication?.} */}
+              {/* <Button
                 variant="outline"
                 size="sm"
                 onClick={handleLike}
@@ -212,7 +217,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
                   className={`mr-2 h-4 w-4 ${isLiked ? "fill-current" : ""}`}
                 />
                 {publication?.likes + (isLiked ? 1 : 0)}
-              </Button>
+              </Button> */}
               <Button variant="outline" size="sm" onClick={handleShare}>
                 <Share2 className="mr-2 h-4 w-4" />
                 Share
@@ -290,7 +295,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
             </span>
             <span className="flex items-center gap-1">
               <Heart className="h-4 w-4" />
-              {publication?.pubLikes} likes
+              {publication?.pubLikes?.length ?? 0} likes
             </span>
           </div>
         </div>

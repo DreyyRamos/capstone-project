@@ -92,6 +92,46 @@ export const approvePost = async (
   return response.json();
 };
 
+export const archivePost = async (
+  token: string,
+  postId: string
+  //   newData: any
+) => {
+  const response = await fetch(
+    `/api/publications/editor/toReview/${postId}/archive`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status: "ARCHIVED" }),
+    }
+  );
+  if (!response.ok) throw new Error("Error in updating post");
+  return response.json();
+};
+
+export const restoreArchivePost = async (
+  token: string,
+  postId: string
+  //   newData: any
+) => {
+  const response = await fetch(
+    `/api/publications/editor/toReview/${postId}/restore-archived`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status: "PENDING_REVIEW" }),
+    }
+  );
+  if (!response.ok) throw new Error("Error in updating post");
+  return response.json();
+};
+
 export const deletePost = async (token: string, postId: string) => {
   const response = await fetch(`/api/publications/${postId}`, {
     method: "DELETE",

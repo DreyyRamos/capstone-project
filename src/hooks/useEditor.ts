@@ -1,5 +1,10 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { fetchToReviewPubs, approvePost } from "@/services/editor";
+import {
+  fetchToReviewPubs,
+  approvePost,
+  archivePost,
+  restoreArchivePost,
+} from "@/services/editor";
 
 interface Publication {
   title: string;
@@ -35,6 +40,29 @@ export const useEditorQuery = (token: string) => {
     },
   });
 
+  const archiveMutation = useMutation({
+    mutationFn: (postId: string) => archivePost(token, postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["archived-pubs"] });
+    },
+  });
+
+  const restoreArchiveMutation = useMutation({
+    mutationFn: async (postId: string) =>
+      await restoreArchivePost(token, postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["archived-pubs"] });
+    },
+  });
+
   return {
     // Query results
     data,
@@ -50,6 +78,19 @@ export const useEditorQuery = (token: string) => {
     createError: mutation.error,
     createSuccess: mutation.isSuccess,
     createReset: mutation.reset,
+
+    // archive mutation function
+    archive: archiveMutation.mutate,
+    isArchiving: archiveMutation.isPending,
+    archiveError: archiveMutation.error,
+    archiveSuccess: archiveMutation.isSuccess,
+    archiveReset: archiveMutation.reset,
+
+    restoreArchive: restoreArchiveMutation.mutate,
+    isRestoring: restoreArchiveMutation.isPending,
+    restoringError: restoreArchiveMutation.error,
+    restoringSuccess: restoreArchiveMutation.isSuccess,
+    restoringReset: restoreArchiveMutation.reset,
   };
 
   // export const useFeaturedPostsQuery = () => {

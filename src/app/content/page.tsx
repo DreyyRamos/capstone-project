@@ -35,6 +35,7 @@ import {
 import { useEditorQuery } from "@/hooks/useEditor";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import { usePostQuery, useArchivedPostsQuery } from "@/hooks/usePost";
 
 interface Publication {
   title: string;
@@ -59,13 +60,31 @@ export default function ContentManagerPage() {
   const [categoryFilter, setCategoryFilter] = useState("all");
 
   const token = Cookies.get("token") || "";
-  const { data: toReview, isLoading, approve } = useEditorQuery(token);
+  const {
+    data: toReview,
+    isLoading,
+    approve,
+    archive,
+    restoreArchive,
+  } = useEditorQuery(token);
+
+  const { data: publishedContent } = usePostQuery(token);
+  const { data: archivedPost } = useArchivedPostsQuery(token);
 
   console.log("data to review", toReview);
+  console.log("archived check", archivedPost);
 
   const handleApprove = async (postId: string) => {
     try {
       await approve(postId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleArchive = async (postId: string) => {
+    try {
+      await archive(postId);
     } catch (error) {
       console.error(error);
     }
@@ -164,7 +183,7 @@ export default function ContentManagerPage() {
     DRAFT: Clock,
     PENDING_REVIEW: Eye,
     PUBLISHED: Clock,
-    ARCHIVE: CheckCircle,
+    ARCHIVED: CheckCircle,
     // rejected: XCircle,
   };
 
@@ -258,6 +277,7 @@ export default function ContentManagerPage() {
         <TabsList>
           <TabsTrigger value="drafts">Drafts & Review</TabsTrigger>
           <TabsTrigger value="published">Published Content</TabsTrigger>
+          <TabsTrigger value="archived">Archived Content</TabsTrigger>
           <TabsTrigger value="categories">Categories</TabsTrigger>
         </TabsList>
 
@@ -397,9 +417,12 @@ export default function ContentManagerPage() {
                             Approve & Publish
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem
+                            onClick={() => handleArchive(publication.pubId)}
+                            className="text-red-600"
+                          >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
+                            Archive Post
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -413,7 +436,7 @@ export default function ContentManagerPage() {
 
         <TabsContent value="published" className="space-y-6">
           <div className="space-y-4">
-            {/* {publishedContent?.postToReview?.map((content: any) => (
+            {publishedContent?.posts?.map((content: any) => (
               <Card
                 key={content.pubId}
                 className="hover:shadow-md transition-shadow"
@@ -456,13 +479,23 @@ export default function ContentManagerPage() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                          <Eye className="mr-2 h-4 w-4" />
-                          View
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href={`/publications/${content?.pubId}`}
+                            className="flex items-center"
+                          >
+                            <Eye className="mr-2 h-4 w-4" />
+                            View
+                          </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Edit className="mr-2 h-4 w-4" />
-                          Edit
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href={`/publications/${content?.pubId}/update`}
+                            className="flex items-center"
+                          >
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-red-600">
@@ -474,7 +507,116 @@ export default function ContentManagerPage() {
                   </div>
                 </CardContent>
               </Card>
-            ))} */}
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="archived" className="space-y-6">
+          <div className="space-y-4">
+            {archivedPost?.map((publication: any) => {
+              const StatusIcon =
+                statusIcons[publication.status as keyof typeof statusIcons];
+              return (
+                <Card
+                  key={publication.pubId}
+                  className="hover:shadow-md transition-shadow"
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="text-lg font-semibold">
+                            {publication.title}
+                          </h3>
+                          <Badge
+                            className={
+                              statusColors[
+                                publication.status as keyof typeof statusColors
+                              ]
+                            }
+                          >
+                            <StatusIcon className="h-3 w-3 mr-1" />
+                            {publication?.status}
+                          </Badge>
+                          <Badge variant="outline">
+                            {publication.category}
+                          </Badge>
+                        </div>
+                        <p className="text-muted-foreground mb-3">
+                          {publication.excerpt}
+                        </p>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Avatar className="h-6 w-6">
+                              <AvatarFallback className="text-xs">
+                                {publication?.author?.firstName}
+                                {/* .split(" ")
+                                  .map((n: any) => n[0])
+                                  .join("")} */}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span>{publication?.author?.firstName}</span>
+                            <Badge variant="secondary" className="text-xs">
+                              {publication?.author?.role}
+                            </Badge>
+                          </div>
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-4 w-4" />
+                            {new Date(
+                              publication.updatedAt
+                            ).toLocaleDateString()}
+                          </span>
+                          {/* <span>{publication.wordCount} words</span> */}
+                        </div>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem asChild>
+                            <Link
+                              href={`/publications/${publication.pubId}`}
+                              className="flex items-center"
+                            >
+                              <Eye className="mr-2 h-4 w-4" />
+                              Preview
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link
+                              href={`/publications/${publication.pubId}/update`}
+                              className="flex items-center"
+                            >
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => restoreArchive(publication.pubId)}
+                          >
+                            <CheckCircle className="mr-2 h-4 w-4" />
+                            Restore for Review
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => console.log("delete")}
+                            className="text-red-600"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete Publication
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </TabsContent>
 
