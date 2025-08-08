@@ -1,7 +1,12 @@
 interface User {
-  name: string;
-  profileImage: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  contactNumber: string;
+  bio: string;
+  location: string;
+  profileImage: string;
+  interests: string[];
 }
 
 export const fetchCurrentUser = async (token: string) => {
@@ -15,8 +20,8 @@ export const fetchCurrentUser = async (token: string) => {
   return response.json();
 };
 
-export const EditCurrentUser = async (token: string, newData: User) => {
-  const response = await fetch("/api/edit-user", {
+export const editCurrentUser = async (token: string, newData: User) => {
+  const response = await fetch("/api/user/edit-user", {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,

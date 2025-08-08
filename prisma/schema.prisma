@@ -21,6 +21,12 @@ model User {
   lastName            String?
   password            String
   profileImage        String?
+  bio                 String?
+  contactNumber       String?
+  location            String?
+  interests           String[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @default(now()) @updatedAt
   role                Role[]                @default([STUDENT])
   publications        Publication[]
   updatedPublications Publication[]         @relation("PublicationUpdatedBy")

@@ -19,6 +19,12 @@ export async function GET(req: NextRequest) {
         profileImage: true,
         role: true,
         notifications: true,
+        bio: true,
+        contactNumber: true,
+        location: true,
+        interests: true,
+        createdAt: true,
+        updatedAt: true,
         publications: {
           include: {
             pubLikes: true,

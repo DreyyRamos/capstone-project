@@ -5,9 +5,22 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Calendar, Eye, Heart, MessageCircle, PlusCircle } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Search,
+  Calendar,
+  Eye,
+  Heart,
+  MessageCircle,
+  PlusCircle,
+} from "lucide-react";
 import { usePostQuery } from "@/hooks/usePost";
 import Cookies from "js-cookie";
 import Link from "next/link";
@@ -28,6 +41,9 @@ interface Publication {
   tags: string[];
   category: string;
   author: Author;
+  createdAt: Date;
+  pubLikes: string[];
+  pubComments: string[];
 }
 
 export default function PublicationsPage() {
@@ -174,9 +190,15 @@ export default function PublicationsPage() {
 
               <div className="flex items-center gap-2 mb-4">
                 <Avatar className="h-8 w-8">
+                  <AvatarImage
+                    src={
+                      publication.author?.profileImage ||
+                      "/placeholder.svg?height=128&width=128"
+                    }
+                  />
                   <AvatarFallback>
                     {
-                      publication.author?.firstName
+                      publication.author?.profileImage
                       // .split(" ")
                       // .map((n: any) => n[0])
                       // .join("")}
@@ -184,11 +206,14 @@ export default function PublicationsPage() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  {/* <p className="text-sm font-medium">{publication.author}</p>
+                  <p className="text-sm font-medium">
+                    {publication?.author?.firstName}{" "}
+                    {publication?.author?.lastName}
+                  </p>
                   <p className="text-xs text-muted-foreground flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
-                    {new Date(publication.date).toLocaleDateString()}
-                  </p> */}
+                    {new Date(publication?.createdAt).toLocaleDateString()}
+                  </p>
                 </div>
               </div>
 
@@ -200,11 +225,11 @@ export default function PublicationsPage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <Heart className="h-4 w-4" />
-                    {/* {publication.likes} */}
+                    {publication?.pubLikes?.length}
                   </span>
                   <span className="flex items-center gap-1">
                     <MessageCircle className="h-4 w-4" />
-                    {/* {publication.comments} */}
+                    {publication?.pubComments.length}
                   </span>
                 </div>
                 <Button asChild variant="outline" size="sm">
