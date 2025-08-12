@@ -9,6 +9,8 @@ import {
   createPost,
   updatePost,
   deletePost,
+  replyToCommentPub,
+  replyToReplyCommentPub,
 } from "@/services/publication";
 
 interface Publication {
@@ -152,8 +154,42 @@ export const usePostByIdQuery = (token: string, postId: string) => {
     mutationFn: async (comment: any) =>
       await addCommentPub(token, postId, comment),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["post", postId] });
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+    },
+  });
+
+  const replyToComment = useMutation({
+    mutationFn: async ({
+      reply,
+      commentId,
+    }: {
+      reply: string;
+      commentId: string;
+    }) => await replyToCommentPub(token, postId, reply, commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+    },
+  });
+
+  const replyToReply = useMutation({
+    mutationFn: async ({
+      reply,
+      commentId,
+    }: // replyId,
+    {
+      reply: string;
+      commentId: string;
+      // replyId: string;
+    }) => await replyToReplyCommentPub(token, postId, reply, commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
     },
@@ -180,5 +216,11 @@ export const usePostByIdQuery = (token: string, postId: string) => {
     //Comment functions
     commentToPost: addComments.mutate,
     isCommenting: addComments.isPending,
+
+    //reply functions
+    replyToComment: replyToComment.mutate,
+    isReplyingToComment: replyToComment.isPending,
+    replyToReply: replyToReply.mutate,
+    replyToReplyLoading: replyToReply.isPending,
   };
 };

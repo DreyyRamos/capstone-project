@@ -15,27 +15,29 @@ datasource db {
 }
 
 model User {
-  id                  String                @id @unique @default(uuid())
-  email               String                @unique
-  firstName           String?
-  lastName            String?
-  password            String
-  profileImage        String?
-  bio                 String?
-  contactNumber       String?
-  location            String?
-  interests           String[]
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @default(now()) @updatedAt
-  role                Role[]                @default([STUDENT])
-  publications        Publication[]
-  updatedPublications Publication[]         @relation("PublicationUpdatedBy")
-  notifications       Notifications[]
-  forums              Forum[]
-  pubComments         PublicationComments[]
-  pubLikes            PublicationLikes[]
-  forumReplies        ForumReplies[]
-  forumLikes          ForumLikes[]
+  id                               String                             @id @unique @default(uuid())
+  email                            String                             @unique
+  firstName                        String?
+  lastName                         String?
+  password                         String
+  profileImage                     String?
+  bio                              String?
+  contactNumber                    String?
+  location                         String?
+  interests                        String[]
+  createdAt                        DateTime                           @default(now())
+  updatedAt                        DateTime                           @default(now()) @updatedAt
+  role                             Role[]                             @default([STUDENT])
+  publications                     Publication[]
+  updatedPublications              Publication[]                      @relation("PublicationUpdatedBy")
+  notifications                    Notifications[]
+  forums                           Forum[]
+  pubComments                      PublicationComments[]
+  pubLikes                         PublicationLikes[]
+  forumReplies                     ForumReplies[]
+  forumLikes                       ForumLikes[]
+  publicationCommentReplies        PublicationCommentReplies[]
+  publicationCommentReplyToReplies PublicationCommentReplyToReplies[]
 }
 
 enum Role {
@@ -46,24 +48,26 @@ enum Role {
 }
 
 model Publication {
-  pubId        String                @id @default(cuid())
-  title        String?               @db.VarChar(255)
-  excerpt      String?               @db.VarChar(255)
-  content      String?               @db.VarChar(65535)
-  authorId     String?
-  author       User?                 @relation(fields: [authorId], references: [id])
-  imageUrl     String?
-  tags         String[]
-  category     String?
-  notification Notifications[]
-  pubComments  PublicationComments[]
-  pubLikes     PublicationLikes[]
-  status       PublicationStatus     @default(DRAFT)
-  isFeatured   Boolean               @default(false)
-  createdAt    DateTime              @default(now())
-  updatedAt    DateTime              @updatedAt
-  updatedById  String?
-  updatedBy    User?                 @relation("PublicationUpdatedBy", fields: [updatedById], references: [id])
+  pubId                            String                             @id @default(cuid())
+  title                            String?                            @db.VarChar(255)
+  excerpt                          String?                            @db.VarChar(255)
+  content                          String?                            @db.VarChar(65535)
+  authorId                         String?
+  author                           User?                              @relation(fields: [authorId], references: [id])
+  imageUrl                         String?
+  tags                             String[]
+  category                         String?
+  notification                     Notifications[]
+  pubComments                      PublicationComments[]
+  pubLikes                         PublicationLikes[]
+  status                           PublicationStatus                  @default(DRAFT)
+  isFeatured                       Boolean                            @default(false)
+  createdAt                        DateTime                           @default(now())
+  updatedAt                        DateTime                           @updatedAt
+  updatedById                      String?
+  updatedBy                        User?                              @relation("PublicationUpdatedBy", fields: [updatedById], references: [id])
+  pubCommentsReplies               PublicationCommentReplies[]
+  PublicationCommentReplyToReplies PublicationCommentReplyToReplies[]
 }
 
 enum PublicationStatus {
@@ -129,7 +133,69 @@ model PublicationComments {
   authorId        String?
   author          User?        @relation(fields: [authorId], references: [id])
   createdAt       DateTime     @default(now())
+
+  replies PublicationCommentReplies[]
 }
+
+model PublicationCommentReplies {
+  replyId       String               @id @default(cuid())
+  reply_content String?
+  commentId     String?
+  comment       PublicationComments? @relation(fields: [commentId], references: [commentId], onDelete: Cascade)
+
+  // parent -> children
+  children PublicationCommentReplyToReplies[]
+
+  reply_authorId   String?
+  reply_author     User?        @relation(fields: [reply_authorId], references: [id], onDelete: Cascade)
+  publicationPubId String?
+  publication      Publication? @relation(fields: [publicationPubId], references: [pubId])
+
+  createdAt DateTime @default(now())
+}
+
+model PublicationCommentReplyToReplies {
+  replyToReplyId       String  @id @default(cuid())
+  replyToReply_content String?
+
+  // child -> parent
+  parentReplyId String
+  parentReply   PublicationCommentReplies @relation(fields: [parentReplyId], references: [replyId], onDelete: Cascade)
+
+  reply_authorId   String?
+  reply_author     User?        @relation(fields: [reply_authorId], references: [id], onDelete: Cascade)
+  publicationPubId String?
+  publication      Publication? @relation(fields: [publicationPubId], references: [pubId])
+
+  createdAt DateTime @default(now())
+}
+
+// model PublicationCommentReplies {
+//   replyId          String                             @id @default(cuid())
+//   reply_content    String?
+//   commentId        String?
+//   comment          PublicationComments?               @relation(fields: [commentId], references: [commentId], onDelete: Cascade)
+//   reply_authorId   String?
+//   reply_author     User?                              @relation(fields: [reply_authorId], references: [id], onDelete: Cascade)
+//   publicationPubId String?
+//   publication      Publication?                       @relation(fields: [publicationPubId], references: [pubId])
+//   replies          PublicationCommentReplyToReplies[]
+
+//   createdAt DateTime @default(now())
+// }
+
+// model PublicationCommentReplyToReplies {
+//   replyToReplyId       String                    @id @default(cuid())
+//   replyToReply_content String?
+//   replyId              String?
+//   reply                PublicationCommentReplies @relation(fields: [replyToReplyId], references: [commentId], onDelete: Cascade)
+//   reply_authorId       String?
+//   reply_author         User?                     @relation(fields: [reply_authorId], references: [id], onDelete: Cascade)
+//   publicationPubId     String?
+//   publication          Publication?              @relation(fields: [publicationPubId], references: [pubId])
+
+//   createdAt DateTime @default(now())
+// }
 
 model PublicationLikes {
   likeId      String      @id @default(cuid())

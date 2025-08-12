@@ -15,21 +15,18 @@ export async function GET(
   const pubId = resolvedParams.id;
 
   try {
+    
     const fetchPost = await prisma.publication.findUnique({
-      where: {
-        pubId: pubId,
-      },
+      where: { pubId },
       include: {
         author: {
-          select: {
-            id: true,
-            firstName: true,
-            profileImage: true,
-          },
+          select: { id: true, firstName: true, profileImage: true, role: true },
         },
+        pubLikes: true,
+
         pubComments: {
-          select: {
-            comment_content: true,
+          orderBy: { createdAt: "asc" },
+          include: {
             author: {
               select: {
                 id: true,
@@ -38,10 +35,38 @@ export async function GET(
                 role: true,
               },
             },
-            commentId: true,
+
+            // top-level replies
+            replies: {
+              orderBy: { createdAt: "asc" },
+              include: {
+                reply_author: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    profileImage: true,
+                    role: true,
+                  },
+                },
+
+                // nested replies
+                children: {
+                  orderBy: { createdAt: "asc" },
+                  include: {
+                    reply_author: {
+                      select: {
+                        id: true,
+                        firstName: true,
+                        profileImage: true,
+                        role: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
-        pubLikes: true,
       },
     });
 

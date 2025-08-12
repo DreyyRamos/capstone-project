@@ -4,7 +4,7 @@ import { useState, use } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Heart,
@@ -26,9 +26,14 @@ import LikeButton from "@/components/like-button";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
-import { useFetchOnePostQuery } from "@/hooks/usePost";
+import { useFetchOnePostQuery, usePostByIdQuery } from "@/hooks/usePost";
 import { useTokenUser } from "@/hooks/useTokenUser";
 import { useIsFeatured } from "@/hooks/useIsFeatured";
+import {
+  useAddTopReply,
+  useAddNestedReply,
+  // useReplies,
+} from "@/hooks/useReplies";
 import Cookies from "js-cookie";
 
 type PageProps = {
@@ -36,9 +41,15 @@ type PageProps = {
 };
 
 export default function PublicationDetailPage({ params }: PageProps) {
-  const [newComment, setNewComment] = useState("");
+  const [comment_content, setCommentContent] = useState("");
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyContent, setReplyContent] = useState("");
+  const [replyingToSecondLevel, setReplyingToSecondLevel] = useState<
+    string | null
+  >(null);
+  const [secondLevelReplyContent, setSecondLevelReplyContent] = useState("");
   const { isOpen, action, redirectTo, requireAuth, closeModal } =
     useAuthModal();
 
@@ -47,70 +58,22 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const token = Cookies.get("token") || "";
   const { data: publication, isLoading, isError } = useFetchOnePostQuery(id);
   const { makeFeatured, isLoading: isCurrentlyLoading } = useIsFeatured(token);
+  const { commentToPost, replyToComment, replyToReply } = usePostByIdQuery(
+    token,
+    publication?.pubId
+  );
+  const { mutate: addTopReply } = useAddTopReply(token);
+  const { mutate: addNestedReply } = useAddNestedReply(token);
+  // const { data: replies = [] } = useReplies(
+  //   publication?.pubComments?.commentId,
+  //   publication?.pubId
+  // );
   const { user, isAuthenticated } = useTokenUser();
   const userRoles = user?.roles || user?.role || [];
-  const comments = [
-    {
-      id: 1,
-      content:
-        "Congratulations to all the winners! The projects sound absolutely fascinating, especially Sarah's work on microplastics. It's great to see students tackling such important environmental issues.",
-      author: "Jennifer Martinez",
-      authorRole: "Parent",
-      date: "2024-01-20T10:30:00Z",
-      likes: 12,
-      replies: [
-        {
-          id: 11,
-          content:
-            "I completely agree! As a marine biology teacher, I'm particularly excited about Sarah's research. These are the kinds of projects that can make a real difference.",
-          author: "Mr. Thompson",
-          authorRole: "Teacher",
-          date: "2024-01-20T11:15:00Z",
-          likes: 8,
-        },
-      ],
-    },
-    {
-      id: 2,
-      content:
-        "So proud of our students! Michael's sustainable battery project caught my attention - this could have real commercial applications. Has anyone reached out to local tech companies about potential internships?",
-      author: "Robert Chen",
-      authorRole: "Alumni",
-      date: "2024-01-20T14:20:00Z",
-      likes: 15,
-      replies: [],
-    },
-    {
-      id: 3,
-      content:
-        "The Science Fair was amazing this year! As a student who participated, I can say the level of competition was incredible. Congratulations to all the winners - you truly deserved it!",
-      author: "Alex Rivera",
-      authorRole: "Student",
-      date: "2024-01-20T16:45:00Z",
-      likes: 7,
-      replies: [
-        {
-          id: 31,
-          content:
-            "What was your project about, Alex? I'd love to hear more about the student perspective!",
-          author: "Ms. Johnson",
-          authorRole: "Teacher",
-          date: "2024-01-20T17:30:00Z",
-          likes: 3,
-        },
-      ],
-    },
-    {
-      id: 4,
-      content:
-        "This is exactly why I love working at Lincoln High. Our students consistently demonstrate such creativity and scientific rigor. Looking forward to seeing how our representatives do at State!",
-      author: "Principal Davis",
-      authorRole: "Principal",
-      date: "2024-01-21T08:00:00Z",
-      likes: 24,
-      replies: [],
-    },
-  ];
+
+  // console.log("from new funct", replies);
+
+  console.log("publication to check", publication);
 
   const handleLike = () => {
     if (requireAuth("like this publication")) {
@@ -124,20 +87,102 @@ export default function PublicationDetailPage({ params }: PageProps) {
     }
   };
 
-  const handleComment = () => {
+  const handleComment = async () => {
     if (requireAuth("comment on this publication")) {
-      if (newComment.trim()) {
-        console.log("Adding comment:", newComment);
-        setNewComment("");
+      if (comment_content.trim()) {
+        console.log("Adding comment:", comment_content);
+        try {
+          await commentToPost(comment_content);
+          setCommentContent("");
+          toast.success("Comment added successfully!");
+        } catch (error) {
+          toast.error("Failed to add comment");
+          console.error("Error adding comment:", error);
+        }
       }
     }
   };
 
-  console.log("publication check for like", publication);
+  const handleReply = (commentId: string) => {
+    if (requireAuth("reply to this comment")) {
+      if (replyingTo === commentId) {
+        setReplyingTo(null);
+        setReplyContent("");
+      } else {
+        setReplyingTo(commentId);
+        setReplyContent("");
+      }
+    }
+  };
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    // You could show a toast notification here
+  const handleSecondLevelReply = (replyId: string) => {
+    if (requireAuth("reply to this reply")) {
+      if (replyingToSecondLevel === replyId) {
+        setReplyingToSecondLevel(null);
+        setSecondLevelReplyContent("");
+      } else {
+        setReplyingToSecondLevel(replyId);
+        setSecondLevelReplyContent("");
+      }
+    }
+  };
+
+  const handleSubmitReply = async (commentId: string, pubId: string) => {
+    if (requireAuth("submit reply")) {
+      if (replyContent.trim()) {
+        console.log("Adding reply to comment:", commentId, replyContent);
+        try {
+          await addTopReply({ content: replyContent, pubId, commentId });
+          setReplyContent("");
+          setReplyingTo(null);
+          toast.success("Reply added successfully!");
+        } catch (error) {
+          toast.error("Failed to add reply");
+          console.error("Error adding reply:", error);
+        }
+      }
+    }
+  };
+
+  const handleSubmitSecondLevelReply = async (
+    pubId: string,
+    replyId: string,
+    commentId: string
+  ) => {
+    if (requireAuth("submit second-level reply")) {
+      if (secondLevelReplyContent.trim()) {
+        console.log(
+          "Adding second-level reply to reply:",
+          replyId,
+          secondLevelReplyContent
+        );
+        try {
+          await addNestedReply({
+            content: secondLevelReplyContent,
+            pubId,
+            replyId,
+            commentId,
+            // replyId,
+          });
+          setSecondLevelReplyContent("");
+          setReplyingToSecondLevel(null);
+          toast.success("Reply added successfully!");
+        } catch (error) {
+          toast.error("Failed to add reply");
+          console.error("Error adding second-level reply:", error);
+        }
+      }
+    }
+  };
+
+  const handleCancelReply = () => {
+    setReplyingTo(null);
+    setReplyContent("");
+  };
+
+  const handleCancelSecondLevelReply = () => {
+    setReplyingToSecondLevel(null);
+    setSecondLevelReplyContent("");
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -152,7 +197,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
         redirectTo={redirectTo}
       />
 
-      {/* Back Button */}
       <Button asChild variant="ghost">
         <Link href="/publications">
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -160,11 +204,9 @@ export default function PublicationDetailPage({ params }: PageProps) {
         </Link>
       </Button>
 
-      {/* Article Header */}
       <article className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-center gap-2 flex-wrap">
-            {/* <Badge variant="secondary">{publication.category}</Badge> */}
             {publication?.tags?.map((tag: any) => (
               <Badge key={tag} variant="outline" className="text-xs">
                 {tag}
@@ -193,35 +235,12 @@ export default function PublicationDetailPage({ params }: PageProps) {
                     <Clock className="h-3 w-3" />
                     {new Date(publication?.createdAt).toLocaleDateString()}
                   </span>
-                  {/* <span>{publication.readTime}</span>
-                  <span className="flex items-center gap-1">
-                    <Eye className="h-3 w-3" />
-                    {publication.views} views
-                  </span> */}
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <LikeButton post={publication} token={token} />
-              {/* {publication?.} */}
-              {/* <Button
-                variant="outline"
-                size="sm"
-                onClick={handleLike}
-                className={
-                  isLiked ? "bg-red-50 text-red-600 border-red-200" : ""
-                }
-              >
-                <Heart
-                  className={`mr-2 h-4 w-4 ${isLiked ? "fill-current" : ""}`}
-                />
-                {publication?.likes + (isLiked ? 1 : 0)}
-              </Button> */}
-              <Button variant="outline" size="sm" onClick={handleShare}>
-                <Share2 className="mr-2 h-4 w-4" />
-                Share
-              </Button>
               {(userRoles?.includes("EDITOR") ||
                 userRoles?.includes("ADMIN")) &&
                 !["DRAFT", "PENDING_REVIEW", "ARCHIVED"].includes(
@@ -269,7 +288,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Cover Image */}
         {publication?.imageUrl && (
           <div className="relative aspect-video rounded-lg overflow-hidden">
             <img
@@ -280,19 +298,13 @@ export default function PublicationDetailPage({ params }: PageProps) {
           </div>
         )}
 
-        {/* Article Content */}
         <div
           className="prose prose-lg max-w-none dark:prose-invert"
           dangerouslySetInnerHTML={{ __html: publication?.content }}
         />
 
-        {/* Article Footer */}
         <div className="flex items-center justify-between pt-6 border-t">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <MessageCircle className="h-4 w-4" />
-              {publication?.pubComments} comments
-            </span>
             <span className="flex items-center gap-1">
               <Heart className="h-4 w-4" />
               {publication?.pubLikes?.length ?? 0} likes
@@ -301,25 +313,26 @@ export default function PublicationDetailPage({ params }: PageProps) {
         </div>
       </article>
 
-      {/* Comments Section */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">Comments ({comments.length})</h2>
+        {/* <h2 className="text-2xl font-bold">Comments ({comments.length})</h2> */}
 
-        {/* Comment Form */}
         <Card>
           <CardContent className="p-6">
             <div className="space-y-4">
               <Textarea
                 placeholder="Share your thoughts about this publication..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
+                value={comment_content}
+                onChange={(e) => setCommentContent(e.target.value)}
                 rows={3}
               />
               <div className="flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">
                   Be respectful and constructive in your comments
                 </p>
-                <Button onClick={handleComment} disabled={!newComment.trim()}>
+                <Button
+                  onClick={handleComment}
+                  disabled={!comment_content.trim()}
+                >
                   Post Comment
                 </Button>
               </div>
@@ -327,81 +340,117 @@ export default function PublicationDetailPage({ params }: PageProps) {
           </CardContent>
         </Card>
 
-        {/* Comments List */}
         <div className="space-y-4">
-          {comments.map((comment) => (
-            <Card key={comment.id}>
+          {publication?.pubComments.map((comment: any) => (
+            <Card key={comment.commentId}>
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
                     <Avatar className="h-10 w-10">
+                      <AvatarImage src={comment?.author?.profileImage} />
                       <AvatarFallback>
-                        {comment.author
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
+                        {comment?.author?.firstName?.[0]}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2">
-                        <p className="font-medium">{comment.author}</p>
+                        <p className="font-medium">
+                          {comment?.author?.firstName}
+                        </p>
                         <Badge variant="outline" className="text-xs">
-                          {comment.authorRole}
+                          {comment?.author?.role}
                         </Badge>
                         <span className="text-sm text-muted-foreground">
-                          {new Date(comment.date).toLocaleDateString()}
+                          {new Date(comment?.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                       <p className="text-sm leading-relaxed">
-                        {comment.content}
+                        {comment?.comment_content}
                       </p>
                       <div className="flex items-center gap-4">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={handleComment}
-                        >
+                        <Button variant="ghost" size="sm" onClick={handleLike}>
                           <Heart className="mr-1 h-3 w-3" />
                           {comment.likes}
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={handleComment}
+                          onClick={() => handleReply(comment.commentId)}
                         >
-                          Reply
+                          {replyingTo === comment.commentId
+                            ? "Cancel"
+                            : "Reply"}
                         </Button>
                       </div>
                     </div>
                   </div>
 
-                  {/* Replies */}
-                  {comment.replies && comment.replies.length > 0 && (
+                  {replyingTo === comment.commentId && (
+                    <div className="ml-14 space-y-3">
+                      <div className="border-l-2 border-muted pl-4">
+                        <Textarea
+                          placeholder="Write your reply..."
+                          value={replyContent}
+                          onChange={(e) => setReplyContent(e.target.value)}
+                          rows={2}
+                          className="resize-none"
+                        />
+                        <div className="flex items-center justify-end gap-2 mt-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCancelReply}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              handleSubmitReply(
+                                comment.commentId,
+                                publication.pubId
+                              )
+                            }
+                            disabled={!replyContent.trim()}
+                          >
+                            Reply
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {comment?.replies && comment?.replies?.length > 0 && (
                     <div className="ml-14 space-y-4 border-l-2 border-muted pl-4">
-                      {comment.replies.map((reply) => (
-                        <div key={reply.id} className="flex items-start gap-4">
+                      {comment?.replies?.map((reply: any) => (
+                        <div
+                          key={reply.replyId}
+                          className="flex items-start gap-4"
+                        >
                           <Avatar className="h-8 w-8">
-                            <AvatarFallback className="text-xs">
-                              {reply.author
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
+                            <AvatarImage
+                              src={reply?.reply_author?.profileImage}
+                            />
+                            <AvatarFallback>
+                              {reply?.reply_author?.firstName?.[0]}
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex-1 space-y-2">
                             <div className="flex items-center gap-2">
                               <p className="font-medium text-sm">
-                                {reply.author}
+                                {reply?.reply_author?.firstName}
                               </p>
                               <Badge variant="outline" className="text-xs">
-                                {reply.authorRole}
+                                {reply?.reply_author?.role}
                               </Badge>
                               <span className="text-xs text-muted-foreground">
-                                {new Date(reply.date).toLocaleDateString()}
+                                {new Date(
+                                  reply?.createdAt
+                                ).toLocaleDateString()}
                               </span>
                             </div>
                             <p className="text-sm leading-relaxed">
-                              {reply.content}
+                              {reply.reply_content}
                             </p>
                             <div className="flex items-center gap-4">
                               <Button
@@ -415,11 +464,110 @@ export default function PublicationDetailPage({ params }: PageProps) {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={handleComment}
+                                onClick={() =>
+                                  handleSecondLevelReply(reply.replyId)
+                                }
                               >
-                                Reply
+                                {replyingToSecondLevel === reply.replyId
+                                  ? "Cancel"
+                                  : "Reply"}
                               </Button>
                             </div>
+
+                            {replyingToSecondLevel === reply.replyId && (
+                              <div className="ml-6 space-y-3">
+                                <div className="border-l-2 border-muted pl-4">
+                                  <Textarea
+                                    placeholder="Write your reply..."
+                                    value={secondLevelReplyContent}
+                                    onChange={(e) =>
+                                      setSecondLevelReplyContent(e.target.value)
+                                    }
+                                    rows={2}
+                                    className="resize-none"
+                                  />
+                                  <div className="flex items-center justify-end gap-2 mt-2">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={handleCancelSecondLevelReply}
+                                    >
+                                      Cancel
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      onClick={() =>
+                                        handleSubmitSecondLevelReply(
+                                          publication.pubId,
+                                          reply.replyId,
+                                          comment.commentId
+                                        )
+                                      }
+                                      disabled={!secondLevelReplyContent.trim()}
+                                    >
+                                      Reply
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Render nested children */}
+                            {reply?.children && reply.children.length > 0 && (
+                              <div className="ml-6 space-y-4 border-l-2 border-muted pl-4 mt-4">
+                                {reply.children.map((childReply: any) => (
+                                  <div
+                                    key={childReply.replyId}
+                                    className="flex items-start gap-4"
+                                  >
+                                    <Avatar className="h-8 w-8">
+                                      <AvatarImage
+                                        src={
+                                          childReply?.reply_author?.profileImage
+                                        }
+                                      />
+                                      <AvatarFallback>
+                                        {
+                                          childReply?.reply_author
+                                            ?.firstName?.[0]
+                                        }
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <div className="flex-1 space-y-2">
+                                      <div className="flex items-center gap-2">
+                                        <p className="font-medium text-sm">
+                                          {childReply?.reply_author?.firstName}
+                                        </p>
+                                        <Badge
+                                          variant="outline"
+                                          className="text-xs"
+                                        >
+                                          {childReply?.reply_author?.role}
+                                        </Badge>
+                                        <span className="text-xs text-muted-foreground">
+                                          {new Date(
+                                            childReply?.createdAt
+                                          ).toLocaleDateString()}
+                                        </span>
+                                      </div>
+                                      <p className="text-sm leading-relaxed">
+                                        {childReply?.replyToReply_content}
+                                      </p>
+                                      <div className="flex items-center gap-4">
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={handleLike}
+                                        >
+                                          <Heart className="mr-1 h-3 w-3" />
+                                          {childReply.likes}
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -431,7 +579,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
           ))}
         </div>
 
-        {/* Load More Comments */}
         <div className="text-center">
           <Button variant="outline">Load More Comments</Button>
         </div>
@@ -439,3 +586,536 @@ export default function PublicationDetailPage({ params }: PageProps) {
     </div>
   );
 }
+
+
+// "use client";
+
+// import { useState, use } from "react";
+// import { Button } from "@/components/ui/button";
+// import { Card, CardContent } from "@/components/ui/card";
+// import { Badge } from "@/components/ui/badge";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Textarea } from "@/components/ui/textarea";
+// import {
+//   Heart,
+//   MessageCircle,
+//   Share2,
+//   Flag,
+//   ArrowLeft,
+//   Clock,
+//   Eye,
+//   Star,
+// } from "lucide-react";
+// import { toast } from "sonner";
+// import {
+//   Tooltip,
+//   TooltipContent,
+//   TooltipTrigger,
+// } from "@/components/ui/tooltip";
+// import LikeButton from "@/components/like-button";
+// import Link from "next/link";
+// import { AuthModal } from "@/components/auth-modal";
+// import { useAuthModal } from "@/hooks/use-auth-modal";
+// import { useFetchOnePostQuery, usePostByIdQuery } from "@/hooks/usePost";
+// import { useTokenUser } from "@/hooks/useTokenUser";
+// import { useIsFeatured } from "@/hooks/useIsFeatured";
+// import {
+//   useAddTopReply,
+//   useAddNestedReply,
+//   useReplies,
+// } from "@/hooks/useReplies";
+// import Cookies from "js-cookie";
+
+// type PageProps = {
+//   params: Promise<{ id: string }>;
+// };
+
+// export default function PublicationDetailPage({ params }: PageProps) {
+//   const [comment_content, setCommentContent] = useState("");
+//   const [isLiked, setIsLiked] = useState(false);
+//   const [isBookmarked, setIsBookmarked] = useState(false);
+//   const [replyingTo, setReplyingTo] = useState<string | null>(null);
+//   const [replyContent, setReplyContent] = useState("");
+//   const [replyingToSecondLevel, setReplyingToSecondLevel] = useState<
+//     string | null
+//   >(null);
+//   const [secondLevelReplyContent, setSecondLevelReplyContent] = useState("");
+//   const { isOpen, action, redirectTo, requireAuth, closeModal } =
+//     useAuthModal();
+
+//   const { id } = use(params);
+
+//   const token = Cookies.get("token") || "";
+//   const { data: publication, isLoading, isError } = useFetchOnePostQuery(id);
+//   const { makeFeatured, isLoading: isCurrentlyLoading } = useIsFeatured(token);
+//   const { commentToPost, replyToComment, replyToReply } = usePostByIdQuery(
+//     token,
+//     publication?.pubId
+//   );
+//   const { mutate: addTopReply } = useAddTopReply(token);
+//   const { mutate: addNestedReply } = useAddNestedReply(token);
+//   const { data: replies = [] } = useReplies(
+//     publication?.pubComments?.commentId,
+//     publication?.pubId
+//   );
+//   const { user, isAuthenticated } = useTokenUser();
+//   const userRoles = user?.roles || user?.role || [];
+
+//   console.log("from new funct", replies);
+
+//   console.log("publication to check", publication);
+
+//   const handleLike = () => {
+//     if (requireAuth("like this publication")) {
+//       setIsLiked(!isLiked);
+//     }
+//   };
+
+//   const handleMakeFeature = (id: string) => {
+//     if (requireAuth("feature this publication")) {
+//       makeFeatured(id);
+//     }
+//   };
+
+//   const handleComment = async () => {
+//     if (requireAuth("comment on this publication")) {
+//       if (comment_content.trim()) {
+//         console.log("Adding comment:", comment_content);
+//         try {
+//           await commentToPost(comment_content);
+//           setCommentContent("");
+//           toast.success("Comment added successfully!");
+//         } catch (error) {
+//           toast.error("Failed to add comment");
+//           console.error("Error adding comment:", error);
+//         }
+//       }
+//     }
+//   };
+
+//   const handleReply = (commentId: string) => {
+//     if (requireAuth("reply to this comment")) {
+//       if (replyingTo === commentId) {
+//         setReplyingTo(null);
+//         setReplyContent("");
+//       } else {
+//         setReplyingTo(commentId);
+//         setReplyContent("");
+//       }
+//     }
+//   };
+
+//   const handleSecondLevelReply = (replyId: string) => {
+//     if (requireAuth("reply to this reply")) {
+//       if (replyingToSecondLevel === replyId) {
+//         setReplyingToSecondLevel(null);
+//         setSecondLevelReplyContent("");
+//       } else {
+//         setReplyingToSecondLevel(replyId);
+//         setSecondLevelReplyContent("");
+//       }
+//     }
+//   };
+
+//   const handleSubmitReply = async (commentId: string, pubId: string) => {
+//     if (requireAuth("submit reply")) {
+//       if (replyContent.trim()) {
+//         console.log("Adding reply to comment:", commentId, replyContent);
+//         try {
+//           await addTopReply({ content: replyContent, pubId, commentId });
+//           setReplyContent("");
+//           setReplyingTo(null);
+//           toast.success("Reply added successfully!");
+//         } catch (error) {
+//           toast.error("Failed to add reply");
+//           console.error("Error adding reply:", error);
+//         }
+//       }
+//     }
+//   };
+
+//   const handleSubmitSecondLevelReply = async (
+//     pubId: string,
+//     replyId: string,
+//     commentId: string
+//   ) => {
+//     if (requireAuth("submit second-level reply")) {
+//       if (secondLevelReplyContent.trim()) {
+//         console.log(
+//           "Adding second-level reply to reply:",
+//           replyId,
+//           secondLevelReplyContent
+//         );
+//         try {
+//           await addNestedReply({
+//             content: secondLevelReplyContent,
+//             pubId,
+//             replyId,
+//             commentId,
+//             // replyId,
+//           });
+//           setSecondLevelReplyContent("");
+//           setReplyingToSecondLevel(null);
+//           toast.success("Reply added successfully!");
+//         } catch (error) {
+//           toast.error("Failed to add reply");
+//           console.error("Error adding second-level reply:", error);
+//         }
+//       }
+//     }
+//   };
+
+//   const handleCancelReply = () => {
+//     setReplyingTo(null);
+//     setReplyContent("");
+//   };
+
+//   const handleCancelSecondLevelReply = () => {
+//     setReplyingToSecondLevel(null);
+//     setSecondLevelReplyContent("");
+//   };
+
+//   if (isLoading) return <div>Loading...</div>;
+//   if (isError) return <div>Error loading publication.</div>;
+
+//   return (
+//     <div className="max-w-4xl mx-auto space-y-6">
+//       <AuthModal
+//         isOpen={isOpen}
+//         onClose={closeModal}
+//         action={action}
+//         redirectTo={redirectTo}
+//       />
+
+//       <Button asChild variant="ghost">
+//         <Link href="/publications">
+//           <ArrowLeft className="mr-2 h-4 w-4" />
+//           Back to Publications
+//         </Link>
+//       </Button>
+
+//       <article className="space-y-6">
+//         <div className="space-y-4">
+//           <div className="flex items-center gap-2 flex-wrap">
+//             {publication?.tags?.map((tag: any) => (
+//               <Badge key={tag} variant="outline" className="text-xs">
+//                 {tag}
+//               </Badge>
+//             ))}
+//           </div>
+
+//           <h1 className="text-4xl font-bold leading-tight">
+//             {publication?.title}
+//           </h1>
+
+//           <div className="flex items-center justify-between flex-wrap gap-4">
+//             <div className="flex items-center gap-4">
+//               <Avatar className="h-12 w-12">
+//                 <AvatarFallback>
+//                   {publication?.author?.firstName}
+//                 </AvatarFallback>
+//               </Avatar>
+//               <div>
+//                 <p className="font-medium">{publication?.author.firstName}</p>
+//                 <p className="text-sm text-muted-foreground">
+//                   {publication?.author.role}
+//                 </p>
+//                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
+//                   <span className="flex items-center gap-1">
+//                     <Clock className="h-3 w-3" />
+//                     {new Date(publication?.createdAt).toLocaleDateString()}
+//                   </span>
+//                 </div>
+//               </div>
+//             </div>
+
+//             <div className="flex items-center gap-2">
+//               <LikeButton post={publication} token={token} />
+//               {(userRoles?.includes("EDITOR") ||
+//                 userRoles?.includes("ADMIN")) &&
+//                 !["DRAFT", "PENDING_REVIEW", "ARCHIVED"].includes(
+//                   publication?.status
+//                 ) && (
+//                   <Tooltip>
+//                     <TooltipTrigger asChild>
+//                       <Button
+//                         variant="outline"
+//                         size="sm"
+//                         disabled={isCurrentlyLoading}
+//                         onClick={() => {
+//                           if (publication?.isFeatured) {
+//                             handleMakeFeature(publication.pubId);
+//                             toast(
+//                               "Publication has been removed from featured!"
+//                             );
+//                           } else {
+//                             handleMakeFeature(publication.pubId);
+//                             toast("Publication has been marked as featured!");
+//                           }
+//                         }}
+//                         className={
+//                           isBookmarked
+//                             ? "bg-blue-50 text-blue-600 border-blue-200"
+//                             : ""
+//                         }
+//                       >
+//                         <Star
+//                           className={`h-4 w-4 ${
+//                             publication?.isFeatured ? "fill-current" : ""
+//                           }`}
+//                         />
+//                       </Button>
+//                     </TooltipTrigger>
+//                     <TooltipContent>
+//                       <p>Add to Features</p>
+//                     </TooltipContent>
+//                   </Tooltip>
+//                 )}
+//               <Button variant="outline" size="sm">
+//                 <Flag className="h-4 w-4" />
+//               </Button>
+//             </div>
+//           </div>
+//         </div>
+
+//         {publication?.imageUrl && (
+//           <div className="relative aspect-video rounded-lg overflow-hidden">
+//             <img
+//               src={publication?.imageUrl || "/placeholder.svg"}
+//               alt={publication?.title}
+//               className="w-full h-full object-cover"
+//             />
+//           </div>
+//         )}
+
+//         <div
+//           className="prose prose-lg max-w-none dark:prose-invert"
+//           dangerouslySetInnerHTML={{ __html: publication?.content }}
+//         />
+
+//         <div className="flex items-center justify-between pt-6 border-t">
+//           <div className="flex items-center gap-4 text-sm text-muted-foreground">
+//             <span className="flex items-center gap-1">
+//               <Heart className="h-4 w-4" />
+//               {publication?.pubLikes?.length ?? 0} likes
+//             </span>
+//           </div>
+//         </div>
+//       </article>
+
+//       <div className="space-y-6">
+//         {/* <h2 className="text-2xl font-bold">Comments ({comments.length})</h2> */}
+
+//         <Card>
+//           <CardContent className="p-6">
+//             <div className="space-y-4">
+//               <Textarea
+//                 placeholder="Share your thoughts about this publication..."
+//                 value={comment_content}
+//                 onChange={(e) => setCommentContent(e.target.value)}
+//                 rows={3}
+//               />
+//               <div className="flex items-center justify-between">
+//                 <p className="text-sm text-muted-foreground">
+//                   Be respectful and constructive in your comments
+//                 </p>
+//                 <Button
+//                   onClick={handleComment}
+//                   disabled={!comment_content.trim()}
+//                 >
+//                   Post Comment
+//                 </Button>
+//               </div>
+//             </div>
+//           </CardContent>
+//         </Card>
+
+//         <div className="space-y-4">
+//           {publication?.pubComments.map((comment: any) => (
+//             <Card key={comment.commentId}>
+//               <CardContent className="p-6">
+//                 <div className="space-y-4">
+//                   <div className="flex items-start gap-4">
+//                     <Avatar className="h-10 w-10">
+//                       <AvatarImage src={comment?.author?.profileImage} />
+//                       <AvatarFallback>
+//                         {comment?.author?.firstName?.[0]}
+//                       </AvatarFallback>
+//                     </Avatar>
+//                     <div className="flex-1 space-y-2">
+//                       <div className="flex items-center gap-2">
+//                         <p className="font-medium">
+//                           {comment?.author?.firstName}
+//                         </p>
+//                         <Badge variant="outline" className="text-xs">
+//                           {comment?.author?.role}
+//                         </Badge>
+//                         <span className="text-sm text-muted-foreground">
+//                           {new Date(comment?.createdAt).toLocaleDateString()}
+//                         </span>
+//                       </div>
+//                       <p className="text-sm leading-relaxed">
+//                         {comment?.comment_content}
+//                       </p>
+//                       <div className="flex items-center gap-4">
+//                         <Button variant="ghost" size="sm" onClick={handleLike}>
+//                           <Heart className="mr-1 h-3 w-3" />
+//                           {comment.likes}
+//                         </Button>
+//                         <Button
+//                           variant="ghost"
+//                           size="sm"
+//                           onClick={() => handleReply(comment.commentId)}
+//                         >
+//                           {replyingTo === comment.commentId
+//                             ? "Cancel"
+//                             : "Reply"}
+//                         </Button>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {replyingTo === comment.commentId && (
+//                     <div className="ml-14 space-y-3">
+//                       <div className="border-l-2 border-muted pl-4">
+//                         <Textarea
+//                           placeholder="Write your reply..."
+//                           value={replyContent}
+//                           onChange={(e) => setReplyContent(e.target.value)}
+//                           rows={2}
+//                           className="resize-none"
+//                         />
+//                         <div className="flex items-center justify-end gap-2 mt-2">
+//                           <Button
+//                             variant="ghost"
+//                             size="sm"
+//                             onClick={handleCancelReply}
+//                           >
+//                             Cancel
+//                           </Button>
+//                           <Button
+//                             size="sm"
+//                             onClick={() =>
+//                               handleSubmitReply(
+//                                 comment.commentId,
+//                                 publication.pubId
+//                               )
+//                             }
+//                             disabled={!replyContent.trim()}
+//                           >
+//                             Reply
+//                           </Button>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+
+//                   {comment?.replies && comment?.replies?.length > 0 && (
+//                     <div className="ml-14 space-y-4 border-l-2 border-muted pl-4">
+//                       {comment?.replies?.map((reply: any) => (
+//                         <div
+//                           key={reply.replyId}
+//                           className="flex items-start gap-4"
+//                         >
+//                           <Avatar className="h-8 w-8">
+//                             <AvatarImage
+//                               src={reply?.reply_author?.profileImage}
+//                             />
+//                             <AvatarFallback>
+//                               {reply?.reply_author?.firstName?.[0]}
+//                             </AvatarFallback>
+//                           </Avatar>
+//                           <div className="flex-1 space-y-2">
+//                             <div className="flex items-center gap-2">
+//                               <p className="font-medium text-sm">
+//                                 {reply?.reply_author?.firstName}
+//                               </p>
+//                               <Badge variant="outline" className="text-xs">
+//                                 {reply?.reply_author?.role}
+//                               </Badge>
+//                               <span className="text-xs text-muted-foreground">
+//                                 {new Date(
+//                                   reply?.createdAt
+//                                 ).toLocaleDateString()}
+//                               </span>
+//                             </div>
+//                             <p className="text-sm leading-relaxed">
+//                               {reply.reply_content}
+//                             </p>
+//                             <div className="flex items-center gap-4">
+//                               <Button
+//                                 variant="ghost"
+//                                 size="sm"
+//                                 onClick={handleLike}
+//                               >
+//                                 <Heart className="mr-1 h-3 w-3" />
+//                                 {reply.likes}
+//                               </Button>
+//                               <Button
+//                                 variant="ghost"
+//                                 size="sm"
+//                                 onClick={() =>
+//                                   handleSecondLevelReply(reply.replyId)
+//                                 }
+//                               >
+//                                 {replyingToSecondLevel === reply.replyId
+//                                   ? "Cancel"
+//                                   : "Reply"}
+//                               </Button>
+//                             </div>
+
+//                             {replyingToSecondLevel === reply.replyId && (
+//                               <div className="ml-6 space-y-3">
+//                                 <div className="border-l-2 border-muted pl-4">
+//                                   <Textarea
+//                                     placeholder="Write your reply..."
+//                                     value={secondLevelReplyContent}
+//                                     onChange={(e) =>
+//                                       setSecondLevelReplyContent(e.target.value)
+//                                     }
+//                                     rows={2}
+//                                     className="resize-none"
+//                                   />
+//                                   <div className="flex items-center justify-end gap-2 mt-2">
+//                                     <Button
+//                                       variant="ghost"
+//                                       size="sm"
+//                                       onClick={handleCancelSecondLevelReply}
+//                                     >
+//                                       Cancel
+//                                     </Button>
+//                                     <Button
+//                                       size="sm"
+//                                       onClick={() =>
+//                                         handleSubmitSecondLevelReply(
+//                                           publication.pubId,
+//                                           reply.replyId,
+//                                           comment.commentId
+//                                         )
+//                                       }
+//                                       disabled={!secondLevelReplyContent.trim()}
+//                                     >
+//                                       Reply
+//                                     </Button>
+//                                   </div>
+//                                 </div>
+//                               </div>
+//                             )}
+//                           </div>
+//                         </div>
+//                       ))}
+//                     </div>
+//                   )}
+//                 </div>
+//               </CardContent>
+//             </Card>
+//           ))}
+//         </div>
+
+//         <div className="text-center">
+//           <Button variant="outline">Load More Comments</Button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }

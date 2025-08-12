@@ -73,13 +73,52 @@ export const addCommentPub = async (
   postId: string,
   comment: string
 ) => {
-  const res = await fetch(`/api/publications/${postId}/comment`, {
+  const res = await fetch(`/api/publications/${postId}/comments`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(comment),
+    body: JSON.stringify({ comment_content: comment }),
   });
+  return await res.json();
+};
+
+export const replyToCommentPub = async (
+  token: string,
+  postId: string,
+  reply: string,
+  commentId: string
+) => {
+  const res = await fetch(`/api/publications/${postId}/comments/${commentId}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ reply_content: reply }),
+  });
+  return await res.json();
+};
+
+export const replyToReplyCommentPub = async (
+  token: string,
+  postId: string,
+  reply: string,
+  commentId: string
+  // replyId: string
+) => {
+  const res = await fetch(
+    `/api/publications/${postId}/comments/${commentId}/replies`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ reply_content: reply }),
+    }
+  );
   return await res.json();
 };
 

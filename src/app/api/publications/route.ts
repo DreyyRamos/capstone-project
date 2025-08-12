@@ -22,7 +22,9 @@ export async function GET(req: NextRequest) {
         },
         pubComments: {
           select: {
+            commentId: true,
             comment_content: true,
+            createdAt: true, // Make sure this field exists
             author: {
               select: {
                 id: true,
@@ -31,14 +33,33 @@ export async function GET(req: NextRequest) {
                 profileImage: true,
               },
             },
-            commentId: true,
+            replies: {
+              select: {
+                replyId: true,
+                reply_content: true,
+                createdAt: true, // Make sure this field exists
+                reply_author: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    profileImage: true,
+                  },
+                },
+              },
+            },
           },
         },
         pubLikes: true,
       },
     });
+
+    // Add this logging to see the raw data structure
+    console.log("Posts data:", JSON.stringify(posts, null, 2));
+
     return NextResponse.json({ status: 200, posts });
-  } catch (error) {
-    return NextResponse.json({ status: 500, error });
+  } catch (error: any) {
+    console.error("Database error:", error);
+    return NextResponse.json({ status: 500, error: error.message });
   }
 }
