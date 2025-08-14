@@ -1,35 +1,26 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import {
-  fetchAllPubs,
-  fetchPubById,
-  fetchFeaturedPubs,
-  fetchArchivedPubs,
-  likePub,
-  addCommentPub,
-  createPost,
-  updatePost,
-  deletePost,
-  replyToCommentPub,
-  replyToReplyCommentPub,
-} from "@/services/publication";
+  createForum,
+  fetchAllForums,
+  fetchForumByCategory,
+  fetchForumById,
+} from "@/services/forum";
 
-interface Publication {
-  title: string;
-  excerpt: string;
-  content: string;
-  imageUrl: string;
+interface Forum {
+  topicTitle: string;
+  description: string;
   tags: string[];
   category: string;
 }
 
 // Main hook for working with all posts
-export const usePostQuery = (token: string) => {
+export const useForumQuery = (token: string) => {
   const queryClient = useQueryClient();
 
   // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
-    queryKey: ["pubs"],
-    queryFn: async () => await fetchAllPubs(token),
+    queryKey: ["forum"],
+    queryFn: async () => await fetchAllForums(token),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
@@ -37,13 +28,10 @@ export const usePostQuery = (token: string) => {
   });
 
   // Mutation to create a new post
-  const mutation = useMutation({
-    mutationFn: async (postData: Publication) =>
-      await createPost(token, postData),
+  const createForumQuery = useMutation({
+    mutationFn: async (postData: Forum) => await createForum(token, postData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pubs"] });
-      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
-      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["forum"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
@@ -58,11 +46,10 @@ export const usePostQuery = (token: string) => {
     refetch,
 
     // Mutation functions
-    createPost: mutation.mutate,
-    isCreating: mutation.isPending,
-    createError: mutation.error,
-    createSuccess: mutation.isSuccess,
-    createReset: mutation.reset,
+    createForum: createForumQuery.mutate,
+    isCreatingForum: createForumQuery.isPending,
+    forumCreationError: createForumQuery.error,
+    forumCreationSuccess: createForumQuery.isSuccess,
   };
 };
 
@@ -102,11 +89,28 @@ export const useArchivedPostsQuery = (token: string) => {
 
 // Separate hook for fetching a single post by ID
 
-export const useFetchOnePostQuery = (postId: string) => {
+export const useFetchForumByCategory = (slug: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
-    queryKey: ["pub", postId],
-    queryFn: () => fetchPubById(postId),
-    enabled: !!postId,
+    queryKey: ["forum", slug],
+    queryFn: () => fetchForumByCategory(slug!),
+    enabled: Boolean(slug),
+  });
+
+  return {
+    data,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
+  };
+};
+
+export const useFetchForumById = (forumId: string) => {
+  const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+    queryKey: ["forum", forumId],
+    queryFn: () => fetchForumById(forumId!),
+    enabled: Boolean(forumId),
   });
 
   return {
@@ -128,7 +132,7 @@ export const usePostByIdQuery = (token: string, postId: string) => {
   // });
 
   const updateMutation = useMutation({
-    mutationFn: (postData: Publication) => updatePost(token, postId, postData),
+    mutationFn: (postData: Forum) => updatePost(token, postId, postData),
     onSuccess: () => {
       // Invalidate both the specific post and the posts list
       queryClient.invalidateQueries({ queryKey: ["pub", postId] });

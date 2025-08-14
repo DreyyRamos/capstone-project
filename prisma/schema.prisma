@@ -34,10 +34,14 @@ model User {
   forums                           Forum[]
   pubComments                      PublicationComments[]
   pubLikes                         PublicationLikes[]
-  forumReplies                     ForumReplies[]
-  forumLikes                       ForumLikes[]
   publicationCommentReplies        PublicationCommentReplies[]
   publicationCommentReplyToReplies PublicationCommentReplyToReplies[]
+
+  // --- Updated Forum Relations ---
+  forumComments              ForumComments[]
+  forumLikes                 ForumLikes[]
+  forumCommentReplies        ForumCommentReplies[]
+  forumCommentReplyToReplies ForumCommentReplyToReplies[]
 }
 
 enum Role {
@@ -87,31 +91,84 @@ model Notifications {
   user         User?        @relation(fields: [userId], references: [id])
   pubNotifId   String?
   publication  Publication? @relation(fields: [pubNotifId], references: [pubId])
+  forumNotifId String?
+  forum        Forum?       @relation(fields: [forumNotifId], references: [forumId])
 }
 
 model Forum {
-  forumId      String         @id @default(cuid())
-  topicTitle   String?        @db.VarChar(255)
-  description  String?        @db.VarChar(65535)
-  authorId     String?
-  author       User?          @relation(fields: [authorId], references: [id])
-  imageUrl     String?
-  tags         String?
-  category     String?
-  forumReplies ForumReplies[]
-  forumLikes   ForumLikes[]
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  forumId       String          @id @default(cuid())
+  topicTitle    String?         @db.VarChar(255)
+  description   String?         @db.VarChar(65535)
+  authorId      String?
+  author        User?           @relation(fields: [authorId], references: [id])
+  imageUrl      String?
+  tags          String[]
+  category      String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  notifications Notifications[]
+
+  // --- Updated Forum Relations ---
+  forumLikes                 ForumLikes[]
+  forumComments              ForumComments[]
+  forumCommentReplies        ForumCommentReplies[]
+  ForumCommentReplyToReplies ForumCommentReplyToReplies[]
 }
 
-model ForumReplies {
-  commentId  String   @id @default(cuid())
-  forumReply String?
-  forumId    String?
-  forum      Forum?   @relation(fields: [forumId], references: [forumId], onDelete: Cascade)
-  authorId   String?
-  author     User?    @relation(fields: [authorId], references: [id])
-  createdAt  DateTime @default(now())
+model ForumComments {
+  commentId       String   @id @default(cuid())
+  comment_content String?
+  forumId         String?
+  forum           Forum?   @relation(fields: [forumId], references: [forumId], onDelete: Cascade)
+  authorId        String?
+  author          User?    @relation(fields: [authorId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relation to first-level replies
+  replies ForumCommentReplies[]
+}
+
+model ForumCommentReplies {
+  replyId       String  @id @default(cuid())
+  reply_content String?
+
+  // Link to parent comment
+  commentId String?
+  comment   ForumComments? @relation(fields: [commentId], references: [commentId], onDelete: Cascade)
+
+  // Link to child replies (parent -> children)
+  children ForumCommentReplyToReplies[]
+
+  reply_authorId String?
+  reply_author   User?   @relation(fields: [reply_authorId], references: [id], onDelete: Cascade)
+
+  // Direct link to the main forum post
+  forumId String?
+  forum   Forum?  @relation(fields: [forumId], references: [forumId])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// New model for second-level replies (replies to replies)
+model ForumCommentReplyToReplies {
+  replyToReplyId       String  @id @default(cuid())
+  replyToReply_content String?
+
+  // Link to parent reply (child -> parent)
+  parentReplyId String
+  parentReply   ForumCommentReplies @relation(fields: [parentReplyId], references: [replyId], onDelete: Cascade)
+
+  reply_authorId String?
+  reply_author   User?   @relation(fields: [reply_authorId], references: [id], onDelete: Cascade)
+
+  // Direct link to the main forum post
+  forumId String?
+  forum   Forum?  @relation(fields: [forumId], references: [forumId])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ForumLikes {
@@ -133,6 +190,7 @@ model PublicationComments {
   authorId        String?
   author          User?        @relation(fields: [authorId], references: [id])
   createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 
   replies PublicationCommentReplies[]
 }
@@ -152,6 +210,7 @@ model PublicationCommentReplies {
   publication      Publication? @relation(fields: [publicationPubId], references: [pubId])
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model PublicationCommentReplyToReplies {
@@ -168,34 +227,8 @@ model PublicationCommentReplyToReplies {
   publication      Publication? @relation(fields: [publicationPubId], references: [pubId])
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
-// model PublicationCommentReplies {
-//   replyId          String                             @id @default(cuid())
-//   reply_content    String?
-//   commentId        String?
-//   comment          PublicationComments?               @relation(fields: [commentId], references: [commentId], onDelete: Cascade)
-//   reply_authorId   String?
-//   reply_author     User?                              @relation(fields: [reply_authorId], references: [id], onDelete: Cascade)
-//   publicationPubId String?
-//   publication      Publication?                       @relation(fields: [publicationPubId], references: [pubId])
-//   replies          PublicationCommentReplyToReplies[]
-
-//   createdAt DateTime @default(now())
-// }
-
-// model PublicationCommentReplyToReplies {
-//   replyToReplyId       String                    @id @default(cuid())
-//   replyToReply_content String?
-//   replyId              String?
-//   reply                PublicationCommentReplies @relation(fields: [replyToReplyId], references: [commentId], onDelete: Cascade)
-//   reply_authorId       String?
-//   reply_author         User?                     @relation(fields: [reply_authorId], references: [id], onDelete: Cascade)
-//   publicationPubId     String?
-//   publication          Publication?              @relation(fields: [publicationPubId], references: [pubId])
-
-//   createdAt DateTime @default(now())
-// }
 
 model PublicationLikes {
   likeId      String      @id @default(cuid())

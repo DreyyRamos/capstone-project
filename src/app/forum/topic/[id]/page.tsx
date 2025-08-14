@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Heart,
@@ -20,28 +20,39 @@ import {
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
+import { useFetchForumById } from "@/hooks/useForum";
+import Cookies from "js-cookie";
 
-export default function ForumTopicPage({ params }: { params: { id: string } }) {
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default function ForumTopicPage({ params }: PageProps) {
+  const { id } = use(params);
   const [newReply, setNewReply] = useState("");
   const { isOpen, action, redirectTo, requireAuth, closeModal } =
     useAuthModal();
 
+  const { data: topic } = useFetchForumById(id);
+
+  console.log("topic by id", topic);
+
   // fetch this data based on the ID
-  const topic = {
-    id: 1,
-    title: "Tips for Better Study Habits",
-    content:
-      "I've been struggling with maintaining consistent study habits and would love to hear what works for other students. What are your best tips for staying focused and organized with schoolwork?",
-    author: "Alex Chen",
-    authorRole: "Student",
-    date: "2024-01-15T10:30:00Z",
-    category: "Academic",
-    views: 145,
-    replies: 23,
-    isPinned: false,
-    isLocked: false,
-    likes: 12,
-  };
+  // const topic = {
+  //   id: 1,
+  //   title: "Tips for Better Study Habits",
+  //   content:
+  //     "I've been struggling with maintaining consistent study habits and would love to hear what works for other students. What are your best tips for staying focused and organized with schoolwork?",
+  //   author: "Alex Chen",
+  //   authorRole: "Student",
+  //   date: "2024-01-15T10:30:00Z",
+  //   category: "Academic",
+  //   views: 145,
+  //   replies: 23,
+  //   isPinned: false,
+  //   isLocked: false,
+  //   likes: 12,
+  // };
 
   const replies = [
     {
@@ -129,33 +140,36 @@ export default function ForumTopicPage({ params }: { params: { id: string } }) {
         <CardContent className="p-6">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              {topic.isPinned && <Pin className="h-4 w-4 text-blue-600" />}
-              <Badge variant="secondary">{topic.category}</Badge>
+              {/* {topic.isPinned && <Pin className="h-4 w-4 text-blue-600" />} */}
+              <Badge variant="secondary">{topic?.category}</Badge>
               <span className="text-sm text-muted-foreground">
-                {topic.views} views
+                {/* {topic.views} views */}
               </span>
             </div>
 
-            <h1 className="text-3xl font-bold">{topic.title}</h1>
+            <h1 className="text-3xl font-bold">{topic?.topicTitle}</h1>
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
+                  <AvatarImage src={topic?.author?.profileImage} />
                   <AvatarFallback>
-                    {topic.author
+                    {topic?.author?.firstName
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: any) => n[0])
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium">{topic.author}</p>
+                  <p className="font-medium">
+                    {topic?.author?.firstName} {topic?.author?.lastName}
+                  </p>
                   <p className="text-sm text-muted-foreground">
-                    {topic.authorRole}
+                    {topic?.author?.role}
                   </p>
                   <p className="text-sm text-muted-foreground flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    {new Date(topic.date).toLocaleString()}
+                    {new Date(topic?.createdAt).toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -163,7 +177,7 @@ export default function ForumTopicPage({ params }: { params: { id: string } }) {
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm" onClick={handleLike}>
                   <Heart className="mr-2 h-4 w-4" />
-                  {topic.likes}
+                  {topic?.forumLikes?.length}
                 </Button>
                 <Button variant="outline" size="sm">
                   <Share2 className="mr-2 h-4 w-4" />
@@ -176,13 +190,13 @@ export default function ForumTopicPage({ params }: { params: { id: string } }) {
             </div>
 
             <div className="pt-4">
-              <p className="text-lg leading-relaxed">{topic.content}</p>
+              <p className="text-lg leading-relaxed">{topic?.description}</p>
             </div>
 
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <MessageCircle className="h-4 w-4" />
-                {topic.replies} replies
+                {topic?.forumComments?.length} replies
               </span>
             </div>
           </div>

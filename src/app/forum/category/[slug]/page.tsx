@@ -1,18 +1,49 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, MessageSquare, Users, Clock, Pin, TrendingUp, ArrowLeft, Plus, Eye } from "lucide-react"
-import Link from "next/link"
+import { useState, use } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Search,
+  MessageSquare,
+  Users,
+  Clock,
+  Pin,
+  TrendingUp,
+  ArrowLeft,
+  Plus,
+  Eye,
+} from "lucide-react";
+import Link from "next/link";
+import { useFetchForumByCategory } from "@/hooks/useForum";
 
-export default function ForumCategoryPage({ params }: { params: { id: string } }) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [sortBy, setSortBy] = useState("recent")
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export default function ForumCategoryPage({ params }: PageProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("recent");
+
+  const { slug } = use(params);
+
+  const { data: topics } = useFetchForumByCategory(slug!);
+
+  const truncate = (str: string, max = 30) =>
+    str?.length > max ? str.slice(0, max) + "…" : str;
+
+  console.log("category", topics);
+  console.log("params", slug);
 
   // Sample category data based on the ID
   const categoryData = {
@@ -51,9 +82,9 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
       topics: 8,
       posts: 45,
     },
-  }
+  };
 
-  const category = categoryData[params.id as keyof typeof categoryData] || categoryData["general-discussion"]
+  // const category = categoryData[params.id as keyof typeof categoryData] || categoryData["general-discussion"]
 
   // Sample topics for each category
   const sampleTopics = {
@@ -70,7 +101,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: true,
         isHot: false,
         createdAt: "2024-01-20T09:00:00Z",
-        excerpt: "A warm welcome to all new students joining our school community this semester!",
+        excerpt:
+          "A warm welcome to all new students joining our school community this semester!",
       },
       {
         id: 2,
@@ -84,7 +116,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: false,
         isHot: true,
         createdAt: "2024-01-19T14:30:00Z",
-        excerpt: "What would you like to see added to our cafeteria menu? Share your suggestions here!",
+        excerpt:
+          "What would you like to see added to our cafeteria menu? Share your suggestions here!",
       },
       {
         id: 3,
@@ -98,7 +131,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: false,
         isHot: false,
         createdAt: "2024-01-18T11:00:00Z",
-        excerpt: "Monthly lost and found thread. Check here if you've lost something around campus.",
+        excerpt:
+          "Monthly lost and found thread. Check here if you've lost something around campus.",
       },
     ],
     academic: [
@@ -114,7 +148,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: false,
         isHot: true,
         createdAt: "2024-01-20T10:30:00Z",
-        excerpt: "Looking for advice on maintaining consistent study habits. What works for you?",
+        excerpt:
+          "Looking for advice on maintaining consistent study habits. What works for you?",
       },
       {
         id: 5,
@@ -128,7 +163,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: false,
         isHot: false,
         createdAt: "2024-01-19T16:45:00Z",
-        excerpt: "Looking to form a study group for AP Chemistry. Who's interested?",
+        excerpt:
+          "Looking to form a study group for AP Chemistry. Who's interested?",
       },
       {
         id: 6,
@@ -142,7 +178,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: true,
         isHot: false,
         createdAt: "2024-01-18T13:20:00Z",
-        excerpt: "Free math tutoring sessions available every Tuesday and Thursday after school.",
+        excerpt:
+          "Free math tutoring sessions available every Tuesday and Thursday after school.",
       },
     ],
     "clubs-activities": [
@@ -158,7 +195,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: true,
         isHot: true,
         createdAt: "2024-01-20T08:00:00Z",
-        excerpt: "Auditions for our spring play 'Romeo and Juliet' are coming up! All students welcome.",
+        excerpt:
+          "Auditions for our spring play 'Romeo and Juliet' are coming up! All students welcome.",
       },
       {
         id: 8,
@@ -172,7 +210,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: false,
         isHot: false,
         createdAt: "2024-01-19T15:30:00Z",
-        excerpt: "Summary of our latest science club meeting and upcoming project discussions.",
+        excerpt:
+          "Summary of our latest science club meeting and upcoming project discussions.",
       },
       {
         id: 9,
@@ -186,7 +225,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: false,
         isHot: false,
         createdAt: "2024-01-17T12:00:00Z",
-        excerpt: "Join us for a photo walk around downtown this Saturday morning!",
+        excerpt:
+          "Join us for a photo walk around downtown this Saturday morning!",
       },
     ],
     sports: [
@@ -202,7 +242,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: true,
         isHot: true,
         createdAt: "2024-01-20T07:30:00Z",
-        excerpt: "What an incredible season! Let's celebrate our achievements and look ahead.",
+        excerpt:
+          "What an incredible season! Let's celebrate our achievements and look ahead.",
       },
       {
         id: 11,
@@ -216,7 +257,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: false,
         isHot: false,
         createdAt: "2024-01-19T10:15:00Z",
-        excerpt: "Spring track and field season is starting! Tryouts begin Monday after school.",
+        excerpt:
+          "Spring track and field season is starting! Tryouts begin Monday after school.",
       },
       {
         id: 12,
@@ -246,7 +288,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: false,
         isHot: false,
         createdAt: "2024-01-20T11:00:00Z",
-        excerpt: "Thank you to everyone who attended our winter concert! Share your thoughts here.",
+        excerpt:
+          "Thank you to everyone who attended our winter concert! Share your thoughts here.",
       },
       {
         id: 14,
@@ -260,7 +303,8 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: true,
         isHot: false,
         createdAt: "2024-01-19T09:30:00Z",
-        excerpt: "Submit your artwork for our spring exhibition! Deadline is February 15th.",
+        excerpt:
+          "Submit your artwork for our spring exhibition! Deadline is February 15th.",
       },
       {
         id: 15,
@@ -274,31 +318,36 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         isPinned: false,
         isHot: false,
         createdAt: "2024-01-17T16:20:00Z",
-        excerpt: "Join us for a creative writing workshop with guest author Jane Smith!",
+        excerpt:
+          "Join us for a creative writing workshop with guest author Jane Smith!",
       },
     ],
-  }
+  };
 
-  const topics = sampleTopics[params.id as keyof typeof sampleTopics] || sampleTopics["general-discussion"]
+  // const topics =
+  //   sampleTopics[params.id as keyof typeof sampleTopics] ||
+  //   sampleTopics["general-discussion"];
 
-  const filteredTopics = topics.filter(
-    (topic) =>
-      topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      topic.excerpt.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  // const filteredTopics = topics?.filter(
+  //   (topic: any) =>
+  //     topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     topic.description.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
-  const sortedTopics = [...filteredTopics].sort((a, b) => {
-    switch (sortBy) {
-      case "recent":
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      case "popular":
-        return b.views - a.views
-      case "replies":
-        return b.replies - a.replies
-      default:
-        return 0
-    }
-  })
+  // const sortedTopics = [...filteredTopics].sort((a, b) => {
+  //   switch (sortBy) {
+  //     case "recent":
+  //       return (
+  //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  //       );
+  //     // case "popular":
+  //     //   return b.views - a.views;
+  //     case "replies":
+  //       return b.replies - a.replies;
+  //     default:
+  //       return 0;
+  //   }
+  // });
 
   return (
     <div className="space-y-6">
@@ -312,10 +361,10 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         </Button>
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold">{category.name}</h1>
-            <Badge className={category.color}>{category.topics} topics</Badge>
+            <h1 className="text-3xl font-bold">{topics?.topicTitle}</h1>
+            {/* <Badge className={category.color}>{category.topics} topics</Badge> */}
           </div>
-          <p className="text-muted-foreground">{category.description}</p>
+          <p className="text-muted-foreground">{topics?.description}</p>
         </div>
         <Button asChild>
           <Link href="/forum/create">
@@ -334,7 +383,7 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
                 <MessageSquare className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{category.topics}</p>
+                <p className="text-2xl font-bold">{topics?.length}</p>
                 <p className="text-sm text-muted-foreground">Topics</p>
               </div>
             </div>
@@ -347,7 +396,7 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
                 <Users className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{category.posts}</p>
+                {/* <p className="text-2xl font-bold">{category.posts}</p> */}
                 <p className="text-sm text-muted-foreground">Posts</p>
               </div>
             </div>
@@ -360,7 +409,9 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
                 <TrendingUp className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{Math.floor(category.posts / category.topics)}</p>
+                <p className="text-2xl font-bold">
+                  {/* {Math.floor(category.posts / category.topics)} */}
+                </p>
                 <p className="text-sm text-muted-foreground">Avg. Replies</p>
               </div>
             </div>
@@ -375,7 +426,7 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={`Search ${category.name.toLowerCase()} topics...`}
+                // placeholder={`Search ${category.name.toLowerCase()} topics...`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -397,43 +448,61 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
 
       {/* Topics List */}
       <div className="space-y-4">
-        {sortedTopics.map((topic) => (
-          <Card key={topic.id} className="hover:shadow-md transition-shadow">
+        {topics?.map((topic: any) => (
+          <Card
+            key={topic?.forumId}
+            className="hover:shadow-md transition-shadow"
+          >
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    {topic.isPinned && <Pin className="h-4 w-4 text-blue-600" />}
-                    {topic.isHot && <TrendingUp className="h-4 w-4 text-red-600" />}
+                    {/* {topic.isPinned && (
+                      <Pin className="h-4 w-4 text-blue-600" />
+                    )}
+                    {topic.isHot && (
+                      <TrendingUp className="h-4 w-4 text-red-600" />
+                    )} */}
                     <h3 className="text-lg font-semibold">
-                      <Link href={`/forum/topic/${topic.id}`} className="hover:text-blue-600">
-                        {topic.title}
+                      <Link
+                        href={`/forum/topic/${topic?.forumId}`}
+                        className="hover:text-blue-600"
+                      >
+                        {topic?.topicTitle}
                       </Link>
                     </h3>
-                    {topic.isPinned && (
+                    {/* {topic.isPinned && (
                       <Badge variant="secondary" className="text-xs">
                         Pinned
                       </Badge>
                     )}
                     {topic.isHot && (
-                      <Badge variant="secondary" className="text-xs bg-red-100 text-red-800">
+                      <Badge
+                        variant="secondary"
+                        className="text-xs bg-red-100 text-red-800"
+                      >
                         Hot
                       </Badge>
-                    )}
+                    )} */}
                   </div>
-                  <p className="text-muted-foreground mb-3">{topic.excerpt}</p>
+                  <p className="text-muted-foreground mb-3">
+                    {truncate(topic?.description, 30)}
+                  </p>
                   <div className="flex items-center gap-2 mb-3">
                     <Avatar className="h-6 w-6">
+                      <AvatarImage src={topic?.author?.profileImage} />
                       <AvatarFallback className="text-xs">
-                        {topic.author
+                        {topic?.author?.firstName
                           .split(" ")
-                          .map((n) => n[0])
+                          .map((n: any) => n[0])
                           .join("")}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm text-muted-foreground">by {topic.author}</span>
+                    <span className="text-sm text-muted-foreground">
+                      by {topic?.author?.firstName} {topic?.author?.lastName}
+                    </span>
                     <Badge variant="outline" className="text-xs">
-                      {topic.authorRole}
+                      {topic?.author?.role}
                     </Badge>
                     <span className="text-sm text-muted-foreground">
                       • {new Date(topic.createdAt).toLocaleDateString()}
@@ -442,15 +511,15 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <MessageSquare className="h-4 w-4" />
-                      {topic.replies} replies
+                      {topic?.forumComments?.length} replies
                     </span>
                     <span className="flex items-center gap-1">
                       <Eye className="h-4 w-4" />
-                      {topic.views} views
+                      {/* {topic.views} views */}
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="h-4 w-4" />
-                      Last reply {topic.lastReply} by {topic.lastReplyBy}
+                      {/* Last reply {topic.lastReply} by {topic.lastReplyBy} */}
                     </span>
                   </div>
                 </div>
@@ -458,12 +527,12 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
                   <Button asChild variant="outline" size="sm">
                     <Link href={`/forum/topic/${topic.id}`}>View Topic</Link>
                   </Button>
-                  {topic.isHot && (
+                  {/* {topic.isHot && (
                     <div className="flex items-center gap-1 text-xs text-red-600">
                       <TrendingUp className="h-3 w-3" />
                       Trending
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             </CardContent>
@@ -471,40 +540,46 @@ export default function ForumCategoryPage({ params }: { params: { id: string } }
         ))}
       </div>
 
-      {sortedTopics.length === 0 && (
+      {/* {sortedTopics.length === 0 && (
         <Card>
           <CardContent className="p-12 text-center">
             <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-muted-foreground mb-4">No topics found matching your search.</p>
+            <p className="text-muted-foreground mb-4">
+              No topics found matching your search.
+            </p>
             <Button asChild>
               <Link href="/forum/create">Start the first discussion</Link>
             </Button>
           </CardContent>
         </Card>
-      )}
+      )} */}
 
       {/* Pagination */}
-      {sortedTopics.length > 0 && (
-        <div className="flex justify-center">
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" disabled>
-              Previous
-            </Button>
-            <Button variant="outline" size="sm" className="bg-primary text-primary-foreground">
-              1
-            </Button>
-            <Button variant="outline" size="sm">
-              2
-            </Button>
-            <Button variant="outline" size="sm">
-              3
-            </Button>
-            <Button variant="outline" size="sm">
-              Next
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* {sortedTopics.length > 0 && (
+        // <div className="flex justify-center">
+        //   <div className="flex items-center gap-2">
+        //     <Button variant="outline" size="sm" disabled>
+        //       Previous
+        //     </Button>
+        //     <Button
+        //       variant="outline"
+        //       size="sm"
+        //       className="bg-primary text-primary-foreground"
+        //     >
+        //       1
+        //     </Button>
+        //     <Button variant="outline" size="sm">
+        //       2
+        //     </Button>
+        //     <Button variant="outline" size="sm">
+        //       3
+        //     </Button>
+        //     <Button variant="outline" size="sm">
+        //       Next
+        //     </Button>
+        //   </div>
+        // </div>
+      )} */}
     </div>
-  )
+  );
 }

@@ -1,85 +1,82 @@
 "use client"
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Search, MessageSquare, Users, TrendingUp, Clock, Pin, PlusCircle } from "lucide-react"
-import Link from "next/link"
+import { useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Search,
+  MessageSquare,
+  Users,
+  TrendingUp,
+  Clock,
+  Pin,
+  PlusCircle,
+} from "lucide-react";
+import Link from "next/link";
+import { useForumQuery } from "@/hooks/useForum";
+import Cookies from "js-cookie";
+import { timeAgo } from "@/lib/timeAgo";
 
 export default function ForumPage() {
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const categories = [
-    {
-      id: 1,
-      name: "General Discussion",
-      description: "General topics and school-wide discussions",
-      topics: 45,
-      posts: 234,
-      lastPost: {
-        title: "Welcome New Students!",
-        author: "Admin",
-        time: "2 hours ago",
-      },
-      color: "bg-blue-100 text-blue-800",
-    },
-    {
-      id: 2,
-      name: "Academic",
-      description: "Study tips, homework help, and academic discussions",
-      topics: 23,
-      posts: 156,
-      lastPost: {
-        title: "Tips for Better Study Habits",
-        author: "Alex Chen",
-        time: "4 hours ago",
-      },
-      color: "bg-green-100 text-green-800",
-    },
-    {
-      id: 3,
-      name: "Clubs & Activities",
-      description: "Club announcements, activities, and events",
-      topics: 18,
-      posts: 89,
-      lastPost: {
-        title: "Science Club Meeting Notes",
-        author: "Michael Brown",
-        time: "6 hours ago",
-      },
-      color: "bg-purple-100 text-purple-800",
-    },
-    {
-      id: 4,
-      name: "Sports",
-      description: "Sports news, team updates, and athletic discussions",
-      topics: 12,
-      posts: 67,
-      lastPost: {
-        title: "Basketball Season Recap",
-        author: "Coach Martinez",
-        time: "1 day ago",
-      },
-      color: "bg-orange-100 text-orange-800",
-    },
-    {
-      id: 5,
-      name: "Arts & Culture",
-      description: "Art, music, theater, and cultural events",
-      topics: 8,
-      posts: 45,
-      lastPost: {
-        title: "Winter Concert Preparations",
-        author: "Ms. Johnson",
-        time: "2 days ago",
-      },
-      color: "bg-pink-100 text-pink-800",
-    },
-  ]
+  const token = Cookies.get("token") || "";
+  const { data: rawForums } = useForumQuery(token);
+
+  const categories = useMemo(() => {
+    if (!rawForums?.posts?.length) return [];
+
+    // group by category name
+    const grouped = rawForums?.posts?.reduce((acc: any, forum: any) => {
+      const cat = forum.category || "Uncategorized";
+      (acc[cat] = acc[cat] || []).push(forum);
+      return acc;
+    }, {});
+
+    console.log("check forum from memo", grouped);
+
+    // transform each group into the shape the UI expects
+    return Object.entries(grouped).map(([name, forums]: any) => {
+      const latest = forums.sort(
+        (a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )[0];
+
+      // crude post count: 1 forum post  all comments/replies
+      const posts = forums.reduce(
+        (sum: any, f: any) =>
+          1 +
+          sum +
+          f.forumComments.length +
+          f.forumComments.flatMap((c: any) => c.forumCommentReplies).length,
+        0
+      );
+
+      console.log("check forum from memo 2", latest);
+
+      return {
+        id: name, // replace this if need ko ng real id
+        name,
+        description: `Discussion about ${name}`,
+        topics: forums.length,
+        posts,
+        lastUpdated: timeAgo(new Date(latest.createdAt)),
+        // simple deterministic color per category
+        color: `bg-${
+          ["blue", "green", "purple", "orange", "pink"][name.length % 5]
+        }-100 text-${
+          ["blue", "green", "purple", "orange", "pink"][name.length % 5]
+        }-800`,
+      };
+    });
+  }, [rawForums]);
+
+  console.log("categories to check", categories);
+  console.log("raw forum to check", rawForums);
 
   const recentTopics = [
     {
@@ -137,14 +134,14 @@ export default function ForumPage() {
       isPinned: false,
       isHot: false,
     },
-  ]
+  ];
 
   const stats = [
     { label: "Total Topics", value: "106", icon: MessageSquare },
     { label: "Total Posts", value: "591", icon: MessageSquare },
     { label: "Active Users", value: "247", icon: Users },
     { label: "Today's Posts", value: "18", icon: TrendingUp },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -152,7 +149,9 @@ export default function ForumPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">Community Forum</h1>
-          <p className="text-muted-foreground">Connect, discuss, and share with your school community</p>
+          <p className="text-muted-foreground">
+            Connect, discuss, and share with your school community
+          </p>
         </div>
         <Button asChild>
           <Link href="/forum/create">
@@ -202,29 +201,43 @@ export default function ForumPage() {
         </TabsList>
 
         <TabsContent value="categories" className="space-y-4">
-          {categories.map((category) => (
-            <Card key={category.id} className="hover:shadow-md transition-shadow">
+          {categories.map((category: any, i: any) => (
+            <Card
+              key={category.id}
+              className="hover:shadow-md transition-shadow"
+            >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-lg font-semibold">
-                        <Link href={`/forum/category/${category.id}`} className="hover:text-blue-600">
+                        <Link
+                          href={`/forum/category/${category.name}`}
+                          className="hover:text-blue-600"
+                        >
                           {category.name}
                         </Link>
                       </h3>
-                      <Badge className={category.color}>{category.topics} topics</Badge>
+                      <Badge className={category.color}>
+                        {category.topics} topics
+                      </Badge>
                     </div>
-                    <p className="text-muted-foreground mb-3">{category.description}</p>
+                    <p className="text-muted-foreground mb-3">
+                      {category.description}
+                    </p>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <span>{category.posts} posts</span>
                       <span>•</span>
-                      <span>Last post: {category.lastPost.time}</span>
+                      <span>Last updated: {category.lastUpdated}</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium">{category.lastPost.title}</p>
-                    <p className="text-xs text-muted-foreground">by {category.lastPost.author}</p>
+                    <p className="text-sm font-medium">
+                      {/* {category.lastPost.title} */}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {/* by {category.lastPost.author} */}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -233,32 +246,45 @@ export default function ForumPage() {
         </TabsContent>
 
         <TabsContent value="recent" className="space-y-4">
-          {recentTopics.map((topic) => (
-            <Card key={topic.id} className="hover:shadow-md transition-shadow">
+          {rawForums?.posts?.map((topic: any) => (
+            <Card
+              key={topic.forumId}
+              className="hover:shadow-md transition-shadow"
+            >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      {topic.isPinned && <Pin className="h-4 w-4 text-blue-600" />}
-                      {topic.isHot && <TrendingUp className="h-4 w-4 text-red-600" />}
+                      {/* {topic.isPinned && (
+                        <Pin className="h-4 w-4 text-blue-600" />
+                      )}
+                      {topic.isHot && (
+                        <TrendingUp className="h-4 w-4 text-red-600" />
+                      )} */}
                       <h3 className="text-lg font-semibold">
-                        <Link href={`/forum/topic/${topic.id}`} className="hover:text-blue-600">
-                          {topic.title}
+                        <Link
+                          href={`/forum/topic/${topic.id}`}
+                          className="hover:text-blue-600"
+                        >
+                          {topic?.topicTitle}
                         </Link>
                       </h3>
                     </div>
                     <div className="flex items-center gap-2 mb-3">
                       <Avatar className="h-6 w-6">
+                        <AvatarImage src={topic?.author?.profileImage} />
                         <AvatarFallback className="text-xs">
-                          {topic.author
+                          {topic?.author?.firstName
                             .split(" ")
-                            .map((n) => n[0])
+                            .map((n: any) => n[0])
                             .join("")}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-sm text-muted-foreground">by {topic.author}</span>
+                      <span className="text-sm text-muted-foreground">
+                        by {topic?.author?.firstName} {topic?.author?.lastName}
+                      </span>
                       <Badge variant="outline" className="text-xs">
-                        {topic.category}
+                        {topic?.category}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -266,10 +292,10 @@ export default function ForumPage() {
                         <MessageSquare className="h-4 w-4" />
                         {topic.replies} replies
                       </span>
-                      <span>{topic.views} views</span>
+                      {/* <span>{topic.views} views</span> */}
                       <span className="flex items-center gap-1">
-                        <Clock className="h-4 w-4" />
-                        {topic.lastReply}
+                        {/* <Clock className="h-4 w-4" />
+                        {topic.lastReply} */}
                       </span>
                     </div>
                   </div>
@@ -283,14 +309,20 @@ export default function ForumPage() {
           {recentTopics
             .sort((a, b) => b.views - a.views)
             .map((topic) => (
-              <Card key={topic.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={topic.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <TrendingUp className="h-4 w-4 text-orange-600" />
                         <h3 className="text-lg font-semibold">
-                          <Link href={`/forum/topic/${topic.id}`} className="hover:text-blue-600">
+                          <Link
+                            href={`/forum/topic/${topic.id}`}
+                            className="hover:text-blue-600"
+                          >
                             {topic.title}
                           </Link>
                         </h3>
@@ -304,7 +336,9 @@ export default function ForumPage() {
                               .join("")}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm text-muted-foreground">by {topic.author}</span>
+                        <span className="text-sm text-muted-foreground">
+                          by {topic.author}
+                        </span>
                         <Badge variant="outline" className="text-xs">
                           {topic.category}
                         </Badge>
@@ -314,7 +348,9 @@ export default function ForumPage() {
                           <MessageSquare className="h-4 w-4" />
                           {topic.replies} replies
                         </span>
-                        <span className="font-medium text-orange-600">{topic.views} views</span>
+                        <span className="font-medium text-orange-600">
+                          {topic.views} views
+                        </span>
                         <span className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
                           {topic.lastReply}
@@ -328,5 +364,5 @@ export default function ForumPage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

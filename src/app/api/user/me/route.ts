@@ -26,13 +26,13 @@ export async function GET(req: NextRequest) {
         createdAt: true,
         updatedAt: true,
         publications: {
-          include: {
-            pubLikes: true,
-            pubComments: {
-              include: {
-                author: true,
-              },
-            },
+          select: {
+            title: true,
+            pubId: true,
+            category: true,
+            createdAt: true,
+            status: true,
+            pubComments: true,
           },
         },
       },

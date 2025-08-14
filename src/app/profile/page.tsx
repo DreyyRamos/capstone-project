@@ -38,6 +38,7 @@ import {
 import { UploadButton } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import { useUserQuery } from "@/hooks/useUser";
+import { timeAgo } from "@/lib/timeAgo";
 
 interface User {
   firstName: string;
@@ -596,16 +597,15 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {publications.map((pub, index) => (
-                  <div key={pub.id}>
+                {user?.userData?.publications?.map((pub: any, index: any) => (
+                  <div key={pub?.pubId}>
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <h3 className="font-medium">{pub.title}</h3>
+                        <h3 className="font-medium">{pub?.title}</h3>
                         <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
-                          <Badge variant="outline">{pub.category}</Badge>
-                          <span>{pub.date}</span>
-                          <span>{pub.views} views</span>
-                          <span>{pub.comments} comments</span>
+                          <Badge variant="outline">{pub?.category}</Badge>
+                          <span>{timeAgo(pub?.createdAt)}</span>
+                          <span>{pub?.pubComments?.length} comments</span>
                         </div>
                       </div>
                       <Badge
