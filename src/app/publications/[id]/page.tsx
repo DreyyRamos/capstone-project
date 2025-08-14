@@ -33,7 +33,7 @@ import {
   useAddTopReply,
   useAddNestedReply,
   // useReplies,
-} from "@/hooks/useReplies";
+} from "@/hooks/usePublicationReplies";
 import Cookies from "js-cookie";
 
 type PageProps = {

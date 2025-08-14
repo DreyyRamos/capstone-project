@@ -50,7 +50,7 @@ export async function GET(
 
                 // nested replies
                 children: {
-                  orderBy: { createdAt: "asc" },
+                  orderBy: { createdAt: "desc" },
                   include: {
                     reply_author: {
                       select: {

@@ -38,7 +38,7 @@ export async function GET(
 
             // top-level replies
             replies: {
-              orderBy: { createdAt: "asc" },
+              orderBy: { createdAt: "desc" },
               include: {
                 reply_author: {
                   select: {

@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 import {
   Heart,
   MessageCircle,
@@ -21,6 +22,11 @@ import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
 import { useFetchForumById } from "@/hooks/useForum";
+import {
+  useForumAddNestedReply,
+  useForumAddTopReplyForum,
+  useForumAddComment,
+} from "@/hooks/useForumReplies";
 import Cookies from "js-cookie";
 
 type PageProps = {
@@ -28,86 +34,118 @@ type PageProps = {
 };
 
 export default function ForumTopicPage({ params }: PageProps) {
+  const token = Cookies.get("token") || "";
   const { id } = use(params);
-  const [newReply, setNewReply] = useState("");
+  const [comment_content, setCommentContent] = useState("");
+  // const [newReply, setNewReply] = useState("");
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyContent, setReplyContent] = useState("");
+  const [replyingToSecondLevel, setReplyingToSecondLevel] = useState<
+    string | null
+  >(null);
+  const [secondLevelReplyContent, setSecondLevelReplyContent] = useState("");
   const { isOpen, action, redirectTo, requireAuth, closeModal } =
     useAuthModal();
+  const { mutate: commentToPost } = useForumAddComment(token);
+  const { mutate: addTopReply } = useForumAddTopReplyForum(token);
+  const { mutate: addNestedReply } = useForumAddNestedReply(token);
 
   const { data: topic } = useFetchForumById(id);
 
   console.log("topic by id", topic);
 
-  // fetch this data based on the ID
-  // const topic = {
-  //   id: 1,
-  //   title: "Tips for Better Study Habits",
-  //   content:
-  //     "I've been struggling with maintaining consistent study habits and would love to hear what works for other students. What are your best tips for staying focused and organized with schoolwork?",
-  //   author: "Alex Chen",
-  //   authorRole: "Student",
-  //   date: "2024-01-15T10:30:00Z",
-  //   category: "Academic",
-  //   views: 145,
-  //   replies: 23,
-  //   isPinned: false,
-  //   isLocked: false,
-  //   likes: 12,
-  // };
-
-  const replies = [
-    {
-      id: 1,
-      content:
-        "Great question! I've found that the Pomodoro Technique really helps me stay focused. I study for 25 minutes, then take a 5-minute break. After 4 cycles, I take a longer 15-30 minute break. It keeps me from getting overwhelmed and helps maintain concentration.",
-      author: "Sarah Johnson",
-      authorRole: "Student",
-      date: "2024-01-15T11:15:00Z",
-      likes: 8,
-      dislikes: 0,
-      isHelpful: true,
-    },
-    {
-      id: 2,
-      content:
-        "I second the Pomodoro Technique! Also, I've found that having a dedicated study space really makes a difference. I have a specific corner of my room that's only for studying - no games, no distractions. When I sit there, my brain knows it's time to focus.",
-      author: "Michael Brown",
-      authorRole: "Student",
-      date: "2024-01-15T12:00:00Z",
-      likes: 6,
-      dislikes: 0,
-      isHelpful: false,
-    },
-    {
-      id: 3,
-      content:
-        "As a teacher, I'd recommend creating a study schedule and sticking to it. Consistency is key! Also, don't try to cram everything in one session. Spaced repetition - reviewing material multiple times over several days - is much more effective than marathon study sessions.",
-      author: "Ms. Rodriguez",
-      authorRole: "Teacher",
-      date: "2024-01-15T14:30:00Z",
-      likes: 15,
-      dislikes: 1,
-      isHelpful: true,
-    },
-    {
-      id: 4,
-      content:
-        "One thing that's helped me is studying with friends, but in a structured way. We quiz each other and explain concepts to one another. Teaching someone else really helps solidify your own understanding!",
-      author: "Emma Davis",
-      authorRole: "Student",
-      date: "2024-01-15T16:45:00Z",
-      likes: 4,
-      dislikes: 0,
-      isHelpful: false,
-    },
-  ];
-
-  const handleSubmitReply = () => {
-    if (requireAuth("reply to this topic")) {
-      if (newReply.trim()) {
-        console.log("Submitting reply:", newReply);
-        setNewReply("");
+  const handleComment = async (forumId: string) => {
+    if (requireAuth("comment on this publication")) {
+      if (comment_content.trim()) {
+        console.log("Adding comment:", comment_content);
+        try {
+          await commentToPost({ content: comment_content, forumId });
+          setCommentContent("");
+          toast.success("Comment added successfully!");
+        } catch (error) {
+          toast.error("Failed to add comment");
+          console.error("Error adding comment:", error);
+        }
       }
     }
+  };
+
+  const handleReply = (commentId: string) => {
+    if (requireAuth("reply to this comment")) {
+      if (replyingTo === commentId) {
+        setReplyingTo(null);
+        setReplyContent("");
+      } else {
+        setReplyingTo(commentId);
+        setReplyContent("");
+      }
+    }
+  };
+
+  const handleSecondLevelReply = (replyId: string) => {
+    if (requireAuth("reply to this reply")) {
+      if (replyingToSecondLevel === replyId) {
+        setReplyingToSecondLevel(null);
+        setSecondLevelReplyContent("");
+      } else {
+        setReplyingToSecondLevel(replyId);
+        setSecondLevelReplyContent("");
+      }
+    }
+  };
+
+  const handleSubmitReply = async (forumId: string, commentId: string) => {
+    if (requireAuth("submit reply")) {
+      if (replyContent.trim()) {
+        console.log("Adding reply to comment:", commentId, replyContent);
+        try {
+          await addTopReply({ content: replyContent, forumId, commentId });
+          setReplyContent("");
+          setReplyingTo(null);
+          toast.success("Reply added successfully!");
+        } catch (error) {
+          toast.error("Failed to add reply");
+          console.error("Error adding reply:", error);
+        }
+      }
+    }
+  };
+
+  const handleSubmitSecondLevelReply = async (
+    replyId: string,
+    commentId: string
+  ) => {
+    if (requireAuth("submit second-level reply")) {
+      if (secondLevelReplyContent.trim()) {
+        console.log(
+          "Adding second-level reply to reply:",
+          replyId,
+          secondLevelReplyContent
+        );
+        try {
+          await addNestedReply({
+            content: secondLevelReplyContent,
+            forumId: id,
+            replyId,
+            commentId,
+          });
+          setSecondLevelReplyContent("");
+          setReplyingToSecondLevel(null);
+        } catch (error) {
+          console.error("Error adding second-level reply:", error);
+        }
+      }
+    }
+  };
+
+  const handleCancelReply = () => {
+    setReplyingTo(null);
+    setReplyContent("");
+  };
+
+  const handleCancelSecondLevelReply = () => {
+    setReplyingToSecondLevel(null);
+    setSecondLevelReplyContent("");
   };
 
   const handleLike = () => {
@@ -116,6 +154,10 @@ export default function ForumTopicPage({ params }: PageProps) {
 
   const handleReplyLike = (replyId: number) => {
     requireAuth("like this reply");
+  };
+
+  const handleReplyDislike = (replyId: number) => {
+    requireAuth("dislike this reply");
   };
 
   return (
@@ -205,76 +247,280 @@ export default function ForumTopicPage({ params }: PageProps) {
 
       {/* Replies */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Replies ({replies.length})</h2>
+        <h2 className="text-xl font-semibold">
+          Replies ({topic?.forumComments?.length || 0})
+        </h2>
 
-        {replies.map((reply, index) => (
-          <Card key={reply.id}>
+        {topic?.forumComments?.map((comment: any) => (
+          <Card key={comment.commentId}>
             <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback>
-                    {reply.author
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-
-                <div className="flex-1 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{reply.author}</p>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs">
-                          {reply.authorRole}
-                        </Badge>
-                        {reply.isHelpful && (
-                          <Badge
-                            variant="secondary"
-                            className="text-xs bg-green-100 text-green-800"
-                          >
-                            Helpful
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={comment.author.profileImage} />
+                    <AvatarFallback>
+                      {comment.author.firstName[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">
+                          {comment.author.firstName} {comment.author.lastName}
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="text-xs">
+                            {comment.author.role}
                           </Badge>
-                        )}
+                          {comment.isHelpful && (
+                            <Badge
+                              variant="secondary"
+                              className="text-xs bg-green-100 text-green-800"
+                            >
+                              Helpful
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-muted-foreground flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {new Date(comment.createdAt).toLocaleString()}
+                        </p>
                       </div>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {new Date(reply.date).toLocaleString()}
-                      </p>
+                    </div>
+                    <p className="leading-relaxed">{comment.comment_content}</p>
+                    <div className="flex items-center gap-4">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleReplyLike(comment.commentId)}
+                      >
+                        <ThumbsUp className="mr-2 h-4 w-4" />
+                        {comment.likes}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleReplyDislike(comment.commentId)}
+                      >
+                        <ThumbsDown className="mr-2 h-4 w-4" />
+                        {comment.dislikes}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleReply(comment.commentId)}
+                      >
+                        {replyingTo === comment.commentId ? "Cancel" : "Reply"}
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Flag className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-
-                  <p className="leading-relaxed">{reply.content}</p>
-
-                  <div className="flex items-center gap-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleReplyLike(reply.id)}
-                    >
-                      <ThumbsUp className="mr-2 h-4 w-4" />
-                      {reply.likes}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleReplyLike(reply.id)}
-                    >
-                      <ThumbsDown className="mr-2 h-4 w-4" />
-                      {reply.dislikes}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => requireAuth("reply to this comment")}
-                    >
-                      Reply
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Flag className="h-4 w-4" />
-                    </Button>
-                  </div>
                 </div>
+
+                {replyingTo === comment.commentId && (
+                  <div className="ml-14 space-y-3">
+                    <div className="border-l-2 border-muted pl-4">
+                      <Textarea
+                        placeholder="Write your reply..."
+                        value={replyContent}
+                        onChange={(e) => setReplyContent(e.target.value)}
+                        rows={2}
+                        className="resize-none"
+                      />
+                      <div className="flex items-center justify-end gap-2 mt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleCancelReply}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() =>
+                            handleSubmitReply(topic?.forumId, comment.commentId)
+                          }
+                          disabled={!replyContent.trim()}
+                        >
+                          Reply
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {comment.replies && comment.replies.length > 0 && (
+                  <div className="ml-14 space-y-4 border-l-2 border-muted pl-4">
+                    {comment.replies.map((reply: any) => (
+                      <div
+                        key={reply.replyId}
+                        className="flex items-start gap-4"
+                      >
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={reply.reply_author.profileImage} />
+                          <AvatarFallback>
+                            {reply.reply_author.firstName[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium text-sm">
+                              {reply.reply_author.firstName}{" "}
+                              {reply.reply_author.lastName}
+                            </p>
+                            <Badge variant="outline" className="text-xs">
+                              {reply.reply_author.role}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(reply.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-sm leading-relaxed">
+                            {reply.reply_content}
+                          </p>
+                          <div className="flex items-center gap-4">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleReplyLike(reply.replyId)}
+                            >
+                              <ThumbsUp className="mr-2 h-4 w-4" />
+                              {reply.likes}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleReplyDislike(reply.replyId)}
+                            >
+                              <ThumbsDown className="mr-2 h-4 w-4" />
+                              {reply.dislikes}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                handleSecondLevelReply(reply.replyId)
+                              }
+                            >
+                              {replyingToSecondLevel === reply.replyId
+                                ? "Cancel"
+                                : "Reply"}
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              <Flag className="h-4 w-4" />
+                            </Button>
+                          </div>
+
+                          {replyingToSecondLevel === reply.replyId && (
+                            <div className="ml-6 space-y-3">
+                              <div className="border-l-2 border-muted pl-4">
+                                <Textarea
+                                  placeholder="Write your reply..."
+                                  value={secondLevelReplyContent}
+                                  onChange={(e) =>
+                                    setSecondLevelReplyContent(e.target.value)
+                                  }
+                                  rows={2}
+                                  className="resize-none"
+                                />
+                                <div className="flex items-center justify-end gap-2 mt-2">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handleCancelSecondLevelReply}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    onClick={() =>
+                                      handleSubmitSecondLevelReply(
+                                        reply.replyId,
+                                        comment.commentId
+                                      )
+                                    }
+                                    disabled={!secondLevelReplyContent.trim()}
+                                  >
+                                    Reply
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {reply.children && reply.children.length > 0 && (
+                            <div className="ml-6 space-y-4 border-l-2 border-muted pl-4 mt-4">
+                              {reply.children.map((childReply: any) => (
+                                <div
+                                  key={childReply.replyId}
+                                  className="flex items-start gap-4"
+                                >
+                                  <Avatar className="h-8 w-8">
+                                    <AvatarImage
+                                      src={childReply.reply_author.profileImage}
+                                    />
+                                    <AvatarFallback>
+                                      {childReply.reply_author.firstName[0]}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1 space-y-2">
+                                    <div className="flex items-center gap-2">
+                                      <p className="font-medium text-sm">
+                                        {childReply.reply_author.firstName}{" "}
+                                        {childReply.reply_author.lastName}
+                                      </p>
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs"
+                                      >
+                                        {childReply.reply_author.role}
+                                      </Badge>
+                                      <span className="text-xs text-muted-foreground">
+                                        {new Date(
+                                          childReply.createdAt
+                                        ).toLocaleDateString()}
+                                      </span>
+                                    </div>
+                                    <p className="text-sm leading-relaxed">
+                                      {childReply.replyToReply_content}
+                                    </p>
+                                    <div className="flex items-center gap-4">
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() =>
+                                          handleReplyLike(childReply.replyId)
+                                        }
+                                      >
+                                        <ThumbsUp className="mr-2 h-4 w-4" />
+                                        {childReply.likes}
+                                      </Button>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() =>
+                                          handleReplyDislike(childReply.replyId)
+                                        }
+                                      >
+                                        <ThumbsDown className="mr-2 h-4 w-4" />
+                                        {childReply.dislikes}
+                                      </Button>
+                                      <Button variant="ghost" size="sm">
+                                        <Flag className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -288,8 +534,8 @@ export default function ForumTopicPage({ params }: PageProps) {
           <div className="space-y-4">
             <Textarea
               placeholder="Share your thoughts or advice..."
-              value={newReply}
-              onChange={(e) => setNewReply(e.target.value)}
+              value={comment_content}
+              onChange={(e) => setCommentContent(e.target.value)}
               rows={4}
             />
             <div className="flex items-center justify-between">
@@ -297,10 +543,13 @@ export default function ForumTopicPage({ params }: PageProps) {
                 Be respectful and constructive in your responses
               </p>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setNewReply("")}>
+                <Button variant="outline" onClick={() => setCommentContent("")}>
                   Cancel
                 </Button>
-                <Button onClick={handleSubmitReply} disabled={!newReply.trim()}>
+                <Button
+                  onClick={() => handleComment(topic?.forumId)}
+                  disabled={!comment_content.trim()}
+                >
                   Post Reply
                 </Button>
               </div>
