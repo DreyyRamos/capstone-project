@@ -231,7 +231,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
             </div>
 
             <div className="flex items-center gap-2">
-              <LikeButton post={publication} token={token} />
+              <LikeButton post={publication} token={token} pubId={id} />
               {(userRoles?.includes("EDITOR") ||
                 userRoles?.includes("ADMIN")) &&
                 !["DRAFT", "PENDING_REVIEW", "ARCHIVED"].includes(

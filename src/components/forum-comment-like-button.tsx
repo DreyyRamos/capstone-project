@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import React, { useState, useCallback, useMemo } from "react";
@@ -5,74 +7,120 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { likeCommentForum } from "@/services/publication";
 import { Button } from "@/components/ui/button";
 import { Heart, HeartOff, Loader } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
+import { useUserId } from "@/hooks/useUserId";
 
-interface Like {
-  userId: number;
+interface ForumCommentLike {
+  commentLikeId: string;
+  commentId: string;
+  userId: string; // Changed from number to string (UUID)
   isLiked: boolean;
+  forumId: string | null;
 }
 
-interface Forum {
+interface Author {
+  firstName: string;
+  lastName: string;
+  profileImage: string;
+  role: string;
+}
+
+interface ForumComment {
+  commentId: string;
+  comment_content: string;
   forumId: string;
-  topicTitle: string;
-  description: string;
-  imageUrl: string;
-  forumCommentLikes: Like[];
+  authorId: string;
+  createdAt: string;
+  author: Author;
+  forumCommentLikes: ForumCommentLike[];
 }
 
-interface LikeButtonProps {
-  forum: Forum;
+interface ForumCommentLikeButtonProps {
+  comment: ForumComment;
   token: string;
+  forumId?: string;
 }
 
-const ForumCommentLikeButton = ({ comment, token }: any) => {
+const ForumCommentLikeButton = ({
+  comment,
+  token,
+  forumId,
+}: ForumCommentLikeButtonProps) => {
   console.log("forum from like button", comment);
   const queryClient = useQueryClient();
-  const [currentLikePostId, setCurrentLikePostId] = useState<string | null>(
-    null
-  );
+  const [currentLikeCommentId, setCurrentLikeCommentId] = useState<
+    string | null
+  >(null);
 
-  const userLike = useMemo(
-    () =>
-      comment?.forumCommentLikes?.find(
-        (like: any) => like?.userId === parseInt(token)
-      ),
-    [comment?.forumCommentLikes, token]
-  );
+  const userId = useUserId(token);
 
-  const likeCount = useMemo(
-    () =>
-      comment?.forumCommentLikes?.filter((like: any) => like?.isLiked).length,
-    [comment.forumCommentLikes]
-  );
+  const userLike = useMemo(() => {
+    if (
+      !userId ||
+      !comment?.forumCommentLikes ||
+      comment.forumCommentLikes.length === 0
+    ) {
+      console.log("No userId or no likes found for this comment");
+      return undefined;
+    }
+
+    const found = comment?.forumCommentLikes?.find((like: ForumCommentLike) => {
+      return like?.userId === userId; // Compare with decoded user ID
+    });
+
+    return found;
+  }, [comment?.forumCommentLikes, userId]);
+
+  const likeCount = useMemo(() => {
+    const count =
+      comment?.forumCommentLikes?.filter(
+        (like: ForumCommentLike) => like?.isLiked
+      ).length || 0;
+    console.log("Like count calculation:", count);
+    return count;
+  }, [comment?.forumCommentLikes]);
 
   const likeMutation = useMutation({
     mutationFn: useCallback(
-      async ({
-        forumId,
-        commentId,
-      }: {
-        forumId: string;
-        commentId: string;
-      }) => {
-        return await likeCommentForum(forumId, comment.commentId, token);
+      async (commentId: string) => {
+        return await likeCommentForum(
+          forumId || comment.forumId,
+          commentId,
+          token
+        );
       },
-      [token]
+      [forumId, comment.forumId, token]
     ),
-    onMutate: (commentId: any) => {
-      setCurrentLikePostId(commentId);
+    onMutate: (commentId: string) => {
+      setCurrentLikeCommentId(commentId);
     },
     onSuccess: () => {
-      setCurrentLikePostId(null);
+      setCurrentLikeCommentId(null);
+      const currentForumId = forumId || comment.forumId;
+
+      // Invalidate the specific forum query first
       queryClient.invalidateQueries({
-        predicate: (query) =>
-          query.queryKey[0] === "forum" ||
-          query.queryKey[0] === "forums" ||
-          query.queryKey[0] === "users",
+        queryKey: ["forum", currentForumId],
+      });
+
+      // Also invalidate broader forum queries
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const shouldInvalidate =
+            query.queryKey[0] === "forum" || query.queryKey[0] === "forums";
+          console.log(
+            "Query key:",
+            query.queryKey,
+            "Should invalidate:",
+            shouldInvalidate
+          );
+          return shouldInvalidate;
+        },
       });
     },
     onError: (error: Error) => {
-      console.error("Error liking post:", error);
-      setCurrentLikePostId(null);
+      console.error("Error liking comment:", error);
+      setCurrentLikeCommentId(null);
     },
   });
 
@@ -86,23 +134,28 @@ const ForumCommentLikeButton = ({ comment, token }: any) => {
     }
   }, [likeMutation, comment.commentId]);
 
-  console.log("publication check for like", comment);
-
   return (
-    <Button variant={"ghost"} onClick={handleLikeToggle}>
+    <Button
+      variant={"ghost"}
+      onClick={handleLikeToggle}
+      disabled={likeMutation.isPending}
+      className={`flex items-center space-x-2 ${
+        likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
+      }`}
+    >
       <div className="relative group">
-        {currentLikePostId === comment?.commentId ? (
+        {currentLikeCommentId === comment?.commentId ? (
           <Loader className="animate-spin" />
         ) : userLike && userLike?.isLiked ? (
           <HeartOff className="text-red-500" />
         ) : (
           <Heart className="text-gray-500" />
         )}
-        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
           {userLike && userLike?.isLiked ? "Unlike" : "Like"}
         </span>
       </div>
-      <span className="text-gray-100">{likeCount}</span>
+      <span className="text-gray-100 ml-1">{likeCount}</span>
     </Button>
   );
 };

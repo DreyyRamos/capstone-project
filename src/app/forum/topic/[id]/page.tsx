@@ -293,7 +293,11 @@ export default function ForumTopicPage({ params }: PageProps) {
                     </div>
                     <p className="leading-relaxed">{comment.comment_content}</p>
                     <div className="flex items-center gap-4">
-                      <ForumCommentLikeButton comment={comment} token={token} />
+                      <ForumCommentLikeButton
+                        comment={comment}
+                        token={token}
+                        forumId={id}
+                      />
                       {/* <Button
                         variant="ghost"
                         size="sm"
