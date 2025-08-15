@@ -22,7 +22,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import LikeButton from "@/components/like-button";
+import LikeButton from "@/components/publication-like-button";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";

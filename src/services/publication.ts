@@ -68,6 +68,42 @@ export const likePub = async (postId: string, token: string) => {
   return await res.json();
 };
 
+export const likeForum = async (forumId: string, token: string) => {
+  const res = await fetch(`/api/forums/${forumId}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to like post");
+  }
+
+  return await res.json();
+};
+
+export const likeCommentForum = async (
+  forumId: string,
+  commentId: string,
+  token: string
+) => {
+  const res = await fetch(`/api/forums/${forumId}/comments/${commentId}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to like post");
+  }
+
+  return await res.json();
+};
+
 export const addCommentPub = async (
   token: string,
   postId: string,

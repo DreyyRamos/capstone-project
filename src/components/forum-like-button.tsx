@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { likePub } from "@/services/publication";
+import { likeForum } from "@/services/publication";
 import { Button } from "@/components/ui/button";
 import { Heart, HeartOff, Loader } from "lucide-react";
 
@@ -11,51 +11,52 @@ interface Like {
   isLiked: boolean;
 }
 
-interface Post {
-  pubId: string;
-  title: string;
-  content: string;
+interface Forum {
+  forumId: string;
+  topicTitle: string;
+  description: string;
   imageUrl: string;
-  pubLikes: Like[];
+  forumLikes: Like[];
 }
 
 interface LikeButtonProps {
-  post: Post;
+  forum: Forum;
   token: string;
 }
 
-const LikeButton = ({ post, token }: LikeButtonProps) => {
+const ForumLikeButton = ({ forum, token }: LikeButtonProps) => {
+  console.log("forum from like button", forum);
   const queryClient = useQueryClient();
   const [currentLikePostId, setCurrentLikePostId] = useState<string | null>(
     null
   );
 
   const userLike = useMemo(
-    () => post?.pubLikes?.find((like) => like?.userId === parseInt(token)),
-    [post?.pubLikes, token]
+    () => forum?.forumLikes?.find((like) => like?.userId === parseInt(token)),
+    [forum?.forumLikes, token]
   );
 
   const likeCount = useMemo(
-    () => post?.pubLikes?.filter((like) => like?.isLiked).length,
-    [post?.pubLikes]
+    () => forum?.forumLikes?.filter((like) => like?.isLiked).length,
+    [forum?.forumLikes]
   );
 
   const likeMutation = useMutation({
     mutationFn: useCallback(
-      async (postId: string) => {
-        return await likePub(postId, token);
+      async (forumId: string) => {
+        return await likeForum(forumId, token);
       },
       [token]
     ),
-    onMutate: (postId: string) => {
-      setCurrentLikePostId(postId);
+    onMutate: (forumId: string) => {
+      setCurrentLikePostId(forumId);
     },
     onSuccess: () => {
       setCurrentLikePostId(null);
       queryClient.invalidateQueries({
         predicate: (query) =>
-          query.queryKey[0] === "pub" ||
-          query.queryKey[0] === "pubs" ||
+          query.queryKey[0] === "forum" ||
+          query.queryKey[0] === "forums" ||
           query.queryKey[0] === "users",
       });
     },
@@ -68,14 +69,14 @@ const LikeButton = ({ post, token }: LikeButtonProps) => {
   const handleLikeToggle = useCallback(async () => {
     if (!likeMutation.isPending) {
       try {
-        await likeMutation.mutateAsync(post?.pubId);
+        await likeMutation.mutateAsync(forum?.forumId);
       } catch (error) {
         console.error("Failed to toggle like:", error);
       }
     }
-  }, [likeMutation, post?.pubId]);
+  }, [likeMutation, forum?.forumId]);
 
-  console.log("publication check for like", post);
+  console.log("publication check for like", forum);
 
   return (
     <Button
@@ -95,7 +96,7 @@ const LikeButton = ({ post, token }: LikeButtonProps) => {
       //   disabled={likeMutation.isPending}
     >
       <div className="relative group">
-        {currentLikePostId === post?.pubId ? (
+        {currentLikePostId === forum?.forumId ? (
           <Loader className="animate-spin" />
         ) : userLike && userLike?.isLiked ? (
           <HeartOff className="text-red-500" />
@@ -106,9 +107,9 @@ const LikeButton = ({ post, token }: LikeButtonProps) => {
           {userLike && userLike?.isLiked ? "Unlike" : "Like"}
         </span>
       </div>
-      <span className="text-gray-700">{likeCount}</span>
+      <span className="text-gray-100">{likeCount}</span>
     </Button>
   );
 };
 
-export default LikeButton;
+export default ForumLikeButton;

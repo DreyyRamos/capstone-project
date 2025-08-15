@@ -34,6 +34,7 @@ export async function GET(
                 role: true,
               },
             },
+            forumCommentLikes: true,
 
             // top-level replies
             replies: {
@@ -47,6 +48,7 @@ export async function GET(
                     role: true,
                   },
                 },
+                forumCommentReplyLikes: true,
 
                 // nested replies
                 children: {
@@ -60,6 +62,7 @@ export async function GET(
                         role: true,
                       },
                     },
+                    forumCommentReplyToReplyLikes: true, // ← fixed name
                   },
                 },
               },

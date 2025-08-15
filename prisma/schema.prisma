@@ -38,10 +38,13 @@ model User {
   publicationCommentReplyToReplies PublicationCommentReplyToReplies[]
 
   // --- Updated Forum Relations ---
-  forumComments              ForumComments[]
-  forumLikes                 ForumLikes[]
-  forumCommentReplies        ForumCommentReplies[]
-  forumCommentReplyToReplies ForumCommentReplyToReplies[]
+  forumComments                  ForumComments[]
+  forumLikes                     ForumLikes[]
+  forumCommentLikes              ForumCommentLikes[]
+  forumCommentReplyLikes         ForumCommentReplyLikes[]
+  forumCommentReplies            ForumCommentReplies[]
+  forumCommentReplyToReplies     ForumCommentReplyToReplies[]
+  forumCommentReplyToRepliesLike ForumCommentReplyToReplyLikes[]
 }
 
 enum Role {
@@ -109,10 +112,13 @@ model Forum {
   notifications Notifications[]
 
   // --- Updated Forum Relations ---
-  forumLikes                 ForumLikes[]
-  forumComments              ForumComments[]
-  forumCommentReplies        ForumCommentReplies[]
-  ForumCommentReplyToReplies ForumCommentReplyToReplies[]
+  forumLikes                    ForumLikes[]
+  forumComments                 ForumComments[]
+  forumCommentLikes             ForumCommentLikes[]
+  forumCommentReplyLikes        ForumCommentReplyLikes[]
+  forumCommentReplyToReplyLikes ForumCommentReplyToReplyLikes[]
+  forumCommentReplies           ForumCommentReplies[]
+  ForumCommentReplyToReplies    ForumCommentReplyToReplies[]
 }
 
 model ForumComments {
@@ -126,7 +132,8 @@ model ForumComments {
   updatedAt       DateTime @updatedAt
 
   // Relation to first-level replies
-  replies ForumCommentReplies[]
+  replies           ForumCommentReplies[]
+  forumCommentLikes ForumCommentLikes[]   @relation("CommentLikes")
 }
 
 model ForumCommentReplies {
@@ -144,8 +151,9 @@ model ForumCommentReplies {
   reply_author   User?   @relation(fields: [reply_authorId], references: [id], onDelete: Cascade)
 
   // Direct link to the main forum post
-  forumId String?
-  forum   Forum?  @relation(fields: [forumId], references: [forumId])
+  forumId                String?
+  forum                  Forum?                   @relation(fields: [forumId], references: [forumId])
+  forumCommentReplyLikes ForumCommentReplyLikes[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -164,8 +172,9 @@ model ForumCommentReplyToReplies {
   reply_author   User?   @relation(fields: [reply_authorId], references: [id], onDelete: Cascade)
 
   // Direct link to the main forum post
-  forumId String?
-  forum   Forum?  @relation(fields: [forumId], references: [forumId])
+  forumId                       String?
+  forum                         Forum?                          @relation(fields: [forumId], references: [forumId])
+  forumCommentReplyToReplyLikes ForumCommentReplyToReplyLikes[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -180,6 +189,48 @@ model ForumLikes {
   user    User    @relation(fields: [userId], references: [id])
 
   @@unique([forumId, userId])
+}
+
+// 2. Top-level comment likes
+model ForumCommentLikes {
+  commentLikeId String        @id @default(cuid())
+  commentId     String
+  userId        String
+  isLiked       Boolean       @default(false)
+  comment       ForumComments @relation("CommentLikes", fields: [commentId], references: [commentId], onDelete: Cascade)
+  forumId       String?
+  forum         Forum?        @relation(fields: [forumId], references: [forumId], onDelete: Cascade)
+  user          User          @relation(fields: [userId], references: [id])
+
+  @@unique([commentId, userId])
+}
+
+// 3. First-level reply likes
+model ForumCommentReplyLikes {
+  commentReplyLikeId String              @id @default(cuid())
+  replyId            String
+  userId             String
+  isLiked            Boolean             @default(false)
+  reply              ForumCommentReplies @relation(fields: [replyId], references: [replyId], onDelete: Cascade)
+  user               User                @relation(fields: [userId], references: [id])
+  forumId            String?
+  forum              Forum?              @relation(fields: [forumId], references: [forumId], onDelete: Cascade)
+
+  @@unique([replyId, userId])
+}
+
+// 4. Second-level (children of replies) likes
+model ForumCommentReplyToReplyLikes {
+  commentReplyToReplyLikeId String                     @id @default(cuid())
+  replyToReplyId            String
+  userId                    String
+  isLiked                   Boolean                    @default(false)
+  replyToReply              ForumCommentReplyToReplies @relation(fields: [replyToReplyId], references: [replyToReplyId], onDelete: Cascade)
+  user                      User                       @relation(fields: [userId], references: [id])
+  forumId                   String?
+  forum                     Forum?                     @relation(fields: [forumId], references: [forumId], onDelete: Cascade)
+
+  @@unique([replyToReplyId, userId])
 }
 
 model PublicationComments {

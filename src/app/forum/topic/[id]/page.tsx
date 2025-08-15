@@ -18,6 +18,8 @@ import {
   ThumbsUp,
   ThumbsDown,
 } from "lucide-react";
+import ForumLikeButton from "@/components/forum-like-button";
+import ForumCommentLikeButton from "@/components/forum-comment-like-button";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
@@ -28,6 +30,7 @@ import {
   useForumAddComment,
 } from "@/hooks/useForumReplies";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -217,10 +220,11 @@ export default function ForumTopicPage({ params }: PageProps) {
               </div>
 
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={handleLike}>
+                <ForumLikeButton forum={topic} token={token} />
+                {/* <Button variant="outline" size="sm" onClick={handleLike}>
                   <Heart className="mr-2 h-4 w-4" />
                   {topic?.forumLikes?.length}
-                </Button>
+                </Button> */}
                 <Button variant="outline" size="sm">
                   <Share2 className="mr-2 h-4 w-4" />
                   Share
@@ -289,14 +293,15 @@ export default function ForumTopicPage({ params }: PageProps) {
                     </div>
                     <p className="leading-relaxed">{comment.comment_content}</p>
                     <div className="flex items-center gap-4">
-                      <Button
+                      <ForumCommentLikeButton comment={comment} token={token} />
+                      {/* <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => handleReplyLike(comment.commentId)}
                       >
                         <ThumbsUp className="mr-2 h-4 w-4" />
                         {comment.likes}
-                      </Button>
+                      </Button> */}
                       <Button
                         variant="ghost"
                         size="sm"

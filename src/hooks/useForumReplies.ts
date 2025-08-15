@@ -38,6 +38,7 @@ export function useForumAddComment(token: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["forums"] });
       qc.invalidateQueries({ queryKey: ["forum", token] });
+      qc.invalidateQueries({ queryKey: ["forum"] });
       qc.invalidateQueries({ queryKey: ["replies"] });
       qc.invalidateQueries({ queryKey: ["users"] });
       qc.invalidateQueries({ queryKey: ["to-review"] });
@@ -65,6 +66,7 @@ export function useForumAddTopReplyForum(token: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["forums"] });
       qc.invalidateQueries({ queryKey: ["forum", token] });
+      qc.invalidateQueries({ queryKey: ["forum"] });
       qc.invalidateQueries({ queryKey: ["replies"] });
       qc.invalidateQueries({ queryKey: ["users"] });
       qc.invalidateQueries({ queryKey: ["to-review"] });
@@ -96,6 +98,7 @@ export function useForumAddNestedReply(token: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["forums"] });
       qc.invalidateQueries({ queryKey: ["forum", token] });
+      qc.invalidateQueries({ queryKey: ["forum"] });
       qc.invalidateQueries({ queryKey: ["replies"] });
       qc.invalidateQueries({ queryKey: ["users"] });
       qc.invalidateQueries({ queryKey: ["to-review"] });
