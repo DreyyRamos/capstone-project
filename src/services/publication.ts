@@ -68,6 +68,78 @@ export const likePub = async (postId: string, token: string) => {
   return await res.json();
 };
 
+export const likeCommentPub = async (
+  pubId: string,
+  commentId: string,
+  token: string
+) => {
+  const res = await fetch(
+    `/api/publications/${pubId}/comments/${commentId}/like`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to like post");
+  }
+
+  return await res.json();
+};
+
+export const likeCommentReplyPub = async (
+  pubId: string,
+  commentId: string,
+  replyId: string,
+  token: string
+) => {
+  const res = await fetch(
+    `/api/publications/${pubId}/comments/${commentId}/replies/${replyId}/like`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to like post");
+  }
+
+  return await res.json();
+};
+
+export const likeReplyToReplyPub = async (
+  pubId: string,
+  commentId: string,
+  parentReplyId: string,
+  replyToReplyId: string,
+  token: string
+) => {
+  const response = await fetch(
+    `/api/publications/${pubId}/comments/${commentId}/replies/${parentReplyId}/children/${replyToReplyId}/like`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to like reply to reply");
+  }
+
+  return response.json();
+};
+
 export const likeForum = async (forumId: string, token: string) => {
   const res = await fetch(`/api/forums/${forumId}/like`, {
     method: "POST",
@@ -102,6 +174,55 @@ export const likeCommentForum = async (
   }
 
   return await res.json();
+};
+
+export const likeCommentReplyForum = async (
+  forumId: string,
+  commentId: string,
+  replyId: string,
+  token: string
+) => {
+  const res = await fetch(
+    `/api/forums/${forumId}/comments/${commentId}/replies/${replyId}/like`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to like post");
+  }
+
+  return await res.json();
+};
+
+export const likeReplyToReplyForum = async (
+  forumId: string,
+  commentId: string,
+  parentReplyId: string,
+  replyToReplyId: string,
+  token: string
+) => {
+  const response = await fetch(
+    `/api/forums/${forumId}/comments/${commentId}/replies/${parentReplyId}/children/${replyToReplyId}/like`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to like reply to reply");
+  }
+
+  return response.json();
 };
 
 export const addCommentPub = async (

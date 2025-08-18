@@ -18,8 +18,9 @@ import {
   ThumbsUp,
   ThumbsDown,
 } from "lucide-react";
-import ForumLikeButton from "@/components/forum-like-button";
-import ForumCommentLikeButton from "@/components/forum-comment-like-button";
+import ForumLikeButton from "@/components/like-buttons/forum-like-button";
+import ForumCommentLikeButton from "@/components/like-buttons/forum-comment-like-button";
+import ForumCommentReplyLikeButton from "@/components/like-buttons/forum-comment-reply-like-button";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
@@ -31,6 +32,7 @@ import {
 } from "@/hooks/useForumReplies";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import ForumReplyToReplyLikeButton from "@/components/like-buttons/forum-replyToReply-like-button";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -220,7 +222,7 @@ export default function ForumTopicPage({ params }: PageProps) {
               </div>
 
               <div className="flex items-center gap-2">
-                <ForumLikeButton forum={topic} token={token} />
+                <ForumLikeButton forum={topic} token={token} forumId={id} />
                 {/* <Button variant="outline" size="sm" onClick={handleLike}>
                   <Heart className="mr-2 h-4 w-4" />
                   {topic?.forumLikes?.length}
@@ -390,14 +392,19 @@ export default function ForumTopicPage({ params }: PageProps) {
                             {reply.reply_content}
                           </p>
                           <div className="flex items-center gap-4">
-                            <Button
+                            <ForumCommentReplyLikeButton
+                              reply={reply}
+                              token={token}
+                              forumId={id}
+                            />
+                            {/* <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => handleReplyLike(reply.replyId)}
                             >
                               <ThumbsUp className="mr-2 h-4 w-4" />
                               {reply.likes}
-                            </Button>
+                            </Button> */}
                             <Button
                               variant="ghost"
                               size="sm"
@@ -496,7 +503,13 @@ export default function ForumTopicPage({ params }: PageProps) {
                                       {childReply.replyToReply_content}
                                     </p>
                                     <div className="flex items-center gap-4">
-                                      <Button
+                                      <ForumReplyToReplyLikeButton
+                                        replyToReply={childReply}
+                                        token={token}
+                                        forumId={id}
+                                        commentId={reply?.commentId}
+                                      />
+                                      {/* <Button
                                         variant="ghost"
                                         size="sm"
                                         onClick={() =>
@@ -505,7 +518,7 @@ export default function ForumTopicPage({ params }: PageProps) {
                                       >
                                         <ThumbsUp className="mr-2 h-4 w-4" />
                                         {childReply.likes}
-                                      </Button>
+                                      </Button> */}
                                       <Button
                                         variant="ghost"
                                         size="sm"

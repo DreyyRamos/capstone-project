@@ -22,7 +22,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import LikeButton from "@/components/publication-like-button";
+import LikeButton from "@/components/like-buttons/publication-like-button";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
@@ -35,6 +35,9 @@ import {
   // useReplies,
 } from "@/hooks/usePublicationReplies";
 import Cookies from "js-cookie";
+import PublicationCommentLikeButton from "@/components/like-buttons/publication-comment-like-button";
+import PublicationCommentReplyLikeButton from "@/components/like-buttons/publication-comment-reply-like-button";
+import PublicationReplyToReplyLikeButton from "@/components/like-buttons/publication-replyToReply-like-button";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -359,10 +362,15 @@ export default function PublicationDetailPage({ params }: PageProps) {
                         {comment?.comment_content}
                       </p>
                       <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" onClick={handleLike}>
+                        <PublicationCommentLikeButton
+                          comment={comment}
+                          token={token}
+                          forumId={id}
+                        />
+                        {/* <Button variant="ghost" size="sm" onClick={handleLike}>
                           <Heart className="mr-1 h-3 w-3" />
                           {comment.likes}
-                        </Button>
+                        </Button> */}
                         <Button
                           variant="ghost"
                           size="sm"
@@ -444,14 +452,19 @@ export default function PublicationDetailPage({ params }: PageProps) {
                               {reply.reply_content}
                             </p>
                             <div className="flex items-center gap-4">
-                              <Button
+                              <PublicationCommentReplyLikeButton
+                                reply={reply}
+                                token={token}
+                                pubId={id}
+                              />
+                              {/* <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={handleLike}
                               >
                                 <Heart className="mr-1 h-3 w-3" />
                                 {reply.likes}
-                              </Button>
+                              </Button> */}
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -545,14 +558,20 @@ export default function PublicationDetailPage({ params }: PageProps) {
                                         {childReply?.replyToReply_content}
                                       </p>
                                       <div className="flex items-center gap-4">
-                                        <Button
+                                        <PublicationReplyToReplyLikeButton
+                                          replyToReply={childReply}
+                                          token={token}
+                                          pubId={id}
+                                          commentId={reply.commentId}
+                                        />
+                                        {/* <Button
                                           variant="ghost"
                                           size="sm"
                                           onClick={handleLike}
                                         >
                                           <Heart className="mr-1 h-3 w-3" />
                                           {childReply.likes}
-                                        </Button>
+                                        </Button> */}
                                       </div>
                                     </div>
                                   </div>

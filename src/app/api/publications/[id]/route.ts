@@ -17,7 +17,7 @@ export async function GET(
   try {
     
     const fetchPost = await prisma.publication.findUnique({
-      where: { pubId },
+      where: { pubId: pubId },
       include: {
         author: {
           select: { id: true, firstName: true, profileImage: true, role: true },
@@ -35,6 +35,7 @@ export async function GET(
                 role: true,
               },
             },
+            pubCommentLikes: true,
 
             // top-level replies
             replies: {
@@ -48,6 +49,7 @@ export async function GET(
                     role: true,
                   },
                 },
+                pubCommentReplyLikes: true,
 
                 // nested replies
                 children: {
@@ -61,6 +63,7 @@ export async function GET(
                         role: true,
                       },
                     },
+                    publicationCommentReplyToReplyLikes: true,
                   },
                 },
               },

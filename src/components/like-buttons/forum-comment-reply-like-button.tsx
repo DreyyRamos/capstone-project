@@ -1,13 +1,10 @@
-
-
 "use client";
 
 import React, { useState, useCallback, useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { likeCommentForum } from "@/services/publication";
+import { likeCommentReplyForum } from "@/services/publication";
 import { Button } from "@/components/ui/button";
 import { Heart, HeartOff, Loader } from "lucide-react";
-import { jwtDecode } from "jwt-decode";
 import { useUserId } from "@/hooks/useUserId";
 
 interface ForumCommentLike {
@@ -41,12 +38,8 @@ interface ForumCommentLikeButtonProps {
   forumId?: string;
 }
 
-const ForumCommentLikeButton = ({
-  comment,
-  token,
-  forumId,
-}: ForumCommentLikeButtonProps) => {
-  console.log("forum from like button", comment);
+const ForumCommentReplyLikeButton = ({ reply, token, forumId }: any) => {
+  console.log("forum from comment  reply like button", reply);
   const queryClient = useQueryClient();
   const [currentLikeCommentId, setCurrentLikeCommentId] = useState<
     string | null
@@ -57,50 +50,53 @@ const ForumCommentLikeButton = ({
   const userLike = useMemo(() => {
     if (
       !userId ||
-      !comment?.forumCommentLikes ||
-      comment.forumCommentLikes.length === 0
+      !reply?.forumCommentReplyLikes ||
+      reply?.forumCommentReplyLikes.length === 0
     ) {
       console.log("No userId or no likes found for this comment");
       return undefined;
     }
 
-    const found = comment?.forumCommentLikes?.find((like: ForumCommentLike) => {
-      return like?.userId === userId; // Compare with decoded user ID
-    });
+    const found = reply?.forumCommentReplyLikes?.find(
+      (like: ForumCommentLike) => {
+        return like?.userId === userId; // Compare with decoded user ID
+      }
+    );
 
     return found;
-  }, [comment?.forumCommentLikes, userId]);
+  }, [reply?.forumCommentReplyLikes, userId]);
 
   const likeCount = useMemo(() => {
     const count =
-      comment?.forumCommentLikes?.filter(
+      reply?.forumCommentReplyLikes?.filter(
         (like: ForumCommentLike) => like?.isLiked
       ).length || 0;
     console.log("Like count calculation:", count);
     return count;
-  }, [comment?.forumCommentLikes]);
+  }, [reply?.forumCommentReplyLikes]);
 
   const likeMutation = useMutation({
     mutationFn: useCallback(
       async (commentId: string) => {
-        return await likeCommentForum(
-          forumId || comment.forumId,
+        return await likeCommentReplyForum(
+          forumId || reply.forumId,
           commentId,
+          reply?.replyId,
           token
         );
       },
-      [forumId, comment.forumId, token]
+      [forumId, reply?.forumId, token]
     ),
-    onMutate: (commentId: string) => {
-      setCurrentLikeCommentId(commentId);
+    onMutate: (replyId: string) => {
+      setCurrentLikeCommentId(replyId);
     },
     onSuccess: () => {
       setCurrentLikeCommentId(null);
-      const currentForumId = forumId || comment.forumId;
+      const currentCommentId = reply?.commentId || reply.forumId;
 
       // Invalidate the specific forum query first
       queryClient.invalidateQueries({
-        queryKey: ["forum", currentForumId],
+        queryKey: ["forum", currentCommentId],
       });
 
       // Also invalidate broader forum queries
@@ -127,12 +123,12 @@ const ForumCommentLikeButton = ({
   const handleLikeToggle = useCallback(async () => {
     if (!likeMutation.isPending) {
       try {
-        await likeMutation.mutateAsync(comment.commentId);
+        await likeMutation.mutateAsync(reply?.replyId);
       } catch (error) {
         console.error("Failed to toggle like:", error);
       }
     }
-  }, [likeMutation, comment.commentId]);
+  }, [likeMutation, reply?.replyId]);
 
   return (
     <Button
@@ -144,7 +140,7 @@ const ForumCommentLikeButton = ({
       }`}
     >
       <div className="relative group">
-        {currentLikeCommentId === comment?.commentId ? (
+        {currentLikeCommentId === reply?.replyId ? (
           <Loader className="animate-spin" />
         ) : userLike && userLike?.isLiked ? (
           <HeartOff className="text-red-500" />
@@ -160,4 +156,4 @@ const ForumCommentLikeButton = ({
   );
 };
 
-export default ForumCommentLikeButton;
+export default ForumCommentReplyLikeButton;
