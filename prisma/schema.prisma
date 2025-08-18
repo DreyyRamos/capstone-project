@@ -50,6 +50,12 @@ model User {
   forumCommentReplies            ForumCommentReplies[]
   forumCommentReplyToReplies     ForumCommentReplyToReplies[]
   forumCommentReplyToRepliesLike ForumCommentReplyToReplyLikes[]
+
+  // Reports
+  // Enhanced Reports Relations
+  reportsSubmitted Reports[] @relation("UserReports") // Reports this user has submitted
+  reportsAgainst   Reports[] @relation("ReportedUser") // Reports made against this user
+  reportsReviewed  Reports[] @relation("ReportReviewer") // Reports this user has reviewed
 }
 
 enum Role {
@@ -57,39 +63,6 @@ enum Role {
   MODERATOR
   EDITOR
   STUDENT
-}
-
-model Publication {
-  pubId                            String                                @id @default(cuid())
-  title                            String?                               @db.VarChar(255)
-  excerpt                          String?                               @db.VarChar(255)
-  content                          String?                               @db.VarChar(65535)
-  authorId                         String?
-  author                           User?                                 @relation(fields: [authorId], references: [id])
-  imageUrl                         String?
-  tags                             String[]
-  category                         String?
-  notification                     Notifications[]
-  pubComments                      PublicationComments[]
-  pubLikes                         PublicationLikes[]
-  status                           PublicationStatus                     @default(DRAFT)
-  isFeatured                       Boolean                               @default(false)
-  createdAt                        DateTime                              @default(now())
-  updatedAt                        DateTime                              @updatedAt
-  updatedById                      String?
-  updatedBy                        User?                                 @relation("PublicationUpdatedBy", fields: [updatedById], references: [id])
-  pubCommentsLikes                 PublicationCommentLikes[]
-  pubCommentReplyLikes             PublicationCommentReplyLikes[]
-  pubCommentsReplies               PublicationCommentReplies[]
-  PublicationCommentReplyToReplies PublicationCommentReplyToReplies[]
-  pubCommentReplyToReplyLikes      PublicationCommentReplyToReplyLikes[]
-}
-
-enum PublicationStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-  PENDING_REVIEW
 }
 
 model Notifications {
@@ -118,6 +91,7 @@ model Forum {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   notifications Notifications[]
+  reports       Reports[]
 
   // --- Updated Forum Relations ---
   forumLikes                    ForumLikes[]
@@ -142,6 +116,8 @@ model ForumComments {
   // Relation to first-level replies
   replies           ForumCommentReplies[]
   forumCommentLikes ForumCommentLikes[]   @relation("CommentLikes")
+
+  reports Reports[]
 }
 
 model ForumCommentReplies {
@@ -162,6 +138,7 @@ model ForumCommentReplies {
   forumId                String?
   forum                  Forum?                   @relation(fields: [forumId], references: [forumId])
   forumCommentReplyLikes ForumCommentReplyLikes[]
+  reports                Reports[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -183,6 +160,7 @@ model ForumCommentReplyToReplies {
   forumId                       String?
   forum                         Forum?                          @relation(fields: [forumId], references: [forumId])
   forumCommentReplyToReplyLikes ForumCommentReplyToReplyLikes[]
+  reports                       Reports[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -241,6 +219,40 @@ model ForumCommentReplyToReplyLikes {
   @@unique([replyToReplyId, userId])
 }
 
+model Publication {
+  pubId                            String                                @id @default(cuid())
+  title                            String?                               @db.VarChar(255)
+  excerpt                          String?                               @db.VarChar(255)
+  content                          String?                               @db.VarChar(65535)
+  authorId                         String?
+  author                           User?                                 @relation(fields: [authorId], references: [id])
+  imageUrl                         String?
+  tags                             String[]
+  category                         String?
+  notification                     Notifications[]
+  pubComments                      PublicationComments[]
+  pubLikes                         PublicationLikes[]
+  status                           PublicationStatus                     @default(DRAFT)
+  reports                          Reports[]
+  isFeatured                       Boolean                               @default(false)
+  createdAt                        DateTime                              @default(now())
+  updatedAt                        DateTime                              @updatedAt
+  updatedById                      String?
+  updatedBy                        User?                                 @relation("PublicationUpdatedBy", fields: [updatedById], references: [id])
+  pubCommentsLikes                 PublicationCommentLikes[]
+  pubCommentReplyLikes             PublicationCommentReplyLikes[]
+  pubCommentsReplies               PublicationCommentReplies[]
+  PublicationCommentReplyToReplies PublicationCommentReplyToReplies[]
+  pubCommentReplyToReplyLikes      PublicationCommentReplyToReplyLikes[]
+}
+
+enum PublicationStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  PENDING_REVIEW
+}
+
 model PublicationComments {
   commentId       String       @id @default(cuid())
   comment_content String?
@@ -250,6 +262,7 @@ model PublicationComments {
   author          User?        @relation(fields: [authorId], references: [id])
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
+  reports         Reports[]
 
   replies         PublicationCommentReplies[]
   pubCommentLikes PublicationCommentLikes[]   @relation("PubCommentLikes")
@@ -270,6 +283,7 @@ model PublicationCommentReplies {
   publication      Publication? @relation(fields: [publicationPubId], references: [pubId])
 
   pubCommentReplyLikes PublicationCommentReplyLikes[]
+  reports              Reports[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -288,6 +302,7 @@ model PublicationCommentReplyToReplies {
   publicationPubId                    String?
   publication                         Publication?                          @relation(fields: [publicationPubId], references: [pubId])
   publicationCommentReplyToReplyLikes PublicationCommentReplyToReplyLikes[]
+  reports                             Reports[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -341,4 +356,92 @@ model PublicationCommentReplyToReplyLikes {
   pub                       Publication?                     @relation(fields: [pubId], references: [pubId], onDelete: Cascade)
 
   @@unique([replyToReplyId, userId])
+}
+
+model Reports {
+  reportId String @id @default(cuid())
+
+  // Basic report information
+  reportedContent String // The actual content that was reported
+  reportReason    String // Reason for the report
+  description     String? // Optional additional description from reporter
+
+  // Reporter information
+  reportedById String
+  reportedBy   User   @relation("UserReports", fields: [reportedById], references: [id])
+
+  // Reported user information
+  reportedUserId String?
+  reportedUser   User?   @relation("ReportedUser", fields: [reportedUserId], references: [id])
+
+  // Content type and references - ALL LEVELS
+  contentType ContentType // What type of content is being reported
+
+  // Main content references
+  forumId     String?
+  forum       Forum?       @relation(fields: [forumId], references: [forumId])
+  pubId       String?
+  publication Publication? @relation(fields: [pubId], references: [pubId])
+
+  // Comment references (both forum and publication)
+  forumCommentId String?
+  forumComment   ForumComments?       @relation(fields: [forumCommentId], references: [commentId])
+  pubCommentId   String?
+  pubComment     PublicationComments? @relation(fields: [pubCommentId], references: [commentId])
+
+  // First-level reply references
+  forumReplyId String?
+  forumReply   ForumCommentReplies?       @relation(fields: [forumReplyId], references: [replyId])
+  pubReplyId   String?
+  pubReply     PublicationCommentReplies? @relation(fields: [pubReplyId], references: [replyId])
+
+  // Second-level reply references (reply-to-reply / children)
+  forumReplyToReplyId String?
+  forumReplyToReply   ForumCommentReplyToReplies?       @relation(fields: [forumReplyToReplyId], references: [replyToReplyId])
+  pubReplyToReplyId   String?
+  pubReplyToReply     PublicationCommentReplyToReplies? @relation(fields: [pubReplyToReplyId], references: [replyToReplyId])
+
+  // Report status and priority
+  status   ReportStatus   @default(PENDING)
+  priority ReportPriority @default(MEDIUM)
+
+  // Moderation information
+  reviewedById   String?
+  reviewedBy     User?     @relation("ReportReviewer", fields: [reviewedById], references: [id])
+  reviewedAt     DateTime?
+  moderatorNotes String?
+
+  // Resolution information
+  actionTaken String?
+  resolvedAt  DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Enums for better type safety
+enum ContentType {
+  FORUM_POST
+  FORUM_COMMENT
+  FORUM_REPLY
+  FORUM_REPLY_TO_REPLY // Children of replies
+  PUBLICATION
+  PUBLICATION_COMMENT
+  PUBLICATION_REPLY
+  PUBLICATION_REPLY_TO_REPLY // Children of replies
+}
+
+enum ReportStatus {
+  PENDING
+  UNDER_REVIEW
+  RESOLVED
+  DISMISSED
+}
+
+enum ReportPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }

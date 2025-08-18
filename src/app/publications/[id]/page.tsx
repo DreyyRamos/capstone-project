@@ -6,21 +6,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Heart,
-  MessageCircle,
-  Share2,
-  Flag,
-  ArrowLeft,
-  Clock,
-  Eye,
-  Star,
-} from "lucide-react";
+import { Heart, Flag, ArrowLeft, Clock, Star } from "lucide-react";
 import { toast } from "sonner";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  TooltipProvider,
 } from "@/components/ui/tooltip";
 import LikeButton from "@/components/like-buttons/publication-like-button";
 import Link from "next/link";
@@ -32,12 +24,13 @@ import { useIsFeatured } from "@/hooks/useIsFeatured";
 import {
   useAddTopReply,
   useAddNestedReply,
-  // useReplies,
 } from "@/hooks/usePublicationReplies";
 import Cookies from "js-cookie";
 import PublicationCommentLikeButton from "@/components/like-buttons/publication-comment-like-button";
 import PublicationCommentReplyLikeButton from "@/components/like-buttons/publication-comment-reply-like-button";
 import PublicationReplyToReplyLikeButton from "@/components/like-buttons/publication-replyToReply-like-button";
+import { ReportModal } from "@/components/report-modal";
+import { useReportModal } from "@/hooks/use-report-modal";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -55,6 +48,14 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const [secondLevelReplyContent, setSecondLevelReplyContent] = useState("");
   const { isOpen, action, redirectTo, requireAuth, closeModal } =
     useAuthModal();
+  const {
+    isModalOpen,
+    contentType,
+    contentId,
+    contentTitle,
+    openReportModal,
+    closeReportModal,
+  } = useReportModal();
 
   const { id } = use(params);
 
@@ -156,7 +157,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
             pubId,
             replyId,
             commentId,
-            // replyId,
           });
           setSecondLevelReplyContent("");
           setReplyingToSecondLevel(null);
@@ -179,6 +179,70 @@ export default function PublicationDetailPage({ params }: PageProps) {
     setSecondLevelReplyContent("");
   };
 
+  const handleReportPublication = () => {
+    openReportModal(
+      "PUBLICATION",
+      id,
+      publication?.title,
+      publication?.authorId
+    );
+  };
+
+  const handleReportPublicationComment = (
+    commentId: string,
+    commentContent: string,
+    authorId?: string
+  ) => {
+    openReportModal(
+      "PUBLICATION_COMMENT",
+      commentId,
+      commentContent.substring(0, 50) + "...",
+      authorId
+    );
+  };
+
+  const handleReportPublicationReply = (
+    replyId: string,
+    replyContent: string,
+    authorId?: string
+  ) => {
+    openReportModal(
+      "PUBLICATION_REPLY",
+      replyId,
+      replyContent.substring(0, 50) + "...",
+      authorId
+    );
+  };
+
+  const handleReportPublicationNestedReply = (
+    nestedReplyId: string,
+    nestedReplyContent: string,
+    authorId?: string
+  ) => {
+    openReportModal(
+      "PUBLICATION_REPLY_TO_REPLY",
+      nestedReplyId,
+      nestedReplyContent.substring(0, 50) + "...",
+      authorId
+    );
+  };
+
+  // const handleReportPublication = () => {
+  //   openReportModal("publication", id, publication?.title);
+  // };
+
+  // const handleReportComment = (commentId: string, commentContent: string) => {
+  //   openReportModal(
+  //     "comment",
+  //     commentId,
+  //     commentContent.substring(0, 50) + "..."
+  //   );
+  // };
+
+  // const handleReportReply = (replyId: string, replyContent: string) => {
+  //   openReportModal("comment", replyId, replyContent.substring(0, 50) + "...");
+  // };
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading publication.</div>;
 
@@ -189,6 +253,13 @@ export default function PublicationDetailPage({ params }: PageProps) {
         onClose={closeModal}
         action={action}
         redirectTo={redirectTo}
+      />
+      <ReportModal
+        isOpen={isModalOpen}
+        onClose={closeReportModal}
+        contentType={contentType}
+        contentId={contentId}
+        contentTitle={contentTitle}
       />
 
       <Button asChild variant="ghost">
@@ -240,42 +311,48 @@ export default function PublicationDetailPage({ params }: PageProps) {
                 !["DRAFT", "PENDING_REVIEW", "ARCHIVED"].includes(
                   publication?.status
                 ) && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={isCurrentlyLoading}
-                        onClick={() => {
-                          if (publication?.isFeatured) {
-                            handleMakeFeature(publication.pubId);
-                            toast(
-                              "Publication has been removed from featured!"
-                            );
-                          } else {
-                            handleMakeFeature(publication.pubId);
-                            toast("Publication has been marked as featured!");
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={isCurrentlyLoading}
+                          onClick={() => {
+                            if (publication?.isFeatured) {
+                              handleMakeFeature(publication.pubId);
+                              toast(
+                                "Publication has been removed from featured!"
+                              );
+                            } else {
+                              handleMakeFeature(publication.pubId);
+                              toast("Publication has been marked as featured!");
+                            }
+                          }}
+                          className={
+                            isBookmarked
+                              ? "bg-blue-50 text-blue-600 border-blue-200"
+                              : ""
                           }
-                        }}
-                        className={
-                          isBookmarked
-                            ? "bg-blue-50 text-blue-600 border-blue-200"
-                            : ""
-                        }
-                      >
-                        <Star
-                          className={`h-4 w-4 ${
-                            publication?.isFeatured ? "fill-current" : ""
-                          }`}
-                        />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Add to Features</p>
-                    </TooltipContent>
-                  </Tooltip>
+                        >
+                          <Star
+                            className={`h-4 w-4 ${
+                              publication?.isFeatured ? "fill-current" : ""
+                            }`}
+                          />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Add to Features</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 )}
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleReportPublication}
+              >
                 <Flag className="h-4 w-4" />
               </Button>
             </div>
@@ -308,8 +385,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
       </article>
 
       <div className="space-y-6">
-        {/* <h2 className="text-2xl font-bold">Comments ({comments.length})</h2> */}
-
         <Card>
           <CardContent className="p-6">
             <div className="space-y-4">
@@ -341,7 +416,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src={comment?.author?.profileImage} />
+                      <AvatarImage
+                        src={
+                          comment?.author?.profileImage || "/placeholder.svg"
+                        }
+                      />
                       <AvatarFallback>
                         {comment?.author?.firstName?.[0]}
                       </AvatarFallback>
@@ -367,10 +446,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
                           token={token}
                           forumId={id}
                         />
-                        {/* <Button variant="ghost" size="sm" onClick={handleLike}>
-                          <Heart className="mr-1 h-3 w-3" />
-                          {comment.likes}
-                        </Button> */}
                         <Button
                           variant="ghost"
                           size="sm"
@@ -379,6 +454,18 @@ export default function PublicationDetailPage({ params }: PageProps) {
                           {replyingTo === comment.commentId
                             ? "Cancel"
                             : "Reply"}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            handleReportPublicationComment(
+                              comment.commentId,
+                              comment.comment_content
+                            )
+                          }
+                        >
+                          <Flag className="h-3 w-3" />
                         </Button>
                       </div>
                     </div>
@@ -428,7 +515,10 @@ export default function PublicationDetailPage({ params }: PageProps) {
                         >
                           <Avatar className="h-8 w-8">
                             <AvatarImage
-                              src={reply?.reply_author?.profileImage}
+                              src={
+                                reply?.reply_author?.profileImage ||
+                                "/placeholder.svg"
+                              }
                             />
                             <AvatarFallback>
                               {reply?.reply_author?.firstName?.[0]}
@@ -457,14 +547,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
                                 token={token}
                                 pubId={id}
                               />
-                              {/* <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={handleLike}
-                              >
-                                <Heart className="mr-1 h-3 w-3" />
-                                {reply.likes}
-                              </Button> */}
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -475,6 +557,18 @@ export default function PublicationDetailPage({ params }: PageProps) {
                                 {replyingToSecondLevel === reply.replyId
                                   ? "Cancel"
                                   : "Reply"}
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  handleReportPublicationReply(
+                                    reply.replyId,
+                                    reply.reply_content
+                                  )
+                                }
+                              >
+                                <Flag className="h-3 w-3" />
                               </Button>
                             </div>
 
@@ -516,7 +610,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
                               </div>
                             )}
 
-                            {/* Render nested children */}
                             {reply?.children && reply.children.length > 0 && (
                               <div className="ml-6 space-y-4 border-l-2 border-muted pl-4 mt-4">
                                 {reply.children.map((childReply: any) => (
@@ -527,7 +620,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
                                     <Avatar className="h-8 w-8">
                                       <AvatarImage
                                         src={
-                                          childReply?.reply_author?.profileImage
+                                          childReply?.reply_author
+                                            ?.profileImage || "/placeholder.svg"
                                         }
                                       />
                                       <AvatarFallback>
@@ -564,14 +658,18 @@ export default function PublicationDetailPage({ params }: PageProps) {
                                           pubId={id}
                                           commentId={reply.commentId}
                                         />
-                                        {/* <Button
+                                        <Button
                                           variant="ghost"
                                           size="sm"
-                                          onClick={handleLike}
+                                          onClick={() =>
+                                            handleReportPublicationNestedReply(
+                                              childReply.replyId,
+                                              childReply.replyToReply_content
+                                            )
+                                          }
                                         >
-                                          <Heart className="mr-1 h-3 w-3" />
-                                          {childReply.likes}
-                                        </Button> */}
+                                          <Flag className="h-3 w-3" />
+                                        </Button>
                                       </div>
                                     </div>
                                   </div>
@@ -596,4 +694,3 @@ export default function PublicationDetailPage({ params }: PageProps) {
     </div>
   );
 }
-

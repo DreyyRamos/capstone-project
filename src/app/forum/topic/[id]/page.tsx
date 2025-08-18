@@ -8,14 +8,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import {
-  Heart,
   MessageCircle,
   Share2,
   Flag,
   ArrowLeft,
-  Pin,
   Clock,
-  ThumbsUp,
   ThumbsDown,
 } from "lucide-react";
 import ForumLikeButton from "@/components/like-buttons/forum-like-button";
@@ -31,8 +28,9 @@ import {
   useForumAddComment,
 } from "@/hooks/useForumReplies";
 import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import ForumReplyToReplyLikeButton from "@/components/like-buttons/forum-replyToReply-like-button";
+import { ReportModal } from "@/components/report-modal";
+import { useReportModal } from "@/hooks/use-report-modal";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -42,7 +40,6 @@ export default function ForumTopicPage({ params }: PageProps) {
   const token = Cookies.get("token") || "";
   const { id } = use(params);
   const [comment_content, setCommentContent] = useState("");
-  // const [newReply, setNewReply] = useState("");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
   const [replyingToSecondLevel, setReplyingToSecondLevel] = useState<
@@ -51,6 +48,14 @@ export default function ForumTopicPage({ params }: PageProps) {
   const [secondLevelReplyContent, setSecondLevelReplyContent] = useState("");
   const { isOpen, action, redirectTo, requireAuth, closeModal } =
     useAuthModal();
+  const {
+    isModalOpen,
+    contentType,
+    contentId,
+    contentTitle,
+    openReportModal,
+    closeReportModal,
+  } = useReportModal();
   const { mutate: commentToPost } = useForumAddComment(token);
   const { mutate: addTopReply } = useForumAddTopReplyForum(token);
   const { mutate: addNestedReply } = useForumAddNestedReply(token);
@@ -165,6 +170,65 @@ export default function ForumTopicPage({ params }: PageProps) {
     requireAuth("dislike this reply");
   };
 
+  const handleReportTopic = () => {
+    openReportModal("FORUM_POST", id, topic?.topicTitle, topic?.authorId);
+  };
+
+  const handleReportForumComment = (
+    commentId: string,
+    commentContent: string,
+    authorId?: string
+  ) => {
+    openReportModal(
+      "FORUM_COMMENT",
+      commentId,
+      commentContent.substring(0, 50) + "...",
+      authorId
+    );
+  };
+
+  const handleReportForumReply = (
+    replyId: string,
+    replyContent: string,
+    authorId?: string
+  ) => {
+    openReportModal(
+      "FORUM_REPLY",
+      replyId,
+      replyContent.substring(0, 50) + "...",
+      authorId
+    );
+  };
+
+  const handleReportForumNestedReply = (
+    nestedReplyId: string,
+    nestedReplyContent: string,
+    authorId?: string
+  ) => {
+    openReportModal(
+      "FORUM_REPLY_TO_REPLY",
+      nestedReplyId,
+      nestedReplyContent.substring(0, 50) + "...",
+      authorId
+    );
+  };
+
+  // const handleReportTopic = () => {
+  //   openReportModal("forum_post", id, topic?.topicTitle);
+  // };
+
+  // const handleReportComment = (commentId: string, commentContent: string) => {
+  //   openReportModal(
+  //     "comment",
+  //     commentId,
+  //     commentContent.substring(0, 50) + "..."
+  //   );
+  // };
+
+  // const handleReportReply = (replyId: string, replyContent: string) => {
+  //   openReportModal("comment", replyId, replyContent.substring(0, 50) + "...");
+  // };
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <AuthModal
@@ -172,6 +236,13 @@ export default function ForumTopicPage({ params }: PageProps) {
         onClose={closeModal}
         action={action}
         redirectTo={redirectTo}
+      />
+      <ReportModal
+        isOpen={isModalOpen}
+        onClose={closeReportModal}
+        contentType={contentType}
+        contentId={contentId}
+        contentTitle={contentTitle}
       />
 
       {/* Back Button */}
@@ -199,7 +270,9 @@ export default function ForumTopicPage({ params }: PageProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={topic?.author?.profileImage} />
+                  <AvatarImage
+                    src={topic?.author?.profileImage || "/placeholder.svg"}
+                  />
                   <AvatarFallback>
                     {topic?.author?.firstName
                       .split(" ")
@@ -223,15 +296,11 @@ export default function ForumTopicPage({ params }: PageProps) {
 
               <div className="flex items-center gap-2">
                 <ForumLikeButton forum={topic} token={token} forumId={id} />
-                {/* <Button variant="outline" size="sm" onClick={handleLike}>
-                  <Heart className="mr-2 h-4 w-4" />
-                  {topic?.forumLikes?.length}
-                </Button> */}
                 <Button variant="outline" size="sm">
                   <Share2 className="mr-2 h-4 w-4" />
                   Share
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={handleReportTopic}>
                   <Flag className="h-4 w-4" />
                 </Button>
               </div>
@@ -263,7 +332,9 @@ export default function ForumTopicPage({ params }: PageProps) {
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={comment.author.profileImage} />
+                    <AvatarImage
+                      src={comment.author.profileImage || "/placeholder.svg"}
+                    />
                     <AvatarFallback>
                       {comment.author.firstName[0]}
                     </AvatarFallback>
@@ -300,14 +371,6 @@ export default function ForumTopicPage({ params }: PageProps) {
                         token={token}
                         forumId={id}
                       />
-                      {/* <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleReplyLike(comment.commentId)}
-                      >
-                        <ThumbsUp className="mr-2 h-4 w-4" />
-                        {comment.likes}
-                      </Button> */}
                       <Button
                         variant="ghost"
                         size="sm"
@@ -323,7 +386,16 @@ export default function ForumTopicPage({ params }: PageProps) {
                       >
                         {replyingTo === comment.commentId ? "Cancel" : "Reply"}
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          handleReportForumComment(
+                            comment.commentId,
+                            comment.comment_content
+                          )
+                        }
+                      >
                         <Flag className="h-4 w-4" />
                       </Button>
                     </div>
@@ -370,7 +442,12 @@ export default function ForumTopicPage({ params }: PageProps) {
                         className="flex items-start gap-4"
                       >
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={reply.reply_author.profileImage} />
+                          <AvatarImage
+                            src={
+                              reply.reply_author.profileImage ||
+                              "/placeholder.svg"
+                            }
+                          />
                           <AvatarFallback>
                             {reply.reply_author.firstName[0]}
                           </AvatarFallback>
@@ -397,14 +474,6 @@ export default function ForumTopicPage({ params }: PageProps) {
                               token={token}
                               forumId={id}
                             />
-                            {/* <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleReplyLike(reply.replyId)}
-                            >
-                              <ThumbsUp className="mr-2 h-4 w-4" />
-                              {reply.likes}
-                            </Button> */}
                             <Button
                               variant="ghost"
                               size="sm"
@@ -424,7 +493,16 @@ export default function ForumTopicPage({ params }: PageProps) {
                                 ? "Cancel"
                                 : "Reply"}
                             </Button>
-                            <Button variant="ghost" size="sm">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                handleReportForumReply(
+                                  reply.replyId,
+                                  reply.reply_content
+                                )
+                              }
+                            >
                               <Flag className="h-4 w-4" />
                             </Button>
                           </div>
@@ -475,7 +553,10 @@ export default function ForumTopicPage({ params }: PageProps) {
                                 >
                                   <Avatar className="h-8 w-8">
                                     <AvatarImage
-                                      src={childReply.reply_author.profileImage}
+                                      src={
+                                        childReply.reply_author.profileImage ||
+                                        "/placeholder.svg"
+                                      }
                                     />
                                     <AvatarFallback>
                                       {childReply.reply_author.firstName[0]}
@@ -509,16 +590,6 @@ export default function ForumTopicPage({ params }: PageProps) {
                                         forumId={id}
                                         commentId={reply?.commentId}
                                       />
-                                      {/* <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() =>
-                                          handleReplyLike(childReply.replyId)
-                                        }
-                                      >
-                                        <ThumbsUp className="mr-2 h-4 w-4" />
-                                        {childReply.likes}
-                                      </Button> */}
                                       <Button
                                         variant="ghost"
                                         size="sm"
@@ -529,7 +600,16 @@ export default function ForumTopicPage({ params }: PageProps) {
                                         <ThumbsDown className="mr-2 h-4 w-4" />
                                         {childReply.dislikes}
                                       </Button>
-                                      <Button variant="ghost" size="sm">
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() =>
+                                          handleReportForumNestedReply(
+                                            childReply.replyId,
+                                            childReply.replyToReply_content
+                                          )
+                                        }
+                                      >
                                         <Flag className="h-4 w-4" />
                                       </Button>
                                     </div>
