@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -55,14 +55,13 @@ export default function ForumTopicPage({ params }: PageProps) {
     contentTitle,
     openReportModal,
     closeReportModal,
+    reportedUserId,
   } = useReportModal();
   const { mutate: commentToPost } = useForumAddComment(token);
   const { mutate: addTopReply } = useForumAddTopReplyForum(token);
   const { mutate: addNestedReply } = useForumAddNestedReply(token);
 
   const { data: topic } = useFetchForumById(id);
-
-  console.log("topic by id", topic);
 
   const handleComment = async (forumId: string) => {
     if (requireAuth("comment on this publication")) {
@@ -158,20 +157,17 @@ export default function ForumTopicPage({ params }: PageProps) {
     setSecondLevelReplyContent("");
   };
 
-  const handleLike = () => {
-    requireAuth("like this topic");
-  };
-
-  const handleReplyLike = (replyId: number) => {
-    requireAuth("like this reply");
-  };
-
   const handleReplyDislike = (replyId: number) => {
     requireAuth("dislike this reply");
   };
 
   const handleReportTopic = () => {
-    openReportModal("FORUM_POST", id, topic?.topicTitle, topic?.authorId);
+    openReportModal(
+      "FORUM_POST",
+      topic?.forumId,
+      topic?.topicTitle,
+      topic?.authorId
+    );
   };
 
   const handleReportForumComment = (
@@ -213,22 +209,6 @@ export default function ForumTopicPage({ params }: PageProps) {
     );
   };
 
-  // const handleReportTopic = () => {
-  //   openReportModal("forum_post", id, topic?.topicTitle);
-  // };
-
-  // const handleReportComment = (commentId: string, commentContent: string) => {
-  //   openReportModal(
-  //     "comment",
-  //     commentId,
-  //     commentContent.substring(0, 50) + "..."
-  //   );
-  // };
-
-  // const handleReportReply = (replyId: string, replyContent: string) => {
-  //   openReportModal("comment", replyId, replyContent.substring(0, 50) + "...");
-  // };
-
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <AuthModal
@@ -243,6 +223,7 @@ export default function ForumTopicPage({ params }: PageProps) {
         contentType={contentType}
         contentId={contentId}
         contentTitle={contentTitle}
+        reportedUserId={reportedUserId}
       />
 
       {/* Back Button */}
@@ -391,8 +372,9 @@ export default function ForumTopicPage({ params }: PageProps) {
                         size="sm"
                         onClick={() =>
                           handleReportForumComment(
-                            comment.commentId,
-                            comment.comment_content
+                            comment?.commentId,
+                            comment?.comment_content,
+                            comment?.authorId
                           )
                         }
                       >
@@ -499,7 +481,8 @@ export default function ForumTopicPage({ params }: PageProps) {
                               onClick={() =>
                                 handleReportForumReply(
                                   reply.replyId,
-                                  reply.reply_content
+                                  reply.reply_content,
+                                  reply.reply_authorId
                                 )
                               }
                             >
@@ -605,8 +588,9 @@ export default function ForumTopicPage({ params }: PageProps) {
                                         size="sm"
                                         onClick={() =>
                                           handleReportForumNestedReply(
-                                            childReply.replyId,
-                                            childReply.replyToReply_content
+                                            childReply.replyToReplyId,
+                                            childReply.replyToReply_content,
+                                            childReply?.reply_authorId
                                           )
                                         }
                                       >

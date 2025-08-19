@@ -46,7 +46,6 @@ const ForumCommentLikeButton = ({
   token,
   forumId,
 }: ForumCommentLikeButtonProps) => {
-  console.log("forum from like button", comment);
   const queryClient = useQueryClient();
   const [currentLikeCommentId, setCurrentLikeCommentId] = useState<
     string | null

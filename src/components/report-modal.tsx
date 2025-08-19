@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { X, Flag, AlertTriangle } from "lucide-react";
+import Cookies from "js-cookie";
 
 // Complete content types - ALL LEVELS including reply-to-reply (children)
 type ContentType =
@@ -80,6 +81,7 @@ export function ReportModal({
   const [additionalDetails, setAdditionalDetails] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const token = Cookies.get("token") || "";
 
   if (!isOpen) return null;
 
@@ -118,6 +120,7 @@ export function ReportModal({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(reportData),
       });
@@ -130,7 +133,7 @@ export function ReportModal({
         }, 2000);
       } else {
         console.error("Failed to submit report");
-        // Handle error - show toast, etc.
+        // Handle error
       }
     } catch (error) {
       console.error("Error submitting report:", error);

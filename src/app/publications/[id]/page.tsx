@@ -55,6 +55,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
     contentTitle,
     openReportModal,
     closeReportModal,
+    reportedUserId,
   } = useReportModal();
 
   const { id } = use(params);
@@ -68,7 +69,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const { user, isAuthenticated } = useTokenUser();
   const userRoles = user?.roles || user?.role || [];
 
-  console.log("publication to check", publication);
+  console.log("report publication to check", publication);
 
   const handleLike = () => {
     if (requireAuth("like this publication")) {
@@ -182,7 +183,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const handleReportPublication = () => {
     openReportModal(
       "PUBLICATION",
-      id,
+      publication?.pubId,
       publication?.title,
       publication?.authorId
     );
@@ -260,6 +261,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
         contentType={contentType}
         contentId={contentId}
         contentTitle={contentTitle}
+        reportedUserId={reportedUserId}
       />
 
       <Button asChild variant="ghost">
@@ -461,7 +463,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
                           onClick={() =>
                             handleReportPublicationComment(
                               comment.commentId,
-                              comment.comment_content
+                              comment.comment_content,
+                              comment.authorId
                             )
                           }
                         >
@@ -564,7 +567,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
                                 onClick={() =>
                                   handleReportPublicationReply(
                                     reply.replyId,
-                                    reply.reply_content
+                                    reply.reply_content,
+                                    reply.reply_authorId
                                   )
                                 }
                               >
@@ -663,8 +667,9 @@ export default function PublicationDetailPage({ params }: PageProps) {
                                           size="sm"
                                           onClick={() =>
                                             handleReportPublicationNestedReply(
-                                              childReply.replyId,
-                                              childReply.replyToReply_content
+                                              childReply.replyToReplyId,
+                                              childReply.replyToReply_content,
+                                              childReply.reply_authorId
                                             )
                                           }
                                         >

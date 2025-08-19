@@ -26,6 +26,7 @@ export function useReportModal() {
     contentType: "PUBLICATION", // Default to a valid ContentType value
     contentId: "",
     contentTitle: "",
+    reportedUserId: ""
   });
 
   // Updated to use the complete ContentType enum
@@ -80,7 +81,7 @@ openReportModal("PUBLICATION_COMMENT", "pub_comment_654", "Comment on publicatio
 // Report a publication nested reply
 openReportModal("PUBLICATION_REPLY_TO_REPLY", "pub_nested_987", "Nested publication reply", "nested_author_id");
 
-// Then use in your component:
+// Then use in component:
 <ReportModal
   isOpen={isModalOpen}
   onClose={closeReportModal}
