@@ -39,7 +39,6 @@ interface ForumCommentLikeButtonProps {
 }
 
 const PublicationCommentReplyLikeButton = ({ reply, token, pubId }: any) => {
-  console.log("forum from comment  reply like button", reply);
   const queryClient = useQueryClient();
   const [currentLikeCommentId, setCurrentLikeCommentId] = useState<
     string | null

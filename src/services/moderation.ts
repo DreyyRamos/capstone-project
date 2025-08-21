@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 export const fetchReportedContents = async (token: string) => {
   const response = await fetch("/api/reports", {
     method: "GET",
@@ -5,6 +7,20 @@ export const fetchReportedContents = async (token: string) => {
       Authorization: `Bearer ${token}`,
       "Content-type": "application/json",
     },
+  });
+  if (!response.ok) throw new Error("Failed to fetch posts");
+  return response.json();
+};
+
+export const deleteReportedContent = async (
+  contentType: any,
+  contentId: any,
+  reportId: any
+) => {
+  const response = await fetch("/api/reports/delete-content", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contentType, contentId, reportId }),
   });
   if (!response.ok) throw new Error("Failed to fetch posts");
   return response.json();

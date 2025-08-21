@@ -45,7 +45,6 @@ const PublicationReplyToReplyLikeButton = ({
   pubId,
   commentId,
 }: ForumReplyToReplyLikeButtonProps) => {
-  console.log("pub reply to reply like button", replyToReply);
   const queryClient = useQueryClient();
   const [currentLikeReplyToReplyId, setCurrentLikeReplyToReplyId] = useState<
     string | null

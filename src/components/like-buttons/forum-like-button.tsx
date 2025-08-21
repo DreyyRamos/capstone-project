@@ -34,8 +34,6 @@ const LikeButton = ({ forum, token, forumId }: LikeButtonProps) => {
   //  const [currentLikeCommentId, setCurrentLikeCommentId] = useState<
   //     string | null
   //   >(null);
-
-  console.log("pub check", forum);
   const userId = useUserId(token);
 
   const userLike = useMemo(() => {

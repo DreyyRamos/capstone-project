@@ -69,8 +69,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const { user, isAuthenticated } = useTokenUser();
   const userRoles = user?.roles || user?.role || [];
 
-  console.log("report publication to check", publication);
-
   const handleLike = () => {
     if (requireAuth("like this publication")) {
       setIsLiked(!isLiked);
@@ -227,22 +225,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
       authorId
     );
   };
-
-  // const handleReportPublication = () => {
-  //   openReportModal("publication", id, publication?.title);
-  // };
-
-  // const handleReportComment = (commentId: string, commentContent: string) => {
-  //   openReportModal(
-  //     "comment",
-  //     commentId,
-  //     commentContent.substring(0, 50) + "..."
-  //   );
-  // };
-
-  // const handleReportReply = (replyId: string, replyContent: string) => {
-  //   openReportModal("comment", replyId, replyContent.substring(0, 50) + "...");
-  // };
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading publication.</div>;

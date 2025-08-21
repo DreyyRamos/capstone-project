@@ -44,7 +44,6 @@ const PublicationCommentLikeButton = ({
   token,
   forumId,
 }: ForumCommentLikeButtonProps) => {
-  console.log("pub comment from like button", comment);
   const queryClient = useQueryClient();
   const [currentLikeCommentId, setCurrentLikeCommentId] = useState<
     string | null

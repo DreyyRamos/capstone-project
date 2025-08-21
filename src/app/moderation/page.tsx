@@ -68,7 +68,8 @@ export default function ModerationPage() {
   const [isContentModalOpen, setIsContentModalOpen] = useState(false);
   const token = Cookies.get("token") || "";
 
-  const { data: reportedContents } = useModeratorQuery(token);
+  const { data: reportedContents, deleteReportedContent } =
+    useModeratorQuery(token);
   console.log("reported contents", reportedContents);
 
   // Transform API data to match UI expectations
@@ -244,6 +245,14 @@ export default function ModerationPage() {
   const handleViewContent = (report: any) => {
     setSelectedReport(report);
     setIsContentModalOpen(true);
+  };
+
+  const handleDelete = async (
+    contentType: any,
+    contentId: any,
+    reportId: any
+  ) => {
+    deleteReportedContent({ contentType, contentId, reportId }); // Pass as a single object
   };
 
   return (
@@ -445,7 +454,16 @@ export default function ModerationPage() {
                               Dismiss Report
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-600">
+                            <DropdownMenuItem
+                              className="text-red-600"
+                              onClick={() =>
+                                handleDelete(
+                                  report.type.toUpperCase(),
+                                  report.contentId,
+                                  report.id
+                                )
+                              }
+                            >
                               <Ban className="mr-2 h-4 w-4" />
                               Take Action
                             </DropdownMenuItem>

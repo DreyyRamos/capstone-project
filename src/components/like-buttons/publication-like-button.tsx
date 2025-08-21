@@ -35,7 +35,6 @@ const LikeButton = ({ post, token, pubId }: LikeButtonProps) => {
   //     string | null
   //   >(null);
 
-  console.log("pub check", post);
   const userId = useUserId(token);
 
   const userLike = useMemo(() => {

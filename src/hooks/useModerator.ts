@@ -1,5 +1,8 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { fetchReportedContents } from "@/services/moderation";
+import {
+  fetchReportedContents,
+  deleteReportedContent,
+} from "@/services/moderation";
 
 interface Publication {
   title: string;
@@ -24,16 +27,30 @@ export const useModeratorQuery = (token: string) => {
     refetchInterval: false,
   });
 
-  // Mutation to approve a new post
-  //   const mutation = useMutation({
-  //     mutationFn: async (postId: string) => await approvePost(token, postId),
-  //     onSuccess: () => {
-  //       queryClient.invalidateQueries({ queryKey: ["pubs"] });
-  //       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
-  //       queryClient.invalidateQueries({ queryKey: ["to-review"] });
-  //       queryClient.invalidateQueries({ queryKey: ["users"] });
-  //     },
-  //   });
+  // Mutation to delete a reported content
+  const deleteReported = useMutation({
+    mutationFn: async ({
+      contentType,
+      contentId,
+      reportId,
+    }: {
+      contentType: any;
+      contentId: any;
+      reportId: any;
+    }) => await deleteReportedContent(contentType, contentId, reportId),
+    onSuccess: (data, variables) => {
+      // Always invalidate reports
+      queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+
+      // Only invalidate specific content type queries
+      if (variables.contentType.includes("PUBLICATION")) {
+        queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      } else if (variables.contentType.includes("FORUM")) {
+        queryClient.invalidateQueries({ queryKey: ["forums"] });
+      }
+    },
+  });
 
   //   const archiveMutation = useMutation({
   //     mutationFn: (postId: string) => archivePost(token, postId),
@@ -68,8 +85,8 @@ export const useModeratorQuery = (token: string) => {
     refetch,
 
     // Mutation functions
-    // approve: mutation.mutate,
-    // isCreating: mutation.isPending,
+    deleteReportedContent: deleteReported.mutate,
+    isDeleting: deleteReported.isPending,
     // createError: mutation.error,
     // createSuccess: mutation.isSuccess,
     // createReset: mutation.reset,
