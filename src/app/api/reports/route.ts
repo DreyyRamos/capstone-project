@@ -101,6 +101,7 @@ export async function GET(req: NextRequest) {
             lastName: true,
             profileImage: true,
             email: true,
+            role: true,
           },
         },
         reportedUser: {
@@ -110,10 +111,17 @@ export async function GET(req: NextRequest) {
             lastName: true,
             profileImage: true,
             email: true,
+            role: true,
           },
         },
         forumId: true,
+        forum: {
+          select: { description: true },
+        },
         pubId: true,
+        publication: {
+          select: { content: true },
+        },
         forumCommentId: true,
         pubCommentId: true,
         forumReplyId: true,

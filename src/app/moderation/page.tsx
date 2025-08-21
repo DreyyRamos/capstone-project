@@ -1,14 +1,26 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +28,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,7 +39,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import {
   Search,
   Flag,
@@ -42,15 +54,18 @@ import {
   Shield,
   Ban,
   FileText,
-} from "lucide-react"
-import Link from "next/link"
+} from "lucide-react";
+import Link from "next/link";
 import { useModeratorQuery } from "@/hooks/useModerator";
 import Cookies from "js-cookie";
+import { ContentViewModal } from "@/components/content-view-modal";
 
 export default function ModerationPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [selectedReport, setSelectedReport] = useState<any>(null);
+  const [isContentModalOpen, setIsContentModalOpen] = useState(false);
   const token = Cookies.get("token") || "";
 
   const { data: reportedContents } = useModeratorQuery(token);
@@ -68,6 +83,9 @@ export default function ModerationPage() {
       reportedUser: `${report.reportedUser?.firstName || "Unknown"} ${
         report.reportedUser?.lastName || "User"
       }`,
+      // Keep the full objects for the modal
+      reportedByUser: report.reportedBy,
+      reportedUserObj: report.reportedUser,
       reason: report.reportReason,
       description:
         report.description ||
@@ -79,10 +97,14 @@ export default function ModerationPage() {
       category: getContentCategory(report),
       reportedUserId: report.reportedUserId,
       contentId: getContentId(report),
+      forum: report?.forum,
+      publication: report?.publication,
+      // Pass through all original report data
+      originalReport: report,
     })) || [];
 
   function getReportTitle(report: any) {
-    const contentType = report.contentType?.toLowerCase();
+    const contentType = report.type?.toLowerCase();
     const reason = report.reportReason || "Content violation";
 
     switch (contentType) {
@@ -109,6 +131,10 @@ export default function ModerationPage() {
       report.pubId ||
       report.forumCommentId ||
       report.pubCommentId ||
+      report.forumReplyId ||
+      report.pubReplyId ||
+      report.forumReplyToReplyId ||
+      report.pubReplyToReplyId ||
       "unknown"
     );
   }
@@ -196,9 +222,10 @@ export default function ModerationPage() {
   ];
 
   const priorityColors = {
-    low: "bg-green-100 text-green-800",
-    medium: "bg-yellow-100 text-yellow-800",
-    high: "bg-red-100 text-red-800",
+    LOW: "bg-green-100 text-green-800",
+    MEDIUM: "bg-yellow-100 text-yellow-800",
+    HIGH: "bg-red-100 text-red-800",
+    URGENT: "bg-violet-700 text-white-800",
   };
 
   const statusColors = {
@@ -214,8 +241,18 @@ export default function ModerationPage() {
     user_behavior: User,
   };
 
+  const handleViewContent = (report: any) => {
+    setSelectedReport(report);
+    setIsContentModalOpen(true);
+  };
+
   return (
     <div className="space-y-6">
+      <ContentViewModal
+        isOpen={isContentModalOpen}
+        onClose={() => setIsContentModalOpen(false)}
+        report={selectedReport}
+      />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -393,7 +430,9 @@ export default function ModerationPage() {
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleViewContent(report)}
+                            >
                               <Eye className="mr-2 h-4 w-4" />
                               View Content
                             </DropdownMenuItem>

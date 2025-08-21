@@ -175,12 +175,7 @@ export default function ForumTopicPage({ params }: PageProps) {
     commentContent: string,
     authorId?: string
   ) => {
-    openReportModal(
-      "FORUM_COMMENT",
-      commentId,
-      commentContent.substring(0, 50) + "...",
-      authorId
-    );
+    openReportModal("FORUM_COMMENT", commentId, commentContent, authorId);
   };
 
   const handleReportForumReply = (
@@ -188,12 +183,7 @@ export default function ForumTopicPage({ params }: PageProps) {
     replyContent: string,
     authorId?: string
   ) => {
-    openReportModal(
-      "FORUM_REPLY",
-      replyId,
-      replyContent.substring(0, 50) + "...",
-      authorId
-    );
+    openReportModal("FORUM_REPLY", replyId, replyContent, authorId);
   };
 
   const handleReportForumNestedReply = (
@@ -204,7 +194,7 @@ export default function ForumTopicPage({ params }: PageProps) {
     openReportModal(
       "FORUM_REPLY_TO_REPLY",
       nestedReplyId,
-      nestedReplyContent.substring(0, 50) + "...",
+      nestedReplyContent,
       authorId
     );
   };
