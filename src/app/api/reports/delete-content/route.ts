@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { authMiddleware } from "../../(middlware)/authMiddleware";
 import prisma from "@/lib/prisma";
 
 export async function DELETE(request: NextRequest) {
   try {
+    const authResult = await authMiddleware(request);
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+    const { id: moderatorId } = authResult.user;
+
     const { contentType, contentId, reportId } = await request.json();
 
     if (!contentType || !contentId || !reportId) {
@@ -144,11 +151,14 @@ export async function DELETE(request: NextRequest) {
     await prisma.reports.update({
       where: { reportId },
       data: {
-        status: "RESOLVED",
+        status: "DELETED",
         actionTaken: contentExists
           ? "Content deleted"
           : "Content was already deleted",
         resolvedAt: new Date(),
+        reviewedBy: {
+          connect: { id: moderatorId },
+        },
       },
     });
 

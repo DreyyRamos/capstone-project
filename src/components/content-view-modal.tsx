@@ -23,6 +23,9 @@ import {
   Eye,
   AlertTriangle,
 } from "lucide-react";
+import { useModeratorQuery } from "@/hooks/useModerator";
+import { useConfirmation } from "./confirmation-provider";
+import Cookies from "js-cookie";
 
 interface ContentViewModalProps {
   isOpen: boolean;
@@ -35,13 +38,27 @@ export function ContentViewModal({
   onClose,
   report,
 }: ContentViewModalProps) {
+  const { confirmDelete } = useConfirmation();
   console.log("report from modal", report);
+  const token = Cookies.get("token") || "";
+
+  const { deleteReportedContent, isDeleting, deleteSuccess } =
+    useModeratorQuery(token);
+
+  const handleDelete = async (
+    contentType: any,
+    contentId: any,
+    reportId: any
+  ) => {
+    deleteReportedContent({ contentType, contentId, reportId }); // Pass as a single object
+  };
 
   // Get content info based on report data
   const getContentInfo = () => {
     if (!report) return null;
 
     const baseInfo = {
+      reportId: report.id,
       contentId: report.contentId,
       contentType: report.type,
       createdAt: report.createdAt || new Date().toISOString(),
@@ -105,6 +122,12 @@ export function ContentViewModal({
   };
 
   const content = getContentInfo();
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      onClose();
+    }
+  }, [deleteSuccess, onClose]);
 
   if (!report || !content) return null;
 
@@ -295,7 +318,21 @@ export function ContentViewModal({
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
-          <Button variant="destructive">Take Action</Button>
+          <Button
+            variant="destructive"
+            onClick={() =>
+              confirmDelete("reported content", () =>
+                handleDelete(
+                  content.contentType.toUpperCase(),
+                  content.contentId,
+                  content.reportId
+                )
+              )
+            }
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Deleting Content" : "Delete this reported content"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

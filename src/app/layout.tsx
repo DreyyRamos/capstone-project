@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { RoleBasedLayout } from "@/components/role-based-layout";
 import ReactQueryProvider from "@/utils/ReactQueryProvider";
+import { ConfirmationProvider } from "@/components/confirmation-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,7 +32,9 @@ export default function RootLayout({
         >
           <ReactQueryProvider>
             {/* <RoleProvider> */}
-            <RoleBasedLayout>{children}</RoleBasedLayout>
+            <RoleBasedLayout>
+              <ConfirmationProvider>{children}</ConfirmationProvider>
+            </RoleBasedLayout>
             <Toaster />
             {/* </RoleProvider> */}
           </ReactQueryProvider>

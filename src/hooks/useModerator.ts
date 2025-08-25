@@ -2,6 +2,8 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   fetchReportedContents,
   deleteReportedContent,
+  restoreReportedContent,
+  cleanupReports,
 } from "@/services/moderation";
 
 interface Publication {
@@ -37,7 +39,7 @@ export const useModeratorQuery = (token: string) => {
       contentType: any;
       contentId: any;
       reportId: any;
-    }) => await deleteReportedContent(contentType, contentId, reportId),
+    }) => await deleteReportedContent(contentType, contentId, reportId, token),
     onSuccess: (data, variables) => {
       // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
@@ -49,6 +51,39 @@ export const useModeratorQuery = (token: string) => {
       } else if (variables.contentType.includes("FORUM")) {
         queryClient.invalidateQueries({ queryKey: ["forums"] });
       }
+    },
+  });
+
+  const restoreReported = useMutation({
+    mutationFn: async (reportId: string) =>
+      await restoreReportedContent(reportId, token),
+    onSuccess: (data, variables) => {
+      // Always invalidate reports
+      queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+
+      // Only invalidate specific content type queries
+      // if (variables.contentType.includes("PUBLICATION")) {
+      //   queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      // } else if (variables.contentType.includes("FORUM")) {
+      //   queryClient.invalidateQueries({ queryKey: ["forums"] });
+      // }
+    },
+  });
+
+  const cleanupReport = useMutation({
+    mutationFn: async () => await cleanupReports(token),
+    onSuccess: (data, variables) => {
+      // Always invalidate reports
+      queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+
+      // Only invalidate specific content type queries
+      // if (variables.contentType.includes("PUBLICATION")) {
+      //   queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      // } else if (variables.contentType.includes("FORUM")) {
+      //   queryClient.invalidateQueries({ queryKey: ["forums"] });
+      // }
     },
   });
 
@@ -88,15 +123,19 @@ export const useModeratorQuery = (token: string) => {
     deleteReportedContent: deleteReported.mutate,
     isDeleting: deleteReported.isPending,
     // createError: mutation.error,
-    // createSuccess: mutation.isSuccess,
+    deleteSuccess: deleteReported.isSuccess,
     // createReset: mutation.reset,
 
-    // // archive mutation function
-    // archive: archiveMutation.mutate,
-    // isArchiving: archiveMutation.isPending,
+    // restore mutation function
+    restoreContent: restoreReported.mutate,
+    isRestoring: restoreReported.isPending,
+    restoreSuccess: restoreReported.isSuccess,
     // archiveError: archiveMutation.error,
-    // archiveSuccess: archiveMutation.isSuccess,
     // archiveReset: archiveMutation.reset,
+
+    cleanupReport: cleanupReport.mutate,
+    isCleaningUp: cleanupReport.isPending,
+    cleanUpSuccess: cleanupReport.isSuccess,
 
     // restoreArchive: restoreArchiveMutation.mutate,
     // isRestoring: restoreArchiveMutation.isPending,

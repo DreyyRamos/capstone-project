@@ -82,7 +82,7 @@ model Notifications {
 model Forum {
   forumId       String          @id @default(cuid())
   topicTitle    String?         @db.VarChar(255)
-  description   String?         @db.VarChar(65535)
+  description   String?         @db.Text
   authorId      String?
   author        User?           @relation(fields: [authorId], references: [id])
   imageUrl      String?
@@ -222,8 +222,8 @@ model ForumCommentReplyToReplyLikes {
 model Publication {
   pubId                            String                                @id @default(cuid())
   title                            String?                               @db.VarChar(255)
-  excerpt                          String?                               @db.VarChar(255)
-  content                          String?                               @db.VarChar(65535)
+  excerpt                          String?                               @db.Text
+  content                          String?                               @db.Text
   authorId                         String?
   author                           User?                                 @relation(fields: [authorId], references: [id])
   imageUrl                         String?
@@ -434,9 +434,9 @@ enum ContentType {
 
 enum ReportStatus {
   PENDING
-  UNDER_REVIEW
+  RESTORED
   RESOLVED
-  DISMISSED
+  DELETED
 }
 
 enum ReportPriority {

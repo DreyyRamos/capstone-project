@@ -15,12 +15,52 @@ export const fetchReportedContents = async (token: string) => {
 export const deleteReportedContent = async (
   contentType: any,
   contentId: any,
-  reportId: any
+  reportId: any,
+  token: string
 ) => {
   const response = await fetch("/api/reports/delete-content", {
     method: "DELETE",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify({ contentType, contentId, reportId }),
+  });
+  if (!response.ok) throw new Error("Failed to fetch posts");
+  return response.json();
+};
+
+export const restoreReportedContent = async (
+  // contentType: any,
+  // contentId: any,
+  reportId: any,
+  token: string
+) => {
+  const response = await fetch("/api/reports/resolve-report", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ reportId }),
+  });
+  if (!response.ok) throw new Error("Failed to fetch posts");
+  return response.json();
+};
+
+export const cleanupReports = async (
+  // contentType: any,
+  // contentId: any,
+  // reportId: any,
+  token: string
+) => {
+  const response = await fetch("/api/reports/cleanup-reports", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    // body: JSON.stringify({ reportId }),
   });
   if (!response.ok) throw new Error("Failed to fetch posts");
   return response.json();

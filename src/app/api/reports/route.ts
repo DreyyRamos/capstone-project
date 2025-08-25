@@ -86,7 +86,6 @@ export async function GET(req: NextRequest) {
     }
 
     const reports = await prisma.reports.findMany({
-      where: { status: "PENDING" },
       select: {
         reportId: true,
         contentType: true,
@@ -130,6 +129,7 @@ export async function GET(req: NextRequest) {
         forumReplyToReplyId: true,
         pubReplyToReplyId: true,
         status: true,
+        actionTaken: true,
         priority: true,
         createdAt: true,
       },

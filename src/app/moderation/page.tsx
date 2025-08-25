@@ -54,22 +54,31 @@ import {
   Shield,
   Ban,
   FileText,
+  TriangleAlert,
 } from "lucide-react";
 import Link from "next/link";
 import { useModeratorQuery } from "@/hooks/useModerator";
 import Cookies from "js-cookie";
 import { ContentViewModal } from "@/components/content-view-modal";
+import { useConfirmation } from "@/components/confirmation-provider";
 
 export default function ModerationPage() {
+  const { confirmDelete, confirmAction } = useConfirmation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("PENDING");
   const [typeFilter, setTypeFilter] = useState("all");
   const [selectedReport, setSelectedReport] = useState<any>(null);
   const [isContentModalOpen, setIsContentModalOpen] = useState(false);
   const token = Cookies.get("token") || "";
 
-  const { data: reportedContents, deleteReportedContent } =
-    useModeratorQuery(token);
+  const {
+    data: reportedContents,
+    deleteReportedContent,
+    restoreContent,
+    cleanupReport,
+    isCleaningUp,
+    cleanUpSuccess,
+  } = useModeratorQuery(token);
   console.log("reported contents", reportedContents);
 
   // Transform API data to match UI expectations
@@ -230,9 +239,10 @@ export default function ModerationPage() {
   };
 
   const statusColors = {
-    pending: "bg-orange-100 text-orange-800",
-    resolved: "bg-green-100 text-green-800",
-    dismissed: "bg-gray-100 text-gray-800",
+    PENDING: "bg-orange-100 text-orange-800",
+    RESOLVED: "bg-green-100 text-green-800",
+    DISMISSED: "bg-gray-100 text-gray-800",
+    UNDER_REVIEW: "bg-gray-400 text-gray-800",
   };
 
   const typeIcons = {
@@ -255,6 +265,14 @@ export default function ModerationPage() {
     deleteReportedContent({ contentType, contentId, reportId }); // Pass as a single object
   };
 
+  const handleRestoreContent = (reportId: string) => {
+    restoreContent(reportId);
+  };
+
+  const handleCleanUp = () => {
+    cleanupReport();
+  };
+
   return (
     <div className="space-y-6">
       <ContentViewModal
@@ -271,11 +289,14 @@ export default function ModerationPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button asChild variant="outline">
-            <Link href="/moderation/guidelines">
-              <Shield className="mr-2 h-4 w-4" />
-              Guidelines
-            </Link>
+          <Button
+            variant="outline"
+            onClick={() =>
+              confirmDelete("or clean-up reported contents", handleCleanUp)
+            }
+          >
+            <TriangleAlert className="mr-2 h-4 w-4" />
+            Clean Up Reported Contents
           </Button>
           <Button asChild>
             <Link href="/moderation/reports/new">
@@ -333,10 +354,11 @@ export default function ModerationPage() {
                     <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="PENDING">Pending</SelectItem>
+                    <SelectItem value="RESTORED">Restored</SelectItem>
+                    <SelectItem value="RESOLVED">Resolved</SelectItem>
+                    <SelectItem value="DELETED">Deleted</SelectItem>
                     <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="resolved">Resolved</SelectItem>
-                    <SelectItem value="dismissed">Dismissed</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -445,11 +467,15 @@ export default function ModerationPage() {
                               <Eye className="mr-2 h-4 w-4" />
                               View Content
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <CheckCircle className="mr-2 h-4 w-4" />
-                              Resolve Report
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                confirmAction(
+                                  "Dismiss Report",
+                                  "This will restore the reported content",
+                                  () => handleRestoreContent(report.id)
+                                )
+                              }
+                            >
                               <XCircle className="mr-2 h-4 w-4" />
                               Dismiss Report
                             </DropdownMenuItem>
@@ -457,15 +483,17 @@ export default function ModerationPage() {
                             <DropdownMenuItem
                               className="text-red-600"
                               onClick={() =>
-                                handleDelete(
-                                  report.type.toUpperCase(),
-                                  report.contentId,
-                                  report.id
+                                confirmDelete("reported content", () =>
+                                  handleDelete(
+                                    report.type.toUpperCase(),
+                                    report.contentId,
+                                    report.id
+                                  )
                                 )
                               }
                             >
                               <Ban className="mr-2 h-4 w-4" />
-                              Take Action
+                              Delete this content
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
