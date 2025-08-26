@@ -55,6 +55,7 @@ import {
   Ban,
   FileText,
   TriangleAlert,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -84,7 +85,7 @@ export default function ModerationPage() {
   } = useModeratorQuery(token);
   console.log("reported contents", reportedContents);
 
-  const { data: usersModerator } = useFetchUsersModerator(token);
+  const { data: usersModerator, triggerBan } = useFetchUsersModerator(token);
   console.log("users for modertaion", usersModerator);
   // Transform API data to match UI expectations
   const transformedReports =
@@ -572,56 +573,62 @@ export default function ModerationPage() {
                         <Badge className="bg-yellow-100 text-yellow-800">
                           {user.warningPoints} Warnings
                         </Badge>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="outline" size="sm">
-                              <AlertTriangle className="mr-2 h-4 w-4" />
-                              Warn User
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Issue Warning</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Send a warning to this user for violating
-                                community guidelines.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <Textarea placeholder="Reason for warning..." />
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction>
-                                Send Warning
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+
+                        {/* Show Warn button only if user has 3 or more warning points */}
+                        {user.warningPoints >= 3 && user.warningPoints < 5 && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              confirmAction(
+                                "Warn user",
+                                "This will warn the user.",
+                                () => triggerBan(user.id)
+                              )
+                            }
+                          >
+                            <AlertTriangle className="mr-2 h-4 w-4" />
+                            Warn User
+                          </Button>
+                        )}
+
+                        {/* Show Ban button only if user has 10 or more warning points */}
+                        {user.warningPoints >= 10 && (
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() =>
+                              confirmAction(
+                                "Ban this user",
+                                "This will ban the user.",
+                                () => triggerBan(user.id)
+                              )
+                            }
+                          >
+                            <X className="mr-2 h-4 w-4" />
+                            Ban User
+                          </Button>
+                        )}
+
+                        {/* Show Suspend button only if user has 5 or more warning points */}
+                        {user.warningPoints >= 5 && user.warningPoints < 10 && (
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() =>
+                              confirmAction(
+                                "Suspend user",
+                                "This will suspend the user.",
+                                () => triggerBan(user.id)
+                              )
+                            }
+                          >
+                            <Ban className="mr-2 h-4 w-4" />
+                            Suspend User
+                          </Button>
+                        )}
                       </div>
                     </div>
-
-                    {/* <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-10 w-10">
-                      <AvatarFallback>JS</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">John Smith</p>
-                      <p className="text-sm text-muted-foreground">
-                        john.smith@lincolnhigh.edu
-                      </p>
-                      <Badge variant="secondary" className="text-xs">
-                        Student
-                      </Badge>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-red-100 text-red-800">Suspended</Badge>
-                    <Button variant="outline" size="sm">
-                      <CheckCircle className="mr-2 h-4 w-4" />
-                      Lift Suspension
-                    </Button>
-                  </div>
-                </div> */}
                   </>
                 ))}
               </div>

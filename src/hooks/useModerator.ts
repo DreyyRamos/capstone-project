@@ -5,6 +5,7 @@ import {
   restoreReportedContent,
   cleanupReports,
   fetchUsers,
+  triggerAction,
 } from "@/services/moderation";
 
 interface Publication {
@@ -54,6 +55,7 @@ export const useModeratorQuery = (token: string) => {
       // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
 
       // Only invalidate specific content type queries
       if (variables.contentType.includes("PUBLICATION")) {
@@ -71,6 +73,7 @@ export const useModeratorQuery = (token: string) => {
       // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
 
       // Only invalidate specific content type queries
       // if (variables.contentType.includes("PUBLICATION")) {
@@ -87,6 +90,7 @@ export const useModeratorQuery = (token: string) => {
       // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
 
       // Only invalidate specific content type queries
       // if (variables.contentType.includes("PUBLICATION")) {
@@ -156,6 +160,7 @@ export const useModeratorQuery = (token: string) => {
 };
 
 export const useFetchUsersModerator = (token: string) => {
+  const queryClient = useQueryClient();
   // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["moderator-users"],
@@ -166,6 +171,23 @@ export const useFetchUsersModerator = (token: string) => {
     refetchInterval: false,
   });
 
+  const triggerUserStatus = useMutation({
+    mutationFn: async (userId: string) => await triggerAction(token, userId),
+    onSuccess: (data, variables) => {
+      // Always invalidate reports
+      queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
+
+      // Only invalidate specific content type queries
+      // if (variables.contentType.includes("PUBLICATION")) {
+      //   queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      // } else if (variables.contentType.includes("FORUM")) {
+      //   queryClient.invalidateQueries({ queryKey: ["forums"] });
+      // }
+    },
+  });
+
   return {
     // Query results
     data,
@@ -174,5 +196,12 @@ export const useFetchUsersModerator = (token: string) => {
     isError,
     isSuccess,
     refetch,
+
+    // Mutation functions
+    triggerBan: triggerUserStatus.mutate,
+    isBanning: triggerUserStatus.isPending,
+    // createError: mutation.error,
+    banSuccess: triggerUserStatus.isSuccess,
+    // createReset: mutation.reset,
   };
 };

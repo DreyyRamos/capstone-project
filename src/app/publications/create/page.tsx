@@ -30,8 +30,10 @@ import { usePostQuery } from "@/hooks/usePost";
 import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import Tiptap from "@/components/tiptap";
+import { useTokenUser } from "@/hooks/useTokenUser";
 
 export default function CreatePublicationPage() {
+  const { user } = useTokenUser();
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -256,6 +258,22 @@ export default function CreatePublicationPage() {
                   description={formData.content}
                   onChange={handleContentChange}
                 />
+                {user?.status === "BANNED" ? (
+                  <p className="text-red-500">
+                    You cannot create a publication because you're banned.
+                    Contact the administrator.
+                  </p>
+                ) : (
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    className="w-full bg-transparent"
+                    disabled={isCreating}
+                  >
+                    <Save className="mr-2 h-4 w-4" />
+                    Publish
+                  </Button>
+                )}
                 {/* <Textarea
                   placeholder="Write your publication content here..."
                   name="content"
@@ -267,15 +285,6 @@ export default function CreatePublicationPage() {
                   You can use basic HTML formatting in your content
                 </p> */}
               </CardContent>
-              <Button
-                type="submit"
-                variant="outline"
-                className="w-full bg-transparent"
-                disabled={isCreating}
-              >
-                <Save className="mr-2 h-4 w-4" />
-                Publish
-              </Button>
             </Card>
           </div>
 

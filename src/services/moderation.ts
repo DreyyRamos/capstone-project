@@ -78,6 +78,18 @@ export const fetchUsers = async (token: string) => {
   return response.json();
 };
 
+export const triggerAction = async (token: string, userId: string) => {
+  const response = await fetch(`/api/moderator/initiate-actions`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ userId }),
+  });
+  if (!response.ok) throw new Error("Failed to fetch post by id");
+  return response.json();
+};
+
 
 export const fetchPubById = async (postId: string) => {
   const response = await fetch(`/api/publications/${postId}`, {
