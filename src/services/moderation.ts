@@ -16,6 +16,7 @@ export const deleteReportedContent = async (
   contentType: any,
   contentId: any,
   reportId: any,
+  userId: string,
   token: string
 ) => {
   const response = await fetch("/api/reports/delete-content", {
@@ -24,7 +25,7 @@ export const deleteReportedContent = async (
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ contentType, contentId, reportId }),
+    body: JSON.stringify({ contentType, contentId, reportId, userId }),
   });
   if (!response.ok) throw new Error("Failed to fetch posts");
   return response.json();
@@ -65,6 +66,18 @@ export const cleanupReports = async (
   if (!response.ok) throw new Error("Failed to fetch posts");
   return response.json();
 };
+
+export const fetchUsers = async (token: string) => {
+  const response = await fetch(`/api/moderator/fetch-users`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) throw new Error("Failed to fetch post by id");
+  return response.json();
+};
+
 
 export const fetchPubById = async (postId: string) => {
   const response = await fetch(`/api/publications/${postId}`, {

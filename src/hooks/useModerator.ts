@@ -4,6 +4,7 @@ import {
   deleteReportedContent,
   restoreReportedContent,
   cleanupReports,
+  fetchUsers,
 } from "@/services/moderation";
 
 interface Publication {
@@ -35,11 +36,20 @@ export const useModeratorQuery = (token: string) => {
       contentType,
       contentId,
       reportId,
+      userId,
     }: {
       contentType: any;
       contentId: any;
       reportId: any;
-    }) => await deleteReportedContent(contentType, contentId, reportId, token),
+      userId: any;
+    }) =>
+      await deleteReportedContent(
+        contentType,
+        contentId,
+        reportId,
+        userId,
+        token
+      ),
     onSuccess: (data, variables) => {
       // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
@@ -142,5 +152,27 @@ export const useModeratorQuery = (token: string) => {
     // restoringError: restoreArchiveMutation.error,
     // restoringSuccess: restoreArchiveMutation.isSuccess,
     // restoringReset: restoreArchiveMutation.reset,
+  };
+};
+
+export const useFetchUsersModerator = (token: string) => {
+  // Query to fetch all posts
+  const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+    queryKey: ["moderator-users"],
+    queryFn: async () => await fetchUsers(token),
+    // refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchOnReconnect: false,
+    refetchInterval: false,
+  });
+
+  return {
+    // Query results
+    data,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
   };
 };

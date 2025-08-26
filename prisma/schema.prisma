@@ -56,6 +56,17 @@ model User {
   reportsSubmitted Reports[] @relation("UserReports") // Reports this user has submitted
   reportsAgainst   Reports[] @relation("ReportedUser") // Reports made against this user
   reportsReviewed  Reports[] @relation("ReportReviewer") // Reports this user has reviewed
+
+  warningPoints Int        @default(0)
+  status        UserStatus @default(ACTIVE)
+}
+
+// Simple user status enum
+enum UserStatus {
+  ACTIVE // 0-2 warnings
+  WARNED // 3-4 warnings  
+  SUSPENDED // 5-9 warnings (temporary)
+  BANNED // 10+ warnings (permanent)
 }
 
 enum Role {

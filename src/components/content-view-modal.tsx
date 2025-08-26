@@ -48,9 +48,10 @@ export function ContentViewModal({
   const handleDelete = async (
     contentType: any,
     contentId: any,
-    reportId: any
+    reportId: any,
+    userId: any
   ) => {
-    deleteReportedContent({ contentType, contentId, reportId }); // Pass as a single object
+    deleteReportedContent({ contentType, contentId, reportId, userId }); // Pass as a single object
   };
 
   // Get content info based on report data
@@ -68,10 +69,12 @@ export function ContentViewModal({
         "No content available",
       bodyOfContent: report?.forum?.description || report?.publication?.content,
       reportedUser: {
+        id: report.reportedUserObj?.id,
         name: `${report.reportedUser || "Unknown"}`,
         role: report.reportedUserObj?.role,
         avatar: report.reportedUserObj?.profileImage || "/placeholder.svg",
       },
+      status: report?.status,
     };
 
     // Return appropriate content structure based on type
@@ -318,7 +321,27 @@ export function ContentViewModal({
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
-          <Button
+          {!["RESTORED", "RESOLVED", "DELETED"].includes(content.status) && (
+            <Button
+              variant="destructive"
+              onClick={() =>
+                confirmDelete(
+                  "reported content",
+                  async () =>
+                    await handleDelete(
+                      content.contentType.toUpperCase(),
+                      content.contentId,
+                      content.reportId,
+                      content.reportedUser?.id
+                    )
+                )
+              }
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting Content" : "Delete this reported content"}
+            </Button>
+          )}
+          {/* <Button
             variant="destructive"
             onClick={() =>
               confirmDelete("reported content", () =>
@@ -332,7 +355,7 @@ export function ContentViewModal({
             disabled={isDeleting}
           >
             {isDeleting ? "Deleting Content" : "Delete this reported content"}
-          </Button>
+          </Button> */}
         </div>
       </DialogContent>
     </Dialog>
