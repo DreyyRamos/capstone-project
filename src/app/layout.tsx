@@ -30,14 +30,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ReactQueryProvider>
-            {/* <RoleProvider> */}
-            <RoleBasedLayout>
-              <ConfirmationProvider>{children}</ConfirmationProvider>
-            </RoleBasedLayout>
-            <Toaster />
-            {/* </RoleProvider> */}
-          </ReactQueryProvider>
+          <ConfirmationProvider>
+            <ReactQueryProvider>
+              {/* <RoleProvider> */}
+              <RoleBasedLayout>{children}</RoleBasedLayout>
+              <Toaster />
+              {/* </RoleProvider> */}
+            </ReactQueryProvider>
+          </ConfirmationProvider>
         </ThemeProvider>
       </body>
     </html>

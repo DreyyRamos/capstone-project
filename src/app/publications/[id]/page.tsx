@@ -31,6 +31,9 @@ import PublicationCommentReplyLikeButton from "@/components/like-buttons/publica
 import PublicationReplyToReplyLikeButton from "@/components/like-buttons/publication-replyToReply-like-button";
 import { ReportModal } from "@/components/report-modal";
 import { useReportModal } from "@/hooks/use-report-modal";
+import ContentDisplay from "@/components/content-display";
+import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
+import { useUserQuery } from "@/hooks/useUser";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -61,13 +64,21 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const { id } = use(params);
 
   const token = Cookies.get("token") || "";
+  const { data: currentUser } = useUserQuery(token);
+  console.log("current user", currentUser);
   const { data: publication, isLoading, isError } = useFetchOnePostQuery(id);
   const { makeFeatured, isLoading: isCurrentlyLoading } = useIsFeatured(token);
   const { commentToPost } = usePostByIdQuery(token, publication?.pubId);
   const { mutate: addTopReply } = useAddTopReply(token);
   const { mutate: addNestedReply } = useAddNestedReply(token);
-  const { user, isAuthenticated } = useTokenUser();
+  const { user } = useTokenUser();
   const userRoles = user?.roles || user?.role || [];
+  const { StatusModal, checkComment, checkLike, checkShare, checkAndExecute } =
+    useUserStatusCheck(currentUser?.userData?.status, {
+      onBlocked: (action, status) => {
+        console.log(`User tried to ${action} but is ${status}`);
+      },
+    });
 
   const handleLike = () => {
     if (requireAuth("like this publication")) {
@@ -82,19 +93,21 @@ export default function PublicationDetailPage({ params }: PageProps) {
   };
 
   const handleComment = async () => {
-    if (requireAuth("comment on this publication")) {
-      if (comment_content.trim()) {
-        console.log("Adding comment:", comment_content);
-        try {
-          await commentToPost(comment_content);
-          setCommentContent("");
-          toast.success("Comment added successfully!");
-        } catch (error) {
-          toast.error("Failed to add comment");
-          console.error("Error adding comment:", error);
+    checkAndExecute("comment", async () => {
+      if (requireAuth("comment on this publication")) {
+        if (comment_content.trim()) {
+          console.log("Adding comment:", comment_content);
+          try {
+            await commentToPost(comment_content);
+            setCommentContent("");
+            toast.success("Comment added successfully!");
+          } catch (error) {
+            toast.error("Failed to add comment");
+            console.error("Error adding comment:", error);
+          }
         }
       }
-    }
+    });
   };
 
   const handleReply = (commentId: string) => {
@@ -231,6 +244,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      <StatusModal />
       <AuthModal
         isOpen={isOpen}
         onClose={closeModal}
@@ -352,11 +366,20 @@ export default function PublicationDetailPage({ params }: PageProps) {
             />
           </div>
         )}
-
-        <div
-          className="prose prose-lg max-w-none dark:prose-invert"
+        <ContentDisplay htmlContent={publication?.content} />
+        {/* <div
+          className="rounded-md border min-h-[150px] border-input bg-background p-3 
+          focus:outline-none
+          [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4
+          [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4  
+          [&_li]:mb-2 [&_li]:leading-relaxed
+          [&_p]:mb-4 [&_p]:leading-relaxed
+          [&_h1]:mb-4 [&_h1]:mt-6 [&_h1]:text-2xl [&_h1]:font-bold
+          [&_h2]:mb-3 [&_h2]:mt-5 [&_h2]:text-xl [&_h2]:font-semibold
+          [&_h3]:mb-2 [&_h3]:mt-4 [&_h3]:text-lg [&_h3]:font-medium
+          [&_strong]:font-bold [&_b]:font-bold"
           dangerouslySetInnerHTML={{ __html: publication?.content }}
-        />
+        /> */}
 
         <div className="flex items-center justify-between pt-6 border-t">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">

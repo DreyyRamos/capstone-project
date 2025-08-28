@@ -29,9 +29,11 @@ import Cookies from "js-cookie";
 import { useUserQuery } from "@/hooks/useUser";
 import { timeAgo } from "@/lib/timeAgo";
 import { useNotificationQuery } from "@/hooks/useNotification";
+import { useConfirmation } from "./confirmation-provider";
 
 export function Header() {
   const { setTheme, theme } = useTheme();
+  const { confirmAction } = useConfirmation();
 
   const token = Cookies.get("token") || "";
   const { data: user } = useUserQuery(token);
@@ -187,7 +189,15 @@ export function Header() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      confirmAction(
+                        "Logout",
+                        "Are you sure you want to logout?",
+                        handleLogout
+                      )
+                    }
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>

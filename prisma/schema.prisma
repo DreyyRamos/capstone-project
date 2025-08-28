@@ -88,6 +88,8 @@ model Notifications {
   publication  Publication? @relation(fields: [pubNotifId], references: [pubId])
   forumNotifId String?
   forum        Forum?       @relation(fields: [forumNotifId], references: [forumId])
+  reportId     String?
+  reports      Reports?     @relation(fields: [reportId], references: [reportId])
 }
 
 model Forum {
@@ -376,6 +378,7 @@ model Reports {
   reportedContent String // The actual content that was reported
   reportReason    String // Reason for the report
   description     String? // Optional additional description from reporter
+  notifications   Notifications[]
 
   // Reporter information
   reportedById String

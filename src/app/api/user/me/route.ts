@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
         interests: true,
         createdAt: true,
         updatedAt: true,
+        status: true,
         publications: {
           select: {
             title: true,

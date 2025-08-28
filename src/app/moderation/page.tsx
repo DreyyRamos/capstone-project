@@ -20,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,17 +28,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import {
   Search,
   Flag,
@@ -547,11 +535,8 @@ export default function ModerationPage() {
             <CardContent>
               <div className="space-y-4">
                 {usersModerator?.users?.map((user: any) => (
-                  <>
-                    <div
-                      key={user.id}
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                    >
+                  <div key={user.id}>
+                    <div className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="flex items-center gap-4">
                         <Avatar className="h-10 w-10">
                           <AvatarImage src={user.profileImage} />
@@ -571,7 +556,7 @@ export default function ModerationPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge className="bg-yellow-100 text-yellow-800">
-                          {user.warningPoints} Warnings
+                          {user.warningPoints} Warning(s)
                         </Badge>
 
                         {/* Show Warn button only if user has 3 or more warning points */}
@@ -629,7 +614,7 @@ export default function ModerationPage() {
                         )}
                       </div>
                     </div>
-                  </>
+                  </div>
                 ))}
               </div>
             </CardContent>
