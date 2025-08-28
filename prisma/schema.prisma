@@ -78,6 +78,7 @@ enum Role {
 
 model Notifications {
   notifId      String       @id @default(cuid())
+  notifType    String?
   notifTitle   String?
   notifContent String?
   isRead       Boolean      @default(false)

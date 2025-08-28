@@ -16,7 +16,21 @@ export async function POST(req: NextRequest) {
     const authResult = await authMiddleware(req);
     if (authResult instanceof NextResponse) return authResult;
 
-    const { userId } = await req.json();
+    const body = await req.json();
+    const { userId, reportId } = body;
+
+    // Validate required parameters
+    if (!userId) {
+      return NextResponse.json(
+        { message: "userId is required" },
+        { status: 400 }
+      );
+    }
+
+    // reportId is optional - log if missing but don't fail
+    if (!reportId) {
+      console.warn("reportId not provided for userId:", userId);
+    }
 
     const result = await prisma.$transaction(async (tx) => {
       const user = await tx.user.findUnique({ where: { id: userId } });
@@ -33,36 +47,51 @@ export async function POST(req: NextRequest) {
           data: { status: newStatus },
         });
       }
-        let notificationTitle = ""
-        let notificationContent = ""
-      if(user.status === "WARNED") {
-        notificationTitle = "You are being warned",
-        notificationContent = "Your account has been reported 3 times"
-      } else if (user.status === "SUSPENDED") {
-        notificationTitle = "You are being suspended",
-        notificationContent = "Your account has been reported 3 or more times, you cannot interact with Publications or Forums for indefinite amount of time"
-      } else if (user.status === "BANNED") {
-        notificationTitle = "Your account is banned",
-        notificationContent = "Your account has been banned, please contact the administrator to restore your account."
+
+      let notificationTitle = "";
+      let notificationContent = "";
+      
+      // Use the new status, not the old status for notification content
+      if (newStatus === UserStatus.WARNED) {
+        notificationTitle = "You are being warned";
+        notificationContent = "Your account has been reported 3 times";
+      } else if (newStatus === UserStatus.SUSPENDED) {
+        notificationTitle = "You are being suspended";
+        notificationContent = "Your account has been reported 5 or more times, you cannot interact with Publications or Forums for indefinite amount of time";
+      } else if (newStatus === UserStatus.BANNED) {
+        notificationTitle = "Your account is banned";
+        notificationContent = "Your account has been banned, please contact the administrator to restore your account.";
       }
 
-      await tx.notifications.create({
-        data: {
-          notifTitle: notificationTitle,
-          notifContent: notificationContent,
-          userId: userId, // Notify the original author
-          // reportId: id, // Link notification back to the publication
-        },
-      });
+      // Only create notification if there's content to notify about
+      if (notificationTitle && notificationContent) {
+        await tx.notifications.create({
+          data: {
+            notifType: 'reports',
+            notifTitle: notificationTitle,
+            notifContent: notificationContent,
+            userId: userId,
+            reportId: reportId || null, // Allow null if reportId is not provided
+          },
+        });
+      }
 
-      return { user: updatedUser, statusChanged: user.status !== newStatus };
+      return { 
+        user: updatedUser, 
+        statusChanged: user.status !== newStatus,
+        newStatus,
+        oldStatus: user.status
+      };
     });
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error("Failed to check warnings:", error);
-    if (error instanceof Error && error.message === "User not found") {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    if (error instanceof Error) {
+      if (error.message === "User not found") {
+        return NextResponse.json({ message: "User not found" }, { status: 404 });
+      }
+      console.error("Error details:", error.message);
     }
     return NextResponse.json(
       { message: "Internal server error" },
@@ -90,29 +119,58 @@ export async function POST(req: NextRequest) {
 //     const authResult = await authMiddleware(req);
 //     if (authResult instanceof NextResponse) return authResult;
 
-//     const { userId } = await req.json();
+//     const { userId, reportId } = await req.json();
 
-//     const user = await prisma.user.findUnique({ where: { id: userId } });
-//     if (!user) {
-//       return NextResponse.json({ message: "User not found" }, { status: 404 });
-//     }
+//     console.log("data being sent", userId, reportId);
 
-//     const newStatus = computeStatus(user.warningPoints);
-//     let updatedUser = user;
+//     const result = await prisma.$transaction(async (tx) => {
+//       const user = await tx.user.findUnique({ where: { id: userId } });
+//       if (!user) {
+//         throw new Error("User not found");
+//       }
 
-//     if (user.status !== newStatus) {
-//       updatedUser = await prisma.user.update({
-//         where: { id: userId },
-//         data: { status: newStatus },
+//       const newStatus = computeStatus(user.warningPoints);
+//       let updatedUser = user;
+
+//       if (user.status !== newStatus) {
+//         updatedUser = await tx.user.update({
+//           where: { id: userId },
+//           data: { status: newStatus },
+//         });
+//       }
+//       let notificationTitle = "";
+//       let notificationContent = "";
+//       if (user.status === "WARNED") {
+//         (notificationTitle = "You are being warned"),
+//           (notificationContent = "Your account has been reported 3 times");
+//       } else if (user.status === "SUSPENDED") {
+//         (notificationTitle = "You are being suspended"),
+//           (notificationContent =
+//             "Your account has been reported 3 or more times, you cannot interact with Publications or Forums for indefinite amount of time");
+//       } else if (user.status === "BANNED") {
+//         (notificationTitle = "Your account is banned"),
+//           (notificationContent =
+//             "Your account has been banned, please contact the administrator to restore your account.");
+//       }
+
+//       await tx.notifications.create({
+//         data: {
+//           notifTitle: notificationTitle,
+//           notifContent: notificationContent,
+//           userId: userId, // Notify the original author
+//           reportId, // Link notification back to the publication
+//         },
 //       });
-//     }
 
-//     return NextResponse.json(
-//       { user: updatedUser, statusChanged: user.status !== newStatus },
-//       { status: 200 }
-//     );
+//       return { user: updatedUser, statusChanged: user.status !== newStatus };
+//     });
+
+//     return NextResponse.json(result, { status: 200 });
 //   } catch (error) {
 //     console.error("Failed to check warnings:", error);
+//     if (error instanceof Error && error.message === "User not found") {
+//       return NextResponse.json({ message: "User not found" }, { status: 404 });
+//     }
 //     return NextResponse.json(
 //       { message: "Internal server error" },
 //       { status: 500 }

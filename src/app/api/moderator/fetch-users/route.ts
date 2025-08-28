@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
         profileImage: true,
         warningPoints: true,
         status: true,
+        reportsAgainst: true,
       },
     });
 

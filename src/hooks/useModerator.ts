@@ -172,19 +172,14 @@ export const useFetchUsersModerator = (token: string) => {
   });
 
   const triggerUserStatus = useMutation({
-    mutationFn: async (userId: string) => await triggerAction(token, userId),
+    mutationFn: async ({ userId, reportId }: { userId: any; reportId: any }) =>
+      await triggerAction(token, userId, reportId),
     onSuccess: (data, variables) => {
       // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
-
-      // Only invalidate specific content type queries
-      // if (variables.contentType.includes("PUBLICATION")) {
-      //   queryClient.invalidateQueries({ queryKey: ["pubs"] });
-      // } else if (variables.contentType.includes("FORUM")) {
-      //   queryClient.invalidateQueries({ queryKey: ["forums"] });
-      // }
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
 

@@ -233,6 +233,14 @@ export default function ModerationPage() {
     cleanupReport();
   };
 
+  const handleBan = (userId: any, reportId: any) => {
+    if (!userId) {
+      console.error("Cannot trigger action without userId");
+      return; // Or throw/toast an error
+    }
+    triggerBan({ userId, reportId: reportId ?? null });
+  };
+
   return (
     <div className="space-y-6">
       <ContentViewModal
@@ -568,7 +576,11 @@ export default function ModerationPage() {
                               confirmAction(
                                 "Warn user",
                                 "This will warn the user.",
-                                () => triggerBan(user.id)
+                                () =>
+                                  handleBan(
+                                    user.id,
+                                    user?.reportsAgainst?.[0]?.reportId
+                                  )
                               )
                             }
                           >
@@ -586,7 +598,11 @@ export default function ModerationPage() {
                               confirmAction(
                                 "Ban this user",
                                 "This will ban the user.",
-                                () => triggerBan(user.id)
+                                () =>
+                                  handleBan(
+                                    user?.id,
+                                    user?.reportsAgainst?.[0]?.reportId
+                                  )
                               )
                             }
                           >
@@ -604,7 +620,11 @@ export default function ModerationPage() {
                               confirmAction(
                                 "Suspend user",
                                 "This will suspend the user.",
-                                () => triggerBan(user.id)
+                                () =>
+                                  handleBan(
+                                    user?.id,
+                                    user?.reportsAgainst?.[0]?.reportId
+                                  )
                               )
                             }
                           >
