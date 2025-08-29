@@ -53,39 +53,39 @@ export const useForumQuery = (token: string) => {
   };
 };
 
-export const useFeaturedPostsQuery = () => {
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    // A unique query key to cache this data separately from all posts
-    queryKey: ["featured-pubs"],
+// export const useFeaturedPostsQuery = () => {
+//   const { data, isLoading, isError, error, refetch } = useQuery({
+//     // A unique query key to cache this data separately from all posts
+//     queryKey: ["featured-pubs"],
 
-    // The query function is the service you already created
-    queryFn: fetchFeaturedPubs,
+//     // The query function is the service you already created
+//     queryFn: fetchFeaturedPubs,
 
-    // refetchOnWindowFocus: false,
-    // refetchOnMount: false,
-    // refetchOnReconnect: false,
-    // refetchInterval: false,
-  });
+//     // refetchOnWindowFocus: false,
+//     // refetchOnMount: false,
+//     // refetchOnReconnect: false,
+//     // refetchInterval: false,
+//   });
 
-  return { data, isLoading, isError, error, refetch };
-};
+//   return { data, isLoading, isError, error, refetch };
+// };
 
-export const useArchivedPostsQuery = (token: string) => {
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    // A unique query key to cache this data separately from all posts
-    queryKey: ["archived-pubs"],
+// export const useArchivedPostsQuery = (token: string) => {
+//   const { data, isLoading, isError, error, refetch } = useQuery({
+//     // A unique query key to cache this data separately from all posts
+//     queryKey: ["archived-pubs"],
 
-    // The query function is the service you already created
-    queryFn: async () => await fetchArchivedPubs(token),
+//     // The query function is the service you already created
+//     queryFn: async () => await fetchArchivedPubs(token),
 
-    // refetchOnWindowFocus: false,
-    // refetchOnMount: false,
-    // refetchOnReconnect: false,
-    // refetchInterval: false,
-  });
+//     // refetchOnWindowFocus: false,
+//     // refetchOnMount: false,
+//     // refetchOnReconnect: false,
+//     // refetchInterval: false,
+//   });
 
-  return { data, isLoading, isError, error, refetch };
-};
+//   return { data, isLoading, isError, error, refetch };
+// };
 
 // Separate hook for fetching a single post by ID
 
@@ -123,68 +123,68 @@ export const useFetchForumById = (forumId: string) => {
   };
 };
 
-export const usePostByIdQuery = (token: string, postId: string) => {
-  const queryClient = useQueryClient();
-  // const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
-  //   queryKey: ["post", postId],
-  //   queryFn: () => fetchPubById(token, postId),
-  //   enabled: !!postId && !!token,
-  // });
+// export const usePostByIdQuery = (token: string, postId: string) => {
+//   const queryClient = useQueryClient();
+//   // const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+//   //   queryKey: ["post", postId],
+//   //   queryFn: () => fetchPubById(token, postId),
+//   //   enabled: !!postId && !!token,
+//   // });
 
-  const updateMutation = useMutation({
-    mutationFn: (postData: Forum) => updatePost(token, postId, postData),
-    onSuccess: () => {
-      // Invalidate both the specific post and the posts list
-      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
-      queryClient.invalidateQueries({ queryKey: ["pubs"] });
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-      queryClient.invalidateQueries({ queryKey: ["to-review"] });
-      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
-    },
-  });
+//   const updateMutation = useMutation({
+//     mutationFn: (postData: Forum) => updatePost(token, postId, postData),
+//     onSuccess: () => {
+//       // Invalidate both the specific post and the posts list
+//       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+//       queryClient.invalidateQueries({ queryKey: ["pubs"] });
+//       queryClient.invalidateQueries({ queryKey: ["users"] });
+//       queryClient.invalidateQueries({ queryKey: ["to-review"] });
+//       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+//     },
+//   });
 
-  const deleteMutation = useMutation({
-    mutationFn: () => deletePost(token, postId),
-    onSuccess: () => {
-      // Invalidate both the specific post and the posts list
-      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
-      queryClient.invalidateQueries({ queryKey: ["pubs"] });
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-      queryClient.invalidateQueries({ queryKey: ["to-review"] });
-    },
-  });
+//   const deleteMutation = useMutation({
+//     mutationFn: () => deletePost(token, postId),
+//     onSuccess: () => {
+//       // Invalidate both the specific post and the posts list
+//       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+//       queryClient.invalidateQueries({ queryKey: ["pubs"] });
+//       queryClient.invalidateQueries({ queryKey: ["users"] });
+//       queryClient.invalidateQueries({ queryKey: ["to-review"] });
+//     },
+//   });
 
-  const addComments = useMutation({
-    mutationFn: async (comment: any) =>
-      await addCommentPub(token, postId, comment),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
-      queryClient.invalidateQueries({ queryKey: ["pubs"] });
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-      queryClient.invalidateQueries({ queryKey: ["to-review"] });
-    },
-  });
+//   const addComments = useMutation({
+//     mutationFn: async (comment: any) =>
+//       await addCommentPub(token, postId, comment),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+//       queryClient.invalidateQueries({ queryKey: ["pubs"] });
+//       queryClient.invalidateQueries({ queryKey: ["users"] });
+//       queryClient.invalidateQueries({ queryKey: ["to-review"] });
+//     },
+//   });
 
-  return {
-    // Query results
-    // data,
-    // error,
-    // isLoading,
-    // isError,
-    // isSuccess,
-    // refetch,
+//   return {
+//     // Query results
+//     // data,
+//     // error,
+//     // isLoading,
+//     // isError,
+//     // isSuccess,
+//     // refetch,
 
-    // Mutation functions
-    updatePost: updateMutation.mutate,
-    isUpdating: updateMutation.isPending,
-    updateError: updateMutation.error,
-    updateSuccess: updateMutation.isSuccess,
+//     // Mutation functions
+//     updatePost: updateMutation.mutate,
+//     isUpdating: updateMutation.isPending,
+//     updateError: updateMutation.error,
+//     updateSuccess: updateMutation.isSuccess,
 
-    deletePostByUser: deleteMutation.mutate,
-    isDeleting: deleteMutation.isPending,
+//     deletePostByUser: deleteMutation.mutate,
+//     isDeleting: deleteMutation.isPending,
 
-    //Comment functions
-    commentToPost: addComments.mutate,
-    isCommenting: addComments.isPending,
-  };
-};
+//     //Comment functions
+//     commentToPost: addComments.mutate,
+//     isCommenting: addComments.isPending,
+//   };
+// };

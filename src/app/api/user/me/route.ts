@@ -26,6 +26,18 @@ export async function GET(req: NextRequest) {
         createdAt: true,
         updatedAt: true,
         status: true,
+        forums: {
+          select: {
+            topicTitle: true,
+            forumId: true,
+            category: true,
+            createdAt: true,
+            forumComments: true,
+            forumCommentReplies: true,
+            ForumCommentReplyToReplies: true,
+            forumLikes: true,
+          },
+        },
         publications: {
           select: {
             title: true,
@@ -34,6 +46,9 @@ export async function GET(req: NextRequest) {
             createdAt: true,
             status: true,
             pubComments: true,
+            pubCommentsReplies: true,
+            PublicationCommentReplyToReplies: true,
+            pubLikes: true,
           },
         },
       },

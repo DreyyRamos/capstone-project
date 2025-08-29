@@ -232,7 +232,7 @@ export default function CreateForumTopicPage() {
                       }
                     }}
                   />
-                  <Button onClick={handleAddTag} size="sm">
+                  <Button type="button" onClick={handleAddTag} size="sm">
                     Add
                   </Button>
                 </div>

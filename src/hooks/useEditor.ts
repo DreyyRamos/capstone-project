@@ -36,6 +36,7 @@ export const useEditorQuery = (token: string) => {
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });

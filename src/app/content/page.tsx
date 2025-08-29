@@ -465,9 +465,9 @@ export default function ContentManagerPage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>{content?.views} views</span>
-                        <span>{content?.pubLikes} likes</span>
-                        <span>{content?.pubComments} comments</span>
+                        {/* <span>{content?.views} views</span> */}
+                        <span>{content?.pubLikes?.length} likes</span>
+                        <span>{content?.pubComments?.length} comments</span>
                       </div>
                     </div>
                     <DropdownMenu>

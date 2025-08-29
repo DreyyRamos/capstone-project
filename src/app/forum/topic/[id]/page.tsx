@@ -31,6 +31,8 @@ import Cookies from "js-cookie";
 import ForumReplyToReplyLikeButton from "@/components/like-buttons/forum-replyToReply-like-button";
 import { ReportModal } from "@/components/report-modal";
 import { useReportModal } from "@/hooks/use-report-modal";
+import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
+import { useUserQuery } from "@/hooks/useUser";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -61,46 +63,61 @@ export default function ForumTopicPage({ params }: PageProps) {
   const { mutate: addTopReply } = useForumAddTopReplyForum(token);
   const { mutate: addNestedReply } = useForumAddNestedReply(token);
 
+  const { data: currentUser } = useUserQuery(token);
+
+  const { StatusModal, checkComment, checkLike, checkShare, checkAndExecute } =
+    useUserStatusCheck(currentUser?.userData?.status, {
+      onBlocked: (action, status) => {
+        console.log(`User tried to ${action} but is ${status}`);
+      },
+    });
+
   const { data: topic } = useFetchForumById(id);
 
   const handleComment = async (forumId: string) => {
-    if (requireAuth("comment on this publication")) {
-      if (comment_content.trim()) {
-        console.log("Adding comment:", comment_content);
-        try {
-          await commentToPost({ content: comment_content, forumId });
-          setCommentContent("");
-          toast.success("Comment added successfully!");
-        } catch (error) {
-          toast.error("Failed to add comment");
-          console.error("Error adding comment:", error);
+    checkComment(async () => {
+      if (requireAuth("comment on this publication")) {
+        if (comment_content.trim()) {
+          console.log("Adding comment:", comment_content);
+          try {
+            await commentToPost({ content: comment_content, forumId });
+            setCommentContent("");
+            toast.success("Comment added successfully!");
+          } catch (error) {
+            toast.error("Failed to add comment");
+            console.error("Error adding comment:", error);
+          }
         }
       }
-    }
+    });
   };
 
   const handleReply = (commentId: string) => {
-    if (requireAuth("reply to this comment")) {
-      if (replyingTo === commentId) {
-        setReplyingTo(null);
-        setReplyContent("");
-      } else {
-        setReplyingTo(commentId);
-        setReplyContent("");
+    checkAndExecute("reply", () => {
+      if (requireAuth("reply to this comment")) {
+        if (replyingTo === commentId) {
+          setReplyingTo(null);
+          setReplyContent("");
+        } else {
+          setReplyingTo(commentId);
+          setReplyContent("");
+        }
       }
-    }
+    });
   };
 
   const handleSecondLevelReply = (replyId: string) => {
-    if (requireAuth("reply to this reply")) {
-      if (replyingToSecondLevel === replyId) {
-        setReplyingToSecondLevel(null);
-        setSecondLevelReplyContent("");
-      } else {
-        setReplyingToSecondLevel(replyId);
-        setSecondLevelReplyContent("");
+    checkAndExecute("reply", () => {
+      if (requireAuth("reply to this reply")) {
+        if (replyingToSecondLevel === replyId) {
+          setReplyingToSecondLevel(null);
+          setSecondLevelReplyContent("");
+        } else {
+          setReplyingToSecondLevel(replyId);
+          setSecondLevelReplyContent("");
+        }
       }
-    }
+    });
   };
 
   const handleSubmitReply = async (forumId: string, commentId: string) => {
@@ -215,6 +232,7 @@ export default function ForumTopicPage({ params }: PageProps) {
         contentTitle={contentTitle}
         reportedUserId={reportedUserId}
       />
+      <StatusModal />
 
       {/* Back Button */}
       <Button asChild variant="ghost">
@@ -234,6 +252,14 @@ export default function ForumTopicPage({ params }: PageProps) {
               <span className="text-sm text-muted-foreground">
                 {/* {topic.views} views */}
               </span>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span>Tags: </span>
+              {topic?.tags?.map((tag: any) => (
+                <Badge key={tag} variant="outline" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
             </div>
 
             <h1 className="text-3xl font-bold">{topic?.topicTitle}</h1>

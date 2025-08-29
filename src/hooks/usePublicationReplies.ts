@@ -44,6 +44,7 @@ export function useAddTopReply(token: string) {
       qc.invalidateQueries({ queryKey: ["pub", token] });
       qc.invalidateQueries({ queryKey: ["replies"] });
       qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
       qc.invalidateQueries({ queryKey: ["to-review"] });
     },
   });
@@ -75,6 +76,7 @@ export function useAddNestedReply(token: string) {
       qc.invalidateQueries({ queryKey: ["pub", token] });
       qc.invalidateQueries({ queryKey: ["replies"] });
       qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
       qc.invalidateQueries({ queryKey: ["to-review"] });
     },
   });

@@ -80,12 +80,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
       },
     });
 
-  const handleLike = () => {
-    if (requireAuth("like this publication")) {
-      setIsLiked(!isLiked);
-    }
-  };
-
   const handleMakeFeature = (id: string) => {
     if (requireAuth("feature this publication")) {
       makeFeatured(id);
@@ -111,27 +105,31 @@ export default function PublicationDetailPage({ params }: PageProps) {
   };
 
   const handleReply = (commentId: string) => {
-    if (requireAuth("reply to this comment")) {
-      if (replyingTo === commentId) {
-        setReplyingTo(null);
-        setReplyContent("");
-      } else {
-        setReplyingTo(commentId);
-        setReplyContent("");
-      }
-    }
+   checkAndExecute("reply", () => {
+     if (requireAuth("reply to this comment")) {
+       if (replyingTo === commentId) {
+         setReplyingTo(null);
+         setReplyContent("");
+       } else {
+         setReplyingTo(commentId);
+         setReplyContent("");
+       }
+     }
+   });
   };
 
   const handleSecondLevelReply = (replyId: string) => {
-    if (requireAuth("reply to this reply")) {
-      if (replyingToSecondLevel === replyId) {
-        setReplyingToSecondLevel(null);
-        setSecondLevelReplyContent("");
-      } else {
-        setReplyingToSecondLevel(replyId);
-        setSecondLevelReplyContent("");
+    checkAndExecute("reply", () => {
+      if (requireAuth("reply to this reply")) {
+        if (replyingToSecondLevel === replyId) {
+          setReplyingToSecondLevel(null);
+          setSecondLevelReplyContent("");
+        } else {
+          setReplyingToSecondLevel(replyId);
+          setSecondLevelReplyContent("");
+        }
       }
-    }
+    });
   };
 
   const handleSubmitReply = async (commentId: string, pubId: string) => {

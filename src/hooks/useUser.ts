@@ -1,5 +1,9 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { fetchCurrentUser, editCurrentUser } from "@/services/user";
+import {
+  fetchCurrentUser,
+  editCurrentUser,
+  fetchCurrentUserActivity,
+} from "@/services/user";
 
 interface User {
   firstName: string;
@@ -51,5 +55,27 @@ export const useUserQuery = (token: string) => {
     updateError: mutation.error,
     updateSuccess: mutation.isSuccess,
     updateReset: mutation.reset,
+  };
+};
+
+export const useUserActivityQuery = (token: string) => {
+  // Query to fetch user data
+  const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+    queryKey: ["user-activity", token],
+    queryFn: async () => await fetchCurrentUserActivity(token),
+    // refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
+  });
+
+  return {
+    // Query results
+    data,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
   };
 };

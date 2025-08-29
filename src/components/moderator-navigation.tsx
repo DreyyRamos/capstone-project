@@ -34,24 +34,35 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Publications", href: "/publications", icon: BookOpen },
   { name: "Forum", href: "/forum", icon: MessageSquare },
-  { name: "Analytics", href: "/analytics", icon: TrendingUp },
   { name: "Moderation", href: "/moderation", icon: Flag },
-]
+];
 
 const quickActions = [
   { name: "New Publication", href: "/publications/create", icon: FileText },
   { name: "Start Discussion", href: "/forum/create", icon: Hash },
   { name: "Review Reports", href: "/moderation/reports", icon: Flag },
   { name: "Moderate Forum", href: "/forum/moderate", icon: Shield },
-]
+];
 
 const forumCategories = [
-  { name: "General Discussion", count: 45, href: "/forum/category/general-discussion" },
+  {
+    name: "General Discussion",
+    count: 45,
+    href: "/forum/category/general-discussion",
+  },
   { name: "Academic", count: 23, href: "/forum/category/academic" },
-  { name: "Clubs & Activities", count: 18, href: "/forum/category/clubs-activities" },
+  {
+    name: "Clubs & Activities",
+    count: 18,
+    href: "/forum/category/clubs-activities",
+  },
   { name: "Sports", count: 12, href: "/forum/category/sports" },
   { name: "Arts", count: 8, href: "/forum/category/arts" },
-]
+  { name: "Technology", count: 8, href: "/forum/category/technology" },
+  { name: "Study Groups", count: 8, href: "/forum/category/study-groups" },
+  { name: "Events", count: 8, href: "/forum/category/events" },
+  // { name: "Help & Support", count: 8, href: "/forum/category/arts" },
+];
 
 export function ModeratorNavigation() {
   const pathname = usePathname()

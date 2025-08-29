@@ -37,7 +37,7 @@ import {
 // import { useRole } from "@/contexts/role-context"
 import { UploadButton } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
-import { useUserQuery } from "@/hooks/useUser";
+import { useUserQuery, useUserActivityQuery } from "@/hooks/useUser";
 import { timeAgo } from "@/lib/timeAgo";
 
 interface User {
@@ -53,8 +53,10 @@ interface User {
 
 export default function ProfilePage() {
   const token = Cookies.get("token") || "";
+  const { data: userActivity } = useUserActivityQuery(token);
   const { data: user, updateUser } = useUserQuery(token);
-  console.log("user from profile", user);
+  // console.log("user from profile", user);
+  console.log("user activity", userActivity);
 
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -530,7 +532,7 @@ export default function ProfilePage() {
         <TabsList>
           <TabsTrigger value="activity">Recent Activity</TabsTrigger>
           <TabsTrigger value="publications">Publications</TabsTrigger>
-          <TabsTrigger value="achievements">Achievements</TabsTrigger>
+          <TabsTrigger value="achievements">Forums</TabsTrigger>
         </TabsList>
 
         <TabsContent value="activity" className="space-y-4">
@@ -543,11 +545,11 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <div key={activity.id}>
+                {userActivity?.map((activity: any, index: any) => (
+                  <div key={index}>
                     <div className="flex items-start space-x-4">
                       <div className="p-2 bg-muted rounded-lg">
-                        {activity.type === "publication" ? (
+                        {activity.type === "PUBLISHED" ? (
                           <FileText className="h-4 w-4" />
                         ) : (
                           <MessageSquare className="h-4 w-4" />
@@ -555,29 +557,51 @@ export default function ProfilePage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm">
-                          You{" "}
-                          <span className="font-medium">{activity.action}</span>{" "}
-                          <span className="font-medium">{activity.title}</span>
+                          {activity.type === "PUBLISHED" && (
+                            <>
+                              You <span className="font-medium">published</span>{" "}
+                              <span className="font-medium">
+                                {activity.title}
+                              </span>
+                            </>
+                          )}
+                          {activity.type === "REPLIED" && (
+                            <>
+                              You{" "}
+                              <span className="font-medium">replied to</span>{" "}
+                              <span className="font-medium">
+                                {activity.parentTitle}
+                              </span>
+                            </>
+                          )}
                         </p>
                         <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
-                          <span>{activity.date}</span>
-                          {activity.type === "publication" ? (
+                          <span>
+                            {new Date(activity.createdAt).toLocaleString()}
+                          </span>
+                          {activity.type === "PUBLISHED" ? (
                             <>
-                              <span>{activity.engagement.views} views</span>
                               <span>
-                                {activity.engagement.comments} comments
+                                {activity.engagement?.views || 0} views
+                              </span>
+                              <span>
+                                {activity.engagement?.comments || 0} comments
                               </span>
                             </>
                           ) : (
                             <>
-                              <span>{activity.engagement.replies} replies</span>
-                              <span>{activity.engagement.likes} likes</span>
+                              <span>
+                                {activity.engagement?.replies || 0} replies
+                              </span>
+                              <span>
+                                {activity.engagement?.likes || 0} likes
+                              </span>
                             </>
                           )}
                         </div>
                       </div>
                     </div>
-                    {index < recentActivity.length - 1 && (
+                    {index < userActivity.length - 1 && (
                       <Separator className="mt-4" />
                     )}
                   </div>
@@ -606,6 +630,7 @@ export default function ProfilePage() {
                           <Badge variant="outline">{pub?.category}</Badge>
                           <span>{timeAgo(pub?.createdAt)}</span>
                           <span>{pub?.pubComments?.length} comments</span>
+                          <span>{pub?.pubLikes?.length} Likes</span>
                         </div>
                       </div>
                       <Badge

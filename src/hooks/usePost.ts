@@ -157,6 +157,7 @@ export const usePostByIdQuery = (token: string, postId: string) => {
       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
     },
   });

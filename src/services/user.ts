@@ -31,3 +31,15 @@ export const editCurrentUser = async (token: string, newData: User) => {
   if (!response.ok) throw new Error("Failed to fetch current user");
   return response.json();
 };
+
+export const fetchCurrentUserActivity = async (token: string) => {
+  const response = await fetch("/api/user/activity", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    // body: JSON.stringify(newData),
+  });
+  if (!response.ok) throw new Error("Failed to fetch current user");
+  return response.json();
+};

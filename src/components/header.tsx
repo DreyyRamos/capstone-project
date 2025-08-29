@@ -88,6 +88,24 @@ export function Header() {
     setSelectedBanNotification(null);
   };
 
+  const getStatusBadgeClasses = (status: any) => {
+    const baseClasses =
+      "text-xs px-1 py-0 h-4 min-w-0 text-[10px] leading-tight";
+
+    switch (status) {
+      case "ACTIVE":
+        return `${baseClasses} bg-green-500 hover:bg-green-600 text-white`;
+      case "WARNED":
+        return `${baseClasses} bg-yellow-500 hover:bg-yellow-600 text-white`;
+      case "SUSPENDED":
+        return `${baseClasses} bg-orange-500 hover:bg-orange-600 text-white`;
+      case "BANNED":
+        return `${baseClasses} bg-red-500 hover:bg-red-600 text-white`;
+      default:
+        return `${baseClasses} bg-gray-500 hover:bg-gray-600 text-white`;
+    }
+  };
+
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -190,7 +208,7 @@ export function Header() {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="relative h-8 w-8 rounded-full"
+                      className="relative h-auto w-auto rounded-full flex flex-col items-center gap-0.5 py-0.5 px-1"
                     >
                       <Avatar className="h-8 w-8">
                         <AvatarImage
@@ -204,8 +222,42 @@ export function Header() {
                           {user?.userData?.firstName?.[0] || "U"}
                         </AvatarFallback>
                       </Avatar>
+                      <Badge
+                        className={getStatusBadgeClasses(
+                          user?.userData?.status
+                        )}
+                      >
+                        {user?.userData?.status}
+                      </Badge>
                     </Button>
                   </DropdownMenuTrigger>
+                  {/* <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="relative h-auto w-8 rounded-full flex flex-col items-center gap-1 py-1"
+                    >
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage
+                          src={
+                            user?.userData?.profileImage ||
+                            "/placeholder-user.jpg"
+                          }
+                          alt={user?.userData?.firstName || "User"}
+                        />
+                        <AvatarFallback>
+                          {user?.userData?.firstName?.[0] || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <Badge
+                        className={getStatusBadgeClasses(
+                          user?.userData?.status
+                        )}
+                      >
+                        {user?.userData?.status}
+                      </Badge>
+                    </Button>
+                  </DropdownMenuTrigger> */}
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
@@ -292,7 +344,7 @@ export function Header() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex gap-2 sm:gap-0">
-            <Button
+            {/* <Button
               variant="outline"
               className="mx-1.5"
               onClick={() => {
@@ -302,7 +354,7 @@ export function Header() {
               }}
             >
               Contact Admin
-            </Button>
+            </Button> */}
             <Button onClick={handleBanModalClose}>I Understand</Button>
           </DialogFooter>
         </DialogContent>

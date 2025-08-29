@@ -41,6 +41,7 @@ export function useForumAddComment(token: string) {
       qc.invalidateQueries({ queryKey: ["forum"] });
       qc.invalidateQueries({ queryKey: ["replies"] });
       qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
       qc.invalidateQueries({ queryKey: ["to-review"] });
     },
   });
@@ -69,6 +70,7 @@ export function useForumAddTopReplyForum(token: string) {
       qc.invalidateQueries({ queryKey: ["forum"] });
       qc.invalidateQueries({ queryKey: ["replies"] });
       qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
       qc.invalidateQueries({ queryKey: ["to-review"] });
     },
   });
@@ -101,6 +103,7 @@ export function useForumAddNestedReply(token: string) {
       qc.invalidateQueries({ queryKey: ["forum"] });
       qc.invalidateQueries({ queryKey: ["replies"] });
       qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
       qc.invalidateQueries({ queryKey: ["to-review"] });
     },
   });
