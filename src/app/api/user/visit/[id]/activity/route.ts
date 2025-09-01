@@ -1,11 +1,12 @@
 import { NextResponse, NextRequest } from "next/server";
-import { authMiddleware } from "@/app/api/(middlware)/authMiddleware";
 import prisma from "@/lib/prisma";
 
-export async function GET(request: NextRequest) {
-  const authResult = await authMiddleware(request);
-  if (authResult instanceof NextResponse) return authResult;
-  const { id: userId } = authResult.user;
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const resolvedParams = await params;
+  const userId = resolvedParams.id;
 
   if (!userId) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });

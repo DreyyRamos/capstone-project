@@ -3,6 +3,8 @@ import {
   fetchCurrentUser,
   editCurrentUser,
   fetchCurrentUserActivity,
+  fetchVisitUser,
+  fetchVisitingUserActivity,
 } from "@/services/user";
 
 interface User {
@@ -67,6 +69,54 @@ export const useUserActivityQuery = (token: string) => {
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchInterval: false,
+  });
+
+  return {
+    // Query results
+    data,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
+  };
+};
+
+export const useUserVisitorQuery = (id: string) => {
+  const queryClient = useQueryClient();
+
+  // Query to fetch user data
+  const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+    queryKey: ["visit-user"],
+    queryFn: async () => await fetchVisitUser(id),
+    // refetchOnWindowFocus: false,
+    // refetchOnMount: false,
+    // refetchOnReconnect: false,
+    // refetchInterval: false,
+  });
+
+  return {
+    // Query results
+    data,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
+  };
+};
+
+export const useUserVisitingUserActivityQuery = (id: string) => {
+  const queryClient = useQueryClient();
+
+  // Query to fetch user data
+  const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+    queryKey: ["visit-user-activity"],
+    queryFn: async () => await fetchVisitingUserActivity(id),
+    // refetchOnWindowFocus: false,
+    // refetchOnMount: false,
+    // refetchOnReconnect: false,
+    // refetchInterval: false,
   });
 
   return {

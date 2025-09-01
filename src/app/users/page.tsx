@@ -29,121 +29,60 @@ import {
   UserX,
   Crown,
 } from "lucide-react"
+import Cookies from "js-cookie";
+import { useAdminQuery } from "@/hooks/useAdmin";
 
 export default function UsersPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [roleFilter, setRoleFilter] = useState("all")
-  const [statusFilter, setStatusFilter] = useState("all")
+  const token = Cookies.get("token") || "";
+  const { data: users, isLoading } = useAdminQuery(token);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  const users = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john.doe@lincolnhigh.edu",
-      role: "Student",
-      status: "Active",
-      avatar: "/placeholder-user.jpg",
-      joinDate: "2023-09-01",
-      lastActive: "2 hours ago",
-      publications: 5,
-      forumPosts: 23,
-      reputation: 145,
-    },
-    {
-      id: 2,
-      name: "Dr. Sarah Johnson",
-      email: "s.johnson@lincolnhigh.edu",
-      role: "Teacher",
-      status: "Active",
-      avatar: "/placeholder-user.jpg",
-      joinDate: "2022-08-15",
-      lastActive: "1 hour ago",
-      publications: 12,
-      forumPosts: 67,
-      reputation: 892,
-    },
-    {
-      id: 3,
-      name: "Maria Rodriguez",
-      email: "m.rodriguez@lincolnhigh.edu",
-      role: "Librarian",
-      status: "Active",
-      avatar: "/placeholder-user.jpg",
-      joinDate: "2023-01-10",
-      lastActive: "30 minutes ago",
-      publications: 8,
-      forumPosts: 34,
-      reputation: 456,
-    },
-    {
-      id: 4,
-      name: "Alex Chen",
-      email: "alex.chen@lincolnhigh.edu",
-      role: "Student",
-      status: "Active",
-      avatar: "/placeholder-user.jpg",
-      joinDate: "2023-09-01",
-      lastActive: "5 hours ago",
-      publications: 3,
-      forumPosts: 45,
-      reputation: 234,
-    },
-    {
-      id: 5,
-      name: "Emma Davis",
-      email: "emma.davis@lincolnhigh.edu",
-      role: "Student",
-      status: "Inactive",
-      avatar: "/placeholder-user.jpg",
-      joinDate: "2023-09-01",
-      lastActive: "2 weeks ago",
-      publications: 1,
-      forumPosts: 8,
-      reputation: 67,
-    },
-    {
-      id: 6,
-      name: "Admin User",
-      email: "admin@lincolnhigh.edu",
-      role: "Admin",
-      status: "Active",
-      avatar: "/placeholder-user.jpg",
-      joinDate: "2022-01-01",
-      lastActive: "Just now",
-      publications: 25,
-      forumPosts: 156,
-      reputation: 1250,
-    },
-  ]
+  console.log("user from admin side", users);
 
   const stats = [
     { label: "Total Users", value: "1,247", icon: Users, change: "+12%" },
     { label: "Active Today", value: "89", icon: UserCheck, change: "+5%" },
     { label: "New This Month", value: "34", icon: UserPlus, change: "+23%" },
     { label: "Teachers", value: "45", icon: Crown, change: "+2%" },
-  ]
+  ];
 
   const roleColors = {
-    Admin: "bg-red-100 text-red-800",
-    Teacher: "bg-blue-100 text-blue-800",
-    Student: "bg-green-100 text-green-800",
-    Librarian: "bg-purple-100 text-purple-800",
-  }
+    ADMIN: "bg-red-100 text-red-800",
+    MODERATOR: "bg-blue-100 text-blue-800",
+    STUDENT: "bg-green-100 text-green-800",
+    EDITOR: "bg-purple-100 text-purple-800",
+  };
 
   const statusColors = {
-    Active: "bg-green-100 text-green-800",
-    Inactive: "bg-gray-100 text-gray-800",
-    Suspended: "bg-red-100 text-red-800",
-  }
+    ACTIVE: "bg-green-200 text-green-800",
+    WARNED: "bg-yellow-100 text-gray-800",
+    SUSPENDED: "bg-red-100 text-red-800",
+    BANNED: "bg-red-300 text-red-800",
+  };
 
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesRole = roleFilter === "all" || user.role === roleFilter
-    const matchesStatus = statusFilter === "all" || user.status === statusFilter
-    return matchesSearch && matchesRole && matchesStatus
-  })
+  const filteredUsers =
+    users?.users?.filter((user: any) => {
+      if (!user) return false;
+
+      const matchesSearch =
+        searchQuery === "" ||
+        user.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      // Handle both array and string roles
+      const userRoles = Array.isArray(user.role) ? user.role : [user.role];
+      const matchesRole =
+        roleFilter === "all" || userRoles.includes(roleFilter);
+
+      const matchesStatus =
+        statusFilter === "all" || user.status === statusFilter;
+
+      return matchesSearch && matchesRole && matchesStatus;
+    }) || [];
+
+  if (isLoading) <div>Loading...</div>;
 
   return (
     <div className="space-y-6">
@@ -151,7 +90,9 @@ export default function UsersPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">User Management</h1>
-          <p className="text-muted-foreground">Manage users, roles, and permissions</p>
+          <p className="text-muted-foreground">
+            Manage users, roles, and permissions
+          </p>
         </div>
         <Button>
           <UserPlus className="mr-2 h-4 w-4" />
@@ -200,10 +141,10 @@ export default function UsersPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Roles</SelectItem>
-                <SelectItem value="Admin">Admin</SelectItem>
-                <SelectItem value="Teacher">Teacher</SelectItem>
-                <SelectItem value="Student">Student</SelectItem>
-                <SelectItem value="Librarian">Librarian</SelectItem>
+                <SelectItem value="ADMIN">Admin</SelectItem>
+                <SelectItem value="MODERATOR">Moderator</SelectItem>
+                <SelectItem value="STUDENT">Student</SelectItem>
+                <SelectItem value="EDITOR">Editor</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -212,9 +153,10 @@ export default function UsersPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Inactive">Inactive</SelectItem>
-                <SelectItem value="Suspended">Suspended</SelectItem>
+                <SelectItem value="ACTIVE">Active</SelectItem>
+                <SelectItem value="WARNED">Warned</SelectItem>
+                <SelectItem value="SUSPENDED">Suspended</SelectItem>
+                <SelectItem value="BANNED">Banned</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -224,31 +166,55 @@ export default function UsersPage() {
       {/* Users Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Users ({filteredUsers.length})</CardTitle>
+          <CardTitle>Users ({filteredUsers?.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {filteredUsers.map((user) => (
-              <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50">
+            {filteredUsers?.map((user: any) => (
+              <div
+                key={user.id}
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50"
+              >
                 <div className="flex items-center gap-4">
                   <Avatar className="h-12 w-12">
-                    <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
+                    <AvatarImage
+                      src={user.profileImage || "/placeholder.svg"}
+                      alt={user.firstName}
+                    />
                     <AvatarFallback>
-                      {user.name
+                      {user.firstName
                         .split(" ")
-                        .map((n) => n[0])
+                        .map((n: any) => n[0])
                         .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">{user.name}</h3>
-                      <Badge className={roleColors[user.role as keyof typeof roleColors]}>{user.role}</Badge>
-                      <Badge className={statusColors[user.status as keyof typeof statusColors]}>{user.status}</Badge>
+                      <h3 className="font-semibold">
+                        {user.firstName} {user.lastName}
+                      </h3>
+                      <Badge
+                        className={
+                          roleColors[user.role as keyof typeof roleColors]
+                        }
+                      >
+                        {user.role}
+                      </Badge>
+                      <Badge
+                        className={
+                          statusColors[user.status as keyof typeof statusColors]
+                        }
+                      >
+                        {user.status}
+                      </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {user.email}
+                    </p>
                     <div className="flex items-center gap-4 text-xs text-muted-foreground mt-1">
-                      <span>Joined {new Date(user.joinDate).toLocaleDateString()}</span>
+                      <span>
+                        Joined {new Date(user.createdAt).toLocaleDateString()}
+                      </span>
                       <span>•</span>
                       <span>Last active {user.lastActive}</span>
                     </div>
@@ -259,11 +225,11 @@ export default function UsersPage() {
                   <div className="hidden md:flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <BookOpen className="h-4 w-4" />
-                      {user.publications}
+                      {user._count.publications}
                     </div>
                     <div className="flex items-center gap-1">
                       <MessageSquare className="h-4 w-4" />
-                      {user.forumPosts}
+                      {user._count.forums}
                     </div>
                     <div className="flex items-center gap-1">
                       <TrendingUp className="h-4 w-4" />
@@ -302,5 +268,5 @@ export default function UsersPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

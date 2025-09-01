@@ -433,7 +433,9 @@ export default function PublicationDetailPage({ params }: PageProps) {
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2">
                         <p className="font-medium">
-                          {comment?.author?.firstName}
+                          <Link href={`/visit/user/${comment?.authorId}`}>
+                            {comment?.author?.firstName}
+                          </Link>
                         </p>
                         <Badge variant="outline" className="text-xs">
                           {comment?.author?.role}

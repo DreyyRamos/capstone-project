@@ -43,3 +43,21 @@ export const fetchCurrentUserActivity = async (token: string) => {
   if (!response.ok) throw new Error("Failed to fetch current user");
   return response.json();
 };
+
+export const fetchVisitUser = async (id: string) => {
+  const response = await fetch(`/api/user/visit/${id}`, {
+    method: "GET",
+    // body: JSON.stringify(newData),
+  });
+  if (!response.ok) throw new Error("Failed to fetch current user");
+  return response.json();
+};
+
+export const fetchVisitingUserActivity = async (id: string) => {
+  const response = await fetch(`/api/user/visit/${id}/activity`, {
+    method: "GET",
+    // body: JSON.stringify(newData),
+  });
+  if (!response.ok) throw new Error("Failed to fetch current user");
+  return response.json();
+};
