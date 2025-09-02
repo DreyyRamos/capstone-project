@@ -85,6 +85,9 @@ export default function ProfilePage() {
         profileImage: user.userData.profileImage || "",
         interests: user.userData.interests || [],
       });
+
+      // NEW: keep local editing array in sync
+      setInterests(user.userData.interests || []);
     }
   }, [user]);
 
@@ -127,36 +130,6 @@ export default function ProfilePage() {
     reputation: 892,
     achievements: 8,
   };
-
-  const publications = [
-    {
-      id: 1,
-      title: "Spring Sports Highlights",
-      category: "Sports",
-      date: "2 hours ago",
-      status: "Published",
-      views: 234,
-      comments: 12,
-    },
-    {
-      id: 2,
-      title: "Student Council Election Results",
-      category: "News",
-      date: "1 day ago",
-      status: "Published",
-      views: 567,
-      comments: 28,
-    },
-    {
-      id: 3,
-      title: "Art Show Preview",
-      category: "Arts",
-      date: "3 days ago",
-      status: "Published",
-      views: 189,
-      comments: 7,
-    },
-  ];
 
   const achievements = [
     {

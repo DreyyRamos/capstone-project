@@ -14,6 +14,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model UserAdmission {
+  admission_id  String          @id @unique @default(cuid())
+  user_email    String          @unique
+  firstName     String
+  lastName      String?
+  password      String
+  profileImage  String?
+  id_picture    String?
+  bio           String?
+  contactNumber String?
+  location      String?
+  interests     String[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @default(now()) @updatedAt
+  status        AdmissionStatus @default(PENDING)
+  role          Role            @default(STUDENT)
+}
+
+enum AdmissionStatus {
+  PENDING
+  REJECTED
+  APPROVED
+}
+
 model User {
   id                               String                             @id @unique @default(uuid())
   email                            String                             @unique
@@ -25,6 +49,7 @@ model User {
   contactNumber                    String?
   location                         String?
   interests                        String[]
+  id_picture                       String?
   createdAt                        DateTime                           @default(now())
   updatedAt                        DateTime                           @default(now()) @updatedAt
   role                             Role[]                             @default([STUDENT])

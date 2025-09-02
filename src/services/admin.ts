@@ -1,4 +1,22 @@
 import { toast } from "sonner";
+import { Role, AdmissionStatus } from "@/generated/prisma";
+
+interface Admission {
+  admission_id: string;
+  user_email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  profileImage: string;
+  id_picture: string;
+  bio: string;
+  contactNumber: string;
+  location: string;
+  interests: string[];
+  role: Role;
+  createdAt: Date;
+  status: AdmissionStatus;
+}
 
 export const fetchAllUsers = async (token: string) => {
   const response = await fetch("/api/admin/fetch-users", {
@@ -10,6 +28,49 @@ export const fetchAllUsers = async (token: string) => {
   });
   if (!response.ok) throw new Error("Failed to fetch posts");
   return response.json();
+};
+
+export const fetchAllUserAdmissions = async (token: string) => {
+  const response = await fetch("/api/admin/user-admissions", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "application/json",
+    },
+  });
+  if (!response.ok) throw new Error("Failed to fetch posts");
+  return response.json();
+};
+
+export const approveAdmission = async (
+  token: string,
+  admission_id: string,
+  payload: {
+    user_email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    profileImage: string;
+    id_picture: string;
+    bio: string;
+    contactNumber: string;
+    location: string;
+    interests: string[];
+  }
+) => {
+  const res = await fetch(
+    `/api/admin/user-admissions/${admission_id}/approve`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
 };
 
 export const deleteReportedContent = async (
