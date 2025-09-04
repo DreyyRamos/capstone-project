@@ -38,7 +38,7 @@ import { useUserQuery } from "@/hooks/useUser";
 export default function RoleRequestPage() {
   //   const { user } = useRole();
   const token = Cookies.get("token") || "";
-  const { data: user } = useUserQuery(token);
+  const { data: user, roleChange } = useUserQuery(token);
   console.log("user from request", user);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -55,17 +55,17 @@ export default function RoleRequestPage() {
 
   const roleOptions = [
     {
-      value: "editor",
+      value: "EDITOR",
       label: "Editor",
       description: "Create, edit, and manage publications",
     },
     {
-      value: "moderator",
+      value: "MODERATOR",
       label: "Moderator",
       description: "Moderate forums and user content",
     },
     {
-      value: "admin",
+      value: "ADMIN",
       label: "Administrator",
       description: "Full system administration access",
     },
@@ -101,23 +101,20 @@ export default function RoleRequestPage() {
     setSuccessMessage("");
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // In a real app, you would make an API call here
       const requestData = {
-        userId: "Dummy",
-        userName: "data",
-        userEmail: "dummy@eamil",
-        currentRole: "Student",
+        userId: user?.userData?.id,
+        firstName: user?.userData?.firstName,
+        lastName: user?.userData?.lastName,
+        profileImage: user?.userData?.profileImage,
+        userEmail: user?.userData?.email,
+        currentRole: user?.userData?.role,
         requestedRole: formData.requestedRole,
         reason: formData.reason,
         additionalInfo: formData.additionalInfo,
-        status: "pending",
-        requestDate: new Date().toISOString(),
       };
 
-      console.log("Role request submitted:", requestData);
+      // Use the mutation properly
+      await roleChange(requestData);
 
       setSuccessMessage(
         "Your role change request has been submitted successfully! You will receive an email notification once it's reviewed by an administrator."
@@ -131,16 +128,73 @@ export default function RoleRequestPage() {
       });
 
       // Redirect after a delay
-      setTimeout(() => {
-        router.push("/profile");
-      }, 3000);
-    } catch (error) {
-      setErrorMessage("Failed to submit your request. Please try again later.");
+      // setTimeout(() => {
+      //   router.push("/profile");
+      // }, 3000);
+    } catch (error: any) {
+      setErrorMessage(
+        error.message ||
+          "Failed to submit your request. Please try again later."
+      );
       console.error("Role request error:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!validateForm()) {
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+  //   setErrorMessage("");
+  //   setSuccessMessage("");
+
+  //   try {
+  //     // Simulate API call
+
+  //     // In a real app, you would make an API call here
+  //     const requestData = {
+  //       userId: user?.userData?.id,
+  //       firstName: user?.userData?.firstName,
+  //       lastName: user?.userData?.lastName,
+  //       userEmail: user?.userData?.email,
+  //       currentRole: user?.userData?.role,
+  //       requestedRole: formData.requestedRole,
+  //       reason: formData.reason,
+  //       additionalInfo: formData.additionalInfo,
+  //       // status: "PENDING",
+  //       // requestDate: new Date().toISOString(),
+  //     };
+  //     await roleChange(requestData)
+
+  //     console.log("Role request submitted:", requestData);
+
+  //     setSuccessMessage(
+  //       "Your role change request has been submitted successfully! You will receive an email notification once it's reviewed by an administrator."
+  //     );
+
+  //     // Reset form
+  //     setFormData({
+  //       requestedRole: "",
+  //       reason: "",
+  //       additionalInfo: "",
+  //     });
+
+  //     // Redirect after a delay
+  //     setTimeout(() => {
+  //       router.push("/profile");
+  //     }, 3000);
+  //   } catch (error) {
+  //     setErrorMessage("Failed to submit your request. Please try again later.");
+  //     console.error("Role request error:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -215,18 +269,18 @@ export default function RoleRequestPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">{"Your Name"}</p>
+                <p className="font-medium">
+                  {user?.userData?.firstName} {user?.userData?.lastName}
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  {"your.email@lincolnhigh.edu"}
+                  {user?.userData?.email}
                 </p>
               </div>
               <Badge
-                // className={getRoleBadgeColor(user?.role || "student")}
+                className={getRoleBadgeColor(user?.userData?.role || "STUDENT")}
                 variant="outline"
               >
-                {/* {user?.role
-                  ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
-                  : "Student"} */}
+                {user?.userData?.role || "Student"}
               </Badge>
             </div>
           </div>
@@ -282,12 +336,15 @@ export default function RoleRequestPage() {
                 <p className="text-sm font-medium mb-2">Role Change Preview:</p>
                 <div className="flex items-center gap-2">
                   <Badge
-                    // className={getRoleBadgeColor(user?.role || "student")}
+                    className={getRoleBadgeColor(
+                      user?.userData?.role || "student"
+                    )}
                     variant="outline"
                   >
-                    {/* {user?.role
-                      ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
-                      : "Student"} */}
+                    {user?.userData?.role
+                      ? user?.userData?.role.charAt(0).toUpperCase() +
+                        user?.userData?.role.slice(1)
+                      : "Student"}
                   </Badge>
                   <ArrowRight className="h-4 w-4 text-muted-foreground" />
                   <Badge

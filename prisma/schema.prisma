@@ -40,14 +40,17 @@ enum AdmissionStatus {
 
 model ChangeUserRole {
   request_id            String           @id @unique @default(cuid())
+  userId                String
   email                 String           @unique
   firstName             String?
   lastName              String?
+  profileImage          String?
   currentRole           Role             @default(STUDENT)
   requestedRole         Role
-  Reason                String           @db.Text
+  reason                String           @db.Text
   additionalInformation String?          @db.Text
   status                ChangeRoleStatus @default(PENDING)
+  user                  User             @relation(fields: [userId], references: [id])
   createdAt             DateTime         @default(now())
   updatedAt             DateTime         @default(now()) @updatedAt
 }
@@ -102,8 +105,9 @@ model User {
   reportsAgainst   Reports[] @relation("ReportedUser") // Reports made against this user
   reportsReviewed  Reports[] @relation("ReportReviewer") // Reports this user has reviewed
 
-  warningPoints Int        @default(0)
-  status        UserStatus @default(ACTIVE)
+  warningPoints      Int              @default(0)
+  status             UserStatus       @default(ACTIVE)
+  changeRoleRequests ChangeUserRole[]
 }
 
 // Simple user status enum

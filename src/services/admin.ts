@@ -42,6 +42,18 @@ export const fetchAllUserAdmissions = async (token: string) => {
   return response.json();
 };
 
+export const fetchRoleChangeRequests = async (token: string) => {
+  const response = await fetch("/api/admin/fetch-role-requests", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "application/json",
+    },
+  });
+  if (!response.ok) throw new Error("Failed to fetch posts");
+  return response.json();
+};
+
 export const approveAdmission = async (
   token: string,
   admission_id: string,

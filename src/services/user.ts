@@ -61,3 +61,17 @@ export const fetchVisitingUserActivity = async (id: string) => {
   if (!response.ok) throw new Error("Failed to fetch current user");
   return response.json();
 };
+
+
+export const requestRoleChange = async (token: string, newData: any) => {
+  const response = await fetch(`/api/role-change-request`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newData),
+  });
+  if (!response.ok) throw new Error("Failed to fetch current user");
+  return response.json();
+};

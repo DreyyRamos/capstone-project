@@ -5,6 +5,7 @@ import {
   fetchCurrentUserActivity,
   fetchVisitUser,
   fetchVisitingUserActivity,
+  requestRoleChange,
 } from "@/services/user";
 
 interface User {
@@ -16,6 +17,24 @@ interface User {
   location: string;
   profileImage: string;
   interests: string[];
+}
+
+enum Roles {
+  ADMIN,
+  STUDENT,
+  MODERATOR,
+  EDITOR,
+}
+
+interface RoleChange {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  userEmail: string;
+  currentRole: Roles;
+  requestedRole: Roles;
+  reason: string;
+  additionalInfo: string;
 }
 
 export const useUserQuery = (token: string) => {
@@ -42,6 +61,23 @@ export const useUserQuery = (token: string) => {
     },
   });
 
+  const roleChange = useMutation({
+    mutationFn: async (
+      newData: any // Changed from User type to any
+    ) => await requestRoleChange(token, newData),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["pub"] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      // Optional: You might want to show success message here
+      console.log("Role change request submitted successfully:", data);
+    },
+    onError: (error: Error) => {
+      console.error("Role change request failed:", error);
+      // Handle error state in your component
+    },
+  });
+
   return {
     // Query results
     data,
@@ -57,6 +93,11 @@ export const useUserQuery = (token: string) => {
     updateError: mutation.error,
     updateSuccess: mutation.isSuccess,
     updateReset: mutation.reset,
+
+    roleChange: roleChange.mutate,
+    isRequestingChange: roleChange.isPending,
+    isRequestingError: roleChange.error,
+    isRequestingSuccess: roleChange.isSuccess,
   };
 };
 

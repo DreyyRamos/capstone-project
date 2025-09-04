@@ -262,7 +262,8 @@ export function Header() {
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">
-                          {user?.userData?.firstName || "User"}
+                          {user?.userData?.firstName || "User"}{" "}
+                          {user?.userData?.lastName || "Lastname"}
                         </p>
                         <p className="text-xs leading-none text-muted-foreground">
                           {user?.userData?.email || "user@example.com"}
@@ -274,6 +275,12 @@ export function Header() {
                       <Link href="/profile">
                         <User className="mr-2 h-4 w-4" />
                         <span>Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/request-role-change">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Role Change Request</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>

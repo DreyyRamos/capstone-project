@@ -51,152 +51,70 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useConfirmationModal } from "@/hooks/use-confirmation-modal";
+import Cookies from "js-cookie";
+import { useAdminRoleChangeRequestsQuery } from "@/hooks/useAdmin";
 
-interface RoleRequest {
-  id: string;
-  userId: string;
-  userName: string;
-  userEmail: string;
-  userPhone?: string;
-  userLocation?: string;
-  userAvatar?: string;
-  currentRole: string;
-  requestedRole: string;
-  reason: string;
-  additionalInfo?: string;
-  status: "pending" | "approved" | "rejected";
-  requestDate: string;
-  updatedAt: string;
-}
+// interface RoleRequest {
+//   id: string;
+//   userId: string;
+//   userName: string;
+//   userEmail: string;
+//   userPhone?: string;
+//   userLocation?: string;
+//   userAvatar?: string;
+//   currentRole: string;
+//   requestedRole: string;
+//   reason: string;
+//   additionalInfo?: string;
+//   status: "PENDING" | "APPROVED" | "REJECTED";
+//   requestDate: string;
+//   updatedAt: string;
+// }
 
 export default function RoleRequestsPage() {
+  const token = Cookies.get("token") || "";
+  const { data: roleChangeRequests } = useAdminRoleChangeRequestsQuery(token);
+  console.log("requests from role change", roleChangeRequests?.roleRequests);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
-  const [selectedRequest, setSelectedRequest] = useState<RoleRequest | null>(
-    null
-  );
+  const [selectedRequest, setSelectedRequest] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { openModal } = useConfirmationModal();
 
-  // Mock data for role requests
-  const [requests, setRequests] = useState<RoleRequest[]>([
-    {
-      id: "req_001",
-      userId: "user_001",
-      userName: "Sarah Johnson",
-      userEmail: "sarah.johnson@lincolnhigh.edu",
-      userPhone: "(555) 123-4567",
-      userLocation: "Lincoln, State",
-      userAvatar: "/placeholder.svg?height=40&width=40",
-      currentRole: "student",
-      requestedRole: "editor",
-      reason:
-        "I have been actively contributing to the school newspaper and would like to take on editorial responsibilities. I have experience with content creation and would love to help manage publications.",
-      additionalInfo:
-        "I've published 15 articles this semester and have been helping other students with their writing.",
-      status: "pending",
-      requestDate: "2024-01-15T10:30:00Z",
-      updatedAt: "2024-01-15T10:30:00Z",
-    },
-    {
-      id: "req_002",
-      userId: "user_002",
-      userName: "Michael Chen",
-      userEmail: "michael.chen@lincolnhigh.edu",
-      userPhone: "(555) 234-5678",
-      userLocation: "Lincoln, State",
-      userAvatar: "/placeholder.svg?height=40&width=40",
-      currentRole: "student",
-      requestedRole: "moderator",
-      reason:
-        "I would like to help moderate forum discussions and ensure a positive environment for all students. I have been an active participant and understand the community guidelines well.",
-      additionalInfo:
-        "I'm available after school hours and have experience moderating online communities.",
-      status: "pending",
-      requestDate: "2024-01-14T14:20:00Z",
-      updatedAt: "2024-01-14T14:20:00Z",
-    },
-    {
-      id: "req_003",
-      userId: "user_003",
-      userName: "Emily Rodriguez",
-      userEmail: "emily.rodriguez@lincolnhigh.edu",
-      userPhone: "(555) 345-6789",
-      userLocation: "Lincoln, State",
-      userAvatar: "/placeholder.svg?height=40&width=40",
-      currentRole: "editor",
-      requestedRole: "moderator",
-      reason:
-        "As an editor, I've gained valuable experience in content management. I'd like to expand my role to include moderation duties to better serve the school community.",
-      additionalInfo:
-        "I have completed conflict resolution training and am committed to fair moderation practices.",
-      status: "approved",
-      requestDate: "2024-01-12T09:15:00Z",
-      updatedAt: "2024-01-13T16:45:00Z",
-    },
-    {
-      id: "req_004",
-      userId: "user_004",
-      userName: "David Thompson",
-      userEmail: "david.thompson@lincolnhigh.edu",
-      userPhone: "(555) 456-7890",
-      userLocation: "Lincoln, State",
-      userAvatar: "/placeholder.svg?height=40&width=40",
-      currentRole: "student",
-      requestedRole: "admin",
-      reason:
-        "I believe I can contribute significantly to the platform's administration. I have technical skills and leadership experience from student government.",
-      additionalInfo:
-        "I have experience with web development and database management.",
-      status: "rejected",
-      requestDate: "2024-01-10T11:00:00Z",
-      updatedAt: "2024-01-11T13:30:00Z",
-    },
-    {
-      id: "req_005",
-      userId: "user_005",
-      userName: "Lisa Wang",
-      userEmail: "lisa.wang@lincolnhigh.edu",
-      userPhone: "(555) 567-8901",
-      userLocation: "Lincoln, State",
-      userAvatar: "/placeholder.svg?height=40&width=40",
-      currentRole: "student",
-      requestedRole: "editor",
-      reason:
-        "I'm passionate about journalism and have been consistently contributing high-quality content. I'd like to help review and edit other students' submissions.",
-      additionalInfo:
-        "I'm the editor of my class newsletter and have won several writing competitions.",
-      status: "pending",
-      requestDate: "2024-01-13T16:45:00Z",
-      updatedAt: "2024-01-13T16:45:00Z",
-    },
-  ]);
-
   // Filter requests based on search and filters
-  const filteredRequests = requests.filter((request) => {
-    const matchesSearch =
-      request.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.requestedRole.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredRequests = roleChangeRequests?.roleRequests?.filter(
+    (request: any) => {
+      const matchesSearch =
+        request.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        request.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        request.userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        request.requestedRole.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus =
-      statusFilter === "all" || request.status === statusFilter;
-    const matchesRole =
-      roleFilter === "all" || request.requestedRole === roleFilter;
+      const matchesStatus =
+        statusFilter === "all" || request.status === statusFilter;
+      const matchesRole =
+        roleFilter === "all" || request.requestedRole === roleFilter;
 
-    return matchesSearch && matchesStatus && matchesRole;
-  });
+      return matchesSearch && matchesStatus && matchesRole;
+    }
+  );
 
   // Calculate statistics
   const stats = {
-    total: requests.length,
-    pending: requests.filter((r) => r.status === "pending").length,
-    approved: requests.filter((r) => r.status === "approved").length,
-    rejected: requests.filter((r) => r.status === "rejected").length,
+    total: roleChangeRequests?.roleRequests.length,
+    pending: roleChangeRequests?.roleRequests.filter(
+      (r: any) => r.status === "PENDING"
+    ).length,
+    approved: roleChangeRequests?.roleRequests.filter(
+      (r: any) => r.status === "APPROVED"
+    ).length,
+    rejected: roleChangeRequests?.roleRequests.filter(
+      (r: any) => r.status === "REJECTED"
+    ).length,
   };
 
-  const handleApprove = (request: RoleRequest) => {
+  const handleApprove = (request: any) => {
     openModal({
       title: "Approve Role Request",
       description: `Are you sure you want to approve ${request.userName}'s request to become a ${request.requestedRole}?`,
@@ -207,22 +125,23 @@ export default function RoleRequestsPage() {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        setRequests((prev) =>
-          prev.map((r) =>
-            r.id === request.id
-              ? {
-                  ...r,
-                  status: "approved" as const,
-                  updatedAt: new Date().toISOString(),
-                }
-              : r
-          )
-        );
+        //   setRequests((prev: any) =>
+        //     prev.map((r: any) =>
+        //       r.id === request.id
+        //         ? {
+        //             ...r,
+        //             status: "approved" as const,
+        //             updatedAt: new Date().toISOString(),
+        //           }
+        //         : r
+        //     )
+        //   );
+        // },
       },
     });
   };
 
-  const handleReject = (request: RoleRequest) => {
+  const handleReject = (request: any) => {
     openModal({
       title: "Reject Role Request",
       description: `Are you sure you want to reject ${request.userName}'s request to become a ${request.requestedRole}?`,
@@ -233,22 +152,22 @@ export default function RoleRequestsPage() {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        setRequests((prev) =>
-          prev.map((r) =>
-            r.id === request.id
-              ? {
-                  ...r,
-                  status: "rejected" as const,
-                  updatedAt: new Date().toISOString(),
-                }
-              : r
-          )
-        );
+        // setRequests((prev: any) =>
+        //   prev.map((r: any) =>
+        //     r.id === request.id
+        //       ? {
+        //           ...r,
+        //           status: "rejected" as const,
+        //           updatedAt: new Date().toISOString(),
+        //         }
+        //       : r
+        //   )
+        // );
       },
     });
   };
 
-  const handleViewDetails = (request: RoleRequest) => {
+  const handleViewDetails = (request: any) => {
     setSelectedRequest(request);
     setIsModalOpen(true);
   };
@@ -392,40 +311,41 @@ export default function RoleRequestsPage() {
         <CardHeader>
           <CardTitle>Role Change Requests</CardTitle>
           <CardDescription>
-            {filteredRequests.length} request
-            {filteredRequests.length !== 1 ? "s" : ""} found
+            {filteredRequests?.length} request
+            {filteredRequests?.length !== 1 ? "s" : ""} found
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {filteredRequests.map((request) => (
+            {filteredRequests?.map((request: any) => (
               <div
-                key={request.id}
+                key={request.request_id}
                 className="border rounded-lg p-4 hover:bg-muted/50 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <Avatar className="h-12 w-12">
                       <AvatarImage
-                        src={request.userAvatar || "/placeholder.svg"}
+                        src={request.profileImage || "/placeholder.svg"}
                       />
                       <AvatarFallback>
-                        {request.userName
+                        {request.firstName
                           .split(" ")
-                          .map((n) => n[0])
+                          .map((n: any) => n[0])
                           .join("")}
                       </AvatarFallback>
                     </Avatar>
 
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold">{request.userName}</h3>
+                        <h3 className="font-semibold">
+                          {request.firstName} {request.lastName}
+                        </h3>
                         <Badge
                           className={getStatusBadgeColor(request.status)}
                           variant="secondary"
                         >
-                          {request.status.charAt(0).toUpperCase() +
-                            request.status.slice(1)}
+                          {request.status}
                         </Badge>
                       </div>
 
@@ -455,12 +375,10 @@ export default function RoleRequestsPage() {
 
                   <div className="flex items-center gap-2">
                     <div className="text-right text-sm text-muted-foreground mr-4">
-                      <p>
-                        {new Date(request.requestDate).toLocaleDateString()}
-                      </p>
+                      <p>{new Date(request.createdAt).toLocaleDateString()}</p>
                     </div>
 
-                    {request.status === "pending" && (
+                    {request.status === "PENDING" && (
                       <div className="flex gap-2">
                         <Button
                           size="sm"
@@ -510,7 +428,7 @@ export default function RoleRequestsPage() {
               </div>
             ))}
 
-            {filteredRequests.length === 0 && (
+            {filteredRequests?.length === 0 && (
               <div className="text-center py-12">
                 <UserCog className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">
@@ -546,22 +464,22 @@ export default function RoleRequestsPage() {
                   <div className="flex items-center space-x-4">
                     <Avatar className="h-16 w-16">
                       <AvatarImage
-                        src={selectedRequest.userAvatar || "/placeholder.svg"}
+                        src={selectedRequest.profileImage || "/placeholder.svg"}
                       />
                       <AvatarFallback className="text-lg">
-                        {selectedRequest.userName
+                        {selectedRequest.firstName
                           .split(" ")
-                          .map((n) => n[0])
+                          .map((n: any) => n[0])
                           .join("")}
                       </AvatarFallback>
                     </Avatar>
                     <div className="space-y-1">
                       <h4 className="text-xl font-semibold">
-                        {selectedRequest.userName}
+                        {selectedRequest.firstName} {selectedRequest.lastName}
                       </h4>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Mail className="h-4 w-4" />
-                        {selectedRequest.userEmail}
+                        {selectedRequest.email}
                       </div>
                       {selectedRequest.userPhone && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -576,6 +494,96 @@ export default function RoleRequestsPage() {
                         </div>
                       )}
                     </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Role Change Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">
+                    Requester Other Details
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">
+                        Publications that published.
+                      </p>
+                      <Badge
+                        className={getRoleBadgeColor(
+                          selectedRequest.currentRole
+                        )}
+                        variant="outline"
+                      >
+                        {selectedRequest.user?._count?.publications}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">
+                        Forums created
+                      </p>
+                      <Badge
+                        className={getRoleBadgeColor(
+                          selectedRequest.requestedRole
+                        )}
+                        variant="outline"
+                      >
+                        {selectedRequest.user?._count?.forums}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">
+                        Warning(s).
+                      </p>
+                      <Badge
+                        className={getRoleBadgeColor(
+                          selectedRequest.currentRole
+                        )}
+                        variant="outline"
+                      >
+                        {selectedRequest.user?.warningPoints}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">
+                        Account Status.
+                      </p>
+                      <Badge
+                        className={getRoleBadgeColor(
+                          selectedRequest.currentRole
+                        )}
+                        variant="outline"
+                      >
+                        {selectedRequest.user?.status}
+                      </Badge>
+                    </div>
+                    {/* Copy tong nasa baba pag may idadagdag na details ng user sa request prolly reputation points or something like that. */}
+                    {/* <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">
+                        Account Status.
+                      </p>
+                      <Badge
+                        className={getRoleBadgeColor(
+                          selectedRequest.currentRole
+                        )}
+                        variant="outline"
+                      >
+                        {selectedRequest.user?.status}
+                      </Badge>
+                    </div> */}
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-1">
+                      Status
+                    </p>
+                    <Badge
+                      className={getStatusBadgeColor(selectedRequest.status)}
+                      variant="secondary"
+                    >
+                      {selectedRequest.status.charAt(0).toUpperCase() +
+                        selectedRequest.status.slice(1)}
+                    </Badge>
                   </div>
                 </div>
 
@@ -643,13 +651,13 @@ export default function RoleRequestsPage() {
                     </p>
                   </div>
 
-                  {selectedRequest.additionalInfo && (
+                  {selectedRequest.additionalInformation && (
                     <div>
                       <p className="text-sm font-medium text-muted-foreground mb-2">
                         Additional Information
                       </p>
                       <p className="text-sm leading-relaxed bg-muted p-3 rounded-lg">
-                        {selectedRequest.additionalInfo}
+                        {selectedRequest.additionalInformation}
                       </p>
                     </div>
                   )}
@@ -667,10 +675,10 @@ export default function RoleRequestsPage() {
                       </p>
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-muted-foreground" />
-                        {new Date(selectedRequest.requestDate).toLocaleString()}
+                        {new Date(selectedRequest.createdAt).toLocaleString()}
                       </div>
                     </div>
-                    <div>
+                    {/* <div>
                       <p className="font-medium text-muted-foreground mb-1">
                         Last Updated
                       </p>
@@ -678,12 +686,12 @@ export default function RoleRequestsPage() {
                         <Calendar className="h-4 w-4 text-muted-foreground" />
                         {new Date(selectedRequest.updatedAt).toLocaleString()}
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
                 {/* Actions */}
-                {selectedRequest.status === "pending" && (
+                {selectedRequest.status === "PENDING" && (
                   <>
                     <Separator />
                     <div className="flex gap-2 pt-4">
