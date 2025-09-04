@@ -11,7 +11,8 @@ export async function DELETE(req: NextRequest) {
     const { id: moderatorId, role } = authResult.user;
 
     // Add role check for extra security
-    if (!role.includes("ADMIN") && !role.includes("MODERATOR")) {
+    const allowed = ["ADMIN", "MODERATOR"];
+    if (!allowed.includes(role)) {
       return NextResponse.json(
         { error: "Unauthorized: Admin or Moderator role required" },
         { status: 403 }
@@ -88,8 +89,12 @@ export async function GET(req: NextRequest) {
     }
     const { role } = authResult.user;
 
-    if (!role.includes("ADMIN") && !role.includes("MODERATOR")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    const allowed = ["ADMIN", "MODERATOR"];
+    if (!allowed.includes(role)) {
+      return NextResponse.json(
+        { error: "Unauthorized: Admin or Moderator role required" },
+        { status: 403 }
+      );
     }
 
     const fifteenDaysAgo = new Date();

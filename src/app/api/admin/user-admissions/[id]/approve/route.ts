@@ -69,7 +69,7 @@ export async function POST(
           contactNumber,
           location,
           interests,
-          role: [existingAdmission.role], // Use role from admission
+          // role: [existingAdmission.role], // Use role from admission
         },
       });
 

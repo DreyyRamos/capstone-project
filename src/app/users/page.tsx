@@ -72,9 +72,8 @@ export default function UsersPage() {
         user.email?.toLowerCase().includes(searchQuery.toLowerCase());
 
       // Handle both array and string roles
-      const userRoles = Array.isArray(user.role) ? user.role : [user.role];
-      const matchesRole =
-        roleFilter === "all" || userRoles.includes(roleFilter);
+      const userRole = user.role; // string | undefined
+      const matchesRole = roleFilter === "all" || userRole.includes(roleFilter);
 
       const matchesStatus =
         statusFilter === "all" || user.status === statusFilter;

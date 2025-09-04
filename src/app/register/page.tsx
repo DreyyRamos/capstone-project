@@ -28,7 +28,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UploadButton } from "@/utils/uploadthing";
-import RequestEmailTrigger from "@/components/request-email-trigger";
+import EmailTrigger from "@/components/email-trigger";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -528,10 +528,11 @@ export default function RegisterPage() {
                 </Button>
               </form>
               {fire && (
-                <RequestEmailTrigger
+                <EmailTrigger
                   to={formData.user_email}
                   firstName={formData.firstName}
                   lastName={formData.lastName}
+                  emailType="request"
                   send={fire}
                   onSent={(res) => alert("Sent! " + res.status)}
                   onError={(err) => alert("Error: " + err.text)}

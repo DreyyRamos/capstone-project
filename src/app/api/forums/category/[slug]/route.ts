@@ -15,12 +15,35 @@ export async function GET(
   const category = resolvedParams.slug;
 
   try {
+    // Properly construct the where condition
+    let whereCondition;
+    
+    if (category === "Uncategorized" || !category) {
+      // For uncategorized items, look for null or empty category
+      whereCondition = {
+        OR: [
+          { category: null },
+          { category: "" },
+          { category: "Uncategorized" }
+        ]
+      };
+    } else {
+      // For specific categories
+      whereCondition = { category: category };
+    }
+
     const fetchPost = await prisma.forum.findMany({
       orderBy: { createdAt: "desc" },
-      where: { category },
+      where: whereCondition,
       include: {
         author: {
-          select: { id: true, firstName: true, profileImage: true, role: true },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profileImage: true,
+            role: true,
+          },
         },
         forumLikes: true,
 
@@ -31,6 +54,7 @@ export async function GET(
               select: {
                 id: true,
                 firstName: true,
+                lastName: true, // Added lastName
                 profileImage: true,
                 role: true,
               },
@@ -44,6 +68,7 @@ export async function GET(
                   select: {
                     id: true,
                     firstName: true,
+                    lastName: true, // Added lastName
                     profileImage: true,
                     role: true,
                   },
@@ -57,6 +82,7 @@ export async function GET(
                       select: {
                         id: true,
                         firstName: true,
+                        lastName: true, // Added lastName
                         profileImage: true,
                         role: true,
                       },
@@ -72,7 +98,7 @@ export async function GET(
 
     return NextResponse.json(fetchPost);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching forum posts:", error);
     return NextResponse.json(
       { error: "An error occurred while fetching the post." },
       { status: 500 }

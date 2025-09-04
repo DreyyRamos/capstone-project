@@ -38,6 +38,26 @@ enum AdmissionStatus {
   APPROVED
 }
 
+model ChangeUserRole {
+  request_id            String           @id @unique @default(cuid())
+  email                 String           @unique
+  firstName             String?
+  lastName              String?
+  currentRole           Role             @default(STUDENT)
+  requestedRole         Role
+  Reason                String           @db.Text
+  additionalInformation String?          @db.Text
+  status                ChangeRoleStatus @default(PENDING)
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @default(now()) @updatedAt
+}
+
+enum ChangeRoleStatus {
+  PENDING
+  REJECTED
+  APPROVED
+}
+
 model User {
   id                               String                             @id @unique @default(uuid())
   email                            String                             @unique
@@ -52,7 +72,7 @@ model User {
   id_picture                       String?
   createdAt                        DateTime                           @default(now())
   updatedAt                        DateTime                           @default(now()) @updatedAt
-  role                             Role[]                             @default([STUDENT])
+  role                             Role                               @default(STUDENT)
   publications                     Publication[]
   updatedPublications              Publication[]                      @relation("PublicationUpdatedBy")
   notifications                    Notifications[]

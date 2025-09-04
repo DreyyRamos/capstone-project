@@ -55,9 +55,7 @@ export async function POST(req: NextRequest) {
             },
             {
               // Condition 2: Any user whose role array contains 'EDITOR'
-              role: {
-                has: Role.EDITOR,
-              },
+              role: "EDITOR",
             },
           ],
         },
@@ -72,7 +70,7 @@ export async function POST(req: NextRequest) {
       if (usersToNotify.length > 0) {
         const notificationData = usersToNotify.map((user) => {
           // Check if the user has the EDITOR role
-          const isEditor = user.role.includes(Role.EDITOR);
+          const isEditor = user.role === "EDITOR";
 
           // Customize notification content based on the role
           const notifTitle = isEditor

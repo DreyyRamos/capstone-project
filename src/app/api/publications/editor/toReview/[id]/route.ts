@@ -70,7 +70,7 @@ export async function PUT(
     }
 
     // Check if the user is an EDITOR. Your schema defines 'role' as an array.
-    if (!authResult.user.role.includes(Role.EDITOR)) {
+    if (authResult.user.role !== Role.EDITOR) {
       return NextResponse.json(
         {
           message:

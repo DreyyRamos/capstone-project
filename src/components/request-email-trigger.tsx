@@ -9,6 +9,7 @@ type Props = {
   firstName: string;
   lastName: string;
   send: boolean; // parent flips this to true when ready
+  emailType: string;
   onSent?: (result: any) => void;
   onError?: (error: any) => void;
 };
@@ -18,6 +19,7 @@ export default function RequestEmailTrigger({
   firstName,
   lastName,
   send,
+  emailType,
   onSent,
   onError,
 }: Props) {
@@ -29,7 +31,9 @@ export default function RequestEmailTrigger({
     emailjs
       .send(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        emailType === "request"
+          ? process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!
+          : process.env.NEXT_PUBLIC_EMAILJS_CONFIRMATION_TEMPLATE_ID!,
         {
           email: to,
           firstName,

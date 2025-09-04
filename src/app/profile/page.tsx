@@ -179,21 +179,19 @@ export default function ProfilePage() {
   // Removed unused handleInputChange function
 
   const getRoleColor = (role: string) => {
-    switch (role.toLowerCase()) {
-      case "admin":
+    switch (role.toUpperCase()) {
+      case "ADMIN":
         return "bg-red-100 text-red-800";
-      case "editor":
+      case "EDITOR":
         return "bg-blue-100 text-blue-800";
-      case "moderator":
+      case "MODERATOR":
         return "bg-green-100 text-green-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
-  const rawRole = Array.isArray(user?.userData?.role)
-    ? user.userData.role[0]
-    : user?.userData?.role || "student";
+  const rawRole = user?.userData?.role || "STUDENT";
 
   const displayRole =
     String(rawRole).charAt(0).toUpperCase() + String(rawRole).slice(1);

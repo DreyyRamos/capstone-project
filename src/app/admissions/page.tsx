@@ -44,7 +44,8 @@ import { useConfirmation } from "@/components/confirmation-provider";
 import Cookies from "js-cookie";
 import { useAdminUserAdmissionsQuery } from "@/hooks/useAdmin";
 import { Role, AdmissionStatus } from "@/generated/prisma";
-import ConfirmationEmailTrigger from "@/components/confirmation-email-trigger";
+import EmailTrigger from "@/components/email-trigger";
+import { toast } from "sonner";
 
 // const stats = {
 //   total: pendingAdmissions.length,
@@ -76,6 +77,7 @@ export default function AdmissionsPage() {
     data: pendingAdmissions,
     approveUser,
     isApproved,
+    rejectUser,
   } = useAdminUserAdmissionsQuery(token);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
@@ -131,10 +133,11 @@ export default function AdmissionsPage() {
   const handleReject = (admission: (typeof pendingAdmissions)[0]) => {
     const displayName = `${admission.firstName} ${admission.lastName || ""}`;
     confirmReject(`${displayName}'s admission application`, async () => {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await rejectUser(admission.admission_id);
+      toast(
+        `Rejected admission for ${displayName}, Admission ID: ${admission.admission_id}`
+      );
       console.log(`Rejected admission: ${admission.admission_id}`);
-      // In real app, update admission status and send notification
     });
   };
 
@@ -543,17 +546,18 @@ export default function AdmissionsPage() {
             )}
           </div>
           {submitSuccess && (
-            <ConfirmationEmailTrigger
+            <EmailTrigger
               to={filteredAdmissions[0]?.user_email}
               firstName={filteredAdmissions[0]?.firstName}
               lastName={filteredAdmissions[0]?.lastName}
               send={true}
+              emailType="confirmation"
               onSent={(res) => {
-                alert("Sent! " + res.status);
+                toast("Email Sent! " + res.status);
                 setSubmitSuccess(false); // unmount the trigger
               }}
               onError={(err) => {
-                alert("Error: " + err.text);
+                toast("Error Sent: " + err.text);
                 setSubmitSuccess(false);
               }}
             />

@@ -15,29 +15,24 @@ export function RoleBasedLayout({ children }: { children: React.ReactNode }) {
   console.log("Current user from token:", user); // Debug
 
   const navigationComponent = useMemo(() => {
-    if (!isAuthenticated || !user) {
-      return <StudentNavigation />;
-    }
+    if (!isAuthenticated || !user) return <StudentNavigation />;
 
-    // Get roles from token payload
-    const userRoles = user.roles || user.role || [];
+    // 1. read the role (string | undefined)
+    const role = (user.role || "").toUpperCase(); // normalise case
 
-    console.log("Roles from token:", userRoles); // Debug
+    console.log("Role from token:", role);
 
-    // Handle array of roles
-    if (Array.isArray(userRoles) && userRoles.length > 0) {
-      if (userRoles.includes("ADMIN")) {
+    // 2. pick component
+    switch (role) {
+      case "ADMIN":
         return <AdminNavigation />;
-      } else if (userRoles.includes("EDITOR")) {
+      case "EDITOR":
         return <EditorNavigation />;
-      } else if (userRoles.includes("MODERATOR")) {
+      case "MODERATOR":
         return <ModeratorNavigation />;
-      } else {
+      default:
         return <StudentNavigation />;
-      }
     }
-
-    return <StudentNavigation />;
   }, [user, isAuthenticated]);
 
   return (

@@ -21,7 +21,7 @@ export async function PUT(
       await req.json();
 
     // Check if the user is an EDITOR
-    if (!authResult.user.role.includes(Role.EDITOR)) {
+    if (authResult.user.role !== Role.EDITOR) {
       return NextResponse.json(
         {
           message:

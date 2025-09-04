@@ -73,6 +73,19 @@ export const approveAdmission = async (
   return res.json();
 };
 
+export const rejectAdmission = async (token: string, admission_id: string) => {
+  const res = await fetch(`/api/admin/user-admissions/${admission_id}/reject`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    // body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+};
+
 export const deleteReportedContent = async (
   contentType: any,
   contentId: any,

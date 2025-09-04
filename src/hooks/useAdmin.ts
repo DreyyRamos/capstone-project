@@ -3,6 +3,7 @@ import {
   fetchAllUsers,
   fetchAllUserAdmissions,
   approveAdmission,
+  rejectAdmission,
 } from "@/services/admin";
 
 interface Publication {
@@ -195,6 +196,16 @@ export const useAdminUserAdmissionsQuery = (token: string) => {
     },
   });
 
+  const rejectUser = useMutation({
+    mutationFn: async (admission_id: string) =>
+      rejectAdmission(token, admission_id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-admissions"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-side-users"] });
+      queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
+    },
+  });
+
   //   const restoreReported = useMutation({
   //     mutationFn: async (reportId: string) =>
   //       await restoreReportedContent(reportId, token),
@@ -268,6 +279,11 @@ export const useAdminUserAdmissionsQuery = (token: string) => {
     // createError: mutation.error,
     isApproved: approveUser.isSuccess,
     // createReset: mutation.reset,
+
+    rejectUser: rejectUser.mutate,
+    isRejecting: rejectUser.isPending,
+    // createError: mutation.error,
+    isRejected: rejectUser.isSuccess,
 
     // // restore mutation function
     // restoreContent: restoreReported.mutate,

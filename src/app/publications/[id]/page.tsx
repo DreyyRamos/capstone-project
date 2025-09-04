@@ -72,7 +72,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const { mutate: addTopReply } = useAddTopReply(token);
   const { mutate: addNestedReply } = useAddNestedReply(token);
   const { user } = useTokenUser();
-  const userRoles = user?.roles || user?.role || [];
+  const userRole = user?.role || "STUDENT";
   const { StatusModal, checkComment, checkLike, checkShare, checkAndExecute } =
     useUserStatusCheck(currentUser?.userData?.status, {
       onBlocked: (action, status) => {
@@ -105,17 +105,17 @@ export default function PublicationDetailPage({ params }: PageProps) {
   };
 
   const handleReply = (commentId: string) => {
-   checkAndExecute("reply", () => {
-     if (requireAuth("reply to this comment")) {
-       if (replyingTo === commentId) {
-         setReplyingTo(null);
-         setReplyContent("");
-       } else {
-         setReplyingTo(commentId);
-         setReplyContent("");
-       }
-     }
-   });
+    checkAndExecute("reply", () => {
+      if (requireAuth("reply to this comment")) {
+        if (replyingTo === commentId) {
+          setReplyingTo(null);
+          setReplyContent("");
+        } else {
+          setReplyingTo(commentId);
+          setReplyContent("");
+        }
+      }
+    });
   };
 
   const handleSecondLevelReply = (replyId: string) => {
@@ -302,8 +302,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
 
             <div className="flex items-center gap-2">
               <LikeButton post={publication} token={token} pubId={id} />
-              {(userRoles?.includes("EDITOR") ||
-                userRoles?.includes("ADMIN")) &&
+              {(userRole === "EDITOR" || userRole === "ADMIN") &&
                 !["DRAFT", "PENDING_REVIEW", "ARCHIVED"].includes(
                   publication?.status
                 ) && (
