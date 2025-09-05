@@ -38,6 +38,8 @@ export const useEditorQuery = (token: string) => {
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["user-activity"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
+queryClient.invalidateQueries({ queryKey: ["visit-user"] });
+queryClient.invalidateQueries({ queryKey: ["visit-user-activity"] });
     },
   });
 

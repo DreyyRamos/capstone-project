@@ -47,6 +47,8 @@ export function useAddTopReply(token: string) {
       qc.invalidateQueries({ queryKey: ["users"] });
       qc.invalidateQueries({ queryKey: ["user-activity"] });
       qc.invalidateQueries({ queryKey: ["to-review"] });
+      qc.invalidateQueries({ queryKey: ["visit-user"] });
+      qc.invalidateQueries({ queryKey: ["visit-user-activity"] });
     },
   });
 }
@@ -78,8 +80,10 @@ export function useAddNestedReply(token: string) {
       qc.invalidateQueries({ queryKey: ["replies"] });
       qc.invalidateQueries({ queryKey: ["featured-pubs"] });
       qc.invalidateQueries({ queryKey: ["users"] });
-      qc.invalidateQueries({ queryKey: ["user-activity"] });
       qc.invalidateQueries({ queryKey: ["to-review"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
+      qc.invalidateQueries({ queryKey: ["visit-user"] });
+      qc.invalidateQueries({ queryKey: ["visit-user-activity"] });
     },
   });
 }

@@ -33,6 +33,9 @@ export const useForumQuery = (token: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["forum"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user-activity"] });
     },
   });
 

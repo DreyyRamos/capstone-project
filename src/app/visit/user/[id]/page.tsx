@@ -424,12 +424,8 @@ export default function ProfilePage({ params }: PageProps) {
                             </>
                           ) : (
                             <>
-                              <span>
-                                {activity.engagement?.replies || 0} replies
-                              </span>
-                              <span>
-                                {activity.engagement?.likes || 0} likes
-                              </span>
+                              <span>{activity.replyCount || 0} replies</span>
+                              <span>{activity.likeCount || 0} likes</span>
                             </>
                           )}
                         </div>

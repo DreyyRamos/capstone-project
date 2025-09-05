@@ -45,6 +45,9 @@ export const usePostQuery = (token: string) => {
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user-activity"] });
     },
   });
 
@@ -136,6 +139,9 @@ export const usePostByIdQuery = (token: string, postId: string) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user-activity"] });
     },
   });
 
@@ -147,6 +153,9 @@ export const usePostByIdQuery = (token: string, postId: string) => {
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user-activity"] });
     },
   });
 
@@ -159,6 +168,9 @@ export const usePostByIdQuery = (token: string, postId: string) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["user-activity"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user-activity"] });
     },
   });
 
