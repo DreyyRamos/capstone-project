@@ -282,12 +282,23 @@ export default function PublicationDetailPage({ params }: PageProps) {
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <Avatar className="h-12 w-12">
+                <AvatarImage
+                  src={publication.author?.profileImage || "/placeholder.svg"}
+                />
+                <AvatarFallback>
+                  {publication.author?.firstName?.[0]}
+                  {publication.author?.lastName?.[0]}
+                </AvatarFallback>
+              </Avatar>
+              {/* <Avatar className="h-12 w-12">
                 <AvatarFallback>
                   {publication?.author?.firstName}
                 </AvatarFallback>
-              </Avatar>
+              </Avatar> */}
               <div>
-                <p className="font-medium">{publication?.author.firstName}</p>
+                <p className="font-medium">
+                  {publication?.author.firstName} {publication?.author.lastName}
+                </p>
                 <p className="text-sm text-muted-foreground">
                   {publication?.author.role}
                 </p>
@@ -421,6 +432,15 @@ export default function PublicationDetailPage({ params }: PageProps) {
                   <div className="flex items-start gap-4">
                     <Avatar className="h-10 w-10">
                       <AvatarImage
+                        src={comment.author?.profileImage || "/placeholder.svg"}
+                      />
+                      <AvatarFallback>
+                        {comment.author?.firstName?.[0]}
+                        {comment.author?.lastName?.[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    {/* <Avatar className="h-10 w-10">
+                      <AvatarImage
                         src={
                           comment?.author?.profileImage || "/placeholder.svg"
                         }
@@ -428,12 +448,13 @@ export default function PublicationDetailPage({ params }: PageProps) {
                       <AvatarFallback>
                         {comment?.author?.firstName?.[0]}
                       </AvatarFallback>
-                    </Avatar>
+                    </Avatar> */}
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2">
                         <p className="font-medium">
                           <Link href={`/visit/user/${comment?.authorId}`}>
-                            {comment?.author?.firstName}
+                            {comment?.author?.firstName}{" "}
+                            {comment?.author?.lastName}
                           </Link>
                         </p>
                         <Badge variant="outline" className="text-xs">
@@ -529,12 +550,25 @@ export default function PublicationDetailPage({ params }: PageProps) {
                             />
                             <AvatarFallback>
                               {reply?.reply_author?.firstName?.[0]}
+                              {reply?.reply_author?.lastName?.[0]}
                             </AvatarFallback>
                           </Avatar>
+                          {/* <Avatar className="h-8 w-8">
+                            <AvatarImage
+                              src={
+                                reply?.reply_author?.profileImage ||
+                                "/placeholder.svg"
+                              }
+                            />
+                            <AvatarFallback>
+                              {reply?.reply_author?.firstName?.[0]}
+                            </AvatarFallback>
+                          </Avatar> */}
                           <div className="flex-1 space-y-2">
                             <div className="flex items-center gap-2">
                               <p className="font-medium text-sm">
-                                {reply?.reply_author?.firstName}
+                                {reply?.reply_author?.firstName}{" "}
+                                {reply?.reply_author?.lastName}
                               </p>
                               <Badge variant="outline" className="text-xs">
                                 {reply?.reply_author?.role}
@@ -637,12 +671,31 @@ export default function PublicationDetailPage({ params }: PageProps) {
                                           childReply?.reply_author
                                             ?.firstName?.[0]
                                         }
+                                        {
+                                          childReply?.reply_author
+                                            ?.lastName?.[0]
+                                        }
                                       </AvatarFallback>
                                     </Avatar>
+                                    {/* <Avatar className="h-8 w-8">
+                                      <AvatarImage
+                                        src={
+                                          childReply?.reply_author
+                                            ?.profileImage || "/placeholder.svg"
+                                        }
+                                      />
+                                      <AvatarFallback>
+                                        {
+                                          childReply?.reply_author
+                                            ?.firstName?.[0]
+                                        }
+                                      </AvatarFallback>
+                                    </Avatar> */}
                                     <div className="flex-1 space-y-2">
                                       <div className="flex items-center gap-2">
                                         <p className="font-medium text-sm">
-                                          {childReply?.reply_author?.firstName}
+                                          {childReply?.reply_author?.firstName}{" "}
+                                          {childReply?.reply_author?.lastName}
                                         </p>
                                         <Badge
                                           variant="outline"

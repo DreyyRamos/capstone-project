@@ -54,6 +54,47 @@ export const fetchRoleChangeRequests = async (token: string) => {
   return response.json();
 };
 
+export const approveRoleChangeRequest = async (token: string, id: string) => {
+  const response = await fetch(`/api/admin/fetch-role-requests/${id}/accept`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "application/json",
+    },
+  });
+  if (!response.ok) throw new Error("Failed to fetch posts");
+  return response.json();
+};
+
+export const rejectRoleChangeRequest = async (token: string, id: string) => {
+  const response = await fetch(`/api/admin/fetch-role-requests/${id}/reject`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "application/json",
+    },
+  });
+  if (!response.ok) throw new Error("Failed to fetch posts");
+  return response.json();
+};
+
+export const updateRole = async (
+  token: string,
+  id: string,
+  newRole: string
+) => {
+  const response = await fetch(`/api/admin/fetch-users/${id}/update-role`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ newRole }),
+  });
+  if (!response.ok) throw new Error("Failed to fetch posts");
+  return response.json();
+};
+
 export const approveAdmission = async (
   token: string,
   admission_id: string,

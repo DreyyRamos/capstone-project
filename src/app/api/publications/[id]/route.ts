@@ -20,7 +20,13 @@ export async function GET(
       where: { pubId: pubId },
       include: {
         author: {
-          select: { id: true, firstName: true, profileImage: true, role: true },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profileImage: true,
+            role: true,
+          },
         },
         pubLikes: true,
 
@@ -31,6 +37,7 @@ export async function GET(
               select: {
                 id: true,
                 firstName: true,
+                lastName: true,
                 profileImage: true,
                 role: true,
               },
@@ -45,6 +52,7 @@ export async function GET(
                   select: {
                     id: true,
                     firstName: true,
+                    lastName: true,
                     profileImage: true,
                     role: true,
                   },
@@ -59,6 +67,7 @@ export async function GET(
                       select: {
                         id: true,
                         firstName: true,
+                        lastName: true,
                         profileImage: true,
                         role: true,
                       },

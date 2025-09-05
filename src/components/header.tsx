@@ -213,6 +213,17 @@ export function Header() {
                       <Avatar className="h-8 w-8">
                         <AvatarImage
                           src={
+                            user?.userData?.profileImage || "/placeholder.svg"
+                          }
+                        />
+                        <AvatarFallback>
+                          {user?.userData?.firstName?.[0]}
+                          {user?.userData?.lastName?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      {/* <Avatar className="h-8 w-8">
+                        <AvatarImage
+                          src={
                             user?.userData?.profileImage ||
                             "/placeholder-user.jpg"
                           }
@@ -221,7 +232,7 @@ export function Header() {
                         <AvatarFallback>
                           {user?.userData?.firstName?.[0] || "U"}
                         </AvatarFallback>
-                      </Avatar>
+                      </Avatar> */}
                       <Badge
                         className={getStatusBadgeClasses(
                           user?.userData?.status

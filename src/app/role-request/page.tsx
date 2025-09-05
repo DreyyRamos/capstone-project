@@ -50,37 +50,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useConfirmationModal } from "@/hooks/use-confirmation-modal";
 import Cookies from "js-cookie";
 import { useAdminRoleChangeRequestsQuery } from "@/hooks/useAdmin";
-
-// interface RoleRequest {
-//   id: string;
-//   userId: string;
-//   userName: string;
-//   userEmail: string;
-//   userPhone?: string;
-//   userLocation?: string;
-//   userAvatar?: string;
-//   currentRole: string;
-//   requestedRole: string;
-//   reason: string;
-//   additionalInfo?: string;
-//   status: "PENDING" | "APPROVED" | "REJECTED";
-//   requestDate: string;
-//   updatedAt: string;
-// }
+import { useConfirmation } from "@/components/confirmation-provider";
+import { toast } from "sonner";
 
 export default function RoleRequestsPage() {
   const token = Cookies.get("token") || "";
-  const { data: roleChangeRequests } = useAdminRoleChangeRequestsQuery(token);
+  const {
+    data: roleChangeRequests,
+    approveRoleChange,
+    rejectRoleChange,
+  } = useAdminRoleChangeRequestsQuery(token);
   console.log("requests from role change", roleChangeRequests?.roleRequests);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { openModal } = useConfirmationModal();
+  const { openModal } = useConfirmation();
 
   // Filter requests based on search and filters
   const filteredRequests = roleChangeRequests?.roleRequests?.filter(
@@ -102,41 +90,32 @@ export default function RoleRequestsPage() {
 
   // Calculate statistics
   const stats = {
-    total: roleChangeRequests?.roleRequests.length,
-    pending: roleChangeRequests?.roleRequests.filter(
-      (r: any) => r.status === "PENDING"
-    ).length,
-    approved: roleChangeRequests?.roleRequests.filter(
-      (r: any) => r.status === "APPROVED"
-    ).length,
-    rejected: roleChangeRequests?.roleRequests.filter(
-      (r: any) => r.status === "REJECTED"
-    ).length,
+    total: roleChangeRequests?.roleRequests.length || 0,
+    pending:
+      roleChangeRequests?.roleRequests.filter(
+        (r: any) => r.status === "PENDING"
+      ).length || 0,
+    approved:
+      roleChangeRequests?.roleRequests.filter(
+        (r: any) => r.status === "APPROVED"
+      ).length || 0,
+    rejected:
+      roleChangeRequests?.roleRequests.filter(
+        (r: any) => r.status === "REJECTED"
+      ).length || 0,
   };
 
   const handleApprove = (request: any) => {
     openModal({
       title: "Approve Role Request",
-      description: `Are you sure you want to approve ${request.userName}'s request to become a ${request.requestedRole}?`,
+      description: `Are you sure you want to approve ${request.firstName} ${request.lastName}'s request to become ${request.requestedRole}?`,
       confirmText: "Approve",
       variant: "success",
       icon: "success",
       onConfirm: async () => {
         // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        //   setRequests((prev: any) =>
-        //     prev.map((r: any) =>
-        //       r.id === request.id
-        //         ? {
-        //             ...r,
-        //             status: "approved" as const,
-        //             updatedAt: new Date().toISOString(),
-        //           }
-        //         : r
-        //     )
-        //   );
-        // },
+        await approveRoleChange(request?.request_id);
+        toast("Role change request approved!");
       },
     });
   };
@@ -144,25 +123,14 @@ export default function RoleRequestsPage() {
   const handleReject = (request: any) => {
     openModal({
       title: "Reject Role Request",
-      description: `Are you sure you want to reject ${request.userName}'s request to become a ${request.requestedRole}?`,
+      description: `Are you sure you want to reject ${request.firstName} ${request.lastName}'s request to become ${request.requestedRole}?`,
       confirmText: "Reject",
       variant: "destructive",
       icon: "error",
       onConfirm: async () => {
         // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // setRequests((prev: any) =>
-        //   prev.map((r: any) =>
-        //     r.id === request.id
-        //       ? {
-        //           ...r,
-        //           status: "rejected" as const,
-        //           updatedAt: new Date().toISOString(),
-        //         }
-        //       : r
-        //   )
-        // );
+        await rejectRoleChange(request?.request_id);
+        toast("Role change request rejected!");
       },
     });
   };
@@ -189,11 +157,11 @@ export default function RoleRequestsPage() {
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case "approved":
+      case "APPROVED":
         return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "rejected":
+      case "REJECTED":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      case "pending":
+      case "PENDING":
         return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
@@ -201,62 +169,72 @@ export default function RoleRequestsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6 p-4 md:p-0">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Role Change Requests</h1>
-          <p className="text-muted-foreground">
-            Review and manage user role change requests
-          </p>
-        </div>
+      <div className="space-y-2">
+        <h1 className="text-2xl md:text-3xl font-bold">Role Change Requests</h1>
+        <p className="text-sm md:text-base text-muted-foreground">
+          Review and manage user role change requests
+        </p>
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-4 md:pt-6">
             <div className="flex items-center space-x-2">
-              <UserCog className="h-5 w-5 text-blue-600" />
-              <div>
-                <p className="text-2xl font-bold">{stats.total}</p>
-                <p className="text-sm text-muted-foreground">Total Requests</p>
+              <UserCog className="h-4 w-4 md:h-5 md:w-5 text-blue-600 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-lg md:text-2xl font-bold">{stats.total}</p>
+                <p className="text-xs md:text-sm text-muted-foreground truncate">
+                  Total Requests
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-4 md:pt-6">
             <div className="flex items-center space-x-2">
-              <Clock className="h-5 w-5 text-yellow-600" />
-              <div>
-                <p className="text-2xl font-bold">{stats.pending}</p>
-                <p className="text-sm text-muted-foreground">Pending</p>
+              <Clock className="h-4 w-4 md:h-5 md:w-5 text-yellow-600 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-lg md:text-2xl font-bold">{stats.pending}</p>
+                <p className="text-xs md:text-sm text-muted-foreground truncate">
+                  Pending
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-4 md:pt-6">
             <div className="flex items-center space-x-2">
-              <CheckCircle className="h-5 w-5 text-green-600" />
-              <div>
-                <p className="text-2xl font-bold">{stats.approved}</p>
-                <p className="text-sm text-muted-foreground">Approved</p>
+              <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-600 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-lg md:text-2xl font-bold">
+                  {stats.approved}
+                </p>
+                <p className="text-xs md:text-sm text-muted-foreground truncate">
+                  Approved
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-4 md:pt-6">
             <div className="flex items-center space-x-2">
-              <XCircle className="h-5 w-5 text-red-600" />
-              <div>
-                <p className="text-2xl font-bold">{stats.rejected}</p>
-                <p className="text-sm text-muted-foreground">Rejected</p>
+              <XCircle className="h-4 w-4 md:h-5 md:w-5 text-red-600 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-lg md:text-2xl font-bold">
+                  {stats.rejected}
+                </p>
+                <p className="text-xs md:text-sm text-muted-foreground truncate">
+                  Rejected
+                </p>
               </div>
             </div>
           </CardContent>
@@ -265,176 +243,282 @@ export default function RoleRequestsPage() {
 
       {/* Filters */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-4">
+        <CardContent className="p-4 md:pt-6">
+          <div className="space-y-3 md:space-y-0 md:flex md:flex-row md:gap-4">
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
-                  placeholder="Search by name, email, or requested role..."
+                  placeholder="Search by name, email, or role..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 text-sm"
                 />
               </div>
             </div>
 
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="approved">Approved</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="grid grid-cols-2 gap-2 md:flex md:gap-4">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full md:w-[140px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="PENDING">Pending</SelectItem>
+                  <SelectItem value="APPROVED">Approved</SelectItem>
+                  <SelectItem value="REJECTED">Rejected</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Filter by role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Roles</SelectItem>
-                <SelectItem value="EDITOR">Editor</SelectItem>
-                <SelectItem value="MODERATOR">Moderator</SelectItem>
-                <SelectItem value="ADMIN">Admin</SelectItem>
-              </SelectContent>
-            </Select>
+              <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <SelectTrigger className="w-full md:w-[140px]">
+                  <SelectValue placeholder="Role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Roles</SelectItem>
+                  <SelectItem value="EDITOR">Editor</SelectItem>
+                  <SelectItem value="MODERATOR">Moderator</SelectItem>
+                  <SelectItem value="ADMIN">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Requests List */}
       <Card>
-        <CardHeader>
-          <CardTitle>Role Change Requests</CardTitle>
-          <CardDescription>
-            {filteredRequests?.length} request
+        <CardHeader className="p-4 md:p-6">
+          <CardTitle className="text-lg md:text-xl">
+            Role Change Requests
+          </CardTitle>
+          <CardDescription className="text-sm">
+            {filteredRequests?.length || 0} request
             {filteredRequests?.length !== 1 ? "s" : ""} found
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+        <CardContent className="p-4 md:p-6 pt-0">
+          <div className="space-y-3 md:space-y-4">
             {filteredRequests?.map((request: any) => (
               <div
                 key={request.request_id}
-                className="border rounded-lg p-4 hover:bg-muted/50 transition-colors"
+                className="border rounded-lg p-3 md:p-4 hover:bg-muted/50 transition-colors"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <Avatar className="h-12 w-12">
+                {/* Mobile Layout */}
+                <div className="block md:hidden space-y-3">
+                  {/* User Info */}
+                  <div className="flex items-start space-x-3">
+                    <Avatar className="h-10 w-10 flex-shrink-0">
                       <AvatarImage
                         src={request.profileImage || "/placeholder.svg"}
                       />
-                      <AvatarFallback>
-                        {request.firstName
-                          .split(" ")
-                          .map((n: any) => n[0])
-                          .join("")}
+                      <AvatarFallback className="text-sm">
+                        {request.firstName?.[0]}
+                        {request.lastName?.[0]}
                       </AvatarFallback>
                     </Avatar>
-
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold">
+                        <h3 className="font-semibold text-sm truncate">
                           {request.firstName} {request.lastName}
                         </h3>
                         <Badge
-                          className={getStatusBadgeColor(request.status)}
+                          className={`${getStatusBadgeColor(
+                            request.status
+                          )} text-xs px-2 py-0.5`}
                           variant="secondary"
                         >
                           {request.status}
                         </Badge>
                       </div>
-
-                      <p className="text-sm text-muted-foreground mb-2">
+                      <p className="text-xs text-muted-foreground truncate mb-2">
                         {request.userEmail}
                       </p>
-
-                      <div className="flex items-center gap-2 text-sm">
+                      <div className="flex items-center gap-1 text-xs mb-2">
                         <Badge
-                          className={getRoleBadgeColor(request.currentRole)}
+                          className={`${getRoleBadgeColor(
+                            request.currentRole
+                          )} text-xs px-1.5 py-0.5`}
                           variant="outline"
                         >
-                          {request.currentRole.charAt(0).toUpperCase() +
-                            request.currentRole.slice(1)}
+                          {request.currentRole}
                         </Badge>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                        <ArrowRight className="h-3 w-3 text-muted-foreground" />
                         <Badge
-                          className={getRoleBadgeColor(request.requestedRole)}
+                          className={`${getRoleBadgeColor(
+                            request.requestedRole
+                          )} text-xs px-1.5 py-0.5`}
                           variant="outline"
                         >
-                          {request.requestedRole.charAt(0).toUpperCase() +
-                            request.requestedRole.slice(1)}
+                          {request.requestedRole}
                         </Badge>
                       </div>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(request.createdAt).toLocaleDateString()}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <div className="text-right text-sm text-muted-foreground mr-4">
-                      <p>{new Date(request.createdAt).toLocaleDateString()}</p>
-                    </div>
+                  {/* Reason */}
+                  <div className="pl-0">
+                    <p className="text-xs text-muted-foreground line-clamp-2">
+                      <span className="font-medium">Reason:</span>{" "}
+                      {request.reason}
+                    </p>
+                  </div>
 
-                    {request.status === "PENDING" && (
-                      <div className="flex gap-2">
+                  {/* Actions */}
+                  <div className="flex items-center justify-between pt-2 border-t">
+                    {request.status === "PENDING" ? (
+                      <div className="flex gap-2 flex-1">
                         <Button
                           size="sm"
                           variant="outline"
-                          className="text-green-600 border-green-600 hover:bg-green-50 bg-transparent"
+                          className="text-green-600 border-green-600 hover:bg-green-50 bg-transparent flex-1 text-xs h-8"
                           onClick={() => handleApprove(request)}
                         >
-                          <Check className="h-4 w-4 mr-1" />
+                          <Check className="h-3 w-3 mr-1" />
                           Approve
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          className="text-red-600 border-red-600 hover:bg-red-50 bg-transparent"
+                          className="text-red-600 border-red-600 hover:bg-red-50 bg-transparent flex-1 text-xs h-8"
                           onClick={() => handleReject(request)}
                         >
-                          <X className="h-4 w-4 mr-1" />
+                          <X className="h-3 w-3 mr-1" />
                           Reject
                         </Button>
                       </div>
+                    ) : (
+                      <div className="flex-1" />
                     )}
 
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          onClick={() => handleViewDetails(request)}
-                        >
-                          <Eye className="mr-2 h-4 w-4" />
-                          View Details
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 ml-2"
+                      onClick={() => handleViewDetails(request)}
+                    >
+                      <Eye className="h-3 w-3" />
+                    </Button>
                   </div>
                 </div>
 
-                <div className="mt-3 pl-16">
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    <span className="font-medium">Reason:</span>{" "}
-                    {request.reason}
-                  </p>
+                {/* Desktop Layout */}
+                <div className="hidden md:block">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4 flex-1">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage
+                          src={request.profileImage || "/placeholder.svg"}
+                        />
+                        <AvatarFallback>
+                          {request.firstName?.[0]}
+                          {request.lastName?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold">
+                            {request.firstName} {request.lastName}
+                          </h3>
+                          <Badge
+                            className={getStatusBadgeColor(request.status)}
+                            variant="secondary"
+                          >
+                            {request.status}
+                          </Badge>
+                        </div>
+
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {request.userEmail}
+                        </p>
+
+                        <div className="flex items-center gap-2 text-sm">
+                          <Badge
+                            className={getRoleBadgeColor(request.currentRole)}
+                            variant="outline"
+                          >
+                            {request.currentRole}
+                          </Badge>
+                          <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                          <Badge
+                            className={getRoleBadgeColor(request.requestedRole)}
+                            variant="outline"
+                          >
+                            {request.requestedRole}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <div className="text-right text-sm text-muted-foreground mr-4">
+                        <p>
+                          {new Date(request.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+
+                      {request.status === "PENDING" && (
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-green-600 border-green-600 hover:bg-green-50 bg-transparent"
+                            onClick={() => handleApprove(request)}
+                          >
+                            <Check className="h-4 w-4 mr-1" />
+                            Approve
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-red-600 border-red-600 hover:bg-red-50 bg-transparent"
+                            onClick={() => handleReject(request)}
+                          >
+                            <X className="h-4 w-4 mr-1" />
+                            Reject
+                          </Button>
+                        </div>
+                      )}
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() => handleViewDetails(request)}
+                          >
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 pl-16">
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      <span className="font-medium">Reason:</span>{" "}
+                      {request.reason}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
 
             {filteredRequests?.length === 0 && (
-              <div className="text-center py-12">
-                <UserCog className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">
+              <div className="text-center py-8 md:py-12">
+                <UserCog className="h-8 w-8 md:h-12 md:w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-base md:text-lg font-semibold mb-2">
                   No requests found
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {searchTerm || statusFilter !== "all" || roleFilter !== "all"
                     ? "Try adjusting your search or filters"
                     : "No role change requests have been submitted yet"}
@@ -447,7 +531,7 @@ export default function RoleRequestsPage() {
 
       {/* Details Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh]">
+        <DialogContent className="max-w-2xl max-h-[90vh] mx-4">
           <DialogHeader>
             <DialogTitle>Role Change Request Details</DialogTitle>
             <DialogDescription>
@@ -467,10 +551,8 @@ export default function RoleRequestsPage() {
                         src={selectedRequest.profileImage || "/placeholder.svg"}
                       />
                       <AvatarFallback className="text-lg">
-                        {selectedRequest.firstName
-                          .split(" ")
-                          .map((n: any) => n[0])
-                          .join("")}
+                        {selectedRequest.firstName?.[0]}
+                        {selectedRequest.lastName?.[0]}
                       </AvatarFallback>
                     </Avatar>
                     <div className="space-y-1">
@@ -499,91 +581,42 @@ export default function RoleRequestsPage() {
 
                 <Separator />
 
-                {/* Role Change Information */}
+                {/* User Stats */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">
-                    Requester Other Details
-                  </h3>
+                  <h3 className="text-lg font-semibold">User Activity</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground mb-1">
-                        Publications that published.
+                        Publications
                       </p>
-                      <Badge
-                        className={getRoleBadgeColor(
-                          selectedRequest.currentRole
-                        )}
-                        variant="outline"
-                      >
-                        {selectedRequest.user?._count?.publications}
+                      <Badge variant="outline">
+                        {selectedRequest.user?._count?.publications || 0}
                       </Badge>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground mb-1">
-                        Forums created
+                        Forums Created
                       </p>
-                      <Badge
-                        className={getRoleBadgeColor(
-                          selectedRequest.requestedRole
-                        )}
-                        variant="outline"
-                      >
-                        {selectedRequest.user?._count?.forums}
+                      <Badge variant="outline">
+                        {selectedRequest.user?._count?.forums || 0}
                       </Badge>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground mb-1">
-                        Warning(s).
+                        Warning Points
                       </p>
-                      <Badge
-                        className={getRoleBadgeColor(
-                          selectedRequest.currentRole
-                        )}
-                        variant="outline"
-                      >
-                        {selectedRequest.user?.warningPoints}
+                      <Badge variant="outline">
+                        {selectedRequest.user?.warningPoints || 0}
                       </Badge>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground mb-1">
-                        Account Status.
+                        Account Status
                       </p>
-                      <Badge
-                        className={getRoleBadgeColor(
-                          selectedRequest.currentRole
-                        )}
-                        variant="outline"
-                      >
-                        {selectedRequest.user?.status}
+                      <Badge variant="outline">
+                        {selectedRequest.user?.status || "ACTIVE"}
                       </Badge>
                     </div>
-                    {/* Copy tong nasa baba pag may idadagdag na details ng user sa request prolly reputation points or something like that. */}
-                    {/* <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">
-                        Account Status.
-                      </p>
-                      <Badge
-                        className={getRoleBadgeColor(
-                          selectedRequest.currentRole
-                        )}
-                        variant="outline"
-                      >
-                        {selectedRequest.user?.status}
-                      </Badge>
-                    </div> */}
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground mb-1">
-                      Status
-                    </p>
-                    <Badge
-                      className={getStatusBadgeColor(selectedRequest.status)}
-                      variant="secondary"
-                    >
-                      {selectedRequest.status.charAt(0).toUpperCase() +
-                        selectedRequest.status.slice(1)}
-                    </Badge>
                   </div>
                 </div>
 
@@ -603,8 +636,7 @@ export default function RoleRequestsPage() {
                         )}
                         variant="outline"
                       >
-                        {selectedRequest.currentRole.charAt(0).toUpperCase() +
-                          selectedRequest.currentRole.slice(1)}
+                        {selectedRequest.currentRole}
                       </Badge>
                     </div>
                     <div>
@@ -617,8 +649,7 @@ export default function RoleRequestsPage() {
                         )}
                         variant="outline"
                       >
-                        {selectedRequest.requestedRole.charAt(0).toUpperCase() +
-                          selectedRequest.requestedRole.slice(1)}
+                        {selectedRequest.requestedRole}
                       </Badge>
                     </div>
                   </div>
@@ -631,8 +662,7 @@ export default function RoleRequestsPage() {
                       className={getStatusBadgeColor(selectedRequest.status)}
                       variant="secondary"
                     >
-                      {selectedRequest.status.charAt(0).toUpperCase() +
-                        selectedRequest.status.slice(1)}
+                      {selectedRequest.status}
                     </Badge>
                   </div>
                 </div>
@@ -668,7 +698,7 @@ export default function RoleRequestsPage() {
                 {/* Timestamps */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">Timeline</h3>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-1 gap-4 text-sm">
                     <div>
                       <p className="font-medium text-muted-foreground mb-1">
                         Request Date
@@ -678,15 +708,6 @@ export default function RoleRequestsPage() {
                         {new Date(selectedRequest.createdAt).toLocaleString()}
                       </div>
                     </div>
-                    {/* <div>
-                      <p className="font-medium text-muted-foreground mb-1">
-                        Last Updated
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        {new Date(selectedRequest.updatedAt).toLocaleString()}
-                      </div>
-                    </div> */}
                   </div>
                 </div>
 
@@ -694,7 +715,7 @@ export default function RoleRequestsPage() {
                 {selectedRequest.status === "PENDING" && (
                   <>
                     <Separator />
-                    <div className="flex gap-2 pt-4">
+                    <div className="flex flex-col sm:flex-row gap-2 pt-4">
                       <Button
                         className="flex-1"
                         onClick={() => {

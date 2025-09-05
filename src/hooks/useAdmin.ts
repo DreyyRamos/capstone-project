@@ -5,6 +5,9 @@ import {
   fetchRoleChangeRequests,
   approveAdmission,
   rejectAdmission,
+  approveRoleChangeRequest,
+  rejectRoleChangeRequest,
+  updateRole,
 } from "@/services/admin";
 
 interface Publication {
@@ -28,6 +31,16 @@ export const useAdminQuery = (token: string) => {
     // refetchOnMount: true,
     // refetchOnReconnect: false,
     // refetchInterval: false,
+  });
+
+  const updateUserRole = useMutation({
+    mutationFn: async ({ id, newRole }: { id: string; newRole: string }) =>
+      updateRole(token, id, newRole),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-side-users"] });
+      queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
+    },
   });
 
   // Mutation to delete a reported content
@@ -131,6 +144,12 @@ export const useAdminQuery = (token: string) => {
     isError,
     isSuccess,
     refetch,
+
+    updateRole: updateUserRole.mutate,
+    isUpdating: updateUserRole.isPending,
+    // createError: mutation.error,
+    updateSuccess: updateUserRole.isSuccess,
+    // createReset: mutation.reset,
 
     // Mutation functions
     // deleteReportedContent: deleteReported.mutate,
@@ -318,6 +337,26 @@ export const useAdminRoleChangeRequestsQuery = (token: string) => {
     // refetchInterval: false,
   });
 
+  const approveRoleChange = useMutation({
+    mutationFn: async (request_id: string) =>
+      approveRoleChangeRequest(token, request_id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["role-change-requests"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-side-users"] });
+    },
+  });
+
+  const rejectRoleChange = useMutation({
+    mutationFn: async (request_id: string) =>
+      rejectRoleChangeRequest(token, request_id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["role-change-requests"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-side-users"] });
+    },
+  });
+
   // Mutation to approve admission
   // const approveUser = useMutation({
   //   mutationFn: async ({
@@ -422,11 +461,17 @@ export const useAdminRoleChangeRequestsQuery = (token: string) => {
     refetch,
 
     // Mutation functions
-    // approveUser: approveUser.mutate,
-    // isApproving: approveUser.isPending,
-    // // createError: mutation.error,
-    // isApproved: approveUser.isSuccess,
-    // // createReset: mutation.reset,
+    approveRoleChange: approveRoleChange.mutate,
+    isApproving: approveRoleChange.isPending,
+    // createError: mutation.error,
+    isApproved: approveRoleChange.isSuccess,
+    // createReset: mutation.reset,
+
+    rejectRoleChange: rejectRoleChange.mutate,
+    isRejecting: rejectRoleChange.isPending,
+    // createError: mutation.error,
+    isRejected: rejectRoleChange.isSuccess,
+    // createReset: mutation.reset,
 
     // rejectUser: rejectUser.mutate,
     // isRejecting: rejectUser.isPending,

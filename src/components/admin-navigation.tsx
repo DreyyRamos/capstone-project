@@ -63,6 +63,12 @@ const adminNavItems = [
     href: "/admissions",
     icon: UserCheck,
   },
+
+  {
+    title: "Role Change Requests",
+    href: "/role-request",
+    icon: Users,
+  },
   {
     title: "Settings",
     href: "/settings",

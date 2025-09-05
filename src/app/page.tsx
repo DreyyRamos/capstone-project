@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   BookOpen,
   MessageSquare,
@@ -192,16 +192,26 @@ export default function HomePage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Avatar className="h-8 w-8">
+                          <AvatarImage
+                            src={
+                              publication.author?.profileImage ||
+                              "/placeholder.svg"
+                            }
+                          />
                           <AvatarFallback>
-                            {publication.author?.firstName}
-                            {/* .split(" ")
-                              .map((n) => n[0])
-                              .join("")} */}
+                            {publication.author?.firstName?.[0]}
+                            {publication.author?.lastName?.[0]}
                           </AvatarFallback>
                         </Avatar>
+                        {/* <Avatar className="h-8 w-8">
+                          <AvatarFallback>
+                            {publication.author?.firstName}
+                          </AvatarFallback>
+                        </Avatar> */}
                         <div>
                           <p className="text-sm font-medium">
-                            {publication.author?.firstName}
+                            {publication.author?.firstName}{" "}
+                            {publication.author?.lastName}
                           </p>
                           <p className="text-xs text-muted-foreground flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
