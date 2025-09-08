@@ -583,7 +583,9 @@ export default function RoleRequestsPage() {
 
                 {/* User Stats */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">User Activity</h3>
+                  <h3 className="text-lg font-semibold">
+                    User Other Informations
+                  </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground mb-1">
@@ -607,6 +609,14 @@ export default function RoleRequestsPage() {
                       </p>
                       <Badge variant="outline">
                         {selectedRequest.user?.warningPoints || 0}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">
+                        Reputation Points
+                      </p>
+                      <Badge variant="outline">
+                        {selectedRequest.user?.reputationPoints || 0} Points
                       </Badge>
                     </div>
                     <div>

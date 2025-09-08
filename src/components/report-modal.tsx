@@ -213,8 +213,8 @@ export function ReportModal({
               </div>
               <h3 className="text-lg font-semibold mb-2">Report Submitted</h3>
               <p className="text-muted-foreground">
-                Thank you for helping keep our community safe. We'll review your
-                report and take appropriate action.
+                Thank you for helping keep our community safe. We&apos;ll review
+                your report and take appropriate action.
               </p>
             </div>
           ) : (

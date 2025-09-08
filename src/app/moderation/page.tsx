@@ -399,7 +399,7 @@ export default function ModerationPage() {
                           </div>
                           <div className="bg-muted p-3 rounded-md mb-3">
                             <p className="text-sm italic">
-                              "{report.contentPreview}"
+                              &quot;{report.contentPreview}&quot;
                             </p>
                           </div>
                           <p className="text-muted-foreground mb-3">

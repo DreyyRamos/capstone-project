@@ -5,7 +5,7 @@ import { NextRequest } from "next/server";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authMiddleware(req);
@@ -13,8 +13,10 @@ export async function PUT(
       return authResult; // Not logged in
     }
 
-    const resolvedParams = await params;
-    const id = resolvedParams.id;
+    const { id } = await params;
+
+    // const resolvedParams = await params;
+    // const id = resolvedParams.id;
 
     const updatedAdmission = await prisma.userAdmission.update({
       where: { admission_id: id },

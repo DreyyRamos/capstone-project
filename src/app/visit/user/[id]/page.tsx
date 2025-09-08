@@ -446,7 +446,7 @@ export default function ProfilePage({ params }: PageProps) {
             <CardHeader>
               <CardTitle>Your Publications</CardTitle>
               <CardDescription>
-                Articles and content you've published
+                Articles and content you&apos;ve published
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -490,7 +490,7 @@ export default function ProfilePage({ params }: PageProps) {
           <Card>
             <CardHeader>
               <CardTitle>Your Forums</CardTitle>
-              <CardDescription>Forums you've joined in.</CardDescription>
+              <CardDescription>Forums you&apos;ve joined in.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

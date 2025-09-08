@@ -32,7 +32,6 @@ import {
   Filter,
   Eye,
   Calendar,
-  Mail,
   Phone,
   MapPin,
   GraduationCap,
@@ -43,7 +42,7 @@ import {
 import { useConfirmation } from "@/components/confirmation-provider";
 import Cookies from "js-cookie";
 import { useAdminUserAdmissionsQuery } from "@/hooks/useAdmin";
-import { Role, AdmissionStatus } from "@/generated/prisma";
+import type { Role, AdmissionStatus } from "@/generated/prisma";
 import EmailTrigger from "@/components/email-trigger";
 import { toast } from "sonner";
 
@@ -156,6 +155,19 @@ export default function AdmissionsPage() {
     }
   };
 
+  const getStatusBadgeColor = (status: AdmissionStatus) => {
+    switch (status) {
+      case "APPROVED":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "REJECTED":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      case "PENDING":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -251,9 +263,7 @@ export default function AdmissionsPage() {
       {/* Applications List */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            Pending Applications ({filteredAdmissions?.length})
-          </CardTitle>
+          <CardTitle>Applications ({filteredAdmissions?.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -277,9 +287,9 @@ export default function AdmissionsPage() {
                       <h3 className="font-semibold">
                         {admission.firstName} {admission.lastName || ""}
                       </h3>
-                      {/* <Badge className={getRoleBadgeColor(admission.role)}>
-                        {admission.role}
-                      </Badge> */}
+                      <Badge className={getStatusBadgeColor(admission.status)}>
+                        {admission.status}
+                      </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">
                       {admission.user_email}
@@ -288,7 +298,6 @@ export default function AdmissionsPage() {
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {new Date(admission.createdAt).toLocaleDateString()}
-                        {/* {admission.createdAt.toLocaleDateString()} */}
                       </span>
                       <span className="flex items-center gap-1">
                         <MapPin className="h-3 w-3" />
@@ -314,7 +323,8 @@ export default function AdmissionsPage() {
                         <DialogTitle>Admission Application Review</DialogTitle>
                         <DialogDescription>
                           Review {admission.firstName}{" "}
-                          {admission.lastName || ""}'s admission application
+                          {admission.lastName || ""}&apos;s admission
+                          application
                         </DialogDescription>
                       </DialogHeader>
                       <ScrollArea className="max-h-[70vh]">
@@ -385,6 +395,7 @@ export default function AdmissionsPage() {
                                   <AvatarImage
                                     src={
                                       admission.profileImage ||
+                                      "/placeholder.svg" ||
                                       "/placeholder.svg"
                                     }
                                   />
@@ -489,8 +500,9 @@ export default function AdmissionsPage() {
                                   Status:
                                 </label>
                                 <Badge
-                                  variant="outline"
-                                  className="text-orange-600 border-orange-300"
+                                  className={getStatusBadgeColor(
+                                    admission.status
+                                  )}
                                 >
                                   {admission.status}
                                 </Badge>
@@ -509,39 +521,50 @@ export default function AdmissionsPage() {
                           </div>
                         </div>
                       </ScrollArea>
-                      <div className="flex justify-end gap-2 pt-4 border-t mb-2">
-                        <Button
-                          variant="outline"
-                          onClick={() => handleReject(admission)}
-                        >
-                          <XCircle className="h-4 w-4 mr-2" />
-                          Reject
-                        </Button>
-                        <Button onClick={() => handleApprove(admission)}>
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          Approve
-                        </Button>
-                      </div>
+                      {/* Only show action buttons if status is PENDING */}
+                      {admission.status === "PENDING" && (
+                        <div className="flex justify-end gap-2 pt-4 border-t mb-2">
+                          <Button
+                            variant="outline"
+                            onClick={() => handleReject(admission)}
+                          >
+                            <XCircle className="h-4 w-4 mr-2" />
+                            Reject
+                          </Button>
+                          <Button onClick={() => handleApprove(admission)}>
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Approve
+                          </Button>
+                        </div>
+                      )}
                     </DialogContent>
                   </Dialog>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleReject(admission)}
-                  >
-                    <XCircle className="h-4 w-4 mr-2" />
-                    Reject
-                  </Button>
-                  <Button size="sm" onClick={() => handleApprove(admission)}>
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Approve
-                  </Button>
+                  {/* Only show action buttons if status is PENDING */}
+                  {admission.status === "PENDING" && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleReject(admission)}
+                      >
+                        <XCircle className="h-4 w-4 mr-2" />
+                        Reject
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => handleApprove(admission)}
+                      >
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Approve
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
             {filteredAdmissions?.length === 0 && (
               <div className="text-center py-8 text-muted-foreground">
-                No pending applications found.
+                No applications found.
               </div>
             )}
           </div>

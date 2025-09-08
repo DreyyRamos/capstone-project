@@ -10,8 +10,9 @@ export async function POST(
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  const resolvedParams = await params;
-  const { id: forumId, commentId } = resolvedParams;
+  // const resolvedParams = await params;
+  // const { id: forumId, commentId } = resolvedParams;
+  const { id: forumId, commentId } = await params;
 
   const { reply_content } = await req.json();
 

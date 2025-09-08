@@ -262,7 +262,7 @@ export function ContentViewModal({
                         Reported Content:
                       </p>
                       <div className="text-red-700 dark:text-red-400 leading-relaxed mb-2">
-                        "{content.reportedContent}"
+                        &quot;{content.reportedContent}&quot;
                       </div>
                       {content?.bodyOfContent && (
                         <>

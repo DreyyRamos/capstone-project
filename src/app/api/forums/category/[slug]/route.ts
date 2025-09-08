@@ -5,27 +5,29 @@ import { NextRequest } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   // const authResult = await authMiddleware(req);
   // if (authResult instanceof NextResponse) return authResult;
   // const { user } = authResult;
 
-  const resolvedParams = await params;
-  const category = resolvedParams.slug;
+  // const resolvedParams = await params;
+  // const category = resolvedParams.slug;
+
+  const { slug: category } = await params;
 
   try {
     // Properly construct the where condition
     let whereCondition;
-    
+
     if (category === "Uncategorized" || !category) {
       // For uncategorized items, look for null or empty category
       whereCondition = {
         OR: [
           { category: null },
           { category: "" },
-          { category: "Uncategorized" }
-        ]
+          { category: "Uncategorized" },
+        ],
       };
     } else {
       // For specific categories
@@ -108,14 +110,16 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  const resolvedParams = await params;
-  const pubId = resolvedParams.id;
+  // const resolvedParams = await params;
+  // const pubId = resolvedParams.id;
+
+  const { id: pubId } = await params;
 
   if (!pubId) {
     return NextResponse.json({ error: "Post ID is required" }, { status: 400 });
@@ -147,14 +151,16 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  const resolvedParams = await params;
-  const pubId = resolvedParams.id;
+  // const resolvedParams = await params;
+  // const pubId = resolvedParams.id;
+
+  const { id: pubId } = await params;
 
   if (!pubId) {
     return NextResponse.json({ error: "Post ID is required" }, { status: 400 });

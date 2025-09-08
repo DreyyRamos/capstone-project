@@ -5,7 +5,7 @@ import { NextRequest } from "next/server";
 import { Role, PublicationStatus } from "@/generated/prisma";
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authMiddleware(req);
@@ -26,8 +26,10 @@ export async function POST(
       interests,
     } = await req.json();
 
-    const resolvedParams = await params;
-    const id = resolvedParams.id;
+    const { id } = await params;
+
+    // const resolvedParams = await params;
+    // const id = resolvedParams.id;
 
     const approveAdmission = await prisma.$transaction(async (tx) => {
       // First, check if the admission exists and is still pending

@@ -5,7 +5,7 @@ import { NextRequest } from "next/server";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authMiddleware(req);
@@ -21,9 +21,9 @@ export async function PUT(
         { status: 400 }
       );
     }
-
-    const resolvedParams = await params;
-    const id = resolvedParams.id;
+    const { id } = await params;
+    // const resolvedParams = await params;
+    // const id = resolvedParams.id;
 
     const changeUserRole = await prisma.$transaction(async (tx) => {
       // First, check if the admission exists and is still pending

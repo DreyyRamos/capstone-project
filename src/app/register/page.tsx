@@ -559,8 +559,8 @@ export default function RegisterPage() {
                   </p>
                   <p className="text-xs text-amber-700 dark:text-amber-300">
                     New accounts require approval from school administrators.
-                    You'll receive an email confirmation once your account is
-                    approved.
+                    You&apos;ll receive an email confirmation once your account
+                    is approved.
                   </p>
                 </div>
               </div>
@@ -574,7 +574,7 @@ export default function RegisterPage() {
         <div className="max-w-md space-y-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-green-900 dark:text-green-100 mb-4">
-              Join Lincoln High School's Digital Community
+              Join Lincoln High School&apos;s Digital Community
             </h2>
             <p className="text-green-700 dark:text-green-200">
               Connect with students, teachers, and staff in our vibrant online

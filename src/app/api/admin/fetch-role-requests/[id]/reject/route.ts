@@ -6,7 +6,7 @@ import { Role, PublicationStatus } from "@/generated/prisma";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authMiddleware(req);
@@ -14,8 +14,10 @@ export async function PUT(
       return authResult; // Not logged in
     }
 
-    const resolvedParams = await params;
-    const id = resolvedParams.id;
+    const { id } = await params;
+
+    // const resolvedParams = await params;
+    // const id = resolvedParams.id;
 
     const approveRoleChangeRequest = await prisma.$transaction(async (tx) => {
       // First, check if the admission exists and is still pending

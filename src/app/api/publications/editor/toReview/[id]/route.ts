@@ -6,14 +6,16 @@ import { Role, PublicationStatus } from "@/generated/prisma";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   // const { user } = authResult;
 
-  const resolvedParams = await params;
-  const pubId = resolvedParams.id;
+  // const resolvedParams = await params;
+  // const pubId = resolvedParams.id;
+
+  const { id: pubId } = await params;
 
   try {
     const fetchToReview = await prisma.publication.findUnique({
@@ -60,7 +62,7 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // 1. Authenticate the user and check their role
@@ -81,7 +83,7 @@ export async function PUT(
     }
 
     // 2. Get the publication ID from the URL and the new status from the body
-    const { id } = params;
+    const { id } = await params;
     const { status } = (await req.json()) as { status: PublicationStatus };
 
     // Validate the incoming status for this review endpoint
@@ -156,8 +158,6 @@ export async function PUT(
   }
 }
 
-
-
 // export async function PUT(
 //   req: NextRequest,
 //   { params }: { params: { id: string } }
@@ -200,14 +200,15 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  const resolvedParams = await params;
-  const pubId = resolvedParams.id;
+  // const resolvedParams = await params;
+  // const pubId = resolvedParams.id;
+  const { id: pubId } = await params;
 
   if (!pubId) {
     return NextResponse.json({ error: "Post ID is required" }, { status: 400 });

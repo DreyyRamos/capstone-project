@@ -431,7 +431,9 @@ export default function RoleRequestPage() {
               </p>
               <ol className="text-xs text-blue-700 dark:text-blue-300 space-y-1 list-decimal list-inside">
                 <li>Your request will be reviewed by school administrators</li>
-                <li>You'll receive an email notification about the decision</li>
+                <li>
+                  You&apos;ll receive an email notification about the decision
+                </li>
                 <li>If approved, your role will be updated automatically</li>
                 <li>You can track your request status in your profile</li>
               </ol>

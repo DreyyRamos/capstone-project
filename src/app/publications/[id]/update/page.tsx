@@ -337,7 +337,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   <div className="space-y-0.5">
                     <Label>Save as Draft</Label>
                     <p className="text-sm text-muted-foreground">
-                      Don't publish immediately
+                      Don&apos;t publish immediately
                     </p>
                   </div>
                   <Switch checked={isDraft} onCheckedChange={setIsDraft} />

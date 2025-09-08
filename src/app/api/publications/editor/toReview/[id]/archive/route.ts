@@ -6,7 +6,7 @@ import { Role, PublicationStatus } from "@/generated/prisma";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // 1. Authenticate the user and check their role
@@ -27,7 +27,7 @@ export async function PUT(
     }
 
     // 2. Get the publication ID from the URL and the new status from the body
-    const { id } = params;
+    const { id } = await params;
     const { status } = (await req.json()) as { status: PublicationStatus };
 
     // Validate the incoming status for this review endpoint

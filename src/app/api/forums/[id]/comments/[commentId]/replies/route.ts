@@ -3,13 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { authMiddleware } from "@/app/api/(middlware)/authMiddleware";
 
 export async function GET(
-  _req: NextRequest,
-  { params }: { params: { commentId: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ commentId: string }> }
 ) {
-  const authResult = await authMiddleware(_req);
+  const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
-  const { commentId } = params;
+  const { commentId } = await params;
 
   // 1) top-level replies
   const top = await prisma.forumCommentReplies.findMany({
@@ -67,14 +67,16 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { commentId: string } }
+  { params }: { params: Promise<{ commentId: string }> }
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  const resolvedParams = await params;
-  const commentId = resolvedParams.commentId;
+  // const resolvedParams = await params;
+  // const commentId = resolvedParams.commentId;
+
+  const { commentId } = await params;
 
   const { reply_content } = await req.json();
 

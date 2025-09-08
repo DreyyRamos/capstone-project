@@ -4,12 +4,12 @@ import { authMiddleware } from "@/app/api/(middlware)/authMiddleware";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { replyId: string } }
+  { params }: { params: Promise<{ replyId: string }> }
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
-  const { replyId } = params;
+  const { replyId } = await params;
   const { content } = await req.json();
 
   const child = await prisma.publicationCommentReplyToReplies.create({

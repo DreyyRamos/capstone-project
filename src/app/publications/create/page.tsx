@@ -260,7 +260,7 @@ export default function CreatePublicationPage() {
                 />
                 {user?.status === "BANNED" ? (
                   <p className="text-red-500">
-                    You cannot create a publication because you're banned.
+                    You cannot create a publication because you&apos;re banned.
                     Contact the administrator.
                   </p>
                 ) : (
@@ -333,7 +333,7 @@ export default function CreatePublicationPage() {
                   <div className="space-y-0.5">
                     <Label>Save as Draft</Label>
                     <p className="text-sm text-muted-foreground">
-                      Don't publish immediately
+                      Don&apos;t publish immediately
                     </p>
                   </div>
                   <Switch checked={isDraft} onCheckedChange={setIsDraft} />

@@ -11,8 +11,9 @@ export async function POST(
   const { user } = authResult;
 
   // Await the params to resolve the Promise
-  const resolvedParams = await params;
-  const pubId = resolvedParams.id;
+  // const resolvedParams = await params;
+  // const pubId = resolvedParams.id;
+  const { id: pubId } = await params;
 
   try {
     const likePub = await prisma.$transaction(async (tx) => {

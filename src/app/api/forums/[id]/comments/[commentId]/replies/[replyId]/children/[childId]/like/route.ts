@@ -7,12 +7,12 @@ export async function POST(
   {
     params,
   }: {
-    params: {
+    params: Promise<{
       id: string; // forumId
       commentId: string; // commentId
       replyId: string; // parentReplyId
       childId: string; // replyToReplyId
-    };
+    }>;
   }
 ) {
   const authResult = await authMiddleware(req);
@@ -24,7 +24,7 @@ export async function POST(
     commentId,
     replyId: parentReplyId,
     childId: replyToReplyId,
-  } = params;
+  } = await params;
 
   try {
     // Check if the user has already liked this reply-to-reply

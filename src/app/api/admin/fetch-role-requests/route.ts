@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
             },
             warningPoints: true,
             status: true,
+            reputationPoints: true,
           },
         },
       },

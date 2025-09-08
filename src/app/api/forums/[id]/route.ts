@@ -5,14 +5,16 @@ import { NextRequest } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // const authResult = await authMiddleware(req);
   // if (authResult instanceof NextResponse) return authResult;
   // const { user } = authResult;
 
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
+  const { id } = await params;
+
+  // const resolvedParams = await params;
+  // const id = resolvedParams.id;
 
   try {
     const fetchPost = await prisma.forum.findUnique({
@@ -84,14 +86,16 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  const resolvedParams = await params;
-  const pubId = resolvedParams.id;
+  // const resolvedParams = await params;
+  // const pubId = resolvedParams.id;
+
+  const { id: pubId } = await params;
 
   if (!pubId) {
     return NextResponse.json({ error: "Post ID is required" }, { status: 400 });
@@ -123,14 +127,16 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  const resolvedParams = await params;
-  const pubId = resolvedParams.id;
+  // const resolvedParams = await params;
+  // const pubId = resolvedParams.id;
+
+  const { id: pubId } = await params;
 
   if (!pubId) {
     return NextResponse.json({ error: "Post ID is required" }, { status: 400 });

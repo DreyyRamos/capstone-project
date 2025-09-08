@@ -6,7 +6,7 @@ import { Role, PublicationStatus } from "@/generated/prisma";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // 1. Authenticate the user and check their role
@@ -32,7 +32,7 @@ export async function PUT(
     }
 
     // 2. Get the publication ID from the URL
-    const { id } = params;
+    const { id } = await params;
 
     // 3. Use a transaction to update the publication and notify the author
     const updatedPublication = await prisma.$transaction(async (tx) => {
@@ -151,14 +151,15 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  const resolvedParams = await params;
-  const pubId = resolvedParams.id;
+  // const resolvedParams = await params;
+  // const pubId = resolvedParams.id;
+  const { id: pubId } = await params;
 
   if (!pubId) {
     return NextResponse.json({ error: "Post ID is required" }, { status: 400 });
