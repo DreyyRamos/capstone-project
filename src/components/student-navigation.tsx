@@ -13,7 +13,18 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Separator } from "@/components/ui/separator"
-import { Home, BookOpen, MessageSquare, FileText, Hash, Menu, ChevronDown, Plus, GraduationCap } from "lucide-react"
+import {
+  Home,
+  BookOpen,
+  MessageSquare,
+  FileText,
+  Hash,
+  Menu,
+  ChevronDown,
+  Plus,
+  GraduationCap,
+  ChartArea,
+} from "lucide-react";
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -22,7 +33,8 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Publications", href: "/publications", icon: BookOpen },
   { name: "Forum", href: "/forum", icon: MessageSquare },
-]
+  { name: "Leaderboard", href: "/leaderboard", icon: ChartArea },
+];
 
 const quickActions = [
   { name: "New Publication", href: "/publications/create", icon: FileText },

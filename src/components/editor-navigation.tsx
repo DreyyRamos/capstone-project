@@ -25,7 +25,8 @@ import {
   Plus,
   Edit,
   FolderOpen,
-} from "lucide-react"
+  ChartArea,
+} from "lucide-react";
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -35,6 +36,7 @@ const navigation = [
   { name: "Publications", href: "/publications", icon: BookOpen },
   { name: "Forum", href: "/forum", icon: MessageSquare },
   { name: "Content Manager", href: "/content", icon: FolderOpen },
+  { name: "Leaderboard", href: "/leaderboard", icon: ChartArea },
 ];
 
 const quickActions = [

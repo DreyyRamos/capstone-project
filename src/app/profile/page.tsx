@@ -56,7 +56,7 @@ export default function ProfilePage() {
   const { data: userActivity } = useUserActivityQuery(token);
   const { data: user, updateUser } = useUserQuery(token);
   // console.log("user from profile", user);
-  console.log("user activity", userActivity);
+  console.log("user profile", user);
 
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -453,8 +453,12 @@ export default function ProfilePage() {
             <div className="flex items-center space-x-2">
               <Star className="h-5 w-5 text-yellow-600" />
               <div>
-                <p className="text-2xl font-bold">{stats.reputation}</p>
-                <p className="text-sm text-muted-foreground">Reputation</p>
+                <p className="text-2xl font-bold">
+                  {user?.userData?.reputationPoints}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Reputation Points
+                </p>
               </div>
             </div>
           </CardContent>

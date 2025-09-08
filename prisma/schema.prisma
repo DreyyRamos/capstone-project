@@ -105,6 +105,7 @@ model User {
   reportsAgainst   Reports[] @relation("ReportedUser") // Reports made against this user
   reportsReviewed  Reports[] @relation("ReportReviewer") // Reports this user has reviewed
 
+  reputationPoints   Int              @default(0)
   warningPoints      Int              @default(0)
   status             UserStatus       @default(ACTIVE)
   changeRoleRequests ChangeUserRole[]

@@ -21,6 +21,7 @@ export async function GET(req: NextRequest) {
         warningPoints: true,
         status: true,
         createdAt: true,
+        reputationPoints: true,
         _count: {
           select: {
             publications: true,

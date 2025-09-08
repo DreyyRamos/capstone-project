@@ -656,7 +656,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
                               <div className="ml-6 space-y-4 border-l-2 border-muted pl-4 mt-4">
                                 {reply.children.map((childReply: any) => (
                                   <div
-                                    key={childReply.replyId}
+                                    key={childReply.replyToReplyId}
                                     className="flex items-start gap-4"
                                   >
                                     <Avatar className="h-8 w-8">

@@ -26,6 +26,7 @@ import {
   BarChart3,
   UserCheck,
   Settings,
+  ChartArea,
 } from "lucide-react";
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -35,6 +36,7 @@ const mainNavigation = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Publications", href: "/publications", icon: BookOpen },
   { name: "Forum", href: "/forum", icon: MessageSquare },
+  { name: "Leaderboard", href: "/leaderboard", icon: ChartArea },
 ];
 
 const adminNavItems = [

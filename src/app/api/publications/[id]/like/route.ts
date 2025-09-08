@@ -15,33 +15,54 @@ export async function POST(
   const pubId = resolvedParams.id;
 
   try {
-    const existingLike = await prisma.publicationLikes.findUnique({
-      where: {
-        pubId_userId: { pubId: pubId, userId: user.id },
-      },
+    const likePub = await prisma.$transaction(async (tx) => {
+      const pub = await tx.publication.findUnique({
+        where: { pubId },
+        select: { authorId: true },
+      });
+      if (!pub) throw new Error("Publication not found");
+
+      const authorId = pub.authorId; // still nullable
+      const existingLike = await tx.publicationLikes.findUnique({
+        where: { pubId_userId: { pubId, userId: user.id } },
+      });
+
+      let result;
+      let shouldAward = false;
+
+      if (existingLike) {
+        // user row already exists → just flip the flag, **never** award again
+        result = await tx.publicationLikes.update({
+          where: { likeId: existingLike.likeId },
+          data: { isLiked: !existingLike.isLiked },
+        });
+      } else {
+        // very first like from this user to create row + award once
+        result = await tx.publicationLikes.create({
+          data: { pubId, userId: user.id, isLiked: true },
+        });
+        if (authorId) shouldAward = true;
+      }
+
+      // one-time reputation bump (only on first-ever like from user)
+      if (shouldAward) {
+        await tx.user.update({
+          where: { id: authorId! },
+          data: { reputationPoints: { increment: 10 } },
+        });
+      }
+
+      return result;
     });
 
-    if (existingLike) {
-      const updatedLike = await prisma.publicationLikes.update({
-        where: {
-          likeId: existingLike.likeId,
-        },
-        data: {
-          isLiked: !existingLike.isLiked,
-        },
-      });
-      return NextResponse.json(updatedLike);
-    } else {
-      const newLike = await prisma.publicationLikes.create({
-        data: {
-          pubId: pubId,
-          userId: user.id,
-          isLiked: true,
-        },
-      });
-      return NextResponse.json(newLike);
-    }
+    return NextResponse.json({
+      status: 200,
+      message: "Publication liked successfully!",
+      data: likePub,
+    });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: "Error toggling like" }, { status: 500 });
   }
 }
+
