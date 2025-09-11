@@ -47,7 +47,7 @@ export async function POST(
     });
   } catch (error) {
     return NextResponse.json(
-      { error: "Error creating comment" },
+      { error: `Error creating comment ${error}` },
       { status: 500 }
     );
   }

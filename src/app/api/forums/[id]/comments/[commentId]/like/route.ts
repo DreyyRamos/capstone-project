@@ -86,6 +86,9 @@ export async function POST(
       data: forumLike,
     });
   } catch (error) {
-    return NextResponse.json({ error: "Error toggling like" }, { status: 500 });
+    return NextResponse.json(
+      { error: `Error toggling like: ${error}` },
+      { status: 500 }
+    );
   }
 }

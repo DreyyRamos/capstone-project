@@ -114,7 +114,7 @@ export async function PUT(
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
-  const { user } = authResult;
+  // const { user } = authResult;
 
   // const resolvedParams = await params;
   // const pubId = resolvedParams.id;
@@ -155,7 +155,7 @@ export async function DELETE(
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
-  const { user } = authResult;
+  // const { user } = authResult;
 
   // const resolvedParams = await params;
   // const pubId = resolvedParams.id;

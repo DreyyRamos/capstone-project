@@ -33,14 +33,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import {
-  TrendingUp,
-  TrendingDown,
-  Users,
-  BookOpen,
-  MessageSquare,
-  Eye,
-} from "lucide-react";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
 interface AnalyticsData {
   overviewStats: any[];

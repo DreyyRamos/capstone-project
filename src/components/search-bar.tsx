@@ -177,7 +177,7 @@ export default function SearchBar({
             ) : totalResults === 0 && debouncedQuery.length >= 2 ? (
               <div className="p-4 text-center">
                 <p className="text-sm text-muted-foreground">
-                  No results found for "{debouncedQuery}"
+                  No results found for &quot;{debouncedQuery}&quot;
                 </p>
               </div>
             ) : (

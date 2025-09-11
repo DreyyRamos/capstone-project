@@ -8,7 +8,7 @@ export async function GET(
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
-  const { user } = authResult;
+  // const { user } = authResult;
   const { commentId } = await params;
 
   // 1) top-level replies
@@ -34,7 +34,6 @@ export async function GET(
   // 4) Return the nested structure
   return NextResponse.json(topWithChildren);
 }
-
 
 export async function POST(
   req: NextRequest,
@@ -81,7 +80,7 @@ export async function POST(
     });
   } catch (error) {
     return NextResponse.json(
-      { error: "Error creating comment" },
+      { error: `Error creating comment: ${error}` },
       { status: 500 }
     );
   }

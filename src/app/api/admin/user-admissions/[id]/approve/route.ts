@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { authMiddleware } from "@/app/api/(middlware)/authMiddleware";
 import { NextRequest } from "next/server";
-import { Role, PublicationStatus } from "@/generated/prisma";
+
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

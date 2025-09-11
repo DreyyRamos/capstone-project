@@ -2,7 +2,7 @@
 
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/prisma"; // Adjust this import path if necessary
-import { subDays, startOfMonth, subYears, endOfMonth, format } from "date-fns";
+import { subDays, subYears, format } from "date-fns";
 
 export async function GET(request: NextRequest) {
   try {
@@ -178,11 +178,11 @@ export async function GET(request: NextRequest) {
     // ======== 3. PROCESS AND FORMAT DATA ========
 
     // --- Helper function for calculating percentage change ---
-    const calculateChange = (current: number, previous: number) => {
-      if (previous === 0) return current > 0 ? "+100%" : "+0.0%";
-      const change = ((current - previous) / previous) * 100;
-      return `${change > 0 ? "+" : ""}${change.toFixed(1)}%`;
-    };
+    // const calculateChange = (current: number, previous: number) => {
+    //   if (previous === 0) return current > 0 ? "+100%" : "+0.0%";
+    //   const change = ((current - previous) / previous) * 100;
+    //   return `${change > 0 ? "+" : ""}${change.toFixed(1)}%`;
+    // };
 
     // --- Process Overview Stats ---
     // const userChange = calculateChange(usersLast30Days, usersPrev30Days);

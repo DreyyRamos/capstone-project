@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authMiddleware } from "../../(middlware)/authMiddleware";
 import prisma from "@/lib/prisma"; // Assuming prisma client path
-import { Role } from "@/generated/prisma";
 
 export async function POST(req: NextRequest) {
   try {

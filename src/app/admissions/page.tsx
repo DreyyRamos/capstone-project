@@ -75,14 +75,12 @@ export default function AdmissionsPage() {
   const {
     data: pendingAdmissions,
     approveUser,
-    isApproved,
     rejectUser,
   } = useAdminUserAdmissionsQuery(token);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
-  const [fire, setFire] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [selectedAdmission, setSelectedAdmission] = useState<
+  const [_selectedAdmission, setSelectedAdmission] = useState<
     (typeof pendingAdmissions)[0] | null
   >(null);
   const { confirmApprove, confirmReject } = useConfirmation();

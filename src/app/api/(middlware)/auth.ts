@@ -22,7 +22,7 @@ export const signToken = (payload: Record<string, any>): string => {
 export const verifyToken = (token: string): jwt.JwtPayload | null => {
   try {
     return jwt.verify(token, SECRET_KEY) as jwt.JwtPayload;
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 };
