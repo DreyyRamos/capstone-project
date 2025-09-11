@@ -28,8 +28,13 @@ export async function POST(req: NextRequest) {
         select: {
           forumId: true,
           topicTitle: true,
+          author: {
+            select: { id: true },
+          },
         },
       });
+
+      const forumAuthorId = forum.author?.id;
 
       // STEP 2: Find all users to notify.
       const usersToNotify = await tx.user.findMany({
@@ -84,6 +89,13 @@ export async function POST(req: NextRequest) {
         await tx.notifications.createMany({
           data: notificationData,
           skipDuplicates: true,
+        });
+
+        await tx.user.update({
+          where: { id: forumAuthorId },
+          data: {
+            reputationPoints: { increment: 15 },
+          },
         });
       }
 

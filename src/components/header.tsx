@@ -35,6 +35,7 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useState } from "react";
+import SearchBar from "./search-bar";
 
 import { useUserQuery } from "@/hooks/useUser";
 import { timeAgo } from "@/lib/timeAgo";
@@ -119,11 +120,12 @@ export function Header() {
 
           <div className="flex items-center gap-4">
             <div className="relative hidden md:block">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <SearchBar className="hidden md:block" />
+              {/* <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search publications, forums..."
                 className="pl-10 w-64"
-              />
+              /> */}
             </div>
 
             <Button

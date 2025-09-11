@@ -71,8 +71,11 @@ export async function PUT(
       return authResult; // Not logged in
     }
 
-    // Check if the user is an EDITOR. Your schema defines 'role' as an array.
-    if (authResult.user.role !== Role.EDITOR) {
+    // Check if the user is an EDITOR or ADMIN. Your schema defines 'role' as an array.
+    if (
+      authResult.user.role !== Role.EDITOR &&
+      authResult.user.role !== Role.ADMIN
+    ) {
       return NextResponse.json(
         {
           message:
@@ -81,6 +84,15 @@ export async function PUT(
         { status: 403 }
       );
     }
+    // if (authResult.user.role !== Role.EDITOR || Role.ADMIN) {
+    //   return NextResponse.json(
+    //     {
+    //       message:
+    //         "Unauthorized: You do not have permission to perform this action.",
+    //     },
+    //     { status: 403 }
+    //   );
+    // }
 
     // 2. Get the publication ID from the URL and the new status from the body
     const { id } = await params;
@@ -133,6 +145,13 @@ export async function PUT(
           notifContent: notificationContent,
           userId: publication.authorId, // Notify the original author
           pubNotifId: id, // Link notification back to the publication
+        },
+      });
+
+      await tx.user.update({
+        where: { id: publication.authorId },
+        data: {
+          reputationPoints: { increment: 50 },
         },
       });
 
