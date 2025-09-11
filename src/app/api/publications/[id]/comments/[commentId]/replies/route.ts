@@ -52,12 +52,35 @@ export async function POST(
       { status: 400 }
     );
 
-  const reply = await prisma.publicationCommentReplies.create({
-    data: {
-      reply_content,
-      commentId,
-      reply_authorId: user.id,
-    },
-  });
-  return NextResponse.json(reply, { status: 201 });
+  try {
+    const comment = await prisma.$transaction(async (tx) => {
+      const toComment = await tx.publicationCommentReplies.create({
+        data: {
+          reply_content,
+          commentId,
+          reply_authorId: user.id,
+        },
+      });
+
+      const userToReward = await tx.user.update({
+        where: { id: user.id },
+        data: {
+          reputationPoints: { increment: 10 },
+        },
+      });
+
+      return { toComment, userToReward };
+    });
+
+    return NextResponse.json({
+      status: 200,
+      message: "Comment created and points rewarded successfully!",
+      data: comment,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error creating comment" },
+      { status: 500 }
+    );
+  }
 }

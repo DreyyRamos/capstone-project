@@ -10,37 +10,54 @@ export async function POST(
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  // Await the params to resolve the Promise
-  const resolvedParams = await params;
-  const forumId = resolvedParams.id;
+  const { id: forumId } = await params;
 
   try {
-    const existingLike = await prisma.forumLikes.findUnique({
-      where: {
-        forumId_userId: { forumId: forumId, userId: user.id },
-      },
+    const forumLike = await prisma.$transaction(async (tx) => {
+      const pub = await tx.forum.findUnique({
+        where: { forumId },
+        select: { authorId: true },
+      });
+      if (!pub) throw new Error("Publication not found");
+
+      const authorId = pub.authorId; // still nullable
+      const existingLike = await tx.forumLikes.findUnique({
+        where: { forumId_userId: { forumId, userId: user.id } },
+      });
+
+      let result;
+      let shouldAward = false;
+
+      if (existingLike) {
+        // user row already exists → just flip the flag, **never** award again
+        result = await tx.forumLikes.update({
+          where: { likeId: existingLike.likeId },
+          data: { isLiked: !existingLike.isLiked },
+        });
+      } else {
+        // very first like from this user to create row + award once
+        result = await tx.forumLikes.create({
+          data: { forumId, userId: user.id, isLiked: true },
+        });
+        if (authorId) shouldAward = true;
+      }
+
+      // one-time reputation bump (only on first-ever like from user)
+      if (shouldAward) {
+        await tx.user.update({
+          where: { id: authorId! },
+          data: { reputationPoints: { increment: 10 } },
+        });
+      }
+
+      return result;
     });
 
-    if (existingLike) {
-      const updatedLike = await prisma.forumLikes.update({
-        where: {
-          likeId: existingLike.likeId,
-        },
-        data: {
-          isLiked: !existingLike.isLiked,
-        },
-      });
-      return NextResponse.json(updatedLike);
-    } else {
-      const newLike = await prisma.forumLikes.create({
-        data: {
-          forumId: forumId,
-          userId: user.id,
-          isLiked: true,
-        },
-      });
-      return NextResponse.json(newLike);
-    }
+    return NextResponse.json({
+      status: 200,
+      message: "Forum liked successfully!",
+      data: forumLike,
+    });
   } catch (error) {
     return NextResponse.json({ error: "Error toggling like" }, { status: 500 });
   }

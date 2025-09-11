@@ -35,35 +35,6 @@ export async function GET(
   return NextResponse.json(topWithChildren);
 }
 
-// export async function GET(
-//   _req: NextRequest,
-//   { params }: { params: { commentId: string } }
-// ) {
-//   const authResult = await authMiddleware(_req);
-//   if (authResult instanceof NextResponse) return authResult;
-//   const { user } = authResult;
-//   const { commentId } = params;
-
-//   // 1) top-level replies
-//   const top = await prisma.forumCommentReplies.findMany({
-//     where: { commentId },
-//     include: { reply_author: true },
-//     orderBy: { createdAt: "asc" },
-//   });
-
-//   // 2) nested replies
-//   const nested = await prisma.forumCommentReplyToReplies.findMany({
-//     where: { parentReplyId: { in: top.map((r) => r.replyId) } },
-//     include: { reply_author: true },
-//     orderBy: { createdAt: "asc" },
-//   });
-
-//   // 3) single flat payload
-//   return NextResponse.json({
-//     top: top.map((t) => ({ ...t, children: [] })),
-//     nested,
-//   });
-// }
 
 export async function POST(
   req: NextRequest,
@@ -72,9 +43,6 @@ export async function POST(
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
-
-  // const resolvedParams = await params;
-  // const commentId = resolvedParams.commentId;
 
   const { commentId } = await params;
 
@@ -86,12 +54,35 @@ export async function POST(
       { status: 400 }
     );
 
-  const reply = await prisma.forumCommentReplies.create({
-    data: {
-      reply_content,
-      commentId,
-      reply_authorId: user.id,
-    },
-  });
-  return NextResponse.json(reply, { status: 201 });
+  try {
+    const comment = await prisma.$transaction(async (tx) => {
+      const toComment = await tx.forumCommentReplies.create({
+        data: {
+          reply_content,
+          commentId,
+          reply_authorId: user.id,
+        },
+      });
+
+      const userToReward = await tx.user.update({
+        where: { id: user.id },
+        data: {
+          reputationPoints: { increment: 10 },
+        },
+      });
+
+      return { toComment, userToReward };
+    });
+
+    return NextResponse.json({
+      status: 200,
+      message: "Comment created and points rewarded successfully!",
+      data: comment,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error creating comment" },
+      { status: 500 }
+    );
+  }
 }

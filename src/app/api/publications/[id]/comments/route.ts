@@ -18,19 +18,34 @@ export async function POST(
   const { comment_content } = await req.json();
 
   try {
-    const comment = await prisma.publicationComments.create({
-      data: {
-        comment_content: comment_content,
-        author: {
-          connect: { id: user.id },
+    const comment = await prisma.$transaction(async (tx) => {
+      const toComment = await tx.publicationComments.create({
+        data: {
+          comment_content: comment_content,
+          author: {
+            connect: { id: user.id },
+          },
+          publication: {
+            connect: { pubId: pubId },
+          },
         },
-        publication: {
-          connect: { pubId: pubId },
+      });
+
+      const userToReward = await tx.user.update({
+        where: { id: user.id },
+        data: {
+          reputationPoints: { increment: 10 },
         },
-      },
+      });
+
+      return { toComment, userToReward };
     });
 
-    return NextResponse.json(comment);
+    return NextResponse.json({
+      status: 200,
+      message: "Comment created and points rewarded successfully!",
+      data: comment,
+    });
   } catch (error) {
     return NextResponse.json(
       { error: "Error creating comment" },

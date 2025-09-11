@@ -10,9 +10,6 @@ export async function POST(
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  // Await the params to resolve the Promise
-  // const resolvedParams = await params;
-  // const pubId = resolvedParams.id;
   const { id: pubId } = await params;
 
   try {

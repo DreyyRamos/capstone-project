@@ -12,47 +12,36 @@ export async function POST(
   const { replyId } = await params;
   const { content } = await req.json();
 
-  const child = await prisma.publicationCommentReplyToReplies.create({
-    data: {
-      replyToReply_content: content,
-      parentReplyId: replyId,
-      reply_authorId: user.id,
-    },
-    include: { reply_author: true },
-  });
+  try {
+    const comment = await prisma.$transaction(async (tx) => {
+      const toComment = await tx.publicationCommentReplyToReplies.create({
+        data: {
+          replyToReply_content: content,
+          parentReplyId: replyId,
+          reply_authorId: user.id,
+        },
+        include: { reply_author: true },
+      });
 
-  return NextResponse.json(child, { status: 201 });
+      const userToReward = await tx.user.update({
+        where: { id: user.id },
+        data: {
+          reputationPoints: { increment: 10 },
+        },
+      });
+
+      return { toComment, userToReward };
+    });
+
+    return NextResponse.json({
+      status: 200,
+      message: "Comment created and points rewarded successfully!",
+      data: comment,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error creating comment" },
+      { status: 500 }
+    );
+  }
 }
-
-// import prisma from "@/lib/prisma";
-// import { NextRequest, NextResponse } from "next/server";
-// import { authMiddleware } from "@/app/api/(middlware)/authMiddleware";
-
-// export async function POST(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ replyId: string }> }
-// ) {
-//   const authResult = await authMiddleware(req);
-//   if (authResult instanceof NextResponse) return authResult;
-//   const { user } = authResult;
-
-//   const resolvedParams = await params;
-//   const replyId = resolvedParams.replyId;
-
-//   const { reply_content } = await req.json();
-
-//   if (!reply_content || !user.id)
-//     return NextResponse.json(
-//       { error: "Missing content or authorId" },
-//       { status: 400 }
-//     );
-
-//   const nestedReply = await prisma.publicationCommentReplies.create({
-//     data: {
-//       reply_content: reply_content,
-//       parentReplyId: replyId,
-//       reply_authorId: user.id,
-//     },
-//   });
-//   return NextResponse.json(nestedReply, { status: 201 });
-// }
