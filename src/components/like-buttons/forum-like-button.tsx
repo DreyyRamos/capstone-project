@@ -6,6 +6,8 @@ import { likeForum } from "@/services/publication";
 import { Button } from "@/components/ui/button";
 import { Heart, HeartOff, Loader } from "lucide-react";
 import { useUserId } from "@/hooks/useUserId";
+import { useAuthModal } from "@/hooks/use-auth-modal";
+import { AuthModal } from "../auth-modal";
 
 interface Like {
   userId: number;
@@ -31,6 +33,9 @@ const LikeButton = ({ forum, token, forumId }: LikeButtonProps) => {
   const [currentLikePostId, setCurrentLikePostId] = useState<string | null>(
     null
   );
+
+  const { isOpen, action, redirectTo, requireAuth, closeModal } =
+    useAuthModal();
   //  const [currentLikeCommentId, setCurrentLikeCommentId] = useState<
   //     string | null
   //   >(null);
@@ -90,11 +95,13 @@ const LikeButton = ({ forum, token, forumId }: LikeButtonProps) => {
   });
 
   const handleLikeToggle = useCallback(async () => {
-    if (!likeMutation.isPending) {
-      try {
-        await likeMutation.mutateAsync(forum?.forumId);
-      } catch (error) {
-        console.error("Failed to toggle like:", error);
+    if (requireAuth("like this forum")) {
+      if (!likeMutation.isPending) {
+        try {
+          await likeMutation.mutateAsync(forum?.forumId);
+        } catch (error) {
+          console.error("Failed to toggle like:", error);
+        }
       }
     }
   }, [likeMutation, forum?.forumId]);
@@ -102,28 +109,36 @@ const LikeButton = ({ forum, token, forumId }: LikeButtonProps) => {
   console.log("publication check for like", forum);
 
   return (
-    <Button
-      variant={"ghost"}
-      onClick={handleLikeToggle}
-      disabled={likeMutation.isPending}
-      className={`flex items-center space-x-2 ${
-        likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
-      }`}
-    >
-      <div className="relative group">
-        {currentLikePostId === forum?.forumId ? (
-          <Loader className="animate-spin" />
-        ) : userLike && userLike?.isLiked ? (
-          <HeartOff className="text-red-500" />
-        ) : (
-          <Heart className="text-gray-500" />
-        )}
-        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
-          {userLike && userLike?.isLiked ? "Unlike" : "Like"}
-        </span>
-      </div>
-      <span className="text-gray-100 ml-1">{likeCount}</span>
-    </Button>
+    <>
+      <AuthModal
+        isOpen={isOpen}
+        onClose={closeModal}
+        action={action}
+        redirectTo={redirectTo}
+      />
+      <Button
+        variant={"ghost"}
+        onClick={handleLikeToggle}
+        disabled={likeMutation.isPending}
+        className={`flex items-center space-x-2 ${
+          likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        <div className="relative group">
+          {currentLikePostId === forum?.forumId ? (
+            <Loader className="animate-spin" />
+          ) : userLike && userLike?.isLiked ? (
+            <HeartOff className="text-red-500" />
+          ) : (
+            <Heart className="text-gray-500" />
+          )}
+          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
+            {userLike && userLike?.isLiked ? "Unlike" : "Like"}
+          </span>
+        </div>
+        <span className="text-gray-100 ml-1">{likeCount}</span>
+      </Button>
+    </>
   );
 };
 
