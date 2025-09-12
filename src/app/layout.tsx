@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { RoleBasedLayout } from "@/components/role-based-layout";
 import ReactQueryProvider from "@/utils/ReactQueryProvider";
 import { ConfirmationProvider } from "@/components/confirmation-provider";
+import { TokenProvider } from "@/components/token-watcher";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,14 +31,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ConfirmationProvider>
-            <ReactQueryProvider>
-              {/* <RoleProvider> */}
-              <RoleBasedLayout>{children}</RoleBasedLayout>
-              <Toaster />
-              {/* </RoleProvider> */}
-            </ReactQueryProvider>
-          </ConfirmationProvider>
+          <TokenProvider>
+            <ConfirmationProvider>
+              <ReactQueryProvider>
+                {/* <RoleProvider> */}
+                <RoleBasedLayout>{children}</RoleBasedLayout>
+                <Toaster />
+                {/* </RoleProvider> */}
+              </ReactQueryProvider>
+            </ConfirmationProvider>
+          </TokenProvider>
         </ThemeProvider>
       </body>
     </html>
