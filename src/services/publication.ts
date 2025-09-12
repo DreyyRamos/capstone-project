@@ -241,6 +241,45 @@ export const addCommentPub = async (
   return await res.json();
 };
 
+export const editCommentPub = async (
+  token: string,
+  postId: string,
+  commentId: string,
+  comment: string
+) => {
+  const res = await fetch(
+    `/api/publications/${postId}/comments/${commentId}/edit-comment`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ editCommentContent: comment }),
+    }
+  );
+  return await res.json();
+};
+
+export const deleteCommentPub = async (
+  token: string,
+  postId: string,
+  commentId: string
+) => {
+  const res = await fetch(
+    `/api/publications/${postId}/comments/${commentId}/edit-comment`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ editCommentContent: comment }),
+    }
+  );
+  return await res.json();
+};
+
 export const replyToCommentPub = async (
   token: string,
   postId: string,
@@ -255,6 +294,47 @@ export const replyToCommentPub = async (
     },
     body: JSON.stringify({ reply_content: reply }),
   });
+  return await res.json();
+};
+
+export const editReplyPub = async (
+  token: string,
+  postId: string,
+  commentId: string,
+  replyId: string,
+  comment: string
+) => {
+  const res = await fetch(
+    `/api/publications/${postId}/comments/${commentId}/replies/${replyId}/edit-comment`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ editReplyContent: comment }),
+    }
+  );
+  return await res.json();
+};
+
+export const deleteReplyPub = async (
+  token: string,
+  postId: string,
+  commentId: string,
+  replyId: string
+) => {
+  const res = await fetch(
+    `/api/publications/${postId}/comments/${commentId}/replies/${replyId}/edit-comment`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ editCommentContent: comment }),
+    }
+  );
   return await res.json();
 };
 
@@ -274,6 +354,49 @@ export const replyToReplyCommentPub = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ reply_content: reply }),
+    }
+  );
+  return await res.json();
+};
+
+export const editReplyToReplyPub = async (
+  token: string,
+  postId: string,
+  commentId: string,
+  replyId: string,
+  childId: string,
+  comment: string
+) => {
+  const res = await fetch(
+    `/api/publications/${postId}/comments/${commentId}/replies/${replyId}/children/${childId}/edit-comment`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ editReplyContent: comment }),
+    }
+  );
+  return await res.json();
+};
+
+export const deleteReplyToReplyPub = async (
+  token: string,
+  postId: string,
+  commentId: string,
+  replyId: string,
+  childId: string
+) => {
+  const res = await fetch(
+    `/api/publications/${postId}/comments/${commentId}/replies/${replyId}/children/${childId}/edit-comment`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ editCommentContent: comment }),
     }
   );
   return await res.json();

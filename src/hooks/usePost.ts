@@ -11,6 +11,12 @@ import {
   deletePost,
   replyToCommentPub,
   replyToReplyCommentPub,
+  editCommentPub,
+  deleteCommentPub,
+  editReplyPub,
+  deleteReplyPub,
+  editReplyToReplyPub,
+  deleteReplyToReplyPub,
 } from "@/services/publication";
 
 interface Publication {
@@ -174,6 +180,110 @@ export const usePostByIdQuery = (token: string, postId: string) => {
     },
   });
 
+  const editComment = useMutation({
+    mutationFn: async (vars: { comment: string; commentId: string }) =>
+      await editCommentPub(token, postId, vars.commentId, vars.comment),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+    },
+  });
+
+  const deleteComment = useMutation({
+    mutationFn: async (vars: { commentId: string }) =>
+      await deleteCommentPub(token, postId, vars.commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+    },
+  });
+
+  const editReply = useMutation({
+    mutationFn: async (vars: {
+      comment: string;
+      commentId: string;
+      replyId: string;
+    }) =>
+      await editReplyPub(
+        token,
+        postId,
+        vars.commentId,
+        vars.replyId,
+        vars.comment
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+    },
+  });
+
+  const deleteReply = useMutation({
+    mutationFn: async (vars: { commentId: string; replyId: string }) =>
+      await deleteReplyPub(token, postId, vars.commentId, vars.replyId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+    },
+  });
+
+  const editReplyToReply = useMutation({
+    mutationFn: async (vars: {
+      comment: string;
+      commentId: string;
+      replyId: string;
+      childId: string;
+    }) =>
+      await editReplyToReplyPub(
+        token,
+        postId,
+        vars.commentId,
+        vars.replyId,
+        vars.childId,
+        vars.comment
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+    },
+  });
+
+  const deleteReplyToReply = useMutation({
+    mutationFn: async (vars: {
+      commentId: string;
+      replyId: string;
+      childId: string;
+    }) =>
+      await deleteReplyToReplyPub(
+        token,
+        postId,
+        vars.commentId,
+        vars.replyId,
+        vars.childId
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pub", postId] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+    },
+  });
+
   return {
     // Query results
     // data,
@@ -195,5 +305,29 @@ export const usePostByIdQuery = (token: string, postId: string) => {
     //Comment functions
     commentToPost: addComments.mutate,
     isCommenting: addComments.isPending,
+
+    //Edit comment
+    editComment: editComment.mutate,
+    isEditingComment: editComment.isPending,
+
+    //Delete comment
+    deleteComment: deleteComment.mutate,
+    isDeletingComment: deleteComment.isPending,
+
+    //Edit reply
+    editReply: editReply.mutate,
+    isEditingReply: editReply.isPending,
+
+    //Delete reply
+    deleteReply: deleteReply.mutate,
+    isDeletingReply: deleteReply.isPending,
+
+    //Edit reply to reply
+    editReplyToReply: editReplyToReply.mutate,
+    isEditingReplyToReply: editReplyToReply.isPending,
+
+    //Delete reply to reply
+    deleteReplyToReply: deleteReplyToReply.mutate,
+    isDeletingReplyToReply: deleteReplyToReply.isPending,
   };
 };

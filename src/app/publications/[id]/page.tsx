@@ -6,7 +6,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import { Heart, Flag, ArrowLeft, Clock, Star } from "lucide-react";
+import {
+  Heart,
+  Flag,
+  ArrowLeft,
+  Clock,
+  Star,
+  MoreVertical,
+  Edit2,
+  Trash2,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   Tooltip,
@@ -14,6 +23,12 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import LikeButton from "@/components/like-buttons/publication-like-button";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
@@ -34,12 +49,14 @@ import { useReportModal } from "@/hooks/use-report-modal";
 import ContentDisplay from "@/components/content-display";
 import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
 import { useUserQuery } from "@/hooks/useUser";
+import { useConfirmation } from "@/components/confirmation-provider";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
 export default function PublicationDetailPage({ params }: PageProps) {
+  const { confirmDelete } = useConfirmation();
   const [comment_content, setCommentContent] = useState("");
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -49,6 +66,17 @@ export default function PublicationDetailPage({ params }: PageProps) {
     string | null
   >(null);
   const [secondLevelReplyContent, setSecondLevelReplyContent] = useState("");
+
+  // Edit states
+  const [editingComment, setEditingComment] = useState<string | null>(null);
+  const [editCommentContent, setEditCommentContent] = useState("");
+  const [editingReply, setEditingReply] = useState<string | null>(null);
+  const [editReplyContent, setEditReplyContent] = useState("");
+  const [editingNestedReply, setEditingNestedReply] = useState<string | null>(
+    null
+  );
+  const [editNestedReplyContent, setEditNestedReplyContent] = useState("");
+
   const { isOpen, action, redirectTo, requireAuth, closeModal } =
     useAuthModal();
   const {
@@ -68,7 +96,15 @@ export default function PublicationDetailPage({ params }: PageProps) {
   console.log("current user", currentUser);
   const { data: publication, isLoading, isError } = useFetchOnePostQuery(id);
   const { makeFeatured, isLoading: isCurrentlyLoading } = useIsFeatured(token);
-  const { commentToPost } = usePostByIdQuery(token, publication?.pubId);
+  const {
+    commentToPost,
+    editComment,
+    deleteComment,
+    editReply,
+    deleteReply,
+    editReplyToReply,
+    deleteReplyToReply,
+  } = usePostByIdQuery(token, publication?.pubId);
   const { mutate: addTopReply } = useAddTopReply(token);
   const { mutate: addNestedReply } = useAddNestedReply(token);
   const { user } = useTokenUser();
@@ -79,6 +115,162 @@ export default function PublicationDetailPage({ params }: PageProps) {
         console.log(`User tried to ${action} but is ${status}`);
       },
     });
+
+  // Helper function to check if current user owns the content
+  const isCurrentUserContent = (authorId: string) => {
+    return currentUser?.userData?.id === authorId;
+  };
+
+  // Edit handlers
+  const handleEditComment = (comment: any) => {
+    setEditingComment(comment.commentId);
+    setEditCommentContent(comment.comment_content);
+  };
+
+  const handleEditReply = (reply: any) => {
+    setEditingReply(reply.replyId);
+    setEditReplyContent(reply.reply_content);
+  };
+
+  const handleEditNestedReply = (nestedReply: any) => {
+    setEditingNestedReply(nestedReply.replyToReplyId);
+    setEditNestedReplyContent(nestedReply.replyToReply_content);
+  };
+
+  const handleSaveEditComment = async (commentId: string) => {
+    if (editCommentContent.trim()) {
+      try {
+        // Add your API call to update comment here
+        // await updateComment(commentId, editCommentContent);
+        editComment({ comment: editCommentContent, commentId });
+        console.log("Updating comment:", commentId, editCommentContent);
+
+        setEditingComment(null);
+        setEditCommentContent("");
+        toast.success("Comment updated successfully!");
+
+        // Refresh the data or update local state
+      } catch (error) {
+        toast.error("Failed to update comment");
+        console.error("Error updating comment:", error);
+      }
+    }
+  };
+
+  const handleSaveEditReply = async (replyId: string, commentId: string) => {
+    if (editReplyContent.trim()) {
+      try {
+        // Add your API call to update reply here
+        // await updateReply(replyId, editReplyContent);
+        editReply({ comment: editReplyContent, commentId, replyId });
+        console.log("Updating reply:", replyId, editReplyContent);
+
+        setEditingReply(null);
+        setEditReplyContent("");
+        toast.success("Reply updated successfully!");
+
+        // Refresh the data or update local state
+      } catch (error) {
+        toast.error("Failed to update reply");
+        console.error("Error updating reply:", error);
+      }
+    }
+  };
+
+  const handleSaveEditNestedReply = async (
+    nestedReplyId: string,
+    commentId: string,
+    replyId: string
+  ) => {
+    if (editNestedReplyContent.trim()) {
+      try {
+        // Add your API call to update nested reply here
+        // await updateNestedReply(nestedReplyId, editNestedReplyContent);
+        editReplyToReply({
+          comment: editNestedReplyContent,
+          commentId,
+          replyId,
+          childId: nestedReplyId,
+        });
+        console.log(
+          "Updating nested reply:",
+          nestedReplyId,
+          editNestedReplyContent
+        );
+
+        setEditingNestedReply(null);
+        setEditNestedReplyContent("");
+        toast.success("Reply updated successfully!");
+
+        // Refresh the data or update local state
+      } catch (error) {
+        toast.error("Failed to update reply");
+        console.error("Error updating nested reply:", error);
+      }
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingComment(null);
+    setEditCommentContent("");
+    setEditingReply(null);
+    setEditReplyContent("");
+    setEditingNestedReply(null);
+    setEditNestedReplyContent("");
+  };
+
+  // Delete handlers
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      // Add your API call to delete comment here
+      // await deleteComment(commentId);
+      deleteComment({ commentId });
+      console.log("Deleting comment:", commentId);
+
+      toast.success("Comment deleted successfully!");
+
+      // Refresh the data or update local state
+    } catch (error) {
+      toast.error("Failed to delete comment");
+      console.error("Error deleting comment:", error);
+    }
+  };
+
+  const handleDeleteReply = async (replyId: string, commentId: string) => {
+    try {
+      // Add your API call to delete reply here
+      // await deleteReply(replyId);
+      deleteReply({ commentId, replyId });
+      console.log("Deleting reply:", replyId);
+
+      toast.success("Reply deleted successfully!");
+
+      // Refresh the data or update local state
+    } catch (error) {
+      toast.error("Failed to delete reply");
+      console.error("Error deleting reply:", error);
+    }
+  };
+
+  const handleDeleteNestedReply = async (
+    nestedReplyId: string,
+    commentId: string,
+    replyId: string
+  ) => {
+    try {
+      // Add your API call to delete nested reply here
+      // await deleteNestedReply(nestedReplyId);
+      deleteReplyToReply({ commentId, replyId, childId: nestedReplyId });
+      console.log("Deleting nested reply:", nestedReplyId);
+
+      toast.success("Reply deleted successfully!");
+
+      // Refresh the data or update local state
+    } catch (error) {
+      toast.error("Failed to delete reply");
+      console.error("Error deleting nested reply:", error);
+    }
+  };
 
   const handleMakeFeature = (id: string) => {
     if (requireAuth("feature this publication")) {
@@ -290,11 +482,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
                   {publication.author?.lastName?.[0]}
                 </AvatarFallback>
               </Avatar>
-              {/* <Avatar className="h-12 w-12">
-                <AvatarFallback>
-                  {publication?.author?.firstName}
-                </AvatarFallback>
-              </Avatar> */}
               <div>
                 <p className="font-medium">
                   {publication?.author.firstName} {publication?.author.lastName}
@@ -375,19 +562,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
           </div>
         )}
         <ContentDisplay htmlContent={publication?.content} />
-        {/* <div
-          className="rounded-md border min-h-[150px] border-input bg-background p-3 
-          focus:outline-none
-          [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4
-          [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4  
-          [&_li]:mb-2 [&_li]:leading-relaxed
-          [&_p]:mb-4 [&_p]:leading-relaxed
-          [&_h1]:mb-4 [&_h1]:mt-6 [&_h1]:text-2xl [&_h1]:font-bold
-          [&_h2]:mb-3 [&_h2]:mt-5 [&_h2]:text-xl [&_h2]:font-semibold
-          [&_h3]:mb-2 [&_h3]:mt-4 [&_h3]:text-lg [&_h3]:font-medium
-          [&_strong]:font-bold [&_b]:font-bold"
-          dangerouslySetInnerHTML={{ __html: publication?.content }}
-        /> */}
 
         <div className="flex items-center justify-between pt-6 border-t">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -439,34 +613,89 @@ export default function PublicationDetailPage({ params }: PageProps) {
                         {comment.author?.lastName?.[0]}
                       </AvatarFallback>
                     </Avatar>
-                    {/* <Avatar className="h-10 w-10">
-                      <AvatarImage
-                        src={
-                          comment?.author?.profileImage || "/placeholder.svg"
-                        }
-                      />
-                      <AvatarFallback>
-                        {comment?.author?.firstName?.[0]}
-                      </AvatarFallback>
-                    </Avatar> */}
                     <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">
-                          <Link href={`/visit/user/${comment?.authorId}`}>
-                            {comment?.author?.firstName}{" "}
-                            {comment?.author?.lastName}
-                          </Link>
-                        </p>
-                        <Badge variant="outline" className="text-xs">
-                          {comment?.author?.role}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground">
-                          {new Date(comment?.createdAt).toLocaleDateString()}
-                        </span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">
+                            <Link href={`/visit/user/${comment?.authorId}`}>
+                              {comment?.author?.firstName}{" "}
+                              {comment?.author?.lastName}
+                            </Link>
+                          </p>
+                          <Badge variant="outline" className="text-xs">
+                            {comment?.author?.role}
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">
+                            {new Date(comment?.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        {/* Dropdown menu for comment owner */}
+                        {isCurrentUserContent(comment.authorId) && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => handleEditComment(comment)}
+                              >
+                                <Edit2 className="h-4 w-4 mr-2" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  confirmDelete("comment", () =>
+                                    handleDeleteComment(comment.commentId)
+                                  );
+                                }}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
                       </div>
-                      <p className="text-sm leading-relaxed">
-                        {comment?.comment_content}
-                      </p>
+
+                      {/* Comment content - editable if in edit mode */}
+                      {editingComment === comment.commentId ? (
+                        <div className="space-y-2">
+                          <Textarea
+                            value={editCommentContent}
+                            onChange={(e) =>
+                              setEditCommentContent(e.target.value)
+                            }
+                            rows={3}
+                          />
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() =>
+                                handleSaveEditComment(comment.commentId)
+                              }
+                              disabled={!editCommentContent.trim()}
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleCancelEdit}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-sm leading-relaxed">
+                          {comment?.comment_content}
+                        </p>
+                      )}
+
                       <div className="flex items-center gap-4">
                         <PublicationCommentLikeButton
                           comment={comment}
@@ -553,35 +782,95 @@ export default function PublicationDetailPage({ params }: PageProps) {
                               {reply?.reply_author?.lastName?.[0]}
                             </AvatarFallback>
                           </Avatar>
-                          {/* <Avatar className="h-8 w-8">
-                            <AvatarImage
-                              src={
-                                reply?.reply_author?.profileImage ||
-                                "/placeholder.svg"
-                              }
-                            />
-                            <AvatarFallback>
-                              {reply?.reply_author?.firstName?.[0]}
-                            </AvatarFallback>
-                          </Avatar> */}
                           <div className="flex-1 space-y-2">
-                            <div className="flex items-center gap-2">
-                              <p className="font-medium text-sm">
-                                {reply?.reply_author?.firstName}{" "}
-                                {reply?.reply_author?.lastName}
-                              </p>
-                              <Badge variant="outline" className="text-xs">
-                                {reply?.reply_author?.role}
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">
-                                {new Date(
-                                  reply?.createdAt
-                                ).toLocaleDateString()}
-                              </span>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <p className="font-medium text-sm">
+                                  {reply?.reply_author?.firstName}{" "}
+                                  {reply?.reply_author?.lastName}
+                                </p>
+                                <Badge variant="outline" className="text-xs">
+                                  {reply?.reply_author?.role}
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">
+                                  {new Date(
+                                    reply?.createdAt
+                                  ).toLocaleDateString()}
+                                </span>
+                              </div>
+
+                              {/* Dropdown menu for reply owner */}
+                              {isCurrentUserContent(reply.reply_authorId) && (
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem
+                                      onClick={() => handleEditReply(reply)}
+                                    >
+                                      <Edit2 className="h-4 w-4 mr-2" />
+                                      Edit
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() => {
+                                        confirmDelete("reply", () =>
+                                          handleDeleteReply(
+                                            reply.replyId,
+                                            comment.commentId
+                                          )
+                                        );
+                                      }}
+                                      className="text-red-600"
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      Delete
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              )}
                             </div>
-                            <p className="text-sm leading-relaxed">
-                              {reply.reply_content}
-                            </p>
+
+                            {/* Reply content - editable if in edit mode */}
+                            {editingReply === reply.replyId ? (
+                              <div className="space-y-2">
+                                <Textarea
+                                  value={editReplyContent}
+                                  onChange={(e) =>
+                                    setEditReplyContent(e.target.value)
+                                  }
+                                  rows={2}
+                                />
+                                <div className="flex items-center gap-2">
+                                  <Button
+                                    size="sm"
+                                    onClick={() =>
+                                      handleSaveEditReply(
+                                        reply.replyId,
+                                        comment.commentId
+                                      )
+                                    }
+                                    disabled={!editReplyContent.trim()}
+                                  >
+                                    Save
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handleCancelEdit}
+                                  >
+                                    Cancel
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <p className="text-sm leading-relaxed">
+                                {reply.reply_content}
+                              </p>
+                            )}
+
                             <div className="flex items-center gap-4">
                               <PublicationCommentReplyLikeButton
                                 reply={reply}
@@ -677,41 +966,114 @@ export default function PublicationDetailPage({ params }: PageProps) {
                                         }
                                       </AvatarFallback>
                                     </Avatar>
-                                    {/* <Avatar className="h-8 w-8">
-                                      <AvatarImage
-                                        src={
-                                          childReply?.reply_author
-                                            ?.profileImage || "/placeholder.svg"
-                                        }
-                                      />
-                                      <AvatarFallback>
-                                        {
-                                          childReply?.reply_author
-                                            ?.firstName?.[0]
-                                        }
-                                      </AvatarFallback>
-                                    </Avatar> */}
                                     <div className="flex-1 space-y-2">
-                                      <div className="flex items-center gap-2">
-                                        <p className="font-medium text-sm">
-                                          {childReply?.reply_author?.firstName}{" "}
-                                          {childReply?.reply_author?.lastName}
-                                        </p>
-                                        <Badge
-                                          variant="outline"
-                                          className="text-xs"
-                                        >
-                                          {childReply?.reply_author?.role}
-                                        </Badge>
-                                        <span className="text-xs text-muted-foreground">
-                                          {new Date(
-                                            childReply?.createdAt
-                                          ).toLocaleDateString()}
-                                        </span>
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                          <p className="font-medium text-sm">
+                                            {
+                                              childReply?.reply_author
+                                                ?.firstName
+                                            }{" "}
+                                            {childReply?.reply_author?.lastName}
+                                          </p>
+                                          <Badge
+                                            variant="outline"
+                                            className="text-xs"
+                                          >
+                                            {childReply?.reply_author?.role}
+                                          </Badge>
+                                          <span className="text-xs text-muted-foreground">
+                                            {new Date(
+                                              childReply?.createdAt
+                                            ).toLocaleDateString()}
+                                          </span>
+                                        </div>
+
+                                        {/* Dropdown menu for nested reply owner */}
+                                        {isCurrentUserContent(
+                                          childReply.reply_authorId
+                                        ) && (
+                                          <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                              <Button variant="ghost" size="sm">
+                                                <MoreVertical className="h-4 w-4" />
+                                              </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end">
+                                              <DropdownMenuItem
+                                                onClick={() =>
+                                                  handleEditNestedReply(
+                                                    childReply
+                                                  )
+                                                }
+                                              >
+                                                <Edit2 className="h-4 w-4 mr-2" />
+                                                Edit
+                                              </DropdownMenuItem>
+                                              <DropdownMenuItem
+                                                onClick={() => {
+                                                  confirmDelete("reply", () =>
+                                                    handleDeleteNestedReply(
+                                                      childReply.replyToReplyId,
+                                                      comment.commentId,
+                                                      reply.replyId
+                                                    )
+                                                  );
+                                                }}
+                                                className="text-red-600"
+                                              >
+                                                <Trash2 className="h-4 w-4 mr-2" />
+                                                Delete
+                                              </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                          </DropdownMenu>
+                                        )}
                                       </div>
-                                      <p className="text-sm leading-relaxed">
-                                        {childReply?.replyToReply_content}
-                                      </p>
+
+                                      {/* Nested reply content - editable if in edit mode */}
+                                      {editingNestedReply ===
+                                      childReply.replyToReplyId ? (
+                                        <div className="space-y-2">
+                                          <Textarea
+                                            value={editNestedReplyContent}
+                                            onChange={(e) =>
+                                              setEditNestedReplyContent(
+                                                e.target.value
+                                              )
+                                            }
+                                            rows={2}
+                                          />
+                                          <div className="flex items-center gap-2">
+                                            <Button
+                                              size="sm"
+                                              onClick={() =>
+                                                handleSaveEditNestedReply(
+                                                  childReply.replyToReplyId,
+                                                  comment.commentId,
+                                                  reply.replyId
+                                                )
+                                              }
+                                              disabled={
+                                                !editNestedReplyContent.trim()
+                                              }
+                                            >
+                                              Save
+                                            </Button>
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={handleCancelEdit}
+                                            >
+                                              Cancel
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <p className="text-sm leading-relaxed">
+                                          {childReply?.replyToReply_content}
+                                        </p>
+                                      )}
+
                                       <div className="flex items-center gap-4">
                                         <PublicationReplyToReplyLikeButton
                                           replyToReply={childReply}

@@ -4,6 +4,12 @@ import {
   fetchAllForums,
   fetchForumByCategory,
   fetchForumById,
+  editCommentForum,
+  deleteCommentForum,
+  editReplyForum,
+  deleteReplyForum,
+  editReplyToReplyForum,
+  deleteReplyToReplyForum,
 } from "@/services/forum";
 
 interface Forum {
@@ -56,40 +62,6 @@ export const useForumQuery = (token: string) => {
   };
 };
 
-// export const useFeaturedPostsQuery = () => {
-//   const { data, isLoading, isError, error, refetch } = useQuery({
-//     // A unique query key to cache this data separately from all posts
-//     queryKey: ["featured-pubs"],
-
-//     // The query function is the service you already created
-//     queryFn: fetchFeaturedPubs,
-
-//     // refetchOnWindowFocus: false,
-//     // refetchOnMount: false,
-//     // refetchOnReconnect: false,
-//     // refetchInterval: false,
-//   });
-
-//   return { data, isLoading, isError, error, refetch };
-// };
-
-// export const useArchivedPostsQuery = (token: string) => {
-//   const { data, isLoading, isError, error, refetch } = useQuery({
-//     // A unique query key to cache this data separately from all posts
-//     queryKey: ["archived-pubs"],
-
-//     // The query function is the service you already created
-//     queryFn: async () => await fetchArchivedPubs(token),
-
-//     // refetchOnWindowFocus: false,
-//     // refetchOnMount: false,
-//     // refetchOnReconnect: false,
-//     // refetchInterval: false,
-//   });
-
-//   return { data, isLoading, isError, error, refetch };
-// };
-
 // Separate hook for fetching a single post by ID
 
 export const useFetchForumByCategory = (slug: string) => {
@@ -109,11 +81,105 @@ export const useFetchForumByCategory = (slug: string) => {
   };
 };
 
-export const useFetchForumById = (forumId: string) => {
+export const useFetchForumById = (token: string, forumId: string) => {
+  const queryClient = useQueryClient();
+
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["forum", forumId],
     queryFn: () => fetchForumById(forumId!),
     enabled: Boolean(forumId),
+  });
+
+  const editComment = useMutation({
+    mutationFn: async (vars: { comment: string; commentId: string }) =>
+      await editCommentForum(token, forumId, vars.commentId, vars.comment),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forum", forumId] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+    },
+  });
+
+  const deleteComment = useMutation({
+    mutationFn: async (vars: { commentId: string }) =>
+      await deleteCommentForum(token, forumId, vars.commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forum", forumId] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+    },
+  });
+
+  const editReply = useMutation({
+    mutationFn: async (vars: {
+      comment: string;
+      commentId: string;
+      replyId: string;
+    }) =>
+      await editReplyForum(
+        token,
+        forumId,
+        vars.commentId,
+        vars.replyId,
+        vars.comment
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forum", forumId] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+    },
+  });
+
+  const deleteReply = useMutation({
+    mutationFn: async (vars: { commentId: string; replyId: string }) =>
+      await deleteReplyForum(token, forumId, vars.commentId, vars.replyId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forum", forumId] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+    },
+  });
+
+  const editReplyToReply = useMutation({
+    mutationFn: async (vars: {
+      comment: string;
+      commentId: string;
+      replyId: string;
+      childId: string;
+    }) =>
+      await editReplyToReplyForum(
+        token,
+        forumId,
+        vars.commentId,
+        vars.replyId,
+        vars.childId,
+        vars.comment
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forum", forumId] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+    },
+  });
+
+  const deleteReplyToReply = useMutation({
+    mutationFn: async (vars: {
+      commentId: string;
+      replyId: string;
+      childId: string;
+    }) =>
+      await deleteReplyToReplyForum(
+        token,
+        forumId,
+        vars.commentId,
+        vars.replyId,
+        vars.childId
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forum", forumId] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-activity"] });
+    },
   });
 
   return {
@@ -123,71 +189,29 @@ export const useFetchForumById = (forumId: string) => {
     isError,
     isSuccess,
     refetch,
+
+    //Edit comment
+    editComment: editComment.mutate,
+    isEditingComment: editComment.isPending,
+
+    //Delete comment
+    deleteComment: deleteComment.mutate,
+    isDeletingComment: deleteComment.isPending,
+
+    //Edit reply
+    editReply: editReply.mutate,
+    isEditingReply: editReply.isPending,
+
+    //Delete reply
+    deleteReply: deleteReply.mutate,
+    isDeletingReply: deleteReply.isPending,
+
+    //Edit reply to reply
+    editReplyToReply: editReplyToReply.mutate,
+    isEditingReplyToReply: editReplyToReply.isPending,
+
+    //Delete reply to reply
+    deleteReplyToReply: deleteReplyToReply.mutate,
+    isDeletingReplyToReply: deleteReplyToReply.isPending,
   };
 };
-
-// export const usePostByIdQuery = (token: string, postId: string) => {
-//   const queryClient = useQueryClient();
-//   // const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
-//   //   queryKey: ["post", postId],
-//   //   queryFn: () => fetchPubById(token, postId),
-//   //   enabled: !!postId && !!token,
-//   // });
-
-//   const updateMutation = useMutation({
-//     mutationFn: (postData: Forum) => updatePost(token, postId, postData),
-//     onSuccess: () => {
-//       // Invalidate both the specific post and the posts list
-//       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
-//       queryClient.invalidateQueries({ queryKey: ["pubs"] });
-//       queryClient.invalidateQueries({ queryKey: ["users"] });
-//       queryClient.invalidateQueries({ queryKey: ["to-review"] });
-//       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
-//     },
-//   });
-
-//   const deleteMutation = useMutation({
-//     mutationFn: () => deletePost(token, postId),
-//     onSuccess: () => {
-//       // Invalidate both the specific post and the posts list
-//       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
-//       queryClient.invalidateQueries({ queryKey: ["pubs"] });
-//       queryClient.invalidateQueries({ queryKey: ["users"] });
-//       queryClient.invalidateQueries({ queryKey: ["to-review"] });
-//     },
-//   });
-
-//   const addComments = useMutation({
-//     mutationFn: async (comment: any) =>
-//       await addCommentPub(token, postId, comment),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
-//       queryClient.invalidateQueries({ queryKey: ["pubs"] });
-//       queryClient.invalidateQueries({ queryKey: ["users"] });
-//       queryClient.invalidateQueries({ queryKey: ["to-review"] });
-//     },
-//   });
-
-//   return {
-//     // Query results
-//     // data,
-//     // error,
-//     // isLoading,
-//     // isError,
-//     // isSuccess,
-//     // refetch,
-
-//     // Mutation functions
-//     updatePost: updateMutation.mutate,
-//     isUpdating: updateMutation.isPending,
-//     updateError: updateMutation.error,
-//     updateSuccess: updateMutation.isSuccess,
-
-//     deletePostByUser: deleteMutation.mutate,
-//     isDeleting: deleteMutation.isPending,
-
-//     //Comment functions
-//     commentToPost: addComments.mutate,
-//     isCommenting: addComments.isPending,
-//   };
-// };

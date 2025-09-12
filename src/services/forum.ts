@@ -93,6 +93,45 @@ export const addCommentPub = async (
   return await res.json();
 };
 
+export const editCommentForum = async (
+  token: string,
+  forumId: string,
+  commentId: string,
+  comment: string
+) => {
+  const res = await fetch(
+    `/api/forums/${forumId}/comments/${commentId}/edit-comment`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ editCommentContent: comment }),
+    }
+  );
+  return await res.json();
+};
+
+export const deleteCommentForum = async (
+  token: string,
+  forumId: string,
+  commentId: string
+) => {
+  const res = await fetch(
+    `/api/forums/${forumId}/comments/${commentId}/edit-comment`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ editCommentContent: comment }),
+    }
+  );
+  return await res.json();
+};
+
 export const replyToCommentPub = async (
   token: string,
   postId: string,
@@ -107,6 +146,47 @@ export const replyToCommentPub = async (
     },
     body: JSON.stringify({ reply_content: reply }),
   });
+  return await res.json();
+};
+
+export const editReplyForum = async (
+  token: string,
+  forumId: string,
+  commentId: string,
+  replyId: string,
+  comment: string
+) => {
+  const res = await fetch(
+    `/api/forums/${forumId}/comments/${commentId}/replies/${replyId}/edit-comment`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ editCommentContent: comment }),
+    }
+  );
+  return await res.json();
+};
+
+export const deleteReplyForum = async (
+  token: string,
+  forumId: string,
+  commentId: string,
+  replyId: string
+) => {
+  const res = await fetch(
+    `/api/forums/${forumId}/comments/${commentId}/replies/${replyId}/edit-comment`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ editCommentContent: comment }),
+    }
+  );
   return await res.json();
 };
 
@@ -126,6 +206,49 @@ export const replyToReplyCommentPub = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ reply_content: reply }),
+    }
+  );
+  return await res.json();
+};
+
+export const editReplyToReplyForum = async (
+  token: string,
+  forumId: string,
+  commentId: string,
+  replyId: string,
+  childId: string,
+  comment: string
+) => {
+  const res = await fetch(
+    `/api/forums/${forumId}/comments/${commentId}/replies/${replyId}/children/${childId}/edit-comment`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ editCommentContent: comment }),
+    }
+  );
+  return await res.json();
+};
+
+export const deleteReplyToReplyForum = async (
+  token: string,
+  forumId: string,
+  commentId: string,
+  replyId: string,
+  childId: string
+) => {
+  const res = await fetch(
+    `/api/forums/${forumId}/comments/${commentId}/replies/${replyId}/children/${childId}/edit-comment`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ editCommentContent: comment }),
     }
   );
   return await res.json();
