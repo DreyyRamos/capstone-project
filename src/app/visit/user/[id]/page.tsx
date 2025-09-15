@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
-import { Button } from "@/components/ui/button";
+import { use } from "react";
 import {
   Card,
   CardContent,
@@ -14,28 +13,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
-  User,
   Mail,
   Phone,
   MapPin,
   Calendar,
-  Edit3,
-  BookOpen,
   MessageSquare,
   Trophy,
   Star,
   FileText,
   Users,
   Award,
-  Target,
-  Camera,
 } from "lucide-react";
-// import { useRole } from "@/contexts/role-context"
-import { UploadButton } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import {
-  useUserQuery,
-  useUserActivityQuery,
   useUserVisitorQuery,
   useUserVisitingUserActivityQuery,
 } from "@/hooks/useUser";
@@ -57,76 +47,11 @@ interface User {
 }
 
 export default function ProfilePage({ params }: PageProps) {
-  const token = Cookies.get("token") || "";
   const { id } = use(params);
   const { data: user } = useUserVisitorQuery(id);
   const { data: userActivity } = useUserVisitingUserActivityQuery(id);
-  //   const { data: user, updateUser } = useUserQuery(token);
   console.log("user from visit", user);
   console.log("user activity from visit", userActivity);
-
-  //   const [isEditing, setIsEditing] = useState(false);
-  //   const [profileData, setProfileData] = useState({
-  //     firstName: "",
-  //     lastName: "",
-  //     email: "",
-  //     contactNumber: "",
-  //     bio: "",
-  //     location: "",
-  //     createdAt: "",
-  //     profileImage: "",
-  //     interests: [],
-  //   });
-
-  //   // Update profileData when user data changes
-  //   useEffect(() => {
-  //     if (user?.userData) {
-  //       setProfileData({
-  //         firstName: user.userData.firstName || "",
-  //         lastName: user.userData.lastName || "",
-  //         email: user.userData.email || "",
-  //         contactNumber: user.userData.contactNumber || "",
-  //         bio: user.userData.bio || "",
-  //         location: user.userData.location || "",
-  //         createdAt: user.userData.createdAt || "",
-  //         profileImage: user.userData.profileImage || "",
-  //         interests: user.userData.interests || [],
-  //       });
-  //     }
-  //   }, [user]);
-
-  //   const [interests, setInterests] = useState<string[]>([]);
-  //   const [newInterests, setNewInterests] = useState("");
-
-  //   const handleAddInterest = () => {
-  //     if (newInterests.trim() && !interests.includes(newInterests.trim())) {
-  //       setInterests([...interests, newInterests.trim()]);
-  //       setNewInterests("");
-  //     }
-  //   };
-
-  //   const handleRemoveTag = (interestsToRemove: string) => {
-  //     setInterests(
-  //       interests.filter((interest) => interest !== interestsToRemove)
-  //     );
-  //   };
-
-  //   // Fixed: Use consistent field names that match your state
-  //   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     const { name, value } = e.target;
-  //     setProfileData((prev) => ({
-  //       ...prev,
-  //       [name]: value,
-  //     }));
-  //   };
-
-  //   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-  //     const { name, value } = e.target;
-  //     setProfileData((prev) => ({
-  //       ...prev,
-  //       [name]: value,
-  //     }));
-  //   };
 
   const stats = {
     publications: 24,
@@ -134,36 +59,6 @@ export default function ProfilePage({ params }: PageProps) {
     reputation: 892,
     achievements: 8,
   };
-
-  const publications = [
-    {
-      id: 1,
-      title: "Spring Sports Highlights",
-      category: "Sports",
-      date: "2 hours ago",
-      status: "Published",
-      views: 234,
-      comments: 12,
-    },
-    {
-      id: 2,
-      title: "Student Council Election Results",
-      category: "News",
-      date: "1 day ago",
-      status: "Published",
-      views: 567,
-      comments: 28,
-    },
-    {
-      id: 3,
-      title: "Art Show Preview",
-      category: "Arts",
-      date: "3 days ago",
-      status: "Published",
-      views: 189,
-      comments: 7,
-    },
-  ];
 
   const achievements = [
     {
@@ -199,18 +94,6 @@ export default function ProfilePage({ params }: PageProps) {
       progress: "24/50",
     },
   ];
-
-  //   const handleSave = () => {
-  //     // Save to backend - you'll need to pass the updated data
-  //     updateUser({
-  //       ...profileData,
-  //       interests,
-  //     });
-  //     setIsEditing(false);
-  //     console.log("Profile saved:", profileData);
-  //   };
-
-  // Removed unused handleInputChange function
 
   const getRoleColor = (role: string) => {
     switch (role.toUpperCase()) {
@@ -261,13 +144,6 @@ export default function ProfilePage({ params }: PageProps) {
                 <h1 className="text-3xl font-bold">
                   {user?.userData?.firstName} {user?.userData?.lastName}
                 </h1>
-                {/* <Button
-                      onClick={() => setIsEditing(true)}
-                      variant="outline"
-                    >
-                      <Edit3 className="mr-2 h-4 w-4" />
-                      Edit Profile
-                    </Button> */}
               </div>
 
               <p className="text-muted-foreground">{user?.userData?.bio}</p>

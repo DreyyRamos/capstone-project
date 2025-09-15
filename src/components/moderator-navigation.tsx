@@ -17,7 +17,6 @@ import {
   Home,
   BookOpen,
   MessageSquare,
-  TrendingUp,
   FileText,
   Hash,
   Menu,

@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,14 +24,13 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Upload, X, Eye, Save } from "lucide-react";
+import { ArrowLeft, X, Save } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePostQuery } from "@/hooks/usePost";
 import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import Tiptap from "@/components/tiptap";
-import { useTokenUser } from "@/hooks/useTokenUser";
 import { useConfirmation } from "@/components/confirmation-provider";
 
 export default function CreatePublicationPage() {
@@ -46,12 +45,10 @@ export default function CreatePublicationPage() {
   });
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-  // const [isFeatured, setIsFeatured] = useState(false);
   const [isDraft, setIsDraft] = useState(true);
-  // const [imageUrl, setImageUrl] = useState<string | null>(null);
   const router = useRouter();
   const token = Cookies.get("token") || "";
-  const { createPost, isCreating, createSuccess } = usePostQuery(token);
+  const { createPost, isCreating } = usePostQuery(token);
 
   const categories = [
     "Science",
@@ -263,25 +260,6 @@ export default function CreatePublicationPage() {
                   description={formData.content}
                   onChange={handleContentChange}
                 />
-                {/* <Button
-                    type="submit"
-                    variant="outline"
-                    className="w-full bg-transparent"
-                    disabled={isCreating}
-                  >
-                    <Save className="mr-2 h-4 w-4" />
-                    Publish
-                  </Button> */}
-                {/* <Textarea
-                  placeholder="Write your publication content here..."
-                  name="content"
-                  onChange={handleTextAreaChange}
-                  rows={15}
-                  className="min-h-[400px]"
-                />
-                <p className="text-sm text-muted-foreground mt-2">
-                  You can use basic HTML formatting in your content
-                </p> */}
               </CardContent>
             </Card>
           </div>

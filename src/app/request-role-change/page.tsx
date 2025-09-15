@@ -31,16 +31,13 @@ import {
   Send,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRole } from "@/contexts/role-context";
 import Cookies from "js-cookie";
 import { useUserQuery } from "@/hooks/useUser";
 
 export default function RoleRequestPage() {
-  //   const { user } = useRole();
   const token = Cookies.get("token") || "";
   const { data: user, roleChange } = useUserQuery(token);
   console.log("user from request", user);
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -141,60 +138,6 @@ export default function RoleRequestPage() {
       setIsLoading(false);
     }
   };
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (!validateForm()) {
-  //     return;
-  //   }
-
-  //   setIsLoading(true);
-  //   setErrorMessage("");
-  //   setSuccessMessage("");
-
-  //   try {
-  //     // Simulate API call
-
-  //     // In a real app, you would make an API call here
-  //     const requestData = {
-  //       userId: user?.userData?.id,
-  //       firstName: user?.userData?.firstName,
-  //       lastName: user?.userData?.lastName,
-  //       userEmail: user?.userData?.email,
-  //       currentRole: user?.userData?.role,
-  //       requestedRole: formData.requestedRole,
-  //       reason: formData.reason,
-  //       additionalInfo: formData.additionalInfo,
-  //       // status: "PENDING",
-  //       // requestDate: new Date().toISOString(),
-  //     };
-  //     await roleChange(requestData)
-
-  //     console.log("Role request submitted:", requestData);
-
-  //     setSuccessMessage(
-  //       "Your role change request has been submitted successfully! You will receive an email notification once it's reviewed by an administrator."
-  //     );
-
-  //     // Reset form
-  //     setFormData({
-  //       requestedRole: "",
-  //       reason: "",
-  //       additionalInfo: "",
-  //     });
-
-  //     // Redirect after a delay
-  //     setTimeout(() => {
-  //       router.push("/profile");
-  //     }, 3000);
-  //   } catch (error) {
-  //     setErrorMessage("Failed to submit your request. Please try again later.");
-  //     console.error("Role request error:", error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

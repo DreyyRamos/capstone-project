@@ -58,36 +58,3 @@ export function useReportModal() {
     closeReportModal,
   };
 }
-
-// Usage examples:
-/*
-const { isModalOpen, contentType, contentId, contentTitle, reportedUserId, openReportModal, closeReportModal } = useReportModal();
-
-// Report a forum post
-openReportModal("FORUM_POST", "forum_123", "Post title", "author_user_id");
-
-// Report a forum comment
-openReportModal("FORUM_COMMENT", "comment_456", "Comment content preview", "commenter_id");
-
-// Report a nested reply
-openReportModal("FORUM_REPLY_TO_REPLY", "nested_reply_789", "Nested reply content", "reply_author_id");
-
-// Report a publication
-openReportModal("PUBLICATION", "pub_321", "Publication title", "publication_author_id");
-
-// Report a publication comment
-openReportModal("PUBLICATION_COMMENT", "pub_comment_654", "Comment on publication", "commenter_id");
-
-// Report a publication nested reply
-openReportModal("PUBLICATION_REPLY_TO_REPLY", "pub_nested_987", "Nested publication reply", "nested_author_id");
-
-// Then use in component:
-<ReportModal
-  isOpen={isModalOpen}
-  onClose={closeReportModal}
-  contentType={contentType}
-  contentId={contentId}
-  contentTitle={contentTitle}
-  reportedUserId={reportedUserId}
-/>
-*/

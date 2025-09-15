@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-// import { useRole } from "@/contexts/role-context"
+import { useState } from "react";
 import Cookies from "js-cookie";
 
 export function useAuthModal() {
@@ -10,7 +9,6 @@ export function useAuthModal() {
   const [redirectTo, setRedirectTo] = useState("");
 
   const token = Cookies.get("token") || "";
-  // const { user } = useRole()
 
   const requireAuth = (actionDescription: string, redirect?: string) => {
     if (!token) {
