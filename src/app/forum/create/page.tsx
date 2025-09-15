@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -25,7 +26,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForumQuery } from "@/hooks/useForum";
 import Cookies from "js-cookie";
-// import { useRole } from "@/contexts/role-context"
 
 export default function CreateForumTopicPage() {
   const [formData, setFormData] = useState({
@@ -33,27 +33,13 @@ export default function CreateForumTopicPage() {
     description: "",
     category: "",
   });
-  const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-  // const { user } = useRole()
   const router = useRouter();
 
   const token = Cookies.get("token") || "";
 
-  const { createForum, forumCreationSuccess } = useForumQuery(token);
-
-  // Redirect if not authenticated
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push("/login?redirect=" + encodeURIComponent("/forum/create"))
-  //   }
-  // }, [user, router])
-
-  // // Don't render if not authenticated
-  // if (!user) {
-  //   return null
-  // }
+  const { createForum, isCreatingForum } = useForumQuery(token);
 
   const categories = [
     "General Discussion",
@@ -102,14 +88,18 @@ export default function CreateForumTopicPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      createForum({
-        ...formData,
-        tags,
-      });
-
-      if (forumCreationSuccess) {
-        router.push("/");
-      }
+      createForum(
+        {
+          ...formData,
+          tags,
+        },
+        {
+          onSuccess: () => {
+            toast("Forum created!");
+            router.push("/forum");
+          },
+        }
+      );
     } catch (error: any) {
       console.error(error);
     }
@@ -283,13 +273,8 @@ export default function CreateForumTopicPage() {
               <CardContent className="p-4">
                 <Button
                   type="submit"
-                  // onClick={() => handleSubmit}
                   className="w-full"
-                  // disabled={
-                  //   !formData.topicTitle.trim() ||
-                  //   !formData.description.trim() ||
-                  //   !formData.category
-                  // }
+                  disabled={isCreatingForum}
                 >
                   <MessageSquare className="mr-2 h-4 w-4" />
                   Create Topic

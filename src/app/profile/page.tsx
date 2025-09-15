@@ -18,13 +18,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
-  User,
   Mail,
   Phone,
   MapPin,
   Calendar,
   Edit3,
-  BookOpen,
   MessageSquare,
   Trophy,
   Star,
@@ -34,7 +32,6 @@ import {
   Target,
   Camera,
 } from "lucide-react";
-// import { useRole } from "@/contexts/role-context"
 import { UploadButton } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import { useUserQuery, useUserActivityQuery } from "@/hooks/useUser";
@@ -55,7 +52,6 @@ export default function ProfilePage() {
   const token = Cookies.get("token") || "";
   const { data: userActivity } = useUserActivityQuery(token);
   const { data: user, updateUser } = useUserQuery(token);
-  // console.log("user from profile", user);
   console.log("user profile", user);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -167,7 +163,7 @@ export default function ProfilePage() {
   ];
 
   const handleSave = () => {
-    // Save to backend - you'll need to pass the updated data
+    // Save to backend - need to pass the updated data
     updateUser({
       ...profileData,
       interests,
@@ -175,8 +171,6 @@ export default function ProfilePage() {
     setIsEditing(false);
     console.log("Profile saved:", profileData);
   };
-
-  // Removed unused handleInputChange function
 
   const getRoleColor = (role: string) => {
     switch (role.toUpperCase()) {

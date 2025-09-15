@@ -101,7 +101,7 @@ export default function CreatePublicationPage() {
             {
               onSuccess: () => {
                 toast("Publication created and is pending for review!");
-                router.push("/");
+                router.push("/publications");
               },
             }
           );

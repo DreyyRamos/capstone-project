@@ -4,13 +4,6 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Trophy,
@@ -34,7 +27,6 @@ import { useFetchLeaderboard } from "@/hooks/usePublicData";
 
 export default function LeaderboardPage() {
   const { data: users, isLoading } = useFetchLeaderboard();
-  const [timeFilter, setTimeFilter] = useState("all-time");
 
   // Sort users by reputation points in descending order
   const sortedUsers =
@@ -67,21 +59,18 @@ export default function LeaderboardPage() {
   const getRankIcon = (position: number) => {
     switch (position) {
       case 1:
-        // return <Trophy className="h-6 w-6 text-yellow-500" />;
         return (
           <span className="text-lg font-bold h-6 w-6 text-yellow-500">
             #{position}
           </span>
         );
       case 2:
-        // return <Medal className="h-6 w-6 text-gray-500" />;
         return (
           <span className="text-lg font-bold h-6 w-6 text-gray-500">
             #{position}
           </span>
         );
       case 3:
-        // return <Award className="h-6 w-6 text-amber-600" />;
         return (
           <span className="text-lg font-bold h-6 w-6 text-amber-600">
             #{position}

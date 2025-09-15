@@ -9,10 +9,10 @@ export async function PATCH(
 ) {
   const { id } = await params;
   try {
-    // Step 1: Find the post to get its current state
+    // Find the post to get its current state
     const post = await prisma.publication.findUnique({
       where: { pubId: id },
-      select: { isFeatured: true }, // We only need the isFeatured field
+      select: { isFeatured: true }, // only need the isFeatured field
     });
 
     if (!post) {
@@ -22,10 +22,10 @@ export async function PATCH(
       );
     }
 
-    // Step 2: Determine the new value by toggling the current one
+    // Determine the new value by toggling the current one
     const newFeaturedStatus = !post.isFeatured;
 
-    // Step 3: Update the post with the new toggled value
+    // Update the post with the new toggled value
     await prisma.publication.update({
       where: { pubId: id },
       data: { isFeatured: newFeaturedStatus }, // Use the toggled value

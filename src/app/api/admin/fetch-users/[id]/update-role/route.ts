@@ -22,8 +22,6 @@ export async function PUT(
       );
     }
     const { id } = await params;
-    // const resolvedParams = await params;
-    // const id = resolvedParams.id;
 
     const changeUserRole = await prisma.$transaction(async (tx) => {
       // First, check if the admission exists and is still pending
@@ -39,13 +37,6 @@ export async function PUT(
       if (!existingUser) {
         throw new Error("Request not found");
       }
-
-      //   if (existingRequest.status !== "PENDING") {
-      //     throw new Error("Request is not in pending status");
-      //   }
-
-      //   let userId = existingRequest.userId;
-      //   let requestedRole = existingRequest.requestedRole;
 
       const userToUpdate = await tx.user.update({
         where: { id: existingUser.id },

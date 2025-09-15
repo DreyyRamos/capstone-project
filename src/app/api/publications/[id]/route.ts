@@ -11,8 +11,6 @@ export async function GET(
   // if (authResult instanceof NextResponse) return authResult;
   // const { user } = authResult;
 
-  // const resolvedParams = await params;
-  // const pubId = resolvedParams.id;
   const { id: pubId } = await params;
 
   try {
@@ -100,8 +98,6 @@ export async function PUT(
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  // const resolvedParams = await params;
-  // const pubId = resolvedParams.id;
   const { id: pubId } = await params;
 
   if (!pubId) {
@@ -140,8 +136,6 @@ export async function DELETE(
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  // const resolvedParams = await params;
-  // const pubId = resolvedParams.id;
   const { id: pubId } = await params;
 
   if (!pubId) {

@@ -37,16 +37,6 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import { usePostQuery, useArchivedPostsQuery } from "@/hooks/usePost";
 
-interface Publication {
-  title: string;
-  excerpt: string;
-  content: string;
-  imageUrl: string;
-  tags: string[];
-  category: string;
-  status: Status;
-}
-
 enum Status {
   "DRAFT",
   "PUBLISHED",
@@ -89,78 +79,6 @@ export default function ContentManagerPage() {
       console.error(error);
     }
   };
-
-  // const draftPublications = [
-  //   {
-  //     id: 1,
-  //     title: "Winter Sports Season Recap",
-  //     author: "Coach Martinez",
-  //     authorRole: "Teacher",
-  //     lastModified: "2024-01-20T14:30:00Z",
-  //     category: "Sports",
-  //     wordCount: 1250,
-  //     status: "draft",
-  //     excerpt: "A comprehensive look at our winter sports teams' performances this season...",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "New STEM Lab Equipment",
-  //     author: "Dr. Sarah Johnson",
-  //     authorRole: "Teacher",
-  //     lastModified: "2024-01-19T16:45:00Z",
-  //     category: "Science",
-  //     wordCount: 890,
-  //     status: "review",
-  //     excerpt: "Exciting new equipment has arrived for our STEM laboratory...",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Student Council Elections 2024",
-  //     author: "Emma Davis",
-  //     authorRole: "Student",
-  //     lastModified: "2024-01-18T10:15:00Z",
-  //     category: "News",
-  //     wordCount: 650,
-  //     status: "pending",
-  //     excerpt: "Information about the upcoming student council elections...",
-  //   },
-  // ]
-
-  // const publishedContent = [
-  //   {
-  //     id: 4,
-  //     title: "Annual Science Fair Results",
-  //     author: "Dr. Sarah Johnson",
-  //     publishDate: "2024-01-15T09:00:00Z",
-  //     category: "Science",
-  //     views: 1250,
-  //     likes: 45,
-  //     comments: 12,
-  //     status: "published",
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "Student Art Exhibition 2024",
-  //     author: "James Wilson",
-  //     publishDate: "2024-01-10T14:00:00Z",
-  //     category: "Arts",
-  //     views: 2100,
-  //     likes: 78,
-  //     comments: 25,
-  //     status: "published",
-  //   },
-  //   {
-  //     id: 6,
-  //     title: "Basketball Team Championship Victory",
-  //     author: "Coach Martinez",
-  //     publishDate: "2024-01-08T11:30:00Z",
-  //     category: "Sports",
-  //     views: 1850,
-  //     likes: 92,
-  //     comments: 34,
-  //     status: "published",
-  //   },
-  // ]
 
   const categories = [
     { name: "Science", count: 12, color: "bg-blue-100 text-blue-800" },

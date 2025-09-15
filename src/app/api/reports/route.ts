@@ -70,7 +70,7 @@ function assignAdvancedPriority(
     }
   }
 
-  // We could also check for repeat offenders here
+  // pwede din i-check for repeat offenders here
   // if (await isRepeatOffender(reportedUserId)) {
   //   priority = Math.max(priority, Priority.HIGH);
   // }

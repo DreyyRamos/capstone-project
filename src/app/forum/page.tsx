@@ -7,15 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Search,
-  MessageSquare,
-  Users,
-  TrendingUp,
-  Clock,
-  Pin,
-  PlusCircle,
-} from "lucide-react";
+import { Search, MessageSquare, Users, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useForumQuery } from "@/hooks/useForum";
 import Cookies from "js-cookie";

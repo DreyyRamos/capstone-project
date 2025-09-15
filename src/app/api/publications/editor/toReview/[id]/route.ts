@@ -10,10 +10,6 @@ export async function GET(
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
-  // const { user } = authResult;
-
-  // const resolvedParams = await params;
-  // const pubId = resolvedParams.id;
 
   const { id: pubId } = await params;
 

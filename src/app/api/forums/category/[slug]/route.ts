@@ -7,13 +7,6 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  // const authResult = await authMiddleware(req);
-  // if (authResult instanceof NextResponse) return authResult;
-  // const { user } = authResult;
-
-  // const resolvedParams = await params;
-  // const category = resolvedParams.slug;
-
   const { slug: category } = await params;
 
   try {
@@ -56,7 +49,7 @@ export async function GET(
               select: {
                 id: true,
                 firstName: true,
-                lastName: true, // Added lastName
+                lastName: true,
                 profileImage: true,
                 role: true,
               },
@@ -70,7 +63,7 @@ export async function GET(
                   select: {
                     id: true,
                     firstName: true,
-                    lastName: true, // Added lastName
+                    lastName: true,
                     profileImage: true,
                     role: true,
                   },
@@ -84,7 +77,7 @@ export async function GET(
                       select: {
                         id: true,
                         firstName: true,
-                        lastName: true, // Added lastName
+                        lastName: true,
                         profileImage: true,
                         role: true,
                       },
@@ -114,10 +107,6 @@ export async function PUT(
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
-  // const { user } = authResult;
-
-  // const resolvedParams = await params;
-  // const pubId = resolvedParams.id;
 
   const { id: pubId } = await params;
 
@@ -155,10 +144,6 @@ export async function DELETE(
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
-  // const { user } = authResult;
-
-  // const resolvedParams = await params;
-  // const pubId = resolvedParams.id;
 
   const { id: pubId } = await params;
 

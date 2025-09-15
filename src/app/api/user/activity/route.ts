@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
           publication: { select: { pubId: true, title: true } },
         },
       }),
-      // 👇 UPDATED QUERY for Publication Replies
+      // UPDATED QUERY for Publication Replies
       prisma.publicationCommentReplies.findMany({
         where: { reply_authorId: userId },
         select: {
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
           },
         },
       }),
-      // 👇 UPDATED QUERY for Replies to Replies
+      // UPDATED QUERY for Replies to Replies
       prisma.publicationCommentReplyToReplies.findMany({
         where: { reply_authorId: userId },
         select: {
@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
           forum: { select: { forumId: true, topicTitle: true } },
         },
       }),
-      // 👇 UPDATED QUERY for Forum Replies
+      // UPDATED QUERY for Forum Replies
       prisma.forumCommentReplies.findMany({
         where: { reply_authorId: userId },
         select: {
@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
           },
         },
       }),
-      // 👇 UPDATED QUERY for Forum Replies to Replies
+      // UPDATED QUERY for Forum Replies to Replies
       prisma.forumCommentReplyToReplies.findMany({
         where: { reply_authorId: userId },
         select: {
@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
       })),
     ];
 
-    // 👇 UPDATED MAPPING LOGIC for all replies
+    // UPDATED MAPPING LOGIC for all replies
     const repliedActivity = [
       ...pubComments.map((c) => ({
         type: "REPLIED",

@@ -9,7 +9,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Authenticate the user and check their role
+    // Authenticate the user and check their role
     const authResult = await authMiddleware(req);
     if (authResult instanceof NextResponse) {
       return authResult; // Not logged in
@@ -26,7 +26,7 @@ export async function PUT(
       );
     }
 
-    // 2. Get the publication ID from the URL and the new status from the body
+    // Get the publication ID from the URL and the new status from the body
     const { id } = await params;
     const { status } = (await req.json()) as { status: PublicationStatus };
 
@@ -44,7 +44,7 @@ export async function PUT(
       );
     }
 
-    // 3. Use a transaction to update the publication and notify the author
+    // Use a transaction to update the publication and notify the author
     const archivePub = await prisma.$transaction(async (tx) => {
       // First, find the publication to get its authorId and title
       const publication = await tx.publication.findUnique({
@@ -57,13 +57,13 @@ export async function PUT(
         throw new Error("Publication not found or has no author.");
       }
 
-      // STEP A: Update the publication's status
+      // Update the publication's status
       const updatedPub = await tx.publication.update({
         where: { pubId: id },
         data: { status }, // Assign status directly for enum fields
       });
 
-      // STEP B: Create a notification for the original author
+      // Create a notification for the original author
       const notificationTitle = `Your Publication was ${
         status === "PENDING_REVIEW"
           ? "Restored from Archive for reconsideration."
@@ -85,7 +85,7 @@ export async function PUT(
       return updatedPub;
     });
 
-    // 4. Return a success response
+    // Return a success response
     return NextResponse.json(
       {
         message: `Publication successfully ${status.toLowerCase()}.`,

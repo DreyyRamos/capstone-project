@@ -15,9 +15,6 @@ export async function PUT(
 
     const { id } = await params;
 
-    // const resolvedParams = await params;
-    // const id = resolvedParams.id;
-
     const updatedAdmission = await prisma.userAdmission.update({
       where: { admission_id: id },
       data: {

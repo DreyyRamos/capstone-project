@@ -32,7 +32,6 @@ import {
   Search,
   Flag,
   AlertTriangle,
-  CheckCircle,
   XCircle,
   Eye,
   MessageSquare,
@@ -68,8 +67,6 @@ export default function ModerationPage() {
     deleteReportedContent,
     restoreContent,
     cleanupReport,
-    isCleaningUp,
-    cleanUpSuccess,
   } = useModeratorQuery(token);
   console.log("reported contents", reportedContents);
 

@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const { topicTitle, description, tags, category } = await req.json();
 
     const newPublication = await prisma.$transaction(async (tx) => {
-      // STEP 1: Create the publication
+      //Create the publication
       const forum = await tx.forum.create({
         data: {
           topicTitle,
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
       const forumAuthorId = forum.author?.id;
 
-      // STEP 2: Find all users to notify.
+      // Find all users to notify.
       const usersToNotify = await tx.user.findMany({
         where: {
           OR: [
@@ -56,11 +56,11 @@ export async function POST(req: NextRequest) {
         // IMPORTANT: Select the 'role' field as well
         select: {
           id: true,
-          role: true, // We need the roles to create conditional messages
+          role: true, //need the roles to create conditional messages
         },
       });
 
-      // STEP 3: Create the notifications with conditional messages.
+      //Create the notifications with conditional messages.
       if (usersToNotify.length > 0) {
         const notificationData = usersToNotify.map((user) => {
           // Check if the user has the EDITOR role

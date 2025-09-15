@@ -9,7 +9,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Authenticate the user and check their role
+    // Authenticate the user and check their role
     const authResult = await authMiddleware(req);
     if (authResult instanceof NextResponse) {
       return authResult; // Not logged in
@@ -31,12 +31,12 @@ export async function PUT(
       );
     }
 
-    // 2. Get the publication ID from the URL
+    // Get the publication ID from the URL
     const { id } = await params;
 
-    // 3. Use a transaction to update the publication and notify the author
+    // Use a transaction to update the publication and notify the author
     const updatedPublication = await prisma.$transaction(async (tx) => {
-      // First, find the publication to get its authorId and title
+      // find the publication to get its authorId and title
       const publication = await tx.publication.findUnique({
         where: { pubId: id },
         select: {
@@ -56,7 +56,7 @@ export async function PUT(
         throw new Error("Publication not found or has no author.");
       }
 
-      // STEP A: Update the publication and track who updated it
+      // Update the publication and track who updated it
       const updatedPub = await tx.publication.update({
         where: { pubId: id },
         data: {
@@ -109,46 +109,6 @@ export async function PUT(
   }
 }
 
-// export async function PUT(
-//   req: NextRequest,
-//   { params }: { params: { id: string } }
-// ) {
-//   const authResult = await authMiddleware(req);
-//   if (authResult instanceof NextResponse) return authResult;
-//   const { user } = authResult;
-
-//   const resolvedParams = await params;
-//   const pubId = resolvedParams.id;
-
-//   if (!pubId) {
-//     return NextResponse.json({ error: "Post ID is required" }, { status: 400 });
-//   }
-//   //   const { title, content, imageUrl } = await req.json();
-
-//   try {
-//     const updatePost = await prisma.publication.update({
-//       where: {
-//         pubId: pubId,
-//       },
-//       data: {
-//         // title,
-//         // content,
-//         // imageUrl,
-//         status: "PUBLISHED",
-//       },
-//     });
-
-//     console.log(updatePost);
-//     return NextResponse.json(updatePost);
-//   } catch (error) {
-//     console.log(error);
-//     return NextResponse.json(
-//       { error: "An error occurred while updating the post." },
-//       { status: 500 }
-//     );
-//   }
-// }
-
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -157,8 +117,6 @@ export async function DELETE(
   if (authResult instanceof NextResponse) return authResult;
   const { user } = authResult;
 
-  // const resolvedParams = await params;
-  // const pubId = resolvedParams.id;
   const { id: pubId } = await params;
 
   if (!pubId) {

@@ -15,9 +15,6 @@ export async function PUT(
 
     const { id } = await params;
 
-    // const resolvedParams = await params;
-    // const id = resolvedParams.id;
-
     const approveRoleChangeRequest = await prisma.$transaction(async (tx) => {
       // First, check if the admission exists and is still pending
       const existingRequest = await tx.changeUserRole.findUnique({
@@ -92,72 +89,3 @@ export async function PUT(
     );
   }
 }
-
-// import prisma from "@/lib/prisma";
-// import { NextResponse } from "next/server";
-// import { authMiddleware } from "@/app/api/(middlware)/authMiddleware";
-// import { NextRequest } from "next/server";
-// import { Role, PublicationStatus } from "@/generated/prisma";
-
-// export async function POST(
-//   req: NextRequest,
-//   { params }: { params: { id: string } }
-// ) {
-//   try {
-//     const authResult = await authMiddleware(req);
-//     if (authResult instanceof NextResponse) {
-//       return authResult; // Not logged in
-//     }
-
-//     const {
-//       user_email,
-//       firstName,
-//       lastName,
-//       password,
-//       profileImage,
-//       id_picture,
-//       bio,
-//       contactNumber,
-//       location,
-//       interests,
-//     } = await req.json();
-
-//     const resolvedParams = await params;
-//     const id = resolvedParams.id;
-
-//     const approveAdmission = await prisma.$transaction(async (tx) => {
-//       const user = await tx.user.create({
-//         data: {
-//           email: user_email,
-//           firstName,
-//           lastName,
-//           password,
-//           profileImage,
-//           id_picture,
-//           bio,
-//           contactNumber,
-//           location,
-//           interests,
-//         },
-//       });
-
-//       await tx.userAdmission.update({
-//         where: { admission_id: id },
-//         data: {
-//           status: "APPROVED",
-//         },
-//       });
-//       return user;
-//     });
-
-//     return NextResponse.json({
-//       status: 200,
-//       admission: approveAdmission,
-//     });
-//   } catch (error) {
-//     return NextResponse.json(
-//       { error: "Something went wrong" },
-//       { status: 500 }
-//     );
-//   }
-// }

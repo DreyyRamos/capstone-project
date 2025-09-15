@@ -46,13 +46,6 @@ import type { Role, AdmissionStatus } from "@/generated/prisma";
 import EmailTrigger from "@/components/email-trigger";
 import { toast } from "sonner";
 
-// const stats = {
-//   total: pendingAdmissions.length,
-//   students: pendingAdmissions.filter((u) => u.role === "student").length,
-//   teachers: pendingAdmissions.filter((u) => u.role === "teacher").length,
-//   moderators: pendingAdmissions.filter((u) => u.role === "moderator").length,
-// };
-
 interface Admission {
   admission_id: string;
   user_email: string;

@@ -10,7 +10,7 @@ export async function PATCH(_req: NextRequest) {
 
   const { id } = authResult.user;
   try {
-    // 2. Use Prisma to update the notifications
+    // Use Prisma to update the notifications
     const updateResult = await prisma.notifications.updateMany({
       where: {
         userId: id,
@@ -21,7 +21,7 @@ export async function PATCH(_req: NextRequest) {
       },
     });
 
-    // 3. Send a success response
+    // Send a success response
     return NextResponse.json(
       {
         message: "All notifications marked as read successfully.",
@@ -30,7 +30,7 @@ export async function PATCH(_req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    // 4. Handle errors gracefully
+    // Handle errors gracefully
     console.error("Mark all as read error:", error);
 
     // Generic server error for all other cases

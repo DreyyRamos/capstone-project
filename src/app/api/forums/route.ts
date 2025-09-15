@@ -5,7 +5,6 @@ import { authMiddleware } from "../(middlware)/authMiddleware";
 export async function GET(req: NextRequest) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
-  //   const { id } = authResult.user;
 
   try {
     const posts = await prisma.forum.findMany({
@@ -27,7 +26,7 @@ export async function GET(req: NextRequest) {
           select: {
             commentId: true,
             comment_content: true,
-            createdAt: true, // Make sure this field exists
+            createdAt: true,
             author: {
               select: {
                 id: true,
@@ -40,7 +39,7 @@ export async function GET(req: NextRequest) {
               select: {
                 replyId: true,
                 reply_content: true,
-                createdAt: true, // Make sure this field exists
+                createdAt: true,
                 reply_author: {
                   select: {
                     id: true,
@@ -56,9 +55,6 @@ export async function GET(req: NextRequest) {
         forumLikes: true,
       },
     });
-
-    // Add this logging to see the raw data structure
-    console.log("Posts data:", JSON.stringify(posts, null, 2));
 
     return NextResponse.json({ status: 200, posts });
   } catch (error: any) {

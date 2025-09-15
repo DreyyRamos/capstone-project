@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
           select: {
             commentId: true,
             comment_content: true,
-            createdAt: true, // Make sure this field exists
+            createdAt: true,
             author: {
               select: {
                 id: true,
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
               select: {
                 replyId: true,
                 reply_content: true,
-                createdAt: true, // Make sure this field exists
+                createdAt: true,
                 reply_author: {
                   select: {
                     id: true,
@@ -53,9 +53,6 @@ export async function GET(req: NextRequest) {
         pubLikes: true,
       },
     });
-
-    // Add this logging to see the raw data structure
-    console.log("Posts data:", JSON.stringify(posts, null, 2));
 
     return NextResponse.json({ status: 200, posts });
   } catch (error: any) {
