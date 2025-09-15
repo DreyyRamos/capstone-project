@@ -78,21 +78,25 @@ const adminNavItems = [
   },
 ];
 
+const slugify = (str: string) => {
+  return str;
+};
+
 const forumCategories = [
-  {
-    name: "General Discussion",
-    count: 45,
-    href: "/forum/category/general-discussion",
-  },
-  { name: "Academic", count: 23, href: "/forum/category/academic" },
-  {
-    name: "Clubs & Activities",
-    count: 18,
-    href: "/forum/category/clubs-activities",
-  },
-  { name: "Sports", count: 12, href: "/forum/category/sports" },
-  { name: "Arts", count: 8, href: "/forum/category/arts" },
-];
+  { name: "General Discussion", count: 45 },
+  { name: "Academic", count: 23 },
+  { name: "Clubs & Activities", count: 18 },
+  { name: "Sports", count: 12 },
+  { name: "Arts & Culture", count: 8 },
+  { name: "Technology", count: 8 },
+  { name: "Study Groups", count: 8 },
+  { name: "Events", count: 8 },
+  { name: "Help & Support", count: 8 },
+  { name: "Uncategorized", count: 8 },
+].map((cat) => ({
+  ...cat,
+  href: `/forum/category/${slugify(cat.name)}`,
+}));
 
 export function AdminNavigation() {
   const pathname = usePathname();
@@ -171,7 +175,7 @@ export function AdminNavigation() {
                   variant="ghost"
                   className="flex items-center gap-1 text-sm font-medium"
                 >
-                  Categories
+                  Forum Categories
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -283,7 +287,8 @@ export function AdminNavigation() {
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel>Categories</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {forumCategories.slice(0, 3).map((category) => (
+
+                {forumCategories.map((category) => (
                   <DropdownMenuItem key={category.name} asChild>
                     <Link
                       href={category.href}

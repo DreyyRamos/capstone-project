@@ -9,3 +9,11 @@ export const fetchUserLeaderboard = async () => {
   if (!response.ok) throw new Error("Failed to fetch posts");
   return response.json();
 };
+
+export const fetchUsers = async () => {
+  const response = await fetch("/api/public/users", {
+    method: "GET",
+  });
+  if (!response.ok) throw new Error("Failed to fetch posts");
+  return response.json();
+};

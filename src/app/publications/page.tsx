@@ -24,6 +24,9 @@ import {
 import { usePostQuery } from "@/hooks/usePost";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import { useAuthModal } from "@/hooks/use-auth-modal";
+import { AuthModal } from "@/components/auth-modal";
+import { useRouter } from "next/navigation";
 
 interface Author {
   id: string;
@@ -47,6 +50,9 @@ interface Publication {
 }
 
 export default function PublicationsPage() {
+  const router = useRouter();
+  const { isOpen, action, redirectTo, requireAuth, closeModal } =
+    useAuthModal();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
@@ -67,32 +73,21 @@ export default function PublicationsPage() {
     "News",
   ];
 
-  // const filteredPublications = data?.posts?.filter((pub: Publication) => {
-  //   const matchesSearch =
-  //     pub.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     pub.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-  //   const matchesCategory =
-  //     selectedCategory === "all" || pub.category === selectedCategory;
-  //   return matchesSearch && matchesCategory;
-  // });
-
-  // const sortedPublications = [...filteredPublications].sort((a, b) => {
-  //   switch (sortBy) {
-  //     case "newest":
-  //       return new Date(b.date).getTime() - new Date(a.date).getTime();
-  //     case "oldest":
-  //       return new Date(a.date).getTime() - new Date(b.date).getTime();
-  //     case "popular":
-  //       return b.views - a.views;
-  //     case "liked":
-  //       return b.likes - a.likes;
-  //     default:
-  //       return 0;
-  //   }
-  // });
+  const startDiscussion = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (requireAuth("create a publication")) {
+      router.push("/publications/create");
+    }
+  };
 
   return (
     <div className="space-y-6">
+      <AuthModal
+        isOpen={isOpen}
+        onClose={closeModal}
+        action={action}
+        redirectTo={redirectTo}
+      />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -103,10 +98,10 @@ export default function PublicationsPage() {
           </p>
         </div>
         <Button asChild>
-          <Link href="/publications/create">
+          <a className="cursor-pointer" onClick={startDiscussion}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Create Publication
-          </Link>
+          </a>
         </Button>
       </div>
 

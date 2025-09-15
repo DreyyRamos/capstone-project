@@ -20,8 +20,14 @@ import Link from "next/link";
 import { useForumQuery } from "@/hooks/useForum";
 import Cookies from "js-cookie";
 import { timeAgo } from "@/lib/timeAgo";
+import { useAuthModal } from "@/hooks/use-auth-modal";
+import { AuthModal } from "@/components/auth-modal";
+import { useRouter } from "next/navigation";
 
 export default function ForumPage() {
+  const router = useRouter();
+  const { isOpen, action, redirectTo, requireAuth, closeModal } =
+    useAuthModal();
   const [searchQuery, setSearchQuery] = useState("");
 
   const token = Cookies.get("token") || "";
@@ -47,12 +53,16 @@ export default function ForumPage() {
       )[0];
 
       // crude post count: 1 forum post  all comments/replies
-      const posts = forums.reduce(
+      const replies = forums.reduce(
         (sum: any, f: any) =>
-          1 +
-          sum +
-          f.forumComments.length +
-          f.forumComments.flatMap((c: any) => c.forumCommentReplies).length,
+          // 1 +
+          // sum +
+          f.forumComments?.length +
+          f.forumComments?.reduce((total: any, post: any) => {
+            return (
+              total + (post.forumComments?.forumCommentReplies?.length || 0)
+            );
+          }, 0),
         0
       );
 
@@ -63,7 +73,7 @@ export default function ForumPage() {
         name,
         description: `Discussion about ${name}`,
         topics: forums.length,
-        posts,
+        replies,
         lastUpdated: timeAgo(new Date(latest.createdAt)),
         // simple deterministic color per category
         color: `bg-${
@@ -78,73 +88,37 @@ export default function ForumPage() {
   console.log("categories to check", categories);
   console.log("raw forum to check", rawForums);
 
-  const recentTopics = [
-    {
-      id: 1,
-      title: "Tips for Better Study Habits",
-      author: "Alex Chen",
-      category: "Academic",
-      replies: 23,
-      views: 145,
-      lastReply: "2 hours ago",
-      isPinned: false,
-      isHot: true,
-    },
-    {
-      id: 2,
-      title: "Upcoming School Events Discussion",
-      author: "Emma Davis",
-      category: "General Discussion",
-      replies: 15,
-      views: 89,
-      lastReply: "4 hours ago",
-      isPinned: true,
-      isHot: false,
-    },
-    {
-      id: 3,
-      title: "Science Club Meeting Notes",
-      author: "Michael Brown",
-      category: "Clubs & Activities",
-      replies: 8,
-      views: 56,
-      lastReply: "6 hours ago",
-      isPinned: false,
-      isHot: false,
-    },
-    {
-      id: 4,
-      title: "Basketball Season Highlights",
-      author: "Coach Martinez",
-      category: "Sports",
-      replies: 34,
-      views: 234,
-      lastReply: "8 hours ago",
-      isPinned: false,
-      isHot: true,
-    },
-    {
-      id: 5,
-      title: "Art Exhibition Feedback",
-      author: "Sarah Wilson",
-      category: "Arts & Culture",
-      replies: 12,
-      views: 78,
-      lastReply: "1 day ago",
-      isPinned: false,
-      isHot: false,
-    },
-  ];
+  const startDiscussion = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (requireAuth("start a discussion")) {
+      router.push("/forum/create");
+    }
+  };
 
   const stats = [
-    { label: "Total Topics", value: "106", icon: MessageSquare },
-    { label: "Total Posts", value: "591", icon: MessageSquare },
+    {
+      label: "Total Topics",
+      value: rawForums?.posts?.length,
+      icon: MessageSquare,
+    },
+    {
+      label: "Total Replies and Comments",
+      value: rawForums?.posts?.reduce((total: any, post: any) => {
+        return total + (post.forumComments?.length || 0);
+      }, 0),
+      icon: MessageSquare,
+    },
     { label: "Active Users", value: "247", icon: Users },
-    { label: "Today's Posts", value: "18", icon: TrendingUp },
   ];
 
   return (
     <div className="space-y-6">
+      <AuthModal
+        isOpen={isOpen}
+        onClose={closeModal}
+        action={action}
+        redirectTo={redirectTo}
+      />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -154,10 +128,10 @@ export default function ForumPage() {
           </p>
         </div>
         <Button asChild>
-          <Link href="/forum/create">
+          <a className="cursor-pointer" onClick={startDiscussion}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Start Discussion
-          </Link>
+          </a>
         </Button>
       </div>
 
@@ -197,7 +171,6 @@ export default function ForumPage() {
         <TabsList>
           <TabsTrigger value="categories">Categories</TabsTrigger>
           <TabsTrigger value="recent">Recent Topics</TabsTrigger>
-          <TabsTrigger value="popular">Popular</TabsTrigger>
         </TabsList>
 
         <TabsContent value="categories" className="space-y-4">
@@ -218,15 +191,15 @@ export default function ForumPage() {
                           {category.name}
                         </Link>
                       </h3>
-                      <Badge className={category.color}>
+                      {/* <Badge className={category.color}>
                         {category.topics} topics
-                      </Badge>
+                      </Badge> */}
                     </div>
                     <p className="text-muted-foreground mb-3">
                       {category.description}
                     </p>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>{category.posts} posts</span>
+                      <span>{category.topics} topics</span>
                       <span>•</span>
                       <span>Last updated: {category.lastUpdated}</span>
                     </div>
@@ -303,64 +276,6 @@ export default function ForumPage() {
               </CardContent>
             </Card>
           ))}
-        </TabsContent>
-
-        <TabsContent value="popular" className="space-y-4">
-          {recentTopics
-            .sort((a, b) => b.views - a.views)
-            .map((topic) => (
-              <Card
-                key={topic.id}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <TrendingUp className="h-4 w-4 text-orange-600" />
-                        <h3 className="text-lg font-semibold">
-                          <Link
-                            href={`/forum/topic/${topic.id}`}
-                            className="hover:text-blue-600"
-                          >
-                            {topic.title}
-                          </Link>
-                        </h3>
-                      </div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Avatar className="h-6 w-6">
-                          <AvatarFallback className="text-xs">
-                            {topic.author
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm text-muted-foreground">
-                          by {topic.author}
-                        </span>
-                        <Badge variant="outline" className="text-xs">
-                          {topic.category}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <MessageSquare className="h-4 w-4" />
-                          {topic.replies} replies
-                        </span>
-                        <span className="font-medium text-orange-600">
-                          {topic.views} views
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
-                          {topic.lastReply}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
         </TabsContent>
       </Tabs>
     </div>

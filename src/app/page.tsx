@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useFeaturedPostsQuery, usePostQuery } from "@/hooks/usePost";
+import { useForumQuery } from "@/hooks/useForum";
+import { useFetchUsers } from "@/hooks/usePublicData";
 import Cookies from "js-cookie";
 
 interface Author {
@@ -36,40 +38,13 @@ interface Publication {
 }
 
 export default function HomePage() {
-  // const recentForumPosts = [
-  //   {
-  //     id: 1,
-  //     title: "Tips for Better Study Habits",
-  //     author: "Alex Chen",
-  //     replies: 23,
-  //     lastActivity: "2 hours ago",
-  //     category: "Academic",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Upcoming School Events Discussion",
-  //     author: "Emma Davis",
-  //     replies: 15,
-  //     lastActivity: "4 hours ago",
-  //     category: "General",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Science Club Meeting Notes",
-  //     author: "Michael Brown",
-  //     replies: 8,
-  //     lastActivity: "6 hours ago",
-  //     category: "Clubs",
-  //   },
-  // ]
-
   const token = Cookies.get("token") || "";
 
   const { data: featuredPublications, isLoading } = useFeaturedPostsQuery();
   const { data: publications, isLoading: publicationLoading } =
     usePostQuery(token);
-
-  console.log("pubs from usePostQuery", publications);
+  const { data: forums } = useForumQuery(token);
+  const { data: users } = useFetchUsers();
 
   if (isLoading) {
     return <div>Loading publications...</div>; // Or a custom spinner component
@@ -128,7 +103,7 @@ export default function HomePage() {
                   <MessageSquare className="h-6 w-6 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">89</p>
+                  <p className="text-2xl font-bold">{forums?.posts?.length}</p>
                   <p className="text-sm text-muted-foreground">Forum Topics</p>
                 </div>
               </div>
@@ -141,7 +116,7 @@ export default function HomePage() {
                   <Users className="h-6 w-6 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">1,247</p>
+                  <p className="text-2xl font-bold">{users?.count ?? 0}</p>
                   <p className="text-sm text-muted-foreground">Active Users</p>
                 </div>
               </div>

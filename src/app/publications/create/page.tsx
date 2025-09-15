@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -31,9 +32,10 @@ import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import Tiptap from "@/components/tiptap";
 import { useTokenUser } from "@/hooks/useTokenUser";
+import { useConfirmation } from "@/components/confirmation-provider";
 
 export default function CreatePublicationPage() {
-  const { user } = useTokenUser();
+  const { confirmAction } = useConfirmation();
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -85,19 +87,29 @@ export default function CreatePublicationPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      createPost({
-        ...formData,
-        tags,
-        imageUrl: formData.imageUrl ?? "",
-      });
-
-      if (createSuccess) {
-        router.push("/");
+    confirmAction(
+      "Submit Publication",
+      "This publication will be submitted and will be reviewed by editors.",
+      () => {
+        try {
+          createPost(
+            {
+              ...formData,
+              tags,
+              imageUrl: formData.imageUrl ?? "",
+            },
+            {
+              onSuccess: () => {
+                toast("Publication created and is pending for review!");
+                router.push("/");
+              },
+            }
+          );
+        } catch (error: any) {
+          console.error(error);
+        }
       }
-    } catch (error: any) {
-      console.error(error);
-    }
+    );
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,14 +157,6 @@ export default function CreatePublicationPage() {
             </p>
           </div>
         </div>
-        {/* save to drafat */}
-        {/* <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => handleSubmit(false)}>
-            <Save className="mr-2 h-4 w-4" />
-            Save Draft
-          </Button>
-          <Button onClick={() => handleSubmit(true)}>Publish</Button>
-        </div> */}
       </div>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -174,6 +178,7 @@ export default function CreatePublicationPage() {
                     placeholder="Enter publication title..."
                     name="title"
                     onChange={handleChange}
+                    required
                   />
                 </div>
 
@@ -258,13 +263,7 @@ export default function CreatePublicationPage() {
                   description={formData.content}
                   onChange={handleContentChange}
                 />
-                {user?.status === "BANNED" ? (
-                  <p className="text-red-500">
-                    You cannot create a publication because you&apos;re banned.
-                    Contact the administrator.
-                  </p>
-                ) : (
-                  <Button
+                {/* <Button
                     type="submit"
                     variant="outline"
                     className="w-full bg-transparent"
@@ -272,8 +271,7 @@ export default function CreatePublicationPage() {
                   >
                     <Save className="mr-2 h-4 w-4" />
                     Publish
-                  </Button>
-                )}
+                  </Button> */}
                 {/* <Textarea
                   placeholder="Write your publication content here..."
                   name="content"
@@ -395,9 +393,14 @@ export default function CreatePublicationPage() {
                 <CardTitle>Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="outline" className="w-full bg-transparent">
-                  <Eye className="mr-2 h-4 w-4" />
-                  Preview
+                <Button
+                  type="submit"
+                  variant="outline"
+                  className="w-full bg-transparent"
+                  disabled={isCreating}
+                >
+                  <Save className="mr-2 h-4 w-4" />
+                  Publish
                 </Button>
                 <Button variant="outline" className="w-full bg-transparent">
                   <Save className="mr-2 h-4 w-4" />

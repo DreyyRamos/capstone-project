@@ -26,12 +26,18 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useFetchForumByCategory } from "@/hooks/useForum";
+import { AuthModal } from "@/components/auth-modal";
+import { useAuthModal } from "@/hooks/use-auth-modal";
+import { useRouter } from "next/navigation";
 
 type PageProps = {
   params: Promise<{ category: string }>;
 };
 
 export default function ForumCategoryPage({ params }: PageProps) {
+  const router = useRouter();
+  const { isOpen, action, redirectTo, requireAuth, closeModal } =
+    useAuthModal();
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("recent");
 
@@ -51,8 +57,21 @@ export default function ForumCategoryPage({ params }: PageProps) {
   console.log("decoded category", decodedCategory);
   console.log("processed category", category);
 
+  const startDiscussion = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (requireAuth("create a new discussion")) {
+      router.push("/forum/create");
+    }
+  };
+
   return (
     <div className="space-y-6">
+      <AuthModal
+        isOpen={isOpen}
+        onClose={closeModal}
+        action={action}
+        redirectTo={redirectTo}
+      />
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button asChild variant="ghost">
@@ -73,10 +92,10 @@ export default function ForumCategoryPage({ params }: PageProps) {
           </p>
         </div>
         <Button asChild>
-          <Link href="/forum/create">
+          <a className="cursor-pointer" onClick={startDiscussion}>
             <Plus className="mr-2 h-4 w-4" />
             New Topic
-          </Link>
+          </a>
         </Button>
       </div>
 
@@ -244,7 +263,9 @@ export default function ForumCategoryPage({ params }: PageProps) {
                 No topics found in {decodedCategory.toLowerCase()}.
               </p>
               <Button asChild>
-                <Link href="/forum/create">Start the first discussion</Link>
+                <a className="cursor-pointer" onClick={startDiscussion}>
+                  Start the first discussion
+                </a>
               </Button>
             </CardContent>
           </Card>

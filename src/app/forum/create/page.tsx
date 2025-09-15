@@ -153,6 +153,7 @@ export default function CreateForumTopicPage() {
                     name="topicTitle"
                     value={formData.topicTitle}
                     onChange={handleChange}
+                    required
                   />
                   <p className="text-sm text-muted-foreground">
                     Choose a clear, descriptive title that summarizes your topic

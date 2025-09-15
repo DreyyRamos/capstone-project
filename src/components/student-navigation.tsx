@@ -41,13 +41,26 @@ const quickActions = [
   { name: "Start Discussion", href: "/forum/create", icon: Hash },
 ]
 
+const slugify = (str: string) => {
+  return str;
+};
+
 const forumCategories = [
-  { name: "General Discussion", count: 45, href: "/forum/category/general-discussion" },
-  { name: "Academic", count: 23, href: "/forum/category/academic" },
-  { name: "Clubs & Activities", count: 18, href: "/forum/category/clubs-activities" },
-  { name: "Sports", count: 12, href: "/forum/category/sports" },
-  { name: "Arts", count: 8, href: "/forum/category/arts" },
-]
+  { name: "General Discussion", count: 45 },
+  { name: "Academic", count: 23 },
+  { name: "Clubs & Activities", count: 18 },
+  { name: "Sports", count: 12 },
+  { name: "Arts & Culture", count: 8 },
+  { name: "Technology", count: 8 },
+  { name: "Study Groups", count: 8 },
+  { name: "Events", count: 8 },
+  { name: "Help & Support", count: 8 },
+  { name: "Uncategorized", count: 8 },
+].map((cat) => ({
+  ...cat,
+  href: `/forum/category/${slugify(cat.name)}`,
+}));
+
 
 export function StudentNavigation() {
   const pathname = usePathname()
@@ -64,7 +77,7 @@ export function StudentNavigation() {
               Student
             </Badge>
             {navigation.map((item) => {
-              const isActive = pathname === item.href
+              const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.name}
@@ -73,20 +86,23 @@ export function StudentNavigation() {
                     "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors",
                     isActive
                       ? "bg-secondary text-secondary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                   )}
                 >
                   <item.icon className="h-4 w-4" />
                   {item.name}
                 </Link>
-              )
+              );
             })}
 
             {/* Forum Categories Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-1 text-sm font-medium">
-                  Categories
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-1 text-sm font-medium"
+                >
+                  Forum Categories
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -95,7 +111,10 @@ export function StudentNavigation() {
                 <DropdownMenuSeparator />
                 {forumCategories.map((category) => (
                   <DropdownMenuItem key={category.name} asChild>
-                    <Link href={category.href} className="flex items-center justify-between">
+                    <Link
+                      href={category.href}
+                      className="flex items-center justify-between"
+                    >
                       <span>{category.name}</span>
                       <Badge variant="secondary" className="text-xs">
                         {category.count}
@@ -122,7 +141,10 @@ export function StudentNavigation() {
                 <DropdownMenuSeparator />
                 {quickActions.map((action) => (
                   <DropdownMenuItem key={action.name} asChild>
-                    <Link href={action.href} className="flex items-center gap-2">
+                    <Link
+                      href={action.href}
+                      className="flex items-center gap-2"
+                    >
                       <action.icon className="h-4 w-4" />
                       {action.name}
                     </Link>
@@ -141,7 +163,7 @@ export function StudentNavigation() {
               Student
             </Badge>
             {navigation.map((item) => {
-              const isActive = pathname === item.href
+              const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.name}
@@ -150,13 +172,13 @@ export function StudentNavigation() {
                     "flex items-center gap-1 px-2 py-1 text-sm font-medium rounded-md transition-colors",
                     isActive
                       ? "bg-secondary text-secondary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                   )}
                 >
                   <item.icon className="h-4 w-4" />
                   <span className="hidden sm:inline">{item.name}</span>
                 </Link>
-              )
+              );
             })}
           </div>
 
@@ -171,14 +193,18 @@ export function StudentNavigation() {
             <SheetContent side="right" className="w-80">
               <SheetHeader>
                 <SheetTitle>Student Navigation</SheetTitle>
-                <SheetDescription>Access publications and participate in discussions</SheetDescription>
+                <SheetDescription>
+                  Access publications and participate in discussions
+                </SheetDescription>
               </SheetHeader>
               <div className="mt-6 space-y-6">
                 {/* Main Navigation */}
                 <div className="space-y-2">
-                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Main</h3>
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                    Main
+                  </h3>
                   {navigation.map((item) => {
-                    const isActive = pathname === item.href
+                    const isActive = pathname === item.href;
                     return (
                       <Link
                         key={item.name}
@@ -188,13 +214,13 @@ export function StudentNavigation() {
                           "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors",
                           isActive
                             ? "bg-secondary text-secondary-foreground"
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                         )}
                       >
                         <item.icon className="h-4 w-4" />
                         {item.name}
                       </Link>
-                    )
+                    );
                   })}
                 </div>
 
@@ -245,5 +271,5 @@ export function StudentNavigation() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
