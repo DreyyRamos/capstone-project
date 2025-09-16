@@ -18,23 +18,37 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+import {
   Mail,
   Phone,
   MapPin,
   Calendar,
   Edit3,
+  Edit2,
+  Trash2,
   MessageSquare,
   Trophy,
   Star,
   FileText,
   Users,
   Award,
-  Target,
   Camera,
+  MoreVertical,
 } from "lucide-react";
 import { UploadButton } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
-import { useUserQuery, useUserActivityQuery } from "@/hooks/useUser";
+import {
+  useUserQuery,
+  useUserActivityQuery,
+  useUserPublicationQuery,
+} from "@/hooks/useUser";
+import { useConfirmation } from "@/components/confirmation-provider";
 import { timeAgo } from "@/lib/timeAgo";
 
 interface User {
@@ -50,8 +64,10 @@ interface User {
 
 export default function ProfilePage() {
   const token = Cookies.get("token") || "";
+  const { confirmDelete } = useConfirmation();
   const { data: userActivity } = useUserActivityQuery(token);
   const { data: user, updateUser } = useUserQuery(token);
+  const { deletePub, isDeletingPub } = useUserPublicationQuery(token);
   console.log("user profile", user);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -118,6 +134,31 @@ export default function ProfilePage() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleDeletePublication = (pubId: string, title: string) => {
+    confirmDelete("publication", () => {
+      deletePub(pubId);
+    });
+  };
+
+  // Handler functions for forums
+  const handleEditForum = (forumId: string) => {
+    console.log("Edit forum:", forumId);
+    // Navigate to edit forum page or open edit modal
+    // Example: router.push(`/forums/edit/${forumId}`);
+  };
+
+  const handleDeleteForum = (forumId: string, title: string) => {
+    confirmDelete(
+      "forum",
+      () => {
+        console.log("Delete forum:", forumId);
+        // Call your delete forum API here
+        // Example: deleteForum(forumId);
+      }
+      // `Are you sure you want to delete "${title}"? This action cannot be undone.`
+    );
   };
 
   const stats = {
@@ -586,6 +627,38 @@ export default function ProfilePage() {
                       >
                         {pub?.status || "Published"}
                       </Badge>
+
+                      {/* Dropdown Menu for Publications */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem asChild>
+                            <Link
+                              href={`/profile/publication/${pub?.pubId}/update`}
+                            >
+                              <Edit2 className="h-4 w-4 mr-2" />
+                              Edit
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              handleDeletePublication(pub?.pubId, pub?.title)
+                            }
+                            className="text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                     {index < user?.userData?.publications?.length - 1 && (
                       <Separator className="mt-4" />
@@ -630,6 +703,39 @@ export default function ProfilePage() {
                           <span>{forum?.forumLikes?.length || 0} likes</span>
                         </div>
                       </div>
+
+                      {/* Dropdown Menu for Forums */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() => handleEditForum(forum?.forumId)}
+                          >
+                            <Edit2 className="h-4 w-4 mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              handleDeleteForum(
+                                forum?.forumId,
+                                forum?.topicTitle
+                              )
+                            }
+                            className="text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                     {index < user?.userData?.forums?.length - 1 && (
                       <Separator className="mt-4" />

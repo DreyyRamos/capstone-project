@@ -6,6 +6,8 @@ import {
   fetchVisitUser,
   fetchVisitingUserActivity,
   requestRoleChange,
+  editUserPublication,
+  deleteUserPublication,
 } from "@/services/user";
 
 interface User {
@@ -35,6 +37,15 @@ interface RoleChange {
   requestedRole: Roles;
   reason: string;
   additionalInfo: string;
+}
+
+interface Publication {
+  title: string;
+  excerpt: string;
+  content: string;
+  imageUrl: string;
+  tags: string[];
+  category: string;
 }
 
 export const useUserQuery = (token: string) => {
@@ -168,5 +179,62 @@ export const useUserVisitingUserActivityQuery = (id: string) => {
     isError,
     isSuccess,
     refetch,
+  };
+};
+
+export const useUserPublicationQuery = (token: string) => {
+  const queryClient = useQueryClient();
+
+  // Query to fetch user data
+  const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+    queryKey: ["users", token],
+    queryFn: async () => await fetchCurrentUser(token),
+    // refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
+  });
+
+  // Mutation to edit user data
+  const editPub = useMutation({
+    mutationFn: async (vars: { newData: Publication; pubId: string }) =>
+      await editUserPublication(token, vars.newData, vars.pubId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["pub"] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+    },
+  });
+
+  const deletePub = useMutation({
+    mutationFn: async (pubId: string) =>
+      await deleteUserPublication(token, pubId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["pub"] });
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+    },
+    onError: (error: Error) => {
+      console.error("Role change request failed:", error);
+    },
+  });
+
+  return {
+    // Query results
+    data,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
+
+    // Mutation functions
+    editPub: editPub.mutate,
+    isEditing: editPub.isPending,
+    isEditSuccess: editPub.isSuccess,
+
+    deletePub: deletePub.mutate,
+    isDeletingPub: deletePub.isPending,
+    isDeletionSuccess: deletePub.isSuccess,
   };
 };

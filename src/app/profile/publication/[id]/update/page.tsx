@@ -31,6 +31,7 @@ import {
   useFetchOnePostQuery,
   usePostByIdQuery,
 } from "@/hooks/usePost";
+import { useUserPublicationQuery } from "@/hooks/useUser";
 import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import Tiptap from "@/components/tiptap";
@@ -56,7 +57,8 @@ export default function UpdatePublicationPage({ params }: PageProps) {
   const router = useRouter();
   const token = Cookies.get("token") || "";
   const { data: pubToUpdate } = useFetchOnePostQuery(id);
-  const { updatePost, isUpdating, updateSuccess } = usePostByIdQuery(token, id);
+  const { editPub: updatePost, isEditing: isUpdating } =
+    useUserPublicationQuery(token);
 
   const categories = [
     "Science",
@@ -109,14 +111,17 @@ export default function UpdatePublicationPage({ params }: PageProps) {
     try {
       await updatePost(
         {
-          ...formData,
-          tags,
-          imageUrl: formData.imageUrl ?? "",
+          newData: {
+            ...formData,
+            tags,
+            imageUrl: formData.imageUrl ?? "",
+          },
+          pubId: id,
         },
         {
           onSuccess: () => {
-            toast("Updated successfully!");
-            router.push("/content");
+            toast("Publication updated successfully!");
+            router.push(`/publications/${id}`);
           },
         }
       );
@@ -164,7 +169,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
             </Link>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">Create Publication</h1>
+            <h1 className="text-3xl font-bold">Edit Publication</h1>
             <p className="text-muted-foreground">
               Share news, articles, and updates with the school community
             </p>

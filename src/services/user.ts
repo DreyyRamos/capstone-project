@@ -9,6 +9,15 @@ interface User {
   interests: string[];
 }
 
+interface Publication {
+  title: string;
+  excerpt: string;
+  content: string;
+  imageUrl: string;
+  tags: string[];
+  category: string;
+}
+
 export const fetchCurrentUser = async (token: string) => {
   const response = await fetch("/api/user/me", {
     method: "GET",
@@ -62,7 +71,6 @@ export const fetchVisitingUserActivity = async (id: string) => {
   return response.json();
 };
 
-
 export const requestRoleChange = async (token: string, newData: any) => {
   const response = await fetch(`/api/role-change-request`, {
     method: "POST",
@@ -71,6 +79,34 @@ export const requestRoleChange = async (token: string, newData: any) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(newData),
+  });
+  if (!response.ok) throw new Error("Failed to fetch current user");
+  return response.json();
+};
+
+export const editUserPublication = async (
+  token: string,
+  newData: Publication,
+  pubId: string
+) => {
+  const response = await fetch(`/api/user/me/publication/${pubId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(newData),
+  });
+  if (!response.ok) throw new Error("Failed to fetch current user");
+  return response.json();
+};
+
+export const deleteUserPublication = async (token: string, pubId: string) => {
+  const response = await fetch(`/api/user/me/publication/${pubId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    // body: JSON.stringify(newData),
   });
   if (!response.ok) throw new Error("Failed to fetch current user");
   return response.json();
