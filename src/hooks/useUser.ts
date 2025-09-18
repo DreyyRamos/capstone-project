@@ -8,6 +8,8 @@ import {
   requestRoleChange,
   editUserPublication,
   deleteUserPublication,
+  updateUserForum,
+  deleteUserForum,
 } from "@/services/user";
 
 interface User {
@@ -236,5 +238,62 @@ export const useUserPublicationQuery = (token: string) => {
     deletePub: deletePub.mutate,
     isDeletingPub: deletePub.isPending,
     isDeletionSuccess: deletePub.isSuccess,
+  };
+};
+
+export const useUserForumQuery = (token: string) => {
+  const queryClient = useQueryClient();
+
+  // Query to fetch user data
+  const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+    queryKey: ["users", token],
+    queryFn: async () => await fetchCurrentUser(token),
+    // refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
+  });
+
+  // Mutation to edit user data
+  const editForum = useMutation({
+    mutationFn: async (vars: { newData: any; forumId: string }) =>
+      await updateUserForum(token, vars.forumId, vars.newData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["forum"] });
+      queryClient.invalidateQueries({ queryKey: ["forums"] });
+    },
+  });
+
+  const deleteForum = useMutation({
+    mutationFn: async (forumId: string) =>
+      await deleteUserForum(token, forumId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["forum"] });
+      queryClient.invalidateQueries({ queryKey: ["forums"] });
+    },
+    onError: (error: Error) => {
+      console.error("Role change request failed:", error);
+    },
+  });
+
+  return {
+    // Query results
+    data,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
+
+    // Mutation functions
+    editForum: editForum.mutate,
+    isEditing: editForum.isPending,
+    isEditSuccess: editForum.isSuccess,
+
+    deleteForum: deleteForum.mutate,
+    isDeletingForum: deleteForum.isPending,
+    isDeletionSuccess: deleteForum.isSuccess,
   };
 };

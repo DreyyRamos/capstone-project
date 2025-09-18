@@ -49,6 +49,7 @@ import {
   useUserPublicationQuery,
 } from "@/hooks/useUser";
 import { useConfirmation } from "@/components/confirmation-provider";
+import { useUserForumQuery } from "@/hooks/useUser";
 import { timeAgo } from "@/lib/timeAgo";
 
 interface User {
@@ -68,6 +69,7 @@ export default function ProfilePage() {
   const { data: userActivity } = useUserActivityQuery(token);
   const { data: user, updateUser } = useUserQuery(token);
   const { deletePub, isDeletingPub } = useUserPublicationQuery(token);
+  const { deleteForum, isDeletingForum } = useUserForumQuery(token);
   console.log("user profile", user);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -142,23 +144,10 @@ export default function ProfilePage() {
     });
   };
 
-  // Handler functions for forums
-  const handleEditForum = (forumId: string) => {
-    console.log("Edit forum:", forumId);
-    // Navigate to edit forum page or open edit modal
-    // Example: router.push(`/forums/edit/${forumId}`);
-  };
-
   const handleDeleteForum = (forumId: string, title: string) => {
-    confirmDelete(
-      "forum",
-      () => {
-        console.log("Delete forum:", forumId);
-        // Call your delete forum API here
-        // Example: deleteForum(forumId);
-      }
-      // `Are you sure you want to delete "${title}"? This action cannot be undone.`
-    );
+    confirmDelete("forum", () => {
+      deleteForum(forumId);
+    });
   };
 
   const stats = {
@@ -717,10 +706,15 @@ export default function ProfilePage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
-                            onClick={() => handleEditForum(forum?.forumId)}
+                            asChild
+                            // onClick={() => handleEditForum(forum?.forumId)}
                           >
-                            <Edit2 className="h-4 w-4 mr-2" />
-                            Edit
+                            <Link
+                              href={`/profile/forums/${forum?.forumId}/update`}
+                            >
+                              <Edit2 className="h-4 w-4 mr-2" />
+                              Edit
+                            </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() =>

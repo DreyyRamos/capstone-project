@@ -266,36 +266,6 @@ export const createForum = async (token: string, newData: Forum) => {
   return response.json();
 };
 
-export const updatePost = async (
-  token: string,
-  postId: string,
-  newData: Forum
-) => {
-  const response = await fetch(
-    `/api/publications/editor/toReview/${postId}/update`,
-    {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(newData),
-    }
-  );
-  if (!response.ok) throw new Error("Error in updating post");
-  return response.json();
-};
-
-export const deletePost = async (token: string, postId: string) => {
-  const response = await fetch(`/api/publications/${postId}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (!response.ok) throw new Error("Failed to delete post");
-  return response.json();
-};
-
 export const makeIsFeatured = async (token: string, postId: string) => {
   const response = await fetch(
     `/api/publications/isFeatured/makeFeature/${postId}`,

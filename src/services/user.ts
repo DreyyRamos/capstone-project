@@ -111,3 +111,30 @@ export const deleteUserPublication = async (token: string, pubId: string) => {
   if (!response.ok) throw new Error("Failed to fetch current user");
   return response.json();
 };
+
+export const updateUserForum = async (
+  token: string,
+  forumId: string,
+  newData: any
+) => {
+  const response = await fetch(`/api/user/me/forums/${forumId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(newData),
+  });
+  if (!response.ok) throw new Error("Error in updating forum");
+  return response.json();
+};
+
+export const deleteUserForum = async (token: string, forumId: string) => {
+  const response = await fetch(`/api/user/me/forums/${forumId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) throw new Error("Failed to delete post");
+  return response.json();
+};
