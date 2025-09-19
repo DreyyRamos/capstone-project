@@ -15,8 +15,7 @@ export async function PUT(
       return authResult; // Not logged in
     }
 
-    // Check if the user is an EDITOR. Your schema defines 'role' as an array.
-    if (authResult.user.role !== Role.EDITOR) {
+    if (!([Role.EDITOR, Role.ADMIN] as Role[]).includes(authResult.user.role)) {
       return NextResponse.json(
         {
           message:
@@ -25,6 +24,15 @@ export async function PUT(
         { status: 403 }
       );
     }
+    // if (authResult.user.role !== Role.EDITOR) {
+    //   return NextResponse.json(
+    //     {
+    //       message:
+    //         "Unauthorized: You do not have permission to perform this action.",
+    //     },
+    //     { status: 403 }
+    //   );
+    // }
 
     // Get the publication ID from the URL and the new status from the body
     const { id } = await params;

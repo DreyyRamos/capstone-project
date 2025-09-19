@@ -17,6 +17,7 @@ import { useFeaturedPostsQuery, usePostQuery } from "@/hooks/usePost";
 import { useForumQuery } from "@/hooks/useForum";
 import { useFetchUsers } from "@/hooks/usePublicData";
 import Cookies from "js-cookie";
+import HomePageLoading from "./loading";
 
 interface Author {
   id: string;
@@ -47,7 +48,7 @@ export default function HomePage() {
   const { data: users } = useFetchUsers();
 
   if (isLoading) {
-    return <div>Loading publications...</div>; // Or a custom spinner component
+    return <HomePageLoading />;
   }
 
   return (

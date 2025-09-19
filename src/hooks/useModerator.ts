@@ -6,6 +6,7 @@ import {
   cleanupReports,
   fetchUsers,
   triggerAction,
+  fetchReportCount,
 } from "@/services/moderation";
 
 interface Publication {
@@ -198,5 +199,28 @@ export const useFetchUsersModerator = (token: string) => {
     // createError: mutation.error,
     banSuccess: triggerUserStatus.isSuccess,
     // createReset: mutation.reset,
+  };
+};
+
+export const useFetchReportCountQuery = (token: string) => {
+  const queryClient = useQueryClient();
+  // Query to fetch all posts
+  const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+    queryKey: ["report-count"],
+    queryFn: async () => await fetchReportCount(token),
+    // refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchOnReconnect: false,
+    refetchInterval: false,
+  });
+
+  return {
+    // Query results
+    data,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
   };
 };

@@ -48,7 +48,12 @@ import ContentManagerLoading from "./loading";
 import { useEditorQuery } from "@/hooks/useEditor";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { usePostQuery, useArchivedPostsQuery } from "@/hooks/usePost";
+import {
+  usePostQuery,
+  useArchivedPostsQuery,
+  useCountPubsQuery,
+} from "@/hooks/usePost";
+import { toast } from "sonner";
 
 enum Status {
   "DRAFT",
@@ -73,9 +78,11 @@ export default function ContentManagerPage() {
 
   const { data: publishedContent } = usePostQuery(token);
   const { data: archivedPost } = useArchivedPostsQuery(token);
+  const { data: pubsCount } = useCountPubsQuery(token);
 
   console.log("data to review", toReview);
   console.log("archived check", archivedPost);
+  console.log("pubs count", pubsCount);
 
   const handleApprove = async (postId: string) => {
     try {
@@ -87,7 +94,11 @@ export default function ContentManagerPage() {
 
   const handleArchive = async (postId: string) => {
     try {
-      await archive(postId);
+      await archive(postId, {
+        onSuccess: () => {
+          toast("Publication archived!");
+        },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -117,6 +128,11 @@ export default function ContentManagerPage() {
     ARCHIVED: CheckCircle,
     // rejected: XCircle,
   };
+
+  const totalPubs =
+    (pubsCount?.publications.PUBLISHED ?? 0) +
+    (pubsCount?.publications.ARCHIVED ?? 0) +
+    (pubsCount?.publications.PENDING_REVIEW ?? 0);
 
   // Show loading skeleton if initial load or if no data yet
   if (isLoading) {
@@ -158,7 +174,7 @@ export default function ContentManagerPage() {
                 <FileText className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">156</p>
+                <p className="text-2xl font-bold">{totalPubs}</p>
                 <p className="text-sm text-muted-foreground">
                   Total Publications
                 </p>
@@ -173,7 +189,9 @@ export default function ContentManagerPage() {
                 <Clock className="h-6 w-6 text-yellow-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">12</p>
+                <p className="text-2xl font-bold">
+                  {pubsCount?.publications.PENDING_REVIEW || 0}
+                </p>
                 <p className="text-sm text-muted-foreground">Pending Review</p>
               </div>
             </div>
@@ -186,8 +204,10 @@ export default function ContentManagerPage() {
                 <Edit className="h-6 w-6 text-gray-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">8</p>
-                <p className="text-sm text-muted-foreground">Drafts</p>
+                <p className="text-2xl font-bold">
+                  {pubsCount?.publications.ARCHIVED || 0}
+                </p>
+                <p className="text-sm text-muted-foreground">Archived</p>
               </div>
             </div>
           </CardContent>
@@ -199,7 +219,9 @@ export default function ContentManagerPage() {
                 <CheckCircle className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">136</p>
+                <p className="text-2xl font-bold">
+                  {pubsCount?.publications.PUBLISHED || 0}
+                </p>
                 <p className="text-sm text-muted-foreground">Published</p>
               </div>
             </div>
@@ -212,7 +234,6 @@ export default function ContentManagerPage() {
           <TabsTrigger value="drafts">Drafts & Review</TabsTrigger>
           <TabsTrigger value="published">Published Content</TabsTrigger>
           <TabsTrigger value="archived">Archived Content</TabsTrigger>
-          <TabsTrigger value="categories">Categories</TabsTrigger>
         </TabsList>
 
         <TabsContent value="drafts" className="space-y-6">
@@ -432,7 +453,10 @@ export default function ContentManagerPage() {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-600">
+                        <DropdownMenuItem
+                          className="text-red-600"
+                          onClick={() => handleArchive(content?.pubId)}
+                        >
                           <XCircle className="mr-2 h-4 w-4" />
                           Unpublish
                         </DropdownMenuItem>
@@ -552,65 +576,6 @@ export default function ContentManagerPage() {
               );
             })}
           </div>
-        </TabsContent>
-
-        <TabsContent value="categories" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Content Categories</CardTitle>
-              <CardDescription>
-                Manage publication categories and their organization
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {categories.map((category) => (
-                  <Card
-                    key={category.name}
-                    className="hover:shadow-md transition-shadow"
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-semibold">{category.name}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {category.count} publications
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge className={category.color}>
-                            {category.count}
-                          </Badge>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit Category
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <FolderOpen className="mr-2 h-4 w-4" />
-                                View Publications
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-red-600">
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete Category
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>

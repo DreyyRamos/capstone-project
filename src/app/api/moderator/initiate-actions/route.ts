@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authMiddleware } from "../../(middlware)/authMiddleware";
 import prisma from "@/lib/prisma";
-import { UserStatus } from "@/generated/prisma";
+import { UserStatus, Role } from "@/generated/prisma";
 
 function computeStatus(points: number): UserStatus {
   if (points >= 10) return UserStatus.BANNED;
@@ -15,6 +15,18 @@ export async function POST(req: NextRequest) {
   try {
     const authResult = await authMiddleware(req);
     if (authResult instanceof NextResponse) return authResult;
+
+    if (
+      !([Role.MODERATOR, Role.ADMIN] as Role[]).includes(authResult.user.role)
+    ) {
+      return NextResponse.json(
+        {
+          message:
+            "Unauthorized: You do not have permission to perform this action.",
+        },
+        { status: 403 }
+      );
+    }
 
     const body = await req.json();
     const { userId, reportId } = body;

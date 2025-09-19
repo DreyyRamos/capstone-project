@@ -458,3 +458,14 @@ export const makeIsFeatured = async (token: string, postId: string) => {
   if (!response.ok) throw new Error("Failed to delete post");
   return response.json();
 };
+
+export const fetchCountPubs = async (token: string) => {
+  const response = await fetch(`/api/publications/count`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) throw new Error("Failed to fetch post by id");
+  return response.json();
+};

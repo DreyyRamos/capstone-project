@@ -17,6 +17,7 @@ import {
   deleteReplyPub,
   editReplyToReplyPub,
   deleteReplyToReplyPub,
+  fetchCountPubs,
 } from "@/services/publication";
 
 interface Publication {
@@ -329,5 +330,30 @@ export const usePostByIdQuery = (token: string, postId: string) => {
     //Delete reply to reply
     deleteReplyToReply: deleteReplyToReply.mutate,
     isDeletingReplyToReply: deleteReplyToReply.isPending,
+  };
+};
+
+
+export const useCountPubsQuery = (token: string) => {
+  const queryClient = useQueryClient();
+
+  // Query to fetch all posts
+  const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
+    queryKey: ["count-pubs"],
+    queryFn: async () => await fetchCountPubs(token),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
+  });
+
+  return {
+    // Query results
+    data,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch,
   };
 };

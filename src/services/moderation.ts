@@ -228,3 +228,16 @@ export const deletePost = async (token: string, postId: string) => {
   if (!response.ok) throw new Error("Failed to delete post");
   return response.json();
 };
+
+
+export const fetchReportCount = async (token: string) => {
+  const response = await fetch("/api/reports/count", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "application/json",
+    },
+  });
+  if (!response.ok) throw new Error("Failed to fetch posts");
+  return response.json();
+};

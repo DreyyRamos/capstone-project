@@ -48,6 +48,7 @@ import Link from "next/link";
 import {
   useModeratorQuery,
   useFetchUsersModerator,
+  useFetchReportCountQuery,
 } from "@/hooks/useModerator";
 import Cookies from "js-cookie";
 import { ContentViewModal } from "@/components/content-view-modal";
@@ -71,6 +72,8 @@ export default function ModerationPage() {
     cleanupReport,
   } = useModeratorQuery(token);
   console.log("reported contents", reportedContents);
+  const { data: reportCount } = useFetchReportCountQuery(token);
+  console.log("report count: ", reportCount);
 
   const { data: usersModerator, triggerBan } = useFetchUsersModerator(token);
   console.log("users for modertaion", usersModerator);

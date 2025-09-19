@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, MessageSquare, Users, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useForumQuery } from "@/hooks/useForum";
+import { useFetchUsers } from "@/hooks/usePublicData";
 import Cookies from "js-cookie";
 import { timeAgo } from "@/lib/timeAgo";
 import { useAuthModal } from "@/hooks/use-auth-modal";
@@ -25,6 +26,7 @@ export default function ForumPage() {
 
   const token = Cookies.get("token") || "";
   const { data: rawForums, isLoading } = useForumQuery(token);
+  const { data: users } = useFetchUsers();
 
   const categories = useMemo(() => {
     if (!rawForums?.posts?.length) return [];
@@ -101,7 +103,7 @@ export default function ForumPage() {
       }, 0),
       icon: MessageSquare,
     },
-    { label: "Active Users", value: "247", icon: Users },
+    { label: "Active Users", value: users?.count ?? 0, icon: Users },
   ];
 
   if (isLoading) {
