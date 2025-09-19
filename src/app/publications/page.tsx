@@ -27,6 +27,7 @@ import Link from "next/link";
 import { useAuthModal } from "@/hooks/use-auth-modal";
 import { AuthModal } from "@/components/auth-modal";
 import { useRouter } from "next/navigation";
+import PublicationsLoading from "./loading";
 
 interface Author {
   id: string;
@@ -58,7 +59,7 @@ export default function PublicationsPage() {
   const [sortBy, setSortBy] = useState("newest");
   const token = Cookies.get("token") || "";
 
-  const { data } = usePostQuery(token);
+  const { data, isLoading } = usePostQuery(token);
 
   console.log("data from puubs", data);
 
@@ -79,6 +80,10 @@ export default function PublicationsPage() {
       router.push("/publications/create");
     }
   };
+
+  if (isLoading) {
+    return <PublicationsLoading />;
+  }
 
   return (
     <div className="space-y-6">

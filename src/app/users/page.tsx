@@ -43,6 +43,7 @@ import Cookies from "js-cookie";
 import { useAdminQuery } from "@/hooks/useAdmin";
 import { useConfirmationModal } from "@/hooks/use-confirmation-modal";
 import { toast } from "sonner";
+import UsersLoading from "./loading";
 
 export default function UsersPage() {
   const token = Cookies.get("token") || "";
@@ -158,7 +159,9 @@ export default function UsersPage() {
     });
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return <UsersLoading />;
+  }
 
   return (
     <div className="space-y-6">

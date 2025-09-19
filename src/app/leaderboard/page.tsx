@@ -24,6 +24,7 @@ import {
   Heart,
 } from "lucide-react";
 import { useFetchLeaderboard } from "@/hooks/usePublicData";
+import LeaderboardLoading from "./loading";
 
 export default function LeaderboardPage() {
   const { data: users, isLoading } = useFetchLeaderboard();
@@ -132,7 +133,9 @@ export default function LeaderboardPage() {
     },
   ];
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return <LeaderboardLoading />;
+  }
 
   return (
     <div className="space-y-6">

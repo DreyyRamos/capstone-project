@@ -23,6 +23,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import Link from "next/link";
 import {
   Mail,
@@ -51,6 +56,7 @@ import {
 import { useConfirmation } from "@/components/confirmation-provider";
 import { useUserForumQuery } from "@/hooks/useUser";
 import { timeAgo } from "@/lib/timeAgo";
+import ProfilePageLoading from "./loading";
 
 interface User {
   firstName: string;
@@ -67,7 +73,7 @@ export default function ProfilePage() {
   const token = Cookies.get("token") || "";
   const { confirmDelete } = useConfirmation();
   const { data: userActivity } = useUserActivityQuery(token);
-  const { data: user, updateUser } = useUserQuery(token);
+  const { data: user, updateUser, isLoading } = useUserQuery(token);
   const { deletePub, isDeletingPub } = useUserPublicationQuery(token);
   const { deleteForum, isDeletingForum } = useUserForumQuery(token);
   console.log("user profile", user);
@@ -220,6 +226,10 @@ export default function ProfilePage() {
   const displayRole =
     String(rawRole).charAt(0).toUpperCase() + String(rawRole).slice(1);
 
+  if (isLoading) {
+    return <ProfilePageLoading />;
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Profile Header */}
@@ -241,35 +251,45 @@ export default function ProfilePage() {
                     {profileData.firstName?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-
-                <UploadButton
-                  endpoint="imageUploader"
-                  className="absolute -bottom-2 -right-2"
-                  appearance={{
-                    button:
-                      "h-8 w-8 rounded-full p-0 bg-tranparent text-gray-600 border border-gray-500 hover:bg-gray-300 transition-colors shadow-sm !important",
-                    allowedContent: "hidden",
-                    container: "absolute -bottom-2 -right-2",
-                  }}
-                  content={{
-                    button: <Camera className="h-4 w-4" />,
-                  }}
-                  onClientUploadComplete={(res) => {
-                    console.log("Files: ", res);
-                    setProfileData((prev) => ({
-                      ...prev,
-                      profileImage: res[0].ufsUrl,
-                    }));
-                    updateUser({
-                      ...profileData,
-                      profileImage: res[0].ufsUrl,
-                    });
-                  }}
-                  onUploadError={(error) => {
-                    console.error(`Upload failed: ${error.message}`);
-                  }}
-                />
               </div>
+
+              {isEditing && (
+                <Tooltip>
+                  <TooltipTrigger>
+                    <UploadButton
+                      endpoint="imageUploader"
+                      className="mt-2"
+                      appearance={{
+                        button:
+                          "h-8 w-8 rounded-full p-0 bg-transparent text-gray-600 border border-gray-500 hover:bg-gray-300 transition-colors shadow-sm",
+                        allowedContent: "hidden",
+
+                        // container: "flex justify-center",
+                      }}
+                      content={{
+                        button: <Camera className="h-4 w-4" />,
+                      }}
+                      onClientUploadComplete={(res) => {
+                        console.log("Files: ", res);
+                        setProfileData((prev) => ({
+                          ...prev,
+                          profileImage: res[0].ufsUrl,
+                        }));
+                        updateUser({
+                          ...profileData,
+                          profileImage: res[0].ufsUrl,
+                        });
+                      }}
+                      onUploadError={(error) => {
+                        console.error(`Upload failed: ${error.message}`);
+                      }}
+                    />
+                    <TooltipContent>
+                      <p>Upload a profile picture.</p>
+                    </TooltipContent>
+                  </TooltipTrigger>
+                </Tooltip>
+              )}
 
               <Badge className={getRoleColor(rawRole)} variant="secondary">
                 {displayRole}

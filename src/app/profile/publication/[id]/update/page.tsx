@@ -36,6 +36,7 @@ import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import Tiptap from "@/components/tiptap";
 import { toast } from "sonner";
+import UpdatePublicationLoading from "./loading";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -56,9 +57,8 @@ export default function UpdatePublicationPage({ params }: PageProps) {
   const [isDraft, setIsDraft] = useState(true);
   const router = useRouter();
   const token = Cookies.get("token") || "";
-  const { data: pubToUpdate } = useFetchOnePostQuery(id);
-  const { editPub: updatePost, isEditing: isUpdating } =
-    useUserPublicationQuery(token);
+  const { data: pubToUpdate, isLoading } = useFetchOnePostQuery(id);
+  const { editPub: updatePost, isEditing } = useUserPublicationQuery(token);
 
   const categories = [
     "Science",
@@ -156,6 +156,10 @@ export default function UpdatePublicationPage({ params }: PageProps) {
       category: value,
     });
   };
+
+  if (isLoading) {
+    return <UpdatePublicationLoading />;
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -343,7 +347,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label>Save as Draft</Label>
                     <p className="text-sm text-muted-foreground">
@@ -351,7 +355,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                     </p>
                   </div>
                   <Switch checked={isDraft} onCheckedChange={setIsDraft} />
-                </div>
+                </div> */}
               </CardContent>
             </Card>
 
@@ -413,7 +417,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   type="submit"
                   variant="outline"
                   className="w-full bg-transparent"
-                  disabled={isUpdating}
+                  disabled={isEditing}
                 >
                   <Eye className="mr-2 h-4 w-4" />
                   Update

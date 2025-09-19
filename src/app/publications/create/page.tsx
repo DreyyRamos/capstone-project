@@ -32,6 +32,7 @@ import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import Tiptap from "@/components/tiptap";
 import { useConfirmation } from "@/components/confirmation-provider";
+import CreatePublicationLoading from "./loading";
 
 export default function CreatePublicationPage() {
   const { confirmAction } = useConfirmation();
@@ -48,7 +49,7 @@ export default function CreatePublicationPage() {
   const [isDraft, setIsDraft] = useState(true);
   const router = useRouter();
   const token = Cookies.get("token") || "";
-  const { createPost, isCreating } = usePostQuery(token);
+  const { createPost, isCreating, isLoading } = usePostQuery(token);
 
   const categories = [
     "Science",
@@ -135,6 +136,10 @@ export default function CreatePublicationPage() {
       category: value,
     });
   };
+
+  if (isLoading) {
+    return <CreatePublicationLoading />;
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -305,7 +310,7 @@ export default function CreatePublicationPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label>Save as Draft</Label>
                     <p className="text-sm text-muted-foreground">
@@ -313,7 +318,7 @@ export default function CreatePublicationPage() {
                     </p>
                   </div>
                   <Switch checked={isDraft} onCheckedChange={setIsDraft} />
-                </div>
+                </div> */}
               </CardContent>
             </Card>
 
@@ -380,10 +385,10 @@ export default function CreatePublicationPage() {
                   <Save className="mr-2 h-4 w-4" />
                   Publish
                 </Button>
-                <Button variant="outline" className="w-full bg-transparent">
+                {/* <Button variant="outline" className="w-full bg-transparent">
                   <Save className="mr-2 h-4 w-4" />
                   Save Draft
-                </Button>
+                </Button> */}
               </CardContent>
             </Card>
           </div>

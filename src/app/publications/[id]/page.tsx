@@ -50,6 +50,7 @@ import ContentDisplay from "@/components/content-display";
 import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
 import { useUserQuery } from "@/hooks/useUser";
 import { useConfirmation } from "@/components/confirmation-provider";
+import PublicationDetailLoading from "./loading";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -429,7 +430,9 @@ export default function PublicationDetailPage({ params }: PageProps) {
     );
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return <PublicationDetailLoading />;
+  }
   if (isError) return <div>Error loading publication.</div>;
 
   return (

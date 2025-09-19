@@ -54,11 +54,13 @@ import Cookies from "js-cookie";
 import { useAdminRoleChangeRequestsQuery } from "@/hooks/useAdmin";
 import { useConfirmation } from "@/components/confirmation-provider";
 import { toast } from "sonner";
+import RoleRequestsLoading from "./loading";
 
 export default function RoleRequestsPage() {
   const token = Cookies.get("token") || "";
   const {
     data: roleChangeRequests,
+    isLoading,
     approveRoleChange,
     rejectRoleChange,
   } = useAdminRoleChangeRequestsQuery(token);
@@ -167,6 +169,10 @@ export default function RoleRequestsPage() {
         return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
   };
+
+  if (isLoading) {
+    return <RoleRequestsLoading />;
+  }
 
   return (
     <div className="space-y-4 md:space-y-6 p-4 md:p-0">

@@ -57,7 +57,7 @@ const adminNavItems = [
   },
   {
     title: "Content Manager",
-    href: "/content",
+    href: "/content-manager",
     icon: FileText,
   },
   {

@@ -26,6 +26,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForumQuery } from "@/hooks/useForum";
 import Cookies from "js-cookie";
+import CreateForumTopicLoading from "./loading";
 
 export default function CreateForumTopicPage() {
   const [formData, setFormData] = useState({
@@ -39,7 +40,7 @@ export default function CreateForumTopicPage() {
 
   const token = Cookies.get("token") || "";
 
-  const { createForum, isCreatingForum } = useForumQuery(token);
+  const { createForum, isCreatingForum, isLoading } = useForumQuery(token);
 
   const categories = [
     "General Discussion",
@@ -104,6 +105,10 @@ export default function CreateForumTopicPage() {
       console.error(error);
     }
   };
+
+  if (isLoading) {
+    return <CreateForumTopicLoading />;
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">

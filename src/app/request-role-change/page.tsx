@@ -33,10 +33,15 @@ import {
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { useUserQuery } from "@/hooks/useUser";
+import RoleRequestLoading from "./loading";
 
 export default function RoleRequestPage() {
   const token = Cookies.get("token") || "";
-  const { data: user, roleChange } = useUserQuery(token);
+  const {
+    data: user,
+    roleChange,
+    isLoading: isUserLoading,
+  } = useUserQuery(token);
   console.log("user from request", user);
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -166,6 +171,10 @@ export default function RoleRequestPage() {
   const selectedRoleInfo = roleOptions.find(
     (role) => role.value === formData.requestedRole
   );
+
+  if (isUserLoading) {
+    return <RoleRequestLoading />;
+  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">

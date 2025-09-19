@@ -35,7 +35,7 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Publications", href: "/publications", icon: BookOpen },
   { name: "Forum", href: "/forum", icon: MessageSquare },
-  { name: "Content Manager", href: "/content", icon: FolderOpen },
+  { name: "Content Manager", href: "/content-manager", icon: FolderOpen },
   { name: "Leaderboard", href: "/leaderboard", icon: ChartArea },
 ];
 

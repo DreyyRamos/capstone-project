@@ -29,6 +29,7 @@ import { useFetchForumByCategory } from "@/hooks/useForum";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
 import { useRouter } from "next/navigation";
+import ForumCategoryLoading from "./loading";
 
 type PageProps = {
   params: Promise<{ category: string }>;
@@ -48,7 +49,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
   const category =
     decodedCategory === "Uncategorized" ? "Uncategorized" : decodedCategory;
 
-  const { data: topics } = useFetchForumByCategory(category);
+  const { data: topics, isLoading } = useFetchForumByCategory(category);
 
   const truncate = (str: string, max = 30) =>
     str?.length > max ? str.slice(0, max) + "…" : str;
@@ -63,6 +64,10 @@ export default function ForumCategoryPage({ params }: PageProps) {
       router.push("/forum/create");
     }
   };
+
+  if (isLoading) {
+    return <ForumCategoryLoading />;
+  }
 
   return (
     <div className="space-y-6">

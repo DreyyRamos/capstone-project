@@ -15,6 +15,7 @@ import { timeAgo } from "@/lib/timeAgo";
 import { useAuthModal } from "@/hooks/use-auth-modal";
 import { AuthModal } from "@/components/auth-modal";
 import { useRouter } from "next/navigation";
+import ForumLoading from "./loading";
 
 export default function ForumPage() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function ForumPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const token = Cookies.get("token") || "";
-  const { data: rawForums } = useForumQuery(token);
+  const { data: rawForums, isLoading } = useForumQuery(token);
 
   const categories = useMemo(() => {
     if (!rawForums?.posts?.length) return [];
@@ -102,6 +103,10 @@ export default function ForumPage() {
     },
     { label: "Active Users", value: "247", icon: Users },
   ];
+
+  if (isLoading) {
+    return <ForumLoading />;
+  }
 
   return (
     <div className="space-y-6">

@@ -30,6 +30,7 @@ import {
   useUserVisitingUserActivityQuery,
 } from "@/hooks/useUser";
 import { timeAgo } from "@/lib/timeAgo";
+import ProfilePageLoading from "./loading";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -48,7 +49,7 @@ interface User {
 
 export default function ProfilePage({ params }: PageProps) {
   const { id } = use(params);
-  const { data: user } = useUserVisitorQuery(id);
+  const { data: user, isLoading } = useUserVisitorQuery(id);
   const { data: userActivity } = useUserVisitingUserActivityQuery(id);
   console.log("user from visit", user);
   console.log("user activity from visit", userActivity);
@@ -112,6 +113,10 @@ export default function ProfilePage({ params }: PageProps) {
 
   const displayRole =
     String(rawRole).charAt(0).toUpperCase() + String(rawRole).slice(1);
+
+  if (isLoading) {
+    return <ProfilePageLoading />;
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">

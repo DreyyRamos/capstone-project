@@ -43,6 +43,7 @@ import { useReportModal } from "@/hooks/use-report-modal";
 import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
 import { useUserQuery } from "@/hooks/useUser";
 import { useConfirmation } from "@/components/confirmation-provider";
+import ForumTopicLoading from "./loading";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -96,6 +97,7 @@ export default function ForumTopicPage({ params }: PageProps) {
 
   const {
     data: topic,
+    isLoading,
     editComment,
     deleteComment,
     editReply,
@@ -103,6 +105,8 @@ export default function ForumTopicPage({ params }: PageProps) {
     editReplyToReply,
     deleteReplyToReply,
   } = useFetchForumById(token, id);
+
+  console.log("forum to check", topic);
 
   // Helper function to check if current user owns the content
   const isCurrentUserContent = (authorId: string) => {
@@ -378,6 +382,10 @@ export default function ForumTopicPage({ params }: PageProps) {
       authorId
     );
   };
+
+  if (isLoading) {
+    return <ForumTopicLoading />;
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">

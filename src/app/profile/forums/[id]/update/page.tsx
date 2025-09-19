@@ -39,6 +39,7 @@ import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import Tiptap from "@/components/tiptap";
 import { toast } from "sonner";
+import UpdateForumTopicLoading from "./loading";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -60,7 +61,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
   const [isDraft, setIsDraft] = useState(true);
   const router = useRouter();
   const token = Cookies.get("token") || "";
-  const { data: forumToUpdate } = useFetchForumById(token, id);
+  const { data: forumToUpdate, isLoading } = useFetchForumById(token, id);
   const { editForum, isEditing, deleteForum } = useUserForumQuery(token);
   console.log("forum to update", forumToUpdate);
 
@@ -163,6 +164,10 @@ export default function UpdatePublicationPage({ params }: PageProps) {
       category: value,
     });
   };
+
+  if (isLoading) {
+    return <UpdateForumTopicLoading />;
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">

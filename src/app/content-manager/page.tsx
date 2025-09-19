@@ -1,13 +1,25 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +27,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Search,
   FileText,
@@ -31,7 +43,8 @@ import {
   FolderOpen,
   Plus,
   Tag,
-} from "lucide-react"
+} from "lucide-react";
+import ContentManagerLoading from "./loading";
 import { useEditorQuery } from "@/hooks/useEditor";
 import Cookies from "js-cookie";
 import Link from "next/link";
@@ -105,7 +118,10 @@ export default function ContentManagerPage() {
     // rejected: XCircle,
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  // Show loading skeleton if initial load or if no data yet
+  if (isLoading) {
+    return <ContentManagerLoading />;
+  }
 
   return (
     <div className="space-y-6">

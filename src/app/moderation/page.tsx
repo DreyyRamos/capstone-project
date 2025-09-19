@@ -52,6 +52,7 @@ import {
 import Cookies from "js-cookie";
 import { ContentViewModal } from "@/components/content-view-modal";
 import { useConfirmation } from "@/components/confirmation-provider";
+import ModerationLoading from "./loading";
 
 export default function ModerationPage() {
   const { confirmDelete, confirmAction } = useConfirmation();
@@ -64,6 +65,7 @@ export default function ModerationPage() {
 
   const {
     data: reportedContents,
+    isLoading,
     deleteReportedContent,
     restoreContent,
     cleanupReport,
@@ -237,6 +239,10 @@ export default function ModerationPage() {
     }
     triggerBan({ userId, reportId: reportId ?? null });
   };
+
+  if (isLoading) {
+    return <ModerationLoading />;
+  }
 
   return (
     <div className="space-y-6">
