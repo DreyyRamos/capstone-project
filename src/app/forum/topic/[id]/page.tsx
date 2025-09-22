@@ -383,6 +383,13 @@ export default function ForumTopicPage({ params }: PageProps) {
     );
   };
 
+  const [showAll, setShowAll] = useState(false);
+
+  const allComments = topic?.forumComments?.slice().reverse() || [];
+  const visibleComments = showAll
+    ? allComments.reverse()
+    : allComments.slice(0, 3).reverse();
+
   if (isLoading) {
     return <ForumTopicLoading />;
   }
@@ -494,7 +501,25 @@ export default function ForumTopicPage({ params }: PageProps) {
           Replies ({topic?.forumComments?.length || 0})
         </h2>
 
-        {topic?.forumComments?.map((comment: any) => (
+        {topic?.forumComments?.length > 3 && (
+          <div className="group relative">
+            <span
+              className="text-muted-foreground text-sm cursor-pointer"
+              onClick={() => setShowAll(!showAll)}
+            >
+              {showAll
+                ? `Hide replies`
+                : `View all ${topic?.forumComments?.length} replies.`}
+            </span>
+            {!showAll && (
+              <div className="absolute hidden bg-gray-100 p-2 rounded shadow">
+                Click to view all replies.
+              </div>
+            )}
+          </div>
+        )}
+
+        {visibleComments.map((comment: any) => (
           <Card key={comment.commentId}>
             <CardContent className="p-6">
               <div className="space-y-4">

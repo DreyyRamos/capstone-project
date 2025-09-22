@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
@@ -48,6 +48,8 @@ interface Publication {
   createdAt: Date;
   pubLikes: string[];
   pubComments: string[];
+  isFeatured?: boolean;
+  // views?: number;
 }
 
 export default function PublicationsPage() {
@@ -66,12 +68,16 @@ export default function PublicationsPage() {
   const categories = [
     "all",
     "Science",
-    "Library",
     "Arts",
     "Sports",
-    "Environment",
     "Academic",
     "News",
+    "Events",
+    "Library",
+    "Environment",
+    "Technology",
+    "Health",
+    "Community",
   ];
 
   const startDiscussion = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -80,6 +86,80 @@ export default function PublicationsPage() {
       router.push("/publications/create");
     }
   };
+
+  // Improved filtering and sorting logic
+  const filteredAndSortedPubs = useMemo(() => {
+    if (!data?.posts) return [];
+
+    // filter the publications
+    const filtered = data.posts.filter((publication: Publication) => {
+      // Search filter - check title, excerpt, content, author name, and tags
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch =
+        searchQuery === "" ||
+        publication.title?.toLowerCase().includes(searchLower) ||
+        publication.excerpt?.toLowerCase().includes(searchLower) ||
+        publication.content?.toLowerCase().includes(searchLower) ||
+        `${publication.author?.firstName} ${publication.author?.lastName}`
+          .toLowerCase()
+          .includes(searchLower) ||
+        publication.tags?.some((tag) =>
+          tag.toLowerCase().includes(searchLower)
+        );
+
+      // Category filter
+      const matchesCategory =
+        selectedCategory === "all" || publication.category === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+
+    // sort the filtered results
+    const sorted = [...filtered].sort((a: Publication, b: Publication) => {
+      switch (sortBy) {
+        case "newest":
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+
+        case "oldest":
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+
+        // case "popular":
+        //   // Sort by views otherwise by likes + comments
+        //   const aPopularity =
+        //     (a.views || 0) +
+        //     (a.pubLikes?.length || 0) +
+        //     (a.pubComments?.length || 0);
+        //   const bPopularity =
+        //     (b.views || 0) +
+        //     (b.pubLikes?.length || 0) +
+        //     (b.pubComments?.length || 0);
+        //   return bPopularity - aPopularity;
+
+        case "liked":
+          return (b.pubLikes?.length || 0) - (a.pubLikes?.length || 0);
+
+        case "commented":
+          return (b.pubComments?.length || 0) - (a.pubComments?.length || 0);
+
+        case "alphabetical":
+          return (a.title || "").localeCompare(b.title || "");
+
+        default:
+          return 0;
+      }
+    });
+
+    // prioritize featured publications
+    return sorted.sort((a, b) => {
+      if (a.isFeatured && !b.isFeatured) return -1;
+      if (!a.isFeatured && b.isFeatured) return 1;
+      return 0;
+    });
+  }, [data?.posts, searchQuery, selectedCategory, sortBy]);
 
   if (isLoading) {
     return <PublicationsLoading />;
@@ -117,7 +197,7 @@ export default function PublicationsPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search publications..."
+                placeholder="Search publications, authors, or tags..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -145,17 +225,31 @@ export default function PublicationsPage() {
               <SelectContent>
                 <SelectItem value="newest">Newest First</SelectItem>
                 <SelectItem value="oldest">Oldest First</SelectItem>
-                <SelectItem value="popular">Most Viewed</SelectItem>
                 <SelectItem value="liked">Most Liked</SelectItem>
+                <SelectItem value="commented">Most Commented</SelectItem>
+                <SelectItem value="alphabetical">A to Z</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </CardContent>
       </Card>
 
+      {/* Results count */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          Showing {filteredAndSortedPubs.length} of {data?.posts?.length || 0}{" "}
+          publications
+        </p>
+        {searchQuery && (
+          <Button variant="ghost" size="sm" onClick={() => setSearchQuery("")}>
+            Clear search
+          </Button>
+        )}
+      </div>
+
       {/* Publications Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data?.posts?.map((publication: Publication) => (
+        {filteredAndSortedPubs.map((publication: Publication) => (
           <Card
             key={publication.pubId}
             className="overflow-hidden hover:shadow-lg transition-shadow"
@@ -166,11 +260,11 @@ export default function PublicationsPage() {
                 alt={publication.title}
                 className="w-full h-48 object-cover"
               />
-              {/* {publication.featured && (
+              {publication.isFeatured && (
                 <Badge className="absolute top-2 left-2 bg-yellow-500 hover:bg-yellow-600">
                   Featured
                 </Badge>
-              )} */}
+              )}
               <Badge variant="secondary" className="absolute top-2 right-2">
                 {publication.category}
               </Badge>
@@ -188,6 +282,22 @@ export default function PublicationsPage() {
                 {publication.excerpt}
               </p>
 
+              {/* Tags */}
+              {publication.tags && publication.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-4">
+                  {publication.tags.slice(0, 3).map((tag, index) => (
+                    <Badge key={index} variant="outline" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                  {publication.tags.length > 3 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{publication.tags.length - 3}
+                    </Badge>
+                  )}
+                </div>
+              )}
+
               <div className="flex items-center gap-2 mb-4">
                 <Avatar className="h-8 w-8">
                   <AvatarImage
@@ -197,12 +307,8 @@ export default function PublicationsPage() {
                     }
                   />
                   <AvatarFallback>
-                    {
-                      publication.author?.profileImage
-                      // .split(" ")
-                      // .map((n: any) => n[0])
-                      // .join("")}
-                    }
+                    {publication.author?.firstName?.charAt(0)}
+                    {publication.author?.lastName?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div>
@@ -219,17 +325,19 @@ export default function PublicationsPage() {
 
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1">
-                    <Eye className="h-4 w-4" />
-                    {/* {publication.views} */}
-                  </span>
+                  {/* {publication.views && (
+                    <span className="flex items-center gap-1">
+                      <Eye className="h-4 w-4" />
+                      {publication.views}
+                    </span>
+                  )} */}
                   <span className="flex items-center gap-1">
                     <Heart className="h-4 w-4" />
-                    {publication?.pubLikes?.length}
+                    {publication?.pubLikes?.length || 0}
                   </span>
                   <span className="flex items-center gap-1">
                     <MessageCircle className="h-4 w-4" />
-                    {publication?.pubComments.length}
+                    {publication?.pubComments?.length || 0}
                   </span>
                 </div>
                 <Button asChild variant="outline" size="sm">
@@ -241,97 +349,42 @@ export default function PublicationsPage() {
             </CardContent>
           </Card>
         ))}
-        {/* {sortedPublications.map((publication) => (
-          <Card
-            key={publication.id}
-            className="overflow-hidden hover:shadow-lg transition-shadow"
-          >
-            <div className="relative">
-              <img
-                src={publication.image || "/placeholder.svg"}
-                alt={publication.title}
-                className="w-full h-48 object-cover"
-              />
-              {publication.featured && (
-                <Badge className="absolute top-2 left-2 bg-yellow-500 hover:bg-yellow-600">
-                  Featured
-                </Badge>
-              )}
-              <Badge variant="secondary" className="absolute top-2 right-2">
-                {publication.category}
-              </Badge>
-            </div>
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-2 line-clamp-2">
-                <Link
-                  href={`/publications/${publication.id}`}
-                  className="hover:text-blue-600"
-                >
-                  {publication.title}
-                </Link>
-              </h3>
-              <p className="text-muted-foreground mb-4 line-clamp-3">
-                {publication.excerpt}
+      </div>
+
+      {/* No results message */}
+      {filteredAndSortedPubs.length === 0 && !isLoading && (
+        <Card>
+          <CardContent className="p-12 text-center">
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">No publications found</h3>
+              <p className="text-muted-foreground">
+                {searchQuery || selectedCategory !== "all"
+                  ? "No publications match your current filters. Try adjusting your search or category selection."
+                  : "No publications have been created yet."}
               </p>
-
-              <div className="flex items-center gap-2 mb-4">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback>
-                    {publication.author
-                      .split(" ")
-                      .map((n: any) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm font-medium">{publication.author}</p>
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    {new Date(publication.date).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1">
-                    <Eye className="h-4 w-4" />
-                    {publication.views}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Heart className="h-4 w-4" />
-                    {publication.likes}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MessageCircle className="h-4 w-4" />
-                    {publication.comments}
-                  </span>
-                </div>
-                <Button asChild variant="outline" size="sm">
-                  <Link href={`/publications/${publication.id}`}>
-                    Read More
+              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                {(searchQuery || selectedCategory !== "all") && (
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSelectedCategory("all");
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                )}
+                <Button asChild>
+                  <Link href="/publications/create">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Create Publication
                   </Link>
                 </Button>
               </div>
-            </CardContent>
-          </Card>
-        ))} */}
-      </div>
-
-      {/* {sortedPublications.length === 0 && (
-        <Card>
-          <CardContent className="p-12 text-center">
-            <p className="text-muted-foreground">
-              No publications found matching your criteria.
-            </p>
-            <Button asChild className="mt-4">
-              <Link href="/publications/create">
-                Create the first publication
-              </Link>
-            </Button>
+            </div>
           </CardContent>
         </Card>
-      )} */}
+      )}
     </div>
   );
 }

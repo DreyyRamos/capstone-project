@@ -430,6 +430,13 @@ export default function PublicationDetailPage({ params }: PageProps) {
     );
   };
 
+  const [showAll, setShowAll] = useState(false);
+
+  const allComments = publication?.pubComments?.slice().reverse() || [];
+  const visibleComments = showAll
+    ? allComments.reverse()
+    : allComments.slice(0, 3).reverse();
+
   if (isLoading) {
     return <PublicationDetailLoading />;
   }
@@ -602,7 +609,24 @@ export default function PublicationDetailPage({ params }: PageProps) {
         </Card>
 
         <div className="space-y-4">
-          {publication?.pubComments.map((comment: any) => (
+          {publication?.pubComments?.length > 3 && (
+            <div className="group relative">
+              <span
+                className="text-muted-foreground text-sm cursor-pointer"
+                onClick={() => setShowAll(!showAll)}
+              >
+                {showAll
+                  ? `Hide comments`
+                  : `View all ${publication?.pubComments?.length} comments`}
+              </span>
+              {!showAll && (
+                <div className="absolute hidden bg-gray-100 p-2 rounded shadow">
+                  Click to view all comments
+                </div>
+              )}
+            </div>
+          )}
+          {visibleComments.map((comment: any) => (
             <Card key={comment.commentId}>
               <CardContent className="p-6">
                 <div className="space-y-4">
@@ -1112,10 +1136,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
               </CardContent>
             </Card>
           ))}
-        </div>
-
-        <div className="text-center">
-          <Button variant="outline">Load More Comments</Button>
         </div>
       </div>
     </div>
