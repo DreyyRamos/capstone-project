@@ -386,8 +386,10 @@ export default function RoleRequestPage() {
                 <li>
                   You&apos;ll receive an email notification about the decision
                 </li>
-                <li>If approved, your role will be updated automatically</li>
-                <li>You can track your request status in your profile</li>
+                <li>
+                  If approved, you need to logout and login again to reflect the
+                  changes.
+                </li>
               </ol>
             </div>
           </div>

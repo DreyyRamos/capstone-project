@@ -258,22 +258,26 @@ export function ModeratorNavigation() {
 
                 {/* Forum Categories */}
                 <div className="space-y-2">
-                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     Forum Categories
                   </h3>
-                  {forumCategories.map((category) => (
-                    <Link
-                      key={category.name}
-                      href={category.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
-                    >
-                      <span>{category.name}</span>
-                      <Badge variant="secondary" className="text-xs">
-                        {category.count}
-                      </Badge>
-                    </Link>
-                  ))}
+
+                  {/* scrollable area */}
+                  <div className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
+                    {forumCategories.map((category) => (
+                      <Link
+                        key={category.name}
+                        href={category.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center justify-between px-3 py-2 text-sm rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+                      >
+                        <span>{category.name}</span>
+                        <Badge variant="secondary" className="text-xs">
+                          {category.count}
+                        </Badge>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
             </SheetContent>

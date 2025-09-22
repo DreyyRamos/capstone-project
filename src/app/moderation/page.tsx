@@ -262,37 +262,45 @@ export default function ModerationPage() {
             Review reports, manage content, and maintain community standards
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <Button
             variant="outline"
+            size="sm"
             onClick={() =>
               confirmDelete("or clean-up reported contents", handleCleanUp)
             }
+            className="text-xs sm:text-sm"
           >
             <TriangleAlert className="mr-2 h-4 w-4" />
-            Clean Up Reported Contents
+            <span className="hidden sm:inline">Clean Up Reported Contents</span>
+            <span className="sm:hidden">Clean Up</span>
           </Button>
-          <Button asChild>
+          <Button asChild size="sm" className="text-xs sm:text-sm">
             <Link href="/moderation/reports/new">
               <Flag className="mr-2 h-4 w-4" />
-              Create Report
+              <span className="hidden sm:inline">Create Report</span>
+              <span className="sm:hidden">New Report</span>
             </Link>
           </Button>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((stat, index) => (
           <Card key={index}>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-muted rounded-lg">
-                  <stat.icon className={`h-6 w-6 ${stat.color}`} />
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="p-2 sm:p-3 bg-muted rounded-lg flex-shrink-0">
+                  <stat.icon
+                    className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`}
+                  />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                <div className="min-w-0">
+                  <p className="text-xl sm:text-2xl font-bold">{stat.value}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                    {stat.label}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -301,18 +309,24 @@ export default function ModerationPage() {
       </div>
 
       <Tabs defaultValue="reports" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="reports">
-            Reports ({transformedReports.length})
-          </TabsTrigger>
-          <TabsTrigger value="actions">Recent Actions</TabsTrigger>
-          <TabsTrigger value="users">User Management</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="w-full sm:w-auto">
+            <TabsTrigger value="reports" className="text-xs sm:text-sm">
+              Reports ({transformedReports.length})
+            </TabsTrigger>
+            <TabsTrigger value="actions" className="text-xs sm:text-sm">
+              Recent Actions
+            </TabsTrigger>
+            <TabsTrigger value="users" className="text-xs sm:text-sm">
+              User Management
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="reports" className="space-y-6">
           {/* Filters */}
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -376,110 +390,157 @@ export default function ModerationPage() {
                     key={report.id}
                     className="hover:shadow-md transition-shadow"
                   >
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <TypeIcon className="h-4 w-4 text-muted-foreground" />
-                            <h3 className="text-lg font-semibold">
-                              {report.title}
-                            </h3>
-                            <Badge
-                              className={
-                                statusColors[
-                                  report.status as keyof typeof statusColors
-                                ]
-                              }
-                            >
-                              {report.status}
-                            </Badge>
-                            <Badge
-                              className={
-                                priorityColors[
-                                  report.priority as keyof typeof priorityColors
-                                ]
-                              }
-                            >
-                              {report.priority} priority
-                            </Badge>
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
+                            <div className="flex items-center gap-2">
+                              <TypeIcon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                              <h3 className="text-sm sm:text-lg font-semibold truncate">
+                                {report.title}
+                              </h3>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              <Badge
+                                className={
+                                  statusColors[
+                                    report.status as keyof typeof statusColors
+                                  ]
+                                }
+                                // size="sm"
+                              >
+                                {report.status}
+                              </Badge>
+                              <Badge
+                                className={
+                                  priorityColors[
+                                    report.priority as keyof typeof priorityColors
+                                  ]
+                                }
+                                // size="sm"
+                              >
+                                {report.priority} priority
+                              </Badge>
+                            </div>
                           </div>
+
                           <div className="bg-muted p-3 rounded-md mb-3">
-                            <p className="text-sm italic">
+                            <p className="text-sm italic break-words">
                               &quot;{report.contentPreview}&quot;
                             </p>
                           </div>
-                          <p className="text-muted-foreground mb-3">
+
+                          <p className="text-sm text-muted-foreground mb-3 break-words">
                             {report.description}
                           </p>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <span>Reported By: {report.reportedBy}</span>
-                            <span>•</span>
-                            <span>Against: {report.reportedUser}</span>
-                            <span>•</span>
-                            <span>Reason: {report.reason}</span>
-                            <span>•</span>
-                            <span>Category: {report.category}</span>
-                            <span>•</span>
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              {new Date(report.createdAt).toLocaleDateString()}
-                            </span>
+
+                          {/* Mobile-friendly info layout */}
+                          <div className="space-y-2">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-muted-foreground">
+                              <div className="flex items-start gap-1">
+                                <span className="font-medium flex-shrink-0">
+                                  Reported By:
+                                </span>
+                                <span className="truncate">
+                                  {report.reportedBy}
+                                </span>
+                              </div>
+                              <div className="flex items-start gap-1">
+                                <span className="font-medium flex-shrink-0">
+                                  Against:
+                                </span>
+                                <span className="truncate">
+                                  {report.reportedUser}
+                                </span>
+                              </div>
+                              <div className="flex items-start gap-1">
+                                <span className="font-medium flex-shrink-0">
+                                  Reason:
+                                </span>
+                                <span className="truncate">
+                                  {report.reason}
+                                </span>
+                              </div>
+                              <div className="flex items-start gap-1">
+                                <span className="font-medium flex-shrink-0">
+                                  Category:
+                                </span>
+                                <span className="truncate">
+                                  {report.category}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
+                              <Calendar className="h-4 w-4 flex-shrink-0" />
+                              <span>
+                                {new Date(
+                                  report.createdAt
+                                ).toLocaleDateString()}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => handleViewContent(report)}
-                            >
-                              <Eye className="mr-2 h-4 w-4" />
-                              View Content
-                            </DropdownMenuItem>
-                            {!["RESTORED", "RESOLVED", "DELETED"].includes(
-                              report.status
-                            ) && (
-                              <>
-                                <DropdownMenuItem
-                                  onClick={() =>
-                                    confirmAction(
-                                      "Dismiss Report",
-                                      "This will restore the reported content",
-                                      () => handleRestoreContent(report.id)
-                                    )
-                                  }
-                                >
-                                  <XCircle className="mr-2 h-4 w-4" />
-                                  Dismiss Report
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  className="text-red-600"
-                                  onClick={() =>
-                                    confirmDelete(
-                                      "reported content",
-                                      async () =>
-                                        await handleDelete(
-                                          report.type.toUpperCase(),
-                                          report.contentId,
-                                          report.id,
-                                          report?.reportedUserObj?.id
-                                        )
-                                    )
-                                  }
-                                >
-                                  <Ban className="mr-2 h-4 w-4" />
-                                  Delete this content
-                                </DropdownMenuItem>
-                              </>
-                            )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+
+                        <div className="flex-shrink-0">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 sm:h-10 sm:w-10"
+                              >
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => handleViewContent(report)}
+                              >
+                                <Eye className="mr-2 h-4 w-4" />
+                                View Content
+                              </DropdownMenuItem>
+                              {!["RESTORED", "RESOLVED", "DELETED"].includes(
+                                report.status
+                              ) && (
+                                <>
+                                  <DropdownMenuItem
+                                    onClick={() =>
+                                      confirmAction(
+                                        "Dismiss Report",
+                                        "This will restore the reported content",
+                                        () => handleRestoreContent(report.id)
+                                      )
+                                    }
+                                  >
+                                    <XCircle className="mr-2 h-4 w-4" />
+                                    Dismiss Report
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    className="text-red-600"
+                                    onClick={() =>
+                                      confirmDelete(
+                                        "reported content",
+                                        async () =>
+                                          await handleDelete(
+                                            report.type.toUpperCase(),
+                                            report.contentId,
+                                            report.id,
+                                            report?.reportedUserObj?.id
+                                          )
+                                      )
+                                    }
+                                  >
+                                    <Ban className="mr-2 h-4 w-4" />
+                                    Delete this content
+                                  </DropdownMenuItem>
+                                </>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -504,26 +565,26 @@ export default function ModerationPage() {
                   .map((reportActions: any) => (
                     <div
                       key={reportActions?.id}
-                      className="flex items-center justify-between p-4 border rounded-lg"
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="p-2 bg-muted rounded-lg">
+                      <div className="flex items-start gap-4 min-w-0 flex-1">
+                        <div className="p-2 bg-muted rounded-lg flex-shrink-0">
                           <Shield className="h-4 w-4" />
                         </div>
-                        <div>
-                          <p className="font-medium">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm sm:text-base truncate">
                             {reportActions?.actionTaken}
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs sm:text-sm text-muted-foreground truncate">
                             {reportActions?.type} - {reportActions?.title}
                           </p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-muted-foreground break-words">
                             Reason: {reportActions?.reason}
                           </p>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium">
+                      <div className="text-left sm:text-right flex-shrink-0">
+                        <p className="text-xs sm:text-sm font-medium truncate">
                           {reportActions?.reportedByUser?.firstName}{" "}
                           {reportActions?.reportedByUser?.lastName}
                         </p>
@@ -550,17 +611,17 @@ export default function ModerationPage() {
               <div className="space-y-4">
                 {usersModerator?.users?.map((user: any) => (
                   <div key={user.id}>
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="h-10 w-10">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
+                      <div className="flex items-center gap-4 min-w-0 flex-1">
+                        <Avatar className="h-10 w-10 flex-shrink-0">
                           <AvatarImage src={user.profileImage} />
                           <AvatarFallback>{user.firstName}</AvatarFallback>
                         </Avatar>
-                        <div>
-                          <p className="font-medium">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm sm:text-base truncate">
                             {user.firstName} {user.lastName}
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs sm:text-sm text-muted-foreground truncate">
                             {user.email}
                           </p>
                           <Badge variant="secondary" className="text-xs">
@@ -568,8 +629,8 @@ export default function ModerationPage() {
                           </Badge>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge className="bg-yellow-100 text-yellow-800">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-shrink-0">
+                        <Badge className="bg-yellow-100 text-yellow-800 text-xs text-center">
                           {user.warningPoints} Warning(s)
                         </Badge>
 
@@ -578,6 +639,7 @@ export default function ModerationPage() {
                           <Button
                             variant="outline"
                             size="sm"
+                            className="text-xs"
                             onClick={() =>
                               confirmAction(
                                 "Warn user",
@@ -590,8 +652,9 @@ export default function ModerationPage() {
                               )
                             }
                           >
-                            <AlertTriangle className="mr-2 h-4 w-4" />
-                            Warn User
+                            <AlertTriangle className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline">Warn User</span>
+                            <span className="sm:hidden">Warn</span>
                           </Button>
                         )}
 
@@ -600,6 +663,7 @@ export default function ModerationPage() {
                           <Button
                             variant="destructive"
                             size="sm"
+                            className="text-xs"
                             onClick={() =>
                               confirmAction(
                                 "Ban this user",
@@ -612,8 +676,9 @@ export default function ModerationPage() {
                               )
                             }
                           >
-                            <X className="mr-2 h-4 w-4" />
-                            Ban User
+                            <X className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline">Ban User</span>
+                            <span className="sm:hidden">Ban</span>
                           </Button>
                         )}
 
@@ -622,6 +687,7 @@ export default function ModerationPage() {
                           <Button
                             variant="destructive"
                             size="sm"
+                            className="text-xs"
                             onClick={() =>
                               confirmAction(
                                 "Suspend user",
@@ -634,8 +700,11 @@ export default function ModerationPage() {
                               )
                             }
                           >
-                            <Ban className="mr-2 h-4 w-4" />
-                            Suspend User
+                            <Ban className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline">
+                              Suspend User
+                            </span>
+                            <span className="sm:hidden">Suspend</span>
                           </Button>
                         )}
                       </div>
@@ -650,3 +719,657 @@ export default function ModerationPage() {
     </div>
   );
 }
+
+
+// "use client";
+
+// import { useState } from "react";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
+// import {
+//   Card,
+//   CardContent,
+//   CardDescription,
+//   CardHeader,
+//   CardTitle,
+// } from "@/components/ui/card";
+// import { Badge } from "@/components/ui/badge";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuLabel,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
+// import {
+//   Search,
+//   Flag,
+//   AlertTriangle,
+//   XCircle,
+//   Eye,
+//   MessageSquare,
+//   User,
+//   Calendar,
+//   MoreHorizontal,
+//   Shield,
+//   Ban,
+//   FileText,
+//   TriangleAlert,
+//   X,
+// } from "lucide-react";
+// import Link from "next/link";
+// import {
+//   useModeratorQuery,
+//   useFetchUsersModerator,
+//   useFetchReportCountQuery,
+// } from "@/hooks/useModerator";
+// import Cookies from "js-cookie";
+// import { ContentViewModal } from "@/components/content-view-modal";
+// import { useConfirmation } from "@/components/confirmation-provider";
+// import ModerationLoading from "./loading";
+
+// export default function ModerationPage() {
+//   const { confirmDelete, confirmAction } = useConfirmation();
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [statusFilter, setStatusFilter] = useState("PENDING");
+//   const [typeFilter, setTypeFilter] = useState("all");
+//   const [selectedReport, setSelectedReport] = useState<any>(null);
+//   const [isContentModalOpen, setIsContentModalOpen] = useState(false);
+//   const token = Cookies.get("token") || "";
+
+//   const {
+//     data: reportedContents,
+//     isLoading,
+//     deleteReportedContent,
+//     restoreContent,
+//     cleanupReport,
+//   } = useModeratorQuery(token);
+//   console.log("reported contents", reportedContents);
+//   const { data: reportCount } = useFetchReportCountQuery(token);
+//   console.log("report count: ", reportCount);
+
+//   const { data: usersModerator, triggerBan } = useFetchUsersModerator(token);
+//   console.log("users for modertaion", usersModerator);
+//   // Transform API data to match UI expectations
+//   const transformedReports =
+//     reportedContents?.reports?.map((report: any) => ({
+//       id: report.reportId,
+//       type: report.contentType?.toLowerCase().replace("_", "_"),
+//       title: getReportTitle(report),
+//       reportedBy: `${report.reportedBy?.firstName || "Unknown"} ${
+//         report.reportedBy?.lastName || "User"
+//       }`,
+//       reportedUser: `${report.reportedUser?.firstName || "Unknown"} ${
+//         report.reportedUser?.lastName || "User"
+//       }`,
+//       // Keep the full objects for the modal
+//       reportedByUser: report.reportedBy,
+//       reportedUserObj: report.reportedUser,
+//       reason: report.reportReason,
+//       description:
+//         report.description ||
+//         `Report for ${report.contentType?.toLowerCase().replace("_", " ")}`,
+//       status: report?.status || "pending",
+//       priority: report?.priority || "medium",
+//       createdAt: report?.createdAt || new Date().toISOString(),
+//       contentPreview: report.reportedContent || "No content preview available",
+//       category: getContentCategory(report),
+//       reportedUserId: report.reportedUserId,
+//       contentId: getContentId(report),
+//       actionTaken: report?.actionTaken,
+//       forum: report?.forum,
+//       publication: report?.publication,
+//       // Pass through all original report data
+//       originalReport: report,
+//     })) || [];
+
+//   function getReportTitle(report: any) {
+//     const contentType = report.type?.toLowerCase();
+//     const reason = report.reportReason || "Content violation";
+
+//     switch (contentType) {
+//       case "forum_post":
+//         return `Forum post reported for: ${reason}`;
+//       case "publication":
+//         return `Publication reported for: ${reason}`;
+//       case "comment":
+//         return `Comment reported for: ${reason}`;
+//       default:
+//         return `Content reported for: ${reason}`;
+//     }
+//   }
+
+//   function getContentCategory(report: any) {
+//     if (report.forumId) return "Forum";
+//     if (report.pubId) return "Publication";
+//     return "General";
+//   }
+
+//   function getContentId(report: any) {
+//     return (
+//       report.forumId ||
+//       report.pubId ||
+//       report.forumCommentId ||
+//       report.pubCommentId ||
+//       report.forumReplyId ||
+//       report.pubReplyId ||
+//       report.forumReplyToReplyId ||
+//       report.pubReplyToReplyId ||
+//       "unknown"
+//     );
+//   }
+
+//   // Filter reports based on search and filters
+//   const filteredReports = transformedReports.filter((report: any) => {
+//     const matchesSearch =
+//       report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+//       report.reportedBy.toLowerCase().includes(searchQuery.toLowerCase()) ||
+//       report.reason.toLowerCase().includes(searchQuery.toLowerCase());
+
+//     const matchesStatus =
+//       statusFilter === "all" || report.status === statusFilter;
+//     const matchesType = typeFilter === "all" || report.type === typeFilter;
+
+//     return matchesSearch && matchesStatus && matchesType;
+//   });
+
+//   console.log("filtered reports", filteredReports);
+
+//   // Calculate stats from real data
+//   const reportsWithoutAction = transformedReports.filter(
+//     (r: any) => !r.actionTaken
+//   );
+
+//   const stats = [
+//     {
+//       label: "Pending Reports",
+//       value: reportsWithoutAction
+//         .filter((r: any) => r.status === "PENDING")
+//         .length.toString(),
+//       icon: Flag,
+//       color: "text-orange-600",
+//     },
+//     {
+//       label: "High Priority",
+//       value: reportsWithoutAction
+//         .filter((r: any) => ["URGENT", "HIGH"].includes(r.priority))
+//         .length.toString(),
+//       icon: AlertTriangle,
+//       color: "text-yellow-600",
+//     },
+//     {
+//       label: "Total Reports",
+//       value: reportsWithoutAction.length.toString(),
+//       icon: Ban,
+//       color: "text-red-600",
+//     },
+//   ];
+
+//   const priorityColors = {
+//     LOW: "bg-green-100 text-green-800",
+//     MEDIUM: "bg-yellow-100 text-yellow-800",
+//     HIGH: "bg-red-100 text-red-800",
+//     URGENT: "bg-violet-700 text-white-800",
+//   };
+
+//   const statusColors = {
+//     PENDING: "bg-orange-100 text-orange-800",
+//     RESOLVED: "bg-green-100 text-green-800",
+//     DISMISSED: "bg-gray-100 text-gray-800",
+//     UNDER_REVIEW: "bg-gray-400 text-gray-800",
+//   };
+
+//   const typeIcons = {
+//     forum_post: MessageSquare,
+//     publication: FileText,
+//     comment: MessageSquare,
+//     user_behavior: User,
+//   };
+
+//   const handleViewContent = (report: any) => {
+//     setSelectedReport(report);
+//     setIsContentModalOpen(true);
+//   };
+
+//   const handleDelete = async (
+//     contentType: any,
+//     contentId: any,
+//     reportId: any,
+//     userId: any
+//   ) => {
+//     deleteReportedContent({ contentType, contentId, reportId, userId }); // Pass as a single object
+//   };
+
+//   const handleRestoreContent = (reportId: string) => {
+//     restoreContent(reportId);
+//   };
+
+//   const handleCleanUp = () => {
+//     cleanupReport();
+//   };
+
+//   const handleBan = (userId: any, reportId: any) => {
+//     if (!userId) {
+//       console.error("Cannot trigger action without userId");
+//       return; // Or throw/toast an error
+//     }
+//     triggerBan({ userId, reportId: reportId ?? null });
+//   };
+
+//   if (isLoading) {
+//     return <ModerationLoading />;
+//   }
+
+//   return (
+//     <div className="space-y-6">
+//       <ContentViewModal
+//         isOpen={isContentModalOpen}
+//         onClose={() => setIsContentModalOpen(false)}
+//         report={selectedReport}
+//       />
+//       {/* Header */}
+//       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+//         <div>
+//           <h1 className="text-3xl font-bold">Moderation Center</h1>
+//           <p className="text-muted-foreground">
+//             Review reports, manage content, and maintain community standards
+//           </p>
+//         </div>
+//         <div className="flex items-center gap-2">
+//           <Button
+//             variant="outline"
+//             onClick={() =>
+//               confirmDelete("or clean-up reported contents", handleCleanUp)
+//             }
+//           >
+//             <TriangleAlert className="mr-2 h-4 w-4" />
+//             Clean Up Reported Contents
+//           </Button>
+//           <Button asChild>
+//             <Link href="/moderation/reports/new">
+//               <Flag className="mr-2 h-4 w-4" />
+//               Create Report
+//             </Link>
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* Stats */}
+//       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+//         {stats.map((stat, index) => (
+//           <Card key={index}>
+//             <CardContent className="p-6">
+//               <div className="flex items-center gap-4">
+//                 <div className="p-3 bg-muted rounded-lg">
+//                   <stat.icon className={`h-6 w-6 ${stat.color}`} />
+//                 </div>
+//                 <div>
+//                   <p className="text-2xl font-bold">{stat.value}</p>
+//                   <p className="text-sm text-muted-foreground">{stat.label}</p>
+//                 </div>
+//               </div>
+//             </CardContent>
+//           </Card>
+//         ))}
+//       </div>
+
+//       <Tabs defaultValue="reports" className="space-y-6">
+//         <TabsList>
+//           <TabsTrigger value="reports">
+//             Reports ({transformedReports.length})
+//           </TabsTrigger>
+//           <TabsTrigger value="actions">Recent Actions</TabsTrigger>
+//           <TabsTrigger value="users">User Management</TabsTrigger>
+//         </TabsList>
+
+//         <TabsContent value="reports" className="space-y-6">
+//           {/* Filters */}
+//           <Card>
+//             <CardContent className="p-6">
+//               <div className="flex flex-col sm:flex-row gap-4">
+//                 <div className="relative flex-1">
+//                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+//                   <Input
+//                     placeholder="Search reports..."
+//                     value={searchQuery}
+//                     onChange={(e) => setSearchQuery(e.target.value)}
+//                     className="pl-10"
+//                   />
+//                 </div>
+//                 <Select value={statusFilter} onValueChange={setStatusFilter}>
+//                   <SelectTrigger className="w-full sm:w-48">
+//                     <SelectValue placeholder="Filter by status" />
+//                   </SelectTrigger>
+//                   <SelectContent>
+//                     <SelectItem value="PENDING">Pending</SelectItem>
+//                     <SelectItem value="RESTORED">Restored</SelectItem>
+//                     <SelectItem value="RESOLVED">Resolved</SelectItem>
+//                     <SelectItem value="DELETED">Deleted</SelectItem>
+//                     <SelectItem value="all">All Status</SelectItem>
+//                   </SelectContent>
+//                 </Select>
+//                 <Select value={typeFilter} onValueChange={setTypeFilter}>
+//                   <SelectTrigger className="w-full sm:w-48">
+//                     <SelectValue placeholder="Filter by type" />
+//                   </SelectTrigger>
+//                   <SelectContent>
+//                     <SelectItem value="all">All Types</SelectItem>
+//                     <SelectItem value="forum_post">Forum Posts</SelectItem>
+//                     <SelectItem value="publication">Publications</SelectItem>
+//                     <SelectItem value="comment">Comments</SelectItem>
+//                   </SelectContent>
+//                 </Select>
+//               </div>
+//             </CardContent>
+//           </Card>
+
+//           {/* Reports List */}
+//           <div className="space-y-4">
+//             {filteredReports.length === 0 ? (
+//               <Card>
+//                 <CardContent className="p-8 text-center">
+//                   <Flag className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+//                   <h3 className="text-lg font-semibold mb-2">
+//                     No reports found
+//                   </h3>
+//                   <p className="text-muted-foreground">
+//                     {transformedReports.length === 0
+//                       ? "No reports have been submitted yet."
+//                       : "No reports match your current filters."}
+//                   </p>
+//                 </CardContent>
+//               </Card>
+//             ) : (
+//               filteredReports.map((report: any) => {
+//                 const TypeIcon =
+//                   typeIcons[report.type as keyof typeof typeIcons] ||
+//                   MessageSquare;
+//                 return (
+//                   <Card
+//                     key={report.id}
+//                     className="hover:shadow-md transition-shadow"
+//                   >
+//                     <CardContent className="p-6">
+//                       <div className="flex items-start justify-between">
+//                         <div className="flex-1">
+//                           <div className="flex items-center gap-2 mb-2">
+//                             <TypeIcon className="h-4 w-4 text-muted-foreground" />
+//                             <h3 className="text-lg font-semibold">
+//                               {report.title}
+//                             </h3>
+//                             <Badge
+//                               className={
+//                                 statusColors[
+//                                   report.status as keyof typeof statusColors
+//                                 ]
+//                               }
+//                             >
+//                               {report.status}
+//                             </Badge>
+//                             <Badge
+//                               className={
+//                                 priorityColors[
+//                                   report.priority as keyof typeof priorityColors
+//                                 ]
+//                               }
+//                             >
+//                               {report.priority} priority
+//                             </Badge>
+//                           </div>
+//                           <div className="bg-muted p-3 rounded-md mb-3">
+//                             <p className="text-sm italic">
+//                               &quot;{report.contentPreview}&quot;
+//                             </p>
+//                           </div>
+//                           <p className="text-muted-foreground mb-3">
+//                             {report.description}
+//                           </p>
+//                           <div className="flex items-center gap-4 text-sm text-muted-foreground">
+//                             <span>Reported By: {report.reportedBy}</span>
+//                             <span>•</span>
+//                             <span>Against: {report.reportedUser}</span>
+//                             <span>•</span>
+//                             <span>Reason: {report.reason}</span>
+//                             <span>•</span>
+//                             <span>Category: {report.category}</span>
+//                             <span>•</span>
+//                             <span className="flex items-center gap-1">
+//                               <Calendar className="h-4 w-4" />
+//                               {new Date(report.createdAt).toLocaleDateString()}
+//                             </span>
+//                           </div>
+//                         </div>
+//                         <DropdownMenu>
+//                           <DropdownMenuTrigger asChild>
+//                             <Button variant="ghost" size="icon">
+//                               <MoreHorizontal className="h-4 w-4" />
+//                             </Button>
+//                           </DropdownMenuTrigger>
+//                           <DropdownMenuContent align="end">
+//                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+//                             <DropdownMenuSeparator />
+//                             <DropdownMenuItem
+//                               onClick={() => handleViewContent(report)}
+//                             >
+//                               <Eye className="mr-2 h-4 w-4" />
+//                               View Content
+//                             </DropdownMenuItem>
+//                             {!["RESTORED", "RESOLVED", "DELETED"].includes(
+//                               report.status
+//                             ) && (
+//                               <>
+//                                 <DropdownMenuItem
+//                                   onClick={() =>
+//                                     confirmAction(
+//                                       "Dismiss Report",
+//                                       "This will restore the reported content",
+//                                       () => handleRestoreContent(report.id)
+//                                     )
+//                                   }
+//                                 >
+//                                   <XCircle className="mr-2 h-4 w-4" />
+//                                   Dismiss Report
+//                                 </DropdownMenuItem>
+//                                 <DropdownMenuSeparator />
+//                                 <DropdownMenuItem
+//                                   className="text-red-600"
+//                                   onClick={() =>
+//                                     confirmDelete(
+//                                       "reported content",
+//                                       async () =>
+//                                         await handleDelete(
+//                                           report.type.toUpperCase(),
+//                                           report.contentId,
+//                                           report.id,
+//                                           report?.reportedUserObj?.id
+//                                         )
+//                                     )
+//                                   }
+//                                 >
+//                                   <Ban className="mr-2 h-4 w-4" />
+//                                   Delete this content
+//                                 </DropdownMenuItem>
+//                               </>
+//                             )}
+//                           </DropdownMenuContent>
+//                         </DropdownMenu>
+//                       </div>
+//                     </CardContent>
+//                   </Card>
+//                 );
+//               })
+//             )}
+//           </div>
+//         </TabsContent>
+
+//         <TabsContent value="actions" className="space-y-6">
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>Recent Moderation Actions</CardTitle>
+//               <CardDescription>
+//                 Track all moderation activities and decisions
+//               </CardDescription>
+//             </CardHeader>
+//             <CardContent>
+//               <div className="space-y-4">
+//                 {transformedReports
+//                   .filter((reportActions: any) => reportActions?.actionTaken)
+//                   .map((reportActions: any) => (
+//                     <div
+//                       key={reportActions?.id}
+//                       className="flex items-center justify-between p-4 border rounded-lg"
+//                     >
+//                       <div className="flex items-center gap-4">
+//                         <div className="p-2 bg-muted rounded-lg">
+//                           <Shield className="h-4 w-4" />
+//                         </div>
+//                         <div>
+//                           <p className="font-medium">
+//                             {reportActions?.actionTaken}
+//                           </p>
+//                           <p className="text-sm text-muted-foreground">
+//                             {reportActions?.type} - {reportActions?.title}
+//                           </p>
+//                           <p className="text-xs text-muted-foreground">
+//                             Reason: {reportActions?.reason}
+//                           </p>
+//                         </div>
+//                       </div>
+//                       <div className="text-right">
+//                         <p className="text-sm font-medium">
+//                           {reportActions?.reportedByUser?.firstName}{" "}
+//                           {reportActions?.reportedByUser?.lastName}
+//                         </p>
+//                         <p className="text-xs text-muted-foreground">
+//                           {new Date(reportActions?.createdAt).toLocaleString()}
+//                         </p>
+//                       </div>
+//                     </div>
+//                   ))}
+//               </div>
+//             </CardContent>
+//           </Card>
+//         </TabsContent>
+
+//         <TabsContent value="users" className="space-y-6">
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>User Management</CardTitle>
+//               <CardDescription>
+//                 Manage user warnings, suspensions, and bans
+//               </CardDescription>
+//             </CardHeader>
+//             <CardContent>
+//               <div className="space-y-4">
+//                 {usersModerator?.users?.map((user: any) => (
+//                   <div key={user.id}>
+//                     <div className="flex items-center justify-between p-4 border rounded-lg">
+//                       <div className="flex items-center gap-4">
+//                         <Avatar className="h-10 w-10">
+//                           <AvatarImage src={user.profileImage} />
+//                           <AvatarFallback>{user.firstName}</AvatarFallback>
+//                         </Avatar>
+//                         <div>
+//                           <p className="font-medium">
+//                             {user.firstName} {user.lastName}
+//                           </p>
+//                           <p className="text-sm text-muted-foreground">
+//                             {user.email}
+//                           </p>
+//                           <Badge variant="secondary" className="text-xs">
+//                             {user.role}
+//                           </Badge>
+//                         </div>
+//                       </div>
+//                       <div className="flex items-center gap-2">
+//                         <Badge className="bg-yellow-100 text-yellow-800">
+//                           {user.warningPoints} Warning(s)
+//                         </Badge>
+
+//                         {/* Show Warn button only if user has 3 or more warning points */}
+//                         {user.warningPoints >= 3 && user.warningPoints < 5 && (
+//                           <Button
+//                             variant="outline"
+//                             size="sm"
+//                             onClick={() =>
+//                               confirmAction(
+//                                 "Warn user",
+//                                 "This will warn the user.",
+//                                 () =>
+//                                   handleBan(
+//                                     user.id,
+//                                     user?.reportsAgainst?.[0]?.reportId
+//                                   )
+//                               )
+//                             }
+//                           >
+//                             <AlertTriangle className="mr-2 h-4 w-4" />
+//                             Warn User
+//                           </Button>
+//                         )}
+
+//                         {/* Show Ban button only if user has 10 or more warning points */}
+//                         {user.warningPoints >= 10 && (
+//                           <Button
+//                             variant="destructive"
+//                             size="sm"
+//                             onClick={() =>
+//                               confirmAction(
+//                                 "Ban this user",
+//                                 "This will ban the user.",
+//                                 () =>
+//                                   handleBan(
+//                                     user?.id,
+//                                     user?.reportsAgainst?.[0]?.reportId
+//                                   )
+//                               )
+//                             }
+//                           >
+//                             <X className="mr-2 h-4 w-4" />
+//                             Ban User
+//                           </Button>
+//                         )}
+
+//                         {/* Show Suspend button only if user has 5 or more warning points */}
+//                         {user.warningPoints >= 5 && user.warningPoints < 10 && (
+//                           <Button
+//                             variant="destructive"
+//                             size="sm"
+//                             onClick={() =>
+//                               confirmAction(
+//                                 "Suspend user",
+//                                 "This will suspend the user.",
+//                                 () =>
+//                                   handleBan(
+//                                     user?.id,
+//                                     user?.reportsAgainst?.[0]?.reportId
+//                                   )
+//                               )
+//                             }
+//                           >
+//                             <Ban className="mr-2 h-4 w-4" />
+//                             Suspend User
+//                           </Button>
+//                         )}
+//                       </div>
+//                     </div>
+//                   </div>
+//                 ))}
+//               </div>
+//             </CardContent>
+//           </Card>
+//         </TabsContent>
+//       </Tabs>
+//     </div>
+//   );
+// }
