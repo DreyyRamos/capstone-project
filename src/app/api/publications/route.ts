@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
             firstName: true,
             lastName: true,
             profileImage: true,
+            role: true,
           },
         },
         pubComments: {

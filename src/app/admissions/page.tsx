@@ -7,13 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -25,17 +18,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import {
   Users,
-  Clock,
   CheckCircle,
   XCircle,
   Search,
-  Filter,
   Eye,
   Calendar,
   Phone,
   MapPin,
-  GraduationCap,
-  Building,
   ImageIcon,
   Heart,
 } from "lucide-react";
@@ -87,9 +76,9 @@ export default function AdmissionsPage() {
         fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         admission.user_email.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesRole = roleFilter === "all" || admission.role === roleFilter;
+      // const matchesRole = roleFilter === "all" || admission.role === roleFilter;
 
-      return matchesSearch && matchesRole;
+      return matchesSearch;
     }
   );
 
@@ -159,6 +148,8 @@ export default function AdmissionsPage() {
     }
   };
 
+  console.log("debug:", pendingAdmissions?.users?.[0]);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -181,46 +172,12 @@ export default function AdmissionsPage() {
             <p className="text-xs text-muted-foreground">Awaiting approval</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Students</CardTitle>
-            <GraduationCap className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            {/* <div className="text-2xl font-bold">{stats.students}</div> */}
-            <p className="text-xs text-muted-foreground">
-              Student applications
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Teachers</CardTitle>
-            <Building className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            {/* <div className="text-2xl font-bold">{stats.teachers}</div> */}
-            <p className="text-xs text-muted-foreground">
-              Faculty applications
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Moderators</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            {/* <div className="text-2xl font-bold">{stats.moderators}</div> */}
-            <p className="text-xs text-muted-foreground">Staff applications</p>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Filters */}
       <Card>
         <CardHeader>
-          <CardTitle>Filter Applications</CardTitle>
+          <CardTitle>Search Applications</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">
@@ -235,18 +192,6 @@ export default function AdmissionsPage() {
                 />
               </div>
             </div>
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-[180px]">
-                <Filter className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Filter by role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Roles</SelectItem>
-                <SelectItem value="student">Students</SelectItem>
-                <SelectItem value="teacher">Teachers</SelectItem>
-                <SelectItem value="moderator">Moderators</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </CardContent>
       </Card>
@@ -261,10 +206,10 @@ export default function AdmissionsPage() {
             {filteredAdmissions?.map((admission: Admission) => (
               <div
                 key={admission.admission_id}
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors gap-4"
               >
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-12 w-12">
+                <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
+                  <Avatar className="h-12 w-12 shrink-0">
                     <AvatarImage
                       src={admission.profileImage || "/placeholder.svg"}
                     />
@@ -273,46 +218,56 @@ export default function AdmissionsPage() {
                       {admission.lastName?.[0] || ""}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+                      <h3 className="font-semibold truncate">
                         {admission.firstName} {admission.lastName || ""}
                       </h3>
-                      <Badge className={getStatusBadgeColor(admission.status)}>
+                      <Badge
+                        className={`${getStatusBadgeColor(
+                          admission.status
+                        )} shrink-0 w-fit`}
+                      >
                         {admission.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground truncate mb-2">
                       {admission.user_email}
                     </p>
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground mt-1">
-                      <span className="flex items-center gap-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1 shrink-0">
                         <Calendar className="h-3 w-3" />
                         {new Date(admission.createdAt).toLocaleDateString()}
                       </span>
-                      <span className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {admission.location || "Location not provided"}
+                      <span className="flex items-center gap-1 truncate">
+                        <MapPin className="h-3 w-3 shrink-0" />
+                        <span className="truncate">
+                          {admission.location || "Location not provided"}
+                        </span>
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 mb-1">
+
+                <div className="flex flex-row sm:flex-col lg:flex-row items-center gap-2 shrink-0">
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => setSelectedAdmission(admission)}
+                        className="w-full sm:w-auto"
                       >
-                        <Eye className="h-4 w-4 mr-2" />
-                        Review
+                        <Eye className="h-4 w-4 sm:mr-2" />
+                        <span className="sm:inline">Review</span>
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-4xl max-h-[92vh]">
+                    <DialogContent className="max-w-4xl max-h-[92vh] mx-4">
                       <DialogHeader>
-                        <DialogTitle>Admission Application Review</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle className="text-base sm:text-lg">
+                          Admission Application Review
+                        </DialogTitle>
+                        <DialogDescription className="text-sm">
                           Review {admission.firstName}{" "}
                           {admission.lastName || ""}&apos;s admission
                           application
@@ -325,12 +280,12 @@ export default function AdmissionsPage() {
                             <h3 className="text-lg font-semibold mb-3">
                               Personal Information
                             </h3>
-                            <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                               <div>
                                 <label className="font-medium text-muted-foreground">
                                   Admission ID
                                 </label>
-                                <code className="block bg-muted px-2 py-1 rounded text-xs font-mono mt-1">
+                                <code className="block bg-muted px-2 py-1 rounded text-xs font-mono mt-1 break-all">
                                   {admission.admission_id}
                                 </code>
                               </div>
@@ -338,17 +293,17 @@ export default function AdmissionsPage() {
                                 <label className="font-medium text-muted-foreground">
                                   Full Name
                                 </label>
-                                <p>
+                                <p className="break-words">
                                   {admission.firstName}{" "}
                                   {admission.lastName ||
                                     "(No last name provided)"}
                                 </p>
                               </div>
-                              <div>
+                              <div className="sm:col-span-2">
                                 <label className="font-medium text-muted-foreground">
                                   Email
                                 </label>
-                                <p className="flex items-center gap-1">
+                                <p className="flex items-center gap-1 break-all">
                                   {admission.user_email}
                                 </p>
                               </div>
@@ -356,17 +311,17 @@ export default function AdmissionsPage() {
                                 <label className="font-medium text-muted-foreground">
                                   Contact Number
                                 </label>
-                                <p className="flex items-center gap-1">
-                                  <Phone className="h-3 w-3" />
+                                <p className="flex items-center gap-1 break-words">
+                                  <Phone className="h-3 w-3 shrink-0" />
                                   {admission.contactNumber || "Not provided"}
                                 </p>
                               </div>
-                              <div className="col-span-2">
+                              <div>
                                 <label className="font-medium text-muted-foreground">
                                   Location
                                 </label>
-                                <p className="flex items-center gap-1">
-                                  <MapPin className="h-3 w-3" />
+                                <p className="flex items-center gap-1 break-words">
+                                  <MapPin className="h-3 w-3 shrink-0" />
                                   {admission.location || "Not provided"}
                                 </p>
                               </div>
@@ -381,8 +336,8 @@ export default function AdmissionsPage() {
                               Profile Information
                             </h3>
                             <div className="space-y-4">
-                              <div className="flex items-start gap-4">
-                                <Avatar className="h-16 w-16">
+                              <div className="flex flex-col sm:flex-row items-start gap-4">
+                                <Avatar className="h-16 w-16 shrink-0">
                                   <AvatarImage
                                     src={
                                       admission.profileImage ||
@@ -395,11 +350,11 @@ export default function AdmissionsPage() {
                                     {admission.lastName?.[0] || ""}
                                   </AvatarFallback>
                                 </Avatar>
-                                <div className="flex-1">
+                                <div className="flex-1 min-w-0">
                                   <label className="font-medium text-muted-foreground">
                                     Bio
                                   </label>
-                                  <p className="text-sm leading-relaxed mt-1">
+                                  <p className="text-sm leading-relaxed mt-1 break-words">
                                     {admission.bio || "No bio provided"}
                                   </p>
                                 </div>
@@ -417,9 +372,9 @@ export default function AdmissionsPage() {
                                         <Badge
                                           key={index}
                                           variant="secondary"
-                                          className="text-xs"
+                                          className="text-xs break-words"
                                         >
-                                          <Heart className="h-3 w-3 mr-1" />
+                                          <Heart className="h-3 w-3 mr-1 shrink-0" />
                                           {interest}
                                         </Badge>
                                       )
@@ -459,7 +414,7 @@ export default function AdmissionsPage() {
                                   />
                                 ) : (
                                   <div className="w-full max-w-md mx-auto h-48 bg-muted rounded border flex items-center justify-center">
-                                    <p className="text-muted-foreground">
+                                    <p className="text-muted-foreground text-center px-4">
                                       No ID picture uploaded
                                     </p>
                                   </div>
@@ -475,9 +430,9 @@ export default function AdmissionsPage() {
                             <h3 className="text-lg font-semibold mb-3">
                               Application Details
                             </h3>
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                              <div>
-                                <label className="font-medium text-muted-foreground mr-1">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <label className="font-medium text-muted-foreground">
                                   Role:
                                 </label>
                                 <Badge
@@ -486,8 +441,8 @@ export default function AdmissionsPage() {
                                   {admission?.role}
                                 </Badge>
                               </div>
-                              <div>
-                                <label className="font-medium text-muted-foreground mr-1">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <label className="font-medium text-muted-foreground">
                                   Status:
                                 </label>
                                 <Badge
@@ -498,11 +453,11 @@ export default function AdmissionsPage() {
                                   {admission.status}
                                 </Badge>
                               </div>
-                              <div>
+                              <div className="sm:col-span-2">
                                 <label className="font-medium text-muted-foreground">
                                   Submitted:
                                 </label>
-                                <p>
+                                <p className="break-words">
                                   {new Date(
                                     admission.createdAt
                                   ).toLocaleString()}
@@ -514,15 +469,19 @@ export default function AdmissionsPage() {
                       </ScrollArea>
                       {/* Only show action buttons if status is PENDING */}
                       {admission.status === "PENDING" && (
-                        <div className="flex justify-end gap-2 pt-4 border-t mb-2">
+                        <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4 border-t mb-2">
                           <Button
                             variant="outline"
                             onClick={() => handleReject(admission)}
+                            className="w-full sm:w-auto"
                           >
                             <XCircle className="h-4 w-4 mr-2" />
                             Reject
                           </Button>
-                          <Button onClick={() => handleApprove(admission)}>
+                          <Button
+                            onClick={() => handleApprove(admission)}
+                            className="w-full sm:w-auto"
+                          >
                             <CheckCircle className="h-4 w-4 mr-2" />
                             Approve
                           </Button>
@@ -537,16 +496,18 @@ export default function AdmissionsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => handleReject(admission)}
+                        className="w-full sm:w-auto"
                       >
-                        <XCircle className="h-4 w-4 mr-2" />
-                        Reject
+                        <XCircle className="h-4 w-4 sm:mr-2" />
+                        <span className="sm:inline">Reject</span>
                       </Button>
                       <Button
                         size="sm"
                         onClick={() => handleApprove(admission)}
+                        className="w-full sm:w-auto"
                       >
-                        <CheckCircle className="h-4 w-4 mr-2" />
-                        Approve
+                        <CheckCircle className="h-4 w-4 sm:mr-2" />
+                        <span className="sm:inline">Approve</span>
                       </Button>
                     </>
                   )}

@@ -17,6 +17,7 @@ export async function GET() {
             firstName: true,
             lastName: true,
             profileImage: true,
+            role: true,
           },
         },
       },

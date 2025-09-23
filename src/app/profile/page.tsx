@@ -91,6 +91,10 @@ export default function ProfilePage() {
     interests: [],
   });
 
+  // Pagination state for recent activity
+  const [visibleActivityCount, setVisibleActivityCount] = useState(5);
+  const ACTIVITY_INCREMENT = 5;
+
   // Update profileData when user data changes
   useEffect(() => {
     if (user?.userData) {
@@ -154,6 +158,10 @@ export default function ProfilePage() {
     confirmDelete("forum", () => {
       deleteForum(forumId);
     });
+  };
+
+  const handleLoadMoreActivity = () => {
+    setVisibleActivityCount((prev) => prev + ACTIVITY_INCREMENT);
   };
 
   const stats = {
@@ -226,19 +234,24 @@ export default function ProfilePage() {
   const displayRole =
     String(rawRole).charAt(0).toUpperCase() + String(rawRole).slice(1);
 
+  // Get visible activities for pagination
+  const visibleActivities = userActivity?.slice(0, visibleActivityCount) || [];
+  const hasMoreActivities =
+    userActivity && userActivity.length > visibleActivityCount;
+
   if (isLoading) {
     return <ProfilePageLoading />;
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 p-4 sm:p-0">
       {/* Profile Header */}
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="flex flex-col items-center space-y-4">
               <div className="relative">
-                <Avatar className="h-32 w-32">
+                <Avatar className="h-24 w-24 sm:h-32 sm:w-32">
                   {profileData.profileImage.length ? (
                     <AvatarImage
                       src={
@@ -247,7 +260,7 @@ export default function ProfilePage() {
                       }
                     />
                   ) : null}
-                  <AvatarFallback className="text-2xl">
+                  <AvatarFallback className="text-xl sm:text-2xl">
                     {profileData.firstName?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
@@ -299,36 +312,40 @@ export default function ProfilePage() {
             <div className="flex-1 space-y-4">
               {!isEditing ? (
                 <>
-                  <div className="flex items-center justify-between">
-                    <h1 className="text-3xl font-bold">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                    <h1 className="text-2xl sm:text-3xl font-bold">
                       {profileData.firstName} {profileData.lastName}
                     </h1>
                     <Button
                       onClick={() => setIsEditing(true)}
                       variant="outline"
+                      size="sm"
+                      className="w-full sm:w-auto"
                     >
                       <Edit3 className="mr-2 h-4 w-4" />
                       Edit Profile
                     </Button>
                   </div>
 
-                  <p className="text-muted-foreground">{profileData.bio}</p>
+                  <p className="text-muted-foreground text-sm sm:text-base">
+                    {profileData.bio}
+                  </p>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-1 gap-3 text-sm">
                     <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      <span>{profileData.email}</span>
+                      <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <span className="break-all">{profileData.email}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                       <span>{profileData.contactNumber}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                       <span>{profileData.location}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                       <span>
                         Joined{" "}
                         {profileData.createdAt
@@ -340,7 +357,11 @@ export default function ProfilePage() {
 
                   <div className="flex flex-wrap gap-2">
                     {profileData.interests?.map((interest) => (
-                      <Badge key={interest} variant="secondary">
+                      <Badge
+                        key={interest}
+                        variant="secondary"
+                        className="text-xs"
+                      >
                         {interest}
                       </Badge>
                     ))}
@@ -348,7 +369,7 @@ export default function ProfilePage() {
                 </>
               ) : (
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First Name</Label>
                       <Input
@@ -367,7 +388,7 @@ export default function ProfilePage() {
                         onChange={handleChange}
                       />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 sm:col-span-2">
                       <Label htmlFor="email">Email</Label>
                       <Input
                         id="email"
@@ -432,7 +453,7 @@ export default function ProfilePage() {
                         <Badge
                           key={interest}
                           variant="secondary"
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-1 text-xs"
                         >
                           {interest}
                           <button
@@ -446,11 +467,14 @@ export default function ProfilePage() {
                     </div>
                   )}
 
-                  <div className="flex gap-2">
-                    <Button onClick={handleSave}>Save Changes</Button>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Button onClick={handleSave} className="w-full sm:w-auto">
+                      Save Changes
+                    </Button>
                     <Button
                       variant="outline"
                       onClick={() => setIsEditing(false)}
+                      className="w-full sm:w-auto"
                     >
                       Cancel
                     </Button>
@@ -463,44 +487,48 @@ export default function ProfilePage() {
       </Card>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center space-x-2">
-              <FileText className="h-5 w-5 text-blue-600" />
+              <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-xl sm:text-2xl font-bold">
                   {user?.userData?.publications?.length || 0}
                 </p>
-                <p className="text-sm text-muted-foreground">Publications</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Publications
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center space-x-2">
-              <MessageSquare className="h-5 w-5 text-green-600" />
+              <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-xl sm:text-2xl font-bold">
                   {user?.userData?.forums?.length || 0}
                 </p>
-                <p className="text-sm text-muted-foreground">Forum Posts</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Forum Posts
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center space-x-2">
-              <Star className="h-5 w-5 text-yellow-600" />
+              <Star className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600" />
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-xl sm:text-2xl font-bold">
                   {user?.userData?.reputationPoints}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Reputation Points
                 </p>
               </div>
@@ -509,12 +537,16 @@ export default function ProfilePage() {
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center space-x-2">
-              <Trophy className="h-5 w-5 text-purple-600" />
+              <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
               <div>
-                <p className="text-2xl font-bold">{stats.achievements}</p>
-                <p className="text-sm text-muted-foreground">Achievements</p>
+                <p className="text-xl sm:text-2xl font-bold">
+                  {stats.achievements}
+                </p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Achievements
+                </p>
               </div>
             </div>
           </CardContent>
@@ -523,27 +555,37 @@ export default function ProfilePage() {
 
       {/* Tabbed Content */}
       <Tabs defaultValue="activity" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="activity">Recent Activity</TabsTrigger>
-          <TabsTrigger value="publications">Publications</TabsTrigger>
-          <TabsTrigger value="forums">Forums</TabsTrigger>
-          <TabsTrigger value="achievements">Achievements</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4 text-xs sm:text-sm">
+          <TabsTrigger value="activity" className="px-2 sm:px-4">
+            Activity
+          </TabsTrigger>
+          <TabsTrigger value="publications" className="px-2 sm:px-4">
+            Publications
+          </TabsTrigger>
+          <TabsTrigger value="forums" className="px-2 sm:px-4">
+            Forums
+          </TabsTrigger>
+          <TabsTrigger value="achievements" className="px-2 sm:px-4">
+            Achievements
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="activity" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle className="text-lg sm:text-xl">
+                Recent Activity
+              </CardTitle>
               <CardDescription>
                 Your latest contributions and interactions
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {userActivity?.map((activity: any, index: any) => (
+                {visibleActivities.map((activity: any, index: number) => (
                   <div key={index}>
-                    <div className="flex items-start space-x-4">
-                      <div className="p-2 bg-muted rounded-lg">
+                    <div className="flex items-start space-x-3 sm:space-x-4">
+                      <div className="p-2 bg-muted rounded-lg flex-shrink-0">
                         {activity.type === "PUBLISHED" ? (
                           <FileText className="h-4 w-4" />
                         ) : (
@@ -570,7 +612,7 @@ export default function ProfilePage() {
                             </>
                           )}
                         </p>
-                        <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-muted-foreground">
                           <span>
                             {new Date(activity.createdAt).toLocaleString()}
                           </span>
@@ -592,11 +634,32 @@ export default function ProfilePage() {
                         </div>
                       </div>
                     </div>
-                    {index < userActivity.length - 1 && (
+                    {index < visibleActivities.length - 1 && (
                       <Separator className="mt-4" />
                     )}
                   </div>
                 ))}
+
+                {/* Load More Button */}
+                {hasMoreActivities && (
+                  <div className="flex justify-center pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={handleLoadMoreActivity}
+                      className="w-full sm:w-auto"
+                    >
+                      Load More Activities
+                    </Button>
+                  </div>
+                )}
+
+                {/* Show message if no activities */}
+                {!userActivity ||
+                  (userActivity.length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <p>No recent activity to display.</p>
+                    </div>
+                  ))}
               </div>
             </CardContent>
           </Card>
@@ -605,7 +668,9 @@ export default function ProfilePage() {
         <TabsContent value="publications" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Your Publications</CardTitle>
+              <CardTitle className="text-lg sm:text-xl">
+                Your Publications
+              </CardTitle>
               <CardDescription>
                 Articles and content you&apos;ve published
               </CardDescription>
@@ -614,66 +679,80 @@ export default function ProfilePage() {
               <div className="space-y-4">
                 {user?.userData?.publications?.map((pub: any, index: any) => (
                   <div key={pub?.pubId}>
-                    <div className="flex items-start space-x-4">
-                      <div className="p-2 bg-muted rounded-lg">
+                    <div className="flex items-start space-x-3 sm:space-x-4">
+                      <div className="p-2 bg-muted rounded-lg flex-shrink-0">
                         <FileText className="h-4 w-4" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm">
                           You <span className="font-medium">published</span>{" "}
-                          <span className="font-medium">{pub?.title}</span>
+                          <span className="font-medium break-words">
+                            {pub?.title}
+                          </span>
                         </p>
-                        <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
-                          <Badge variant="outline">{pub?.category}</Badge>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-muted-foreground">
+                          <Badge variant="outline" className="text-xs">
+                            {pub?.category}
+                          </Badge>
                           <span>{timeAgo(pub?.createdAt)}</span>
                           <span>{pub?.pubComments?.length || 0} comments</span>
                           <span>{pub?.pubLikes?.length || 0} likes</span>
                         </div>
                       </div>
-                      <Badge
-                        variant="secondary"
-                        className="bg-green-100 text-green-800"
-                      >
-                        {pub?.status || "Published"}
-                      </Badge>
+                      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                        <Badge
+                          variant="secondary"
+                          className="bg-green-100 text-green-800 text-xs"
+                        >
+                          {pub?.status || "Published"}
+                        </Badge>
 
-                      {/* Dropdown Menu for Publications */}
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0"
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link
-                              href={`/profile/publication/${pub?.pubId}/update`}
+                        {/* Dropdown Menu for Publications */}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 flex-shrink-0"
                             >
-                              <Edit2 className="h-4 w-4 mr-2" />
-                              Edit
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() =>
-                              handleDeletePublication(pub?.pubId, pub?.title)
-                            }
-                            className="text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem asChild>
+                              <Link
+                                href={`/profile/publication/${pub?.pubId}/update`}
+                              >
+                                <Edit2 className="h-4 w-4 mr-2" />
+                                Edit
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleDeletePublication(pub?.pubId, pub?.title)
+                              }
+                              className="text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </div>
                     {index < user?.userData?.publications?.length - 1 && (
                       <Separator className="mt-4" />
                     )}
                   </div>
                 ))}
+
+                {/* Show message if no publications */}
+                {!user?.userData?.publications ||
+                  (user.userData.publications.length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <p>No publications to display.</p>
+                    </div>
+                  ))}
               </div>
             </CardContent>
           </Card>
@@ -682,15 +761,15 @@ export default function ProfilePage() {
         <TabsContent value="forums" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Your Forums</CardTitle>
+              <CardTitle className="text-lg sm:text-xl">Your Forums</CardTitle>
               <CardDescription>Forums you&apos;ve joined in.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {user?.userData?.forums?.map((forum: any, index: any) => (
                   <div key={forum?.forumId}>
-                    <div className="flex items-start space-x-4">
-                      <div className="p-2 bg-muted rounded-lg">
+                    <div className="flex items-start space-x-3 sm:space-x-4">
+                      <div className="p-2 bg-muted rounded-lg flex-shrink-0">
                         <MessageSquare className="h-4 w-4" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -699,12 +778,14 @@ export default function ProfilePage() {
                           <span className="font-medium">
                             created a forum titled{" "}
                           </span>{" "}
-                          <span className="font-medium">
+                          <span className="font-medium break-words">
                             <b>{forum?.topicTitle}</b>
                           </span>
                         </p>
-                        <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
-                          <Badge variant="outline">{forum?.category}</Badge>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-muted-foreground">
+                          <Badge variant="outline" className="text-xs">
+                            {forum?.category}
+                          </Badge>
                           <span>{timeAgo(forum?.createdAt)}</span>
                           <span>
                             {forum?.forumComments?.length || 0} comments
@@ -719,7 +800,7 @@ export default function ProfilePage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0"
+                            className="h-8 w-8 p-0 flex-shrink-0"
                           >
                             <MoreVertical className="h-4 w-4" />
                           </Button>
@@ -756,6 +837,14 @@ export default function ProfilePage() {
                     )}
                   </div>
                 ))}
+
+                {/* Show message if no forums */}
+                {!user?.userData?.forums ||
+                  (user.userData.forums.length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <p>No forums to display.</p>
+                    </div>
+                  ))}
               </div>
             </CardContent>
           </Card>
@@ -764,13 +853,13 @@ export default function ProfilePage() {
         <TabsContent value="achievements" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Achievements</CardTitle>
+              <CardTitle className="text-lg sm:text-xl">Achievements</CardTitle>
               <CardDescription>
                 Your milestones and accomplishments
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 {achievements.map((achievement) => (
                   <div
                     key={achievement.id}
@@ -782,17 +871,19 @@ export default function ProfilePage() {
                   >
                     <div className="flex items-start space-x-3">
                       <div
-                        className={`p-2 rounded-lg ${
+                        className={`p-2 rounded-lg flex-shrink-0 ${
                           achievement.earned
                             ? "bg-green-100 text-green-600"
                             : "bg-gray-100 text-gray-400"
                         }`}
                       >
-                        <achievement.icon className="h-5 w-5" />
+                        <achievement.icon className="h-4 w-4 sm:h-5 sm:w-5" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-medium">{achievement.title}</h3>
-                        <p className="text-sm text-muted-foreground">
+                        <h3 className="font-medium text-sm sm:text-base">
+                          {achievement.title}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
                           {achievement.description}
                         </p>
                         {achievement.earned ? (
@@ -816,3 +907,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

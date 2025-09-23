@@ -10,12 +10,14 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 type Ctx = { token: string | null; setToken: (t: string | null) => void };
 const TokenCtx = createContext<Ctx | undefined>(undefined);
 
 export function TokenProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -50,7 +52,7 @@ export function TokenProvider({ children }: { children: React.ReactNode }) {
             <button
               onClick={() => {
                 setOpen(false);
-                window.location.href = "/login";
+                router.push("/login");
               }}
               className="px-4 py-2 bg-blue-600 text-white rounded"
             >

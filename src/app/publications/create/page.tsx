@@ -93,6 +93,7 @@ export default function CreatePublicationPage() {
           createPost(
             {
               ...formData,
+              category: formData.category || "Academic",
               tags,
               imageUrl: formData.imageUrl ?? "",
             },
