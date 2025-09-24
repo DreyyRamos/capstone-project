@@ -92,6 +92,7 @@ export default function CreateForumTopicPage() {
       createForum(
         {
           ...formData,
+          category: formData.category || "Academic",
           tags,
         },
         {

@@ -11,7 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -21,30 +20,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Search,
   Flag,
   AlertTriangle,
-  XCircle,
-  Eye,
-  MessageSquare,
   User,
-  Calendar,
-  MoreHorizontal,
   Shield,
   Ban,
-  FileText,
   TriangleAlert,
-  X,
   Filter,
-  ArrowUpDown,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -57,6 +40,9 @@ import { ContentViewModal } from "@/components/content-view-modal";
 import { useConfirmation } from "@/components/confirmation-provider";
 import ModerationLoading from "./loading";
 import { ContentType } from "@/generated/prisma";
+import ReportsList from "@/components/moderation/reports-list";
+import ActionsTakenLists from "@/components/moderation/actions-taken-lists";
+import ReportedUsers from "@/components/moderation/reported-users";
 
 interface TransformedReport {
   id: string;
@@ -328,29 +314,6 @@ export default function ModerationPage() {
       color: "text-red-600",
     },
   ];
-
-  const priorityColors = {
-    LOW: "bg-green-100 text-green-800",
-    MEDIUM: "bg-yellow-100 text-yellow-800",
-    HIGH: "bg-red-100 text-red-800",
-    URGENT: "bg-violet-700 text-white",
-  };
-
-  const statusColors = {
-    PENDING: "bg-orange-100 text-orange-800",
-    RESOLVED: "bg-green-100 text-green-800",
-    DISMISSED: "bg-gray-100 text-gray-800",
-    RESTORED: "bg-blue-100 text-blue-800",
-    DELETED: "bg-red-100 text-red-800",
-    UNDER_REVIEW: "bg-gray-400 text-gray-800",
-  };
-
-  const typeIcons = {
-    forum_post: MessageSquare,
-    publication: FileText,
-    comment: MessageSquare,
-    user_behavior: User,
-  };
 
   const handleViewContent = (report: any) => {
     setSelectedReport(report);
@@ -631,166 +594,16 @@ export default function ModerationPage() {
               </Card>
             ) : (
               filteredAndSortedReports.map((report: TransformedReport) => {
-                const TypeIcon =
-                  typeIcons[report.contentType as keyof typeof typeIcons] ||
-                  MessageSquare;
                 return (
-                  <Card
+                  <ReportsList
                     key={report.id}
-                    className="hover:shadow-md transition-shadow"
-                  >
-                    <CardContent className="p-4 sm:p-6">
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
-                            <div className="flex items-center gap-2">
-                              <TypeIcon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                              <h3 className="text-sm sm:text-lg font-semibold truncate">
-                                {report.title}
-                              </h3>
-                            </div>
-                            <div className="flex flex-wrap gap-1">
-                              <Badge
-                                className={
-                                  statusColors[
-                                    report.status as keyof typeof statusColors
-                                  ]
-                                }
-                              >
-                                {report.status}
-                              </Badge>
-                              <Badge
-                                className={
-                                  priorityColors[
-                                    report.priority as keyof typeof priorityColors
-                                  ]
-                                }
-                              >
-                                {report.priority} priority
-                              </Badge>
-                            </div>
-                          </div>
-
-                          <div className="bg-muted p-3 rounded-md mb-3">
-                            <p className="text-sm italic break-words">
-                              &quot;{report.contentPreview}&quot;
-                            </p>
-                          </div>
-
-                          <p className="text-sm text-muted-foreground mb-3 break-words">
-                            {report.description}
-                          </p>
-
-                          {/* Mobile-friendly info layout */}
-                          <div className="space-y-2">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-muted-foreground">
-                              <div className="flex items-start gap-1">
-                                <span className="font-medium flex-shrink-0">
-                                  Reported By:
-                                </span>
-                                <span className="truncate">
-                                  {report.reportedBy}
-                                </span>
-                              </div>
-                              <div className="flex items-start gap-1">
-                                <span className="font-medium flex-shrink-0">
-                                  Against:
-                                </span>
-                                <span className="truncate">
-                                  {report.reportedUser}
-                                </span>
-                              </div>
-                              <div className="flex items-start gap-1">
-                                <span className="font-medium flex-shrink-0">
-                                  Reason:
-                                </span>
-                                <span className="truncate">
-                                  {report.reason}
-                                </span>
-                              </div>
-                              <div className="flex items-start gap-1">
-                                <span className="font-medium flex-shrink-0">
-                                  Category:
-                                </span>
-                                <span className="truncate">
-                                  {report.category}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
-                              <Calendar className="h-4 w-4 flex-shrink-0" />
-                              <span>
-                                {new Date(
-                                  report.createdAt
-                                ).toLocaleDateString()}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex-shrink-0">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 sm:h-10 sm:w-10"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                onClick={() => handleViewContent(report)}
-                              >
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Content
-                              </DropdownMenuItem>
-                              {!["RESTORED", "RESOLVED", "DELETED"].includes(
-                                report.status
-                              ) && (
-                                <>
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      confirmAction(
-                                        "Dismiss Report",
-                                        "This will restore the reported content",
-                                        () => handleRestoreContent(report.id)
-                                      )
-                                    }
-                                  >
-                                    <XCircle className="mr-2 h-4 w-4" />
-                                    Dismiss Report
-                                  </DropdownMenuItem>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem
-                                    className="text-red-600"
-                                    onClick={() =>
-                                      confirmDelete(
-                                        "reported content",
-                                        async () =>
-                                          await handleDelete(
-                                            report.contentType.toUpperCase(),
-                                            report.contentId,
-                                            report.id,
-                                            report?.reportedUserObj?.id
-                                          )
-                                      )
-                                    }
-                                  >
-                                    <Ban className="mr-2 h-4 w-4" />
-                                    Delete this content
-                                  </DropdownMenuItem>
-                                </>
-                              )}
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                    report={report}
+                    confirmAction={confirmAction}
+                    confirmDelete={confirmDelete}
+                    handleDelete={handleDelete}
+                    handleRestoreContent={handleRestoreContent}
+                    handleViewContent={handleViewContent}
+                  />
                 );
               })
             )}
@@ -833,37 +646,10 @@ export default function ModerationPage() {
                   </div>
                 ) : (
                   filteredActions.map((reportActions: TransformedReport) => (
-                    <div
+                    <ActionsTakenLists
                       key={reportActions?.id}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4"
-                    >
-                      <div className="flex items-start gap-4 min-w-0 flex-1">
-                        <div className="p-2 bg-muted rounded-lg flex-shrink-0">
-                          <Shield className="h-4 w-4" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="font-medium text-sm sm:text-base truncate">
-                            {reportActions?.actionTaken}
-                          </p>
-                          <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                            {reportActions?.contentType} -{" "}
-                            {reportActions?.title}
-                          </p>
-                          <p className="text-xs text-muted-foreground break-words">
-                            Reason: {reportActions?.reason}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-left sm:text-right flex-shrink-0">
-                        <p className="text-xs sm:text-sm font-medium truncate">
-                          {reportActions?.reportedByUser?.firstName}{" "}
-                          {reportActions?.reportedByUser?.lastName}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(reportActions?.createdAt).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
+                      reportActions={reportActions}
+                    />
                   ))
                 )}
               </div>
@@ -907,113 +693,12 @@ export default function ModerationPage() {
                   </div>
                 ) : (
                   filteredUsers.map((user: any) => (
-                    <div key={user.id}>
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
-                        <div className="flex items-center gap-4 min-w-0 flex-1">
-                          <Avatar className="h-10 w-10 flex-shrink-0">
-                            <AvatarImage src={user.profileImage} />
-                            <AvatarFallback>
-                              {user.firstName?.[0]}
-                              {user.lastName?.[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="min-w-0 flex-1">
-                            <p className="font-medium text-sm sm:text-base truncate">
-                              {user.firstName} {user.lastName}
-                            </p>
-                            <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                              {user.email}
-                            </p>
-                            <Badge variant="secondary" className="text-xs">
-                              {user.role}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-shrink-0">
-                          <Badge className="bg-yellow-100 text-yellow-800 text-xs text-center">
-                            {user.warningPoints || 0} Warning(s)
-                          </Badge>
-
-                          {/* Show Warn button only if user has 3 or more warning points */}
-                          {user.warningPoints >= 3 &&
-                            user.warningPoints < 5 && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="text-xs"
-                                onClick={() =>
-                                  confirmAction(
-                                    "Warn user",
-                                    "This will warn the user.",
-                                    () =>
-                                      handleBan(
-                                        user.id,
-                                        user?.reportsAgainst?.[0]?.reportId
-                                      )
-                                  )
-                                }
-                              >
-                                <AlertTriangle className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                                <span className="hidden sm:inline">
-                                  Warn User
-                                </span>
-                                <span className="sm:hidden">Warn</span>
-                              </Button>
-                            )}
-
-                          {/* Show Ban button only if user has 10 or more warning points */}
-                          {user.warningPoints >= 10 && (
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              className="text-xs"
-                              onClick={() =>
-                                confirmAction(
-                                  "Ban this user",
-                                  "This will ban the user.",
-                                  () =>
-                                    handleBan(
-                                      user?.id,
-                                      user?.reportsAgainst?.[0]?.reportId
-                                    )
-                                )
-                              }
-                            >
-                              <X className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                              <span className="hidden sm:inline">Ban User</span>
-                              <span className="sm:hidden">Ban</span>
-                            </Button>
-                          )}
-
-                          {/* Show Suspend button only if user has 5 or more warning points */}
-                          {user.warningPoints >= 5 &&
-                            user.warningPoints < 10 && (
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                className="text-xs"
-                                onClick={() =>
-                                  confirmAction(
-                                    "Suspend user",
-                                    "This will suspend the user.",
-                                    () =>
-                                      handleBan(
-                                        user?.id,
-                                        user?.reportsAgainst?.[0]?.reportId
-                                      )
-                                  )
-                                }
-                              >
-                                <Ban className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                                <span className="hidden sm:inline">
-                                  Suspend User
-                                </span>
-                                <span className="sm:hidden">Suspend</span>
-                              </Button>
-                            )}
-                        </div>
-                      </div>
-                    </div>
+                    <ReportedUsers
+                      key={user.id}
+                      user={user}
+                      confirmAction={confirmAction}
+                      handleBan={handleBan}
+                    />
                   ))
                 )}
               </div>

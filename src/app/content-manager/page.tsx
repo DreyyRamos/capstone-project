@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -15,29 +14,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Search,
   FileText,
   Clock,
   CheckCircle,
   XCircle,
-  Eye,
   Edit,
-  Trash2,
-  MoreHorizontal,
-  Calendar,
-  User,
   Plus,
   Tag,
-  Heart,
-  MessageCircle,
 } from "lucide-react";
 import ContentManagerLoading from "./loading";
 import { useEditorQuery } from "@/hooks/useEditor";
@@ -49,6 +33,9 @@ import {
   useCountPubsQuery,
 } from "@/hooks/usePost";
 import { toast } from "sonner";
+import Drafts from "@/components/content-manager/drafts";
+import Published from "@/components/content-manager/published";
+import Archived from "@/components/content-manager/archived";
 
 enum Status {
   DRAFT = 0,
@@ -302,20 +289,6 @@ export default function ContentManagerPage() {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const statusColors = {
-    DRAFT: "bg-gray-100 text-gray-800",
-    PENDING_REVIEW: "bg-yellow-100 text-yellow-800",
-    PUBLISHED: "bg-green-100 text-green-800",
-    ARCHIVED: "bg-red-100 text-red-800",
-  };
-
-  const statusIcons = {
-    DRAFT: Clock,
-    PENDING_REVIEW: Eye,
-    PUBLISHED: CheckCircle,
-    ARCHIVED: XCircle,
   };
 
   const totalPubs =
@@ -591,138 +564,13 @@ export default function ContentManagerPage() {
           <div className="space-y-4 mb-5.5">
             {filteredDrafts.length > 0 ? (
               filteredDrafts.map((publication: Publication) => {
-                const StatusIcon = statusIcons[publication.status];
                 return (
-                  <Card
+                  <Drafts
                     key={publication.pubId}
-                    className="hover:shadow-md transition-shadow"
-                  >
-                    <CardContent className="p-4 sm:p-6">
-                      <div className="space-y-3">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-lg font-semibold truncate mb-2">
-                              {publication.title}
-                            </h3>
-                            <div className="flex flex-wrap items-center gap-1 mb-2">
-                              <Badge
-                                className={statusColors[publication.status]}
-                              >
-                                <StatusIcon className="h-3 w-3 mr-1" />
-                                {publication?.status.replace("_", " ")}
-                              </Badge>
-                              <Badge variant="outline">
-                                {publication.category}
-                              </Badge>
-                              {publication.isFeatured && (
-                                <Badge className="bg-yellow-100 text-yellow-800">
-                                  Featured
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="shrink-0"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem asChild>
-                                <Link
-                                  href={`/publications/${publication.pubId}`}
-                                  className="flex items-center"
-                                >
-                                  <Eye className="mr-2 h-4 w-4" />
-                                  Preview
-                                </Link>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem asChild>
-                                <Link
-                                  href={`/publications/${publication.pubId}/update`}
-                                  className="flex items-center"
-                                >
-                                  <Edit className="mr-2 h-4 w-4" />
-                                  Edit
-                                </Link>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleApprove(publication.pubId)}
-                              >
-                                <CheckCircle className="mr-2 h-4 w-4" />
-                                Approve & Publish
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                onClick={() => handleArchive(publication.pubId)}
-                                className="text-red-600"
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Archive Post
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-
-                        <p className="text-muted-foreground text-sm line-clamp-2">
-                          {publication.excerpt}
-                        </p>
-
-                        {/* Tags */}
-                        {publication.tags && publication.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            {publication.tags.slice(0, 2).map((tag, index) => (
-                              <Badge
-                                key={index}
-                                variant="outline"
-                                className="text-xs"
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
-                            {publication.tags.length > 2 && (
-                              <Badge variant="outline" className="text-xs">
-                                +{publication.tags.length - 2}
-                              </Badge>
-                            )}
-                          </div>
-                        )}
-
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <Avatar className="h-6 w-6 shrink-0">
-                              <AvatarFallback className="text-xs">
-                                {publication?.author?.firstName?.charAt(0)}
-                                {publication?.author?.lastName?.charAt(0)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="truncate">
-                              {publication?.author?.firstName}{" "}
-                              {publication?.author?.lastName}
-                            </span>
-                            <Badge
-                              variant="secondary"
-                              className="text-xs shrink-0"
-                            >
-                              {publication?.author?.role}
-                            </Badge>
-                          </div>
-                          <span className="flex items-center gap-1 shrink-0">
-                            <Calendar className="h-4 w-4" />
-                            {new Date(
-                              publication.updatedAt
-                            ).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                    publication={publication}
+                    handleArchive={handleArchive}
+                    handleApprove={handleApprove}
+                  />
                 );
               })
             ) : (
@@ -756,132 +604,11 @@ export default function ContentManagerPage() {
           <div className="space-y-4 mb-5.5">
             {filteredPublished.length > 0 ? (
               filteredPublished.map((content: Publication) => (
-                <Card
+                <Published
                   key={content.pubId}
-                  className="hover:shadow-md transition-shadow"
-                >
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="space-y-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-semibold truncate mb-2">
-                            {content?.title}
-                          </h3>
-                          <div className="flex flex-wrap items-center gap-1 mb-2">
-                            <Badge className="bg-green-100 text-green-800">
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                              Published
-                            </Badge>
-                            <Badge variant="outline">{content?.category}</Badge>
-                            {content.isFeatured && (
-                              <Badge className="bg-yellow-100 text-yellow-800">
-                                Featured
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="shrink-0"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem asChild>
-                              <Link
-                                href={`/publications/${content?.pubId}`}
-                                className="flex items-center"
-                              >
-                                <Eye className="mr-2 h-4 w-4" />
-                                View
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                              <Link
-                                href={`/publications/${content?.pubId}/update`}
-                                className="flex items-center"
-                              >
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              className="text-red-600"
-                              onClick={() => handleArchive(content?.pubId)}
-                            >
-                              <XCircle className="mr-2 h-4 w-4" />
-                              Unpublish
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-
-                      {/* Tags */}
-                      {content.tags && content.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
-                          {content.tags.slice(0, 2).map((tag, index) => (
-                            <Badge
-                              key={index}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-                          {content.tags.length > 2 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{content.tags.length - 2}
-                            </Badge>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <User className="h-4 w-4 shrink-0" />
-                          <span className="truncate">
-                            {content?.author?.firstName}{" "}
-                            {content?.author?.lastName}
-                          </span>
-                          <Badge
-                            variant="secondary"
-                            className="text-xs shrink-0"
-                          >
-                            {content?.author?.role}
-                          </Badge>
-                        </div>
-                        <span className="flex items-center gap-1 shrink-0">
-                          <Calendar className="h-4 w-4" />
-                          {new Date(content.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-muted-foreground">
-                        {content.views && (
-                          <span className="flex items-center gap-1">
-                            <Eye className="h-4 w-4" />
-                            {content.views} views
-                          </span>
-                        )}
-                        <span className="flex items-center gap-1">
-                          <Heart className="h-4 w-4" />
-                          {content?.pubLikes?.length || 0} likes
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <MessageCircle className="h-4 w-4" />
-                          {content?.pubComments?.length || 0} comments
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                  content={content}
+                  handleArchive={handleArchive}
+                />
               ))
             ) : (
               <Card>
@@ -912,135 +639,12 @@ export default function ContentManagerPage() {
           <div className="space-y-4 mb-8">
             {filteredArchived.length > 0 ? (
               filteredArchived.map((publication: Publication) => {
-                const StatusIcon = statusIcons[publication.status];
                 return (
-                  <Card
+                  <Archived
                     key={publication.pubId}
-                    className="hover:shadow-md transition-shadow"
-                  >
-                    <CardContent className="p-4 sm:p-6">
-                      <div className="space-y-3">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-lg font-semibold truncate mb-2">
-                              {publication.title}
-                            </h3>
-                            <div className="flex flex-wrap items-center gap-1 mb-2">
-                              <Badge
-                                className={statusColors[publication.status]}
-                              >
-                                <StatusIcon className="h-3 w-3 mr-1" />
-                                {publication?.status.replace("_", " ")}
-                              </Badge>
-                              <Badge variant="outline">
-                                {publication.category}
-                              </Badge>
-                            </div>
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="shrink-0"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem asChild>
-                                <Link
-                                  href={`/publications/${publication.pubId}`}
-                                  className="flex items-center"
-                                >
-                                  <Eye className="mr-2 h-4 w-4" />
-                                  Preview
-                                </Link>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem asChild>
-                                <Link
-                                  href={`/publications/${publication.pubId}/update`}
-                                  className="flex items-center"
-                                >
-                                  <Edit className="mr-2 h-4 w-4" />
-                                  Edit
-                                </Link>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  restoreArchive(publication.pubId)
-                                }
-                              >
-                                <CheckCircle className="mr-2 h-4 w-4" />
-                                Restore for Review
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                onClick={() => console.log("delete")}
-                                className="text-red-600"
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete Publication
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-
-                        <p className="text-muted-foreground text-sm line-clamp-2">
-                          {publication.excerpt}
-                        </p>
-
-                        {/* Tags */}
-                        {publication.tags && publication.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            {publication.tags.slice(0, 2).map((tag, index) => (
-                              <Badge
-                                key={index}
-                                variant="outline"
-                                className="text-xs"
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
-                            {publication.tags.length > 2 && (
-                              <Badge variant="outline" className="text-xs">
-                                +{publication.tags.length - 2}
-                              </Badge>
-                            )}
-                          </div>
-                        )}
-
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <Avatar className="h-6 w-6 shrink-0">
-                              <AvatarFallback className="text-xs">
-                                {publication?.author?.firstName?.charAt(0)}
-                                {publication?.author?.lastName?.charAt(0)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="truncate">
-                              {publication?.author?.firstName}{" "}
-                              {publication?.author?.lastName}
-                            </span>
-                            <Badge
-                              variant="secondary"
-                              className="text-xs shrink-0"
-                            >
-                              {publication?.author?.role}
-                            </Badge>
-                          </div>
-                          <span className="flex items-center gap-1 shrink-0">
-                            <Calendar className="h-4 w-4" />
-                            {new Date(
-                              publication.updatedAt
-                            ).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                    publication={publication}
+                    restoreArchive={restoreArchive}
+                  />
                 );
               })
             ) : (

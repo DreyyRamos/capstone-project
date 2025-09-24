@@ -1,0 +1,627 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Flag,
+  Clock,
+  ThumbsDown,
+  MoreVertical,
+  Edit2,
+  Trash2,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import ForumCommentLikeButton from "@/components/like-buttons/forum-comment-like-button";
+import ForumCommentReplyLikeButton from "@/components/like-buttons/forum-comment-reply-like-button";
+import ForumReplyToReplyLikeButton from "@/components/like-buttons/forum-replyToReply-like-button";
+
+interface CommentListProps {
+  token: string;
+  id: string;
+  topic: any;
+  comment: any;
+  isCurrentUserContent: any;
+  editingComment: any;
+  editCommentContent: string;
+  editingReply: any;
+  editReplyContent: any;
+  editNestedReplyContent: any;
+  replyContent: string;
+  replyingTo: string | null;
+  replyingToSecondLevel: string | null;
+  secondLevelReplyContent: string;
+  editingNestedReply: string | null;
+  setSecondLevelReplyContent: (value: string) => void;
+  setReplyContent: (value: string) => void;
+  setEditReplyContent: (value: string) => void;
+  setEditNestedReplyContent: (value: string) => void;
+  handleEditComment: (c: any) => void;
+  confirmDelete: (c: string, f: () => void) => void;
+  handleDeleteComment: (d: string) => void;
+  setEditCommentContent: (value: string) => void;
+  handleSaveEditComment: (id: string) => void;
+  handleSaveEditReply: (replyId: string, commentId: string) => void;
+  handleCancelEdit: () => void;
+  handleReply: (id: string) => void;
+  handleReportForumComment: (
+    commentId: string,
+    comment_content: string,
+    authorId: string
+  ) => void;
+  handleCancelReply: () => void;
+  handleSubmitReply: (forumId: string, commentId: string) => void;
+  handleEditReply: (reply: any) => void;
+  handleDeleteReply: (replyId: string, commentId: string) => void;
+  handleReplyDislike: (replyId: number) => void;
+  handleSecondLevelReply: (replyId: string) => void;
+  handleReportForumReply: (
+    replyId: string,
+    reply: any,
+    reply_authorId: string
+  ) => void;
+  handleCancelSecondLevelReply: () => void;
+  handleSubmitSecondLevelReply: (replyId: string, commentId: string) => void;
+  handleEditNestedReply: (childReply: any) => void;
+  handleDeleteNestedReply: (
+    replyToReplyId: string,
+    commentId: string,
+    replyId: string
+  ) => void;
+  handleSaveEditNestedReply: (
+    replyToReplyId: string,
+    commentId: string,
+    replyId: string,
+    childReply_ReplyToReplyId: string
+  ) => void;
+  handleReportForumNestedReply: (
+    replyToReplyId: string,
+    replyToReply_content: string,
+    reply_authorId: string
+  ) => void;
+}
+
+const CommentList = ({
+  token,
+  id,
+  topic,
+  comment,
+  isCurrentUserContent,
+  editingComment,
+  editingReply,
+  editReplyContent,
+  editCommentContent,
+  replyContent,
+  replyingTo,
+  replyingToSecondLevel,
+  secondLevelReplyContent,
+  editingNestedReply,
+  editNestedReplyContent,
+  handleEditComment,
+  confirmDelete,
+  handleDeleteComment,
+  setEditCommentContent,
+  setEditNestedReplyContent,
+  setSecondLevelReplyContent,
+  setReplyContent,
+  setEditReplyContent,
+  handleSaveEditReply,
+  handleSaveEditComment,
+  handleCancelEdit,
+  handleReply,
+  handleReportForumComment,
+  handleCancelReply,
+  handleSubmitReply,
+  handleEditReply,
+  handleDeleteReply,
+  handleReplyDislike,
+  handleSecondLevelReply,
+  handleReportForumReply,
+  handleCancelSecondLevelReply,
+  handleSubmitSecondLevelReply,
+  handleEditNestedReply,
+  handleDeleteNestedReply,
+  handleSaveEditNestedReply,
+  handleReportForumNestedReply,
+}: CommentListProps) => {
+  return (
+    <Card key={comment.commentId}>
+      <CardContent className="p-6">
+        <div className="space-y-4">
+          <div className="flex items-start gap-4">
+            <Avatar className="h-10 w-10">
+              <AvatarImage
+                src={comment.author.profileImage || "/placeholder.svg"}
+              />
+              <AvatarFallback>{comment.author.firstName[0]}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">
+                    {comment.author.firstName} {comment.author.lastName}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs">
+                      {comment.author.role}
+                    </Badge>
+                    {comment.isHelpful && (
+                      <Badge
+                        variant="secondary"
+                        className="text-xs bg-green-100 text-green-800"
+                      >
+                        Helpful
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {new Date(comment.createdAt).toLocaleString()}
+                  </p>
+                </div>
+
+                {/* Dropdown menu for comment owner */}
+                {isCurrentUserContent(comment.authorId) && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => handleEditComment(comment)}
+                      >
+                        <Edit2 className="h-4 w-4 mr-2" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          confirmDelete("comment", () =>
+                            handleDeleteComment(comment.commentId)
+                          );
+                        }}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </div>
+
+              {/* Comment content - editable if in edit mode */}
+              {editingComment === comment.commentId ? (
+                <div className="space-y-2">
+                  <Textarea
+                    value={editCommentContent}
+                    onChange={(e) => setEditCommentContent(e.target.value)}
+                    rows={3}
+                  />
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => handleSaveEditComment(comment.commentId)}
+                      disabled={!editCommentContent.trim()}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleCancelEdit}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <p className="leading-relaxed">{comment.comment_content}</p>
+              )}
+
+              <div className="flex items-center gap-4">
+                <ForumCommentLikeButton
+                  comment={comment}
+                  token={token}
+                  forumId={id}
+                />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleReply(comment.commentId)}
+                >
+                  {replyingTo === comment.commentId ? "Cancel" : "Reply"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    handleReportForumComment(
+                      comment?.commentId,
+                      comment?.comment_content,
+                      comment?.authorId
+                    )
+                  }
+                >
+                  <Flag className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {replyingTo === comment.commentId && (
+            <div className="ml-6 md:ml-14 space-y-3">
+              <div className="border-l-2 border-muted pl-2 md:pl-4">
+                <Textarea
+                  placeholder="Write your reply..."
+                  value={replyContent}
+                  onChange={(e) => setReplyContent(e.target.value)}
+                  rows={2}
+                  className="resize-none"
+                />
+                <div className="flex items-center justify-end gap-2 mt-2">
+                  <Button variant="ghost" size="sm" onClick={handleCancelReply}>
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() =>
+                      handleSubmitReply(topic?.forumId, comment.commentId)
+                    }
+                    disabled={!replyContent.trim()}
+                  >
+                    Reply
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {comment.replies && comment.replies.length > 0 && (
+            <div className="ml-6 md:ml-14 space-y-4 border-l-2 border-muted pl-2 md:pl-4">
+              {comment.replies.map((reply: any) => (
+                <div key={reply.replyId} className="flex items-start gap-4">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage
+                      src={
+                        reply.reply_author.profileImage ||
+                        "/placeholder.svg" ||
+                        "/placeholder.svg"
+                      }
+                    />
+                    <AvatarFallback>
+                      {reply.reply_author.firstName[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-sm">
+                          {reply.reply_author.firstName}{" "}
+                          {reply.reply_author.lastName}
+                        </p>
+                        <Badge variant="outline" className="text-xs">
+                          {reply.reply_author.role}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(reply.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+
+                      {/* Dropdown menu for reply owner */}
+                      {isCurrentUserContent(reply.reply_authorId) && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() => handleEditReply(reply)}
+                            >
+                              <Edit2 className="h-4 w-4 mr-2" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => {
+                                confirmDelete("reply", () =>
+                                  handleDeleteReply(
+                                    reply.replyId,
+                                    comment.commentId
+                                  )
+                                );
+                              }}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </div>
+
+                    {/* Reply content - editable if in edit mode */}
+                    {editingReply === reply.replyId ? (
+                      <div className="space-y-2">
+                        <Textarea
+                          value={editReplyContent}
+                          onChange={(e) => setEditReplyContent(e.target.value)}
+                          rows={2}
+                        />
+                        <div className="flex items-center gap-2">
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              handleSaveEditReply(
+                                reply.replyId,
+                                comment.commentId
+                              )
+                            }
+                            disabled={!editReplyContent.trim()}
+                          >
+                            Save
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCancelEdit}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm leading-relaxed">
+                        {reply.reply_content}
+                      </p>
+                    )}
+
+                    <div className="flex items-center gap-4">
+                      <ForumCommentReplyLikeButton
+                        reply={reply}
+                        token={token}
+                        forumId={id}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleReplyDislike(reply.replyId)}
+                      >
+                        <ThumbsDown className="mr-2 h-4 w-4" />
+                        {reply.dislikes}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleSecondLevelReply(reply.replyId)}
+                      >
+                        {replyingToSecondLevel === reply.replyId
+                          ? "Cancel"
+                          : "Reply"}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          handleReportForumReply(
+                            reply.replyId,
+                            reply.reply_content,
+                            reply.reply_authorId
+                          )
+                        }
+                      >
+                        <Flag className="h-4 w-4" />
+                      </Button>
+                    </div>
+
+                    {replyingToSecondLevel === reply.replyId && (
+                      <div className="ml-3 md:ml-6 space-y-3">
+                        <div className="border-l-2 border-muted pl-2 md:pl-4">
+                          <Textarea
+                            placeholder="Write your reply..."
+                            value={secondLevelReplyContent}
+                            onChange={(e) =>
+                              setSecondLevelReplyContent(e.target.value)
+                            }
+                            rows={2}
+                            className="resize-none"
+                          />
+                          <div className="flex items-center justify-end gap-2 mt-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleCancelSecondLevelReply}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              size="sm"
+                              onClick={() =>
+                                handleSubmitSecondLevelReply(
+                                  reply.replyId,
+                                  comment.commentId
+                                )
+                              }
+                              disabled={!secondLevelReplyContent.trim()}
+                            >
+                              Reply
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {reply.children && reply.children.length > 0 && (
+                      <div className="ml-3 md:ml-6 space-y-4 border-l-2 border-muted pl-2 md:pl-4 mt-4">
+                        {reply.children.map((childReply: any) => (
+                          <div
+                            key={childReply.replyToReplyId}
+                            className="flex items-start gap-4"
+                          >
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage
+                                src={
+                                  childReply.reply_author.profileImage ||
+                                  "/placeholder.svg" ||
+                                  "/placeholder.svg"
+                                }
+                              />
+                              <AvatarFallback>
+                                {childReply.reply_author.firstName[0]}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 space-y-2">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <p className="font-medium text-sm">
+                                    {childReply.reply_author.firstName}{" "}
+                                    {childReply.reply_author.lastName}
+                                  </p>
+                                  <Badge variant="outline" className="text-xs">
+                                    {childReply.reply_author.role}
+                                  </Badge>
+                                  <span className="text-xs text-muted-foreground">
+                                    {new Date(
+                                      childReply.createdAt
+                                    ).toLocaleDateString()}
+                                  </span>
+                                </div>
+
+                                {/* Dropdown menu for nested reply owner */}
+                                {isCurrentUserContent(
+                                  childReply.reply_authorId
+                                ) && (
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="ghost" size="sm">
+                                        <MoreVertical className="h-4 w-4" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                      <DropdownMenuItem
+                                        onClick={() =>
+                                          handleEditNestedReply(childReply)
+                                        }
+                                      >
+                                        <Edit2 className="h-4 w-4 mr-2" />
+                                        Edit
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          confirmDelete("reply", () =>
+                                            handleDeleteNestedReply(
+                                              childReply.replyToReplyId,
+                                              comment.commentId,
+                                              reply.replyId
+                                            )
+                                          );
+                                        }}
+                                        className="text-red-600"
+                                      >
+                                        <Trash2 className="h-4 w-4 mr-2" />
+                                        Delete
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                )}
+                              </div>
+
+                              {/* Nested reply content - editable if in edit mode */}
+                              {editingNestedReply ===
+                              childReply.replyToReplyId ? (
+                                <div className="space-y-2">
+                                  <Textarea
+                                    value={editNestedReplyContent}
+                                    onChange={(e) =>
+                                      setEditNestedReplyContent(e.target.value)
+                                    }
+                                    rows={2}
+                                  />
+                                  <div className="flex items-center gap-2">
+                                    <Button
+                                      size="sm"
+                                      onClick={() =>
+                                        handleSaveEditNestedReply(
+                                          childReply.replyToReplyId,
+                                          comment.commentId,
+                                          reply.replyId,
+                                          childReply.replyToReplyId
+                                        )
+                                      }
+                                      disabled={!editNestedReplyContent.trim()}
+                                    >
+                                      Save
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={handleCancelEdit}
+                                    >
+                                      Cancel
+                                    </Button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <p className="text-sm leading-relaxed">
+                                  {childReply.replyToReply_content}
+                                </p>
+                              )}
+
+                              <div className="flex items-center gap-4">
+                                <ForumReplyToReplyLikeButton
+                                  replyToReply={childReply}
+                                  token={token}
+                                  forumId={id}
+                                  commentId={reply?.commentId}
+                                />
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    handleReplyDislike(childReply.replyId)
+                                  }
+                                >
+                                  <ThumbsDown className="mr-2 h-4 w-4" />
+                                  {childReply.dislikes}
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    handleReportForumNestedReply(
+                                      childReply.replyToReplyId,
+                                      childReply.replyToReply_content,
+                                      childReply?.reply_authorId
+                                    )
+                                  }
+                                >
+                                  <Flag className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default CommentList;

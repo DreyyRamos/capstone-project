@@ -57,6 +57,9 @@ import { useConfirmation } from "@/components/confirmation-provider";
 import { useUserForumQuery } from "@/hooks/useUser";
 import { timeAgo } from "@/lib/timeAgo";
 import ProfilePageLoading from "./loading";
+import Activities from "@/components/profile/activities";
+import ProfilePublications from "@/components/profile/publications";
+import UserForums from "@/components/profile/forums";
 
 interface User {
   firstName: string;
@@ -583,61 +586,12 @@ export default function ProfilePage() {
             <CardContent>
               <div className="space-y-4">
                 {visibleActivities.map((activity: any, index: number) => (
-                  <div key={index}>
-                    <div className="flex items-start space-x-3 sm:space-x-4">
-                      <div className="p-2 bg-muted rounded-lg flex-shrink-0">
-                        {activity.type === "PUBLISHED" ? (
-                          <FileText className="h-4 w-4" />
-                        ) : (
-                          <MessageSquare className="h-4 w-4" />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm">
-                          {activity.type === "PUBLISHED" && (
-                            <>
-                              You <span className="font-medium">published</span>{" "}
-                              <span className="font-medium">
-                                {activity.title}
-                              </span>
-                            </>
-                          )}
-                          {activity.type === "REPLIED" && (
-                            <>
-                              You{" "}
-                              <span className="font-medium">replied to</span>{" "}
-                              <span className="font-medium">
-                                {activity.parentTitle}
-                              </span>
-                            </>
-                          )}
-                        </p>
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-muted-foreground">
-                          <span>
-                            {new Date(activity.createdAt).toLocaleString()}
-                          </span>
-                          {activity.type === "PUBLISHED" ? (
-                            <>
-                              <span>{activity.likeCounts || 0} likes</span>
-                              <span>{activity.commentCount || 0} comments</span>
-                            </>
-                          ) : (
-                            <>
-                              <span>
-                                {activity.engagement?.replies || 0} replies
-                              </span>
-                              <span>
-                                {activity.engagement?.likes || 0} likes
-                              </span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    {index < visibleActivities.length - 1 && (
-                      <Separator className="mt-4" />
-                    )}
-                  </div>
+                  <Activities
+                    key={index}
+                    index={index}
+                    activity={activity}
+                    visibleActivities={visibleActivities}
+                  />
                 ))}
 
                 {/* Load More Button */}
@@ -678,72 +632,13 @@ export default function ProfilePage() {
             <CardContent>
               <div className="space-y-4">
                 {user?.userData?.publications?.map((pub: any, index: any) => (
-                  <div key={pub?.pubId}>
-                    <div className="flex items-start space-x-3 sm:space-x-4">
-                      <div className="p-2 bg-muted rounded-lg flex-shrink-0">
-                        <FileText className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm">
-                          You <span className="font-medium">published</span>{" "}
-                          <span className="font-medium break-words">
-                            {pub?.title}
-                          </span>
-                        </p>
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-muted-foreground">
-                          <Badge variant="outline" className="text-xs">
-                            {pub?.category}
-                          </Badge>
-                          <span>{timeAgo(pub?.createdAt)}</span>
-                          <span>{pub?.pubComments?.length || 0} comments</span>
-                          <span>{pub?.pubLikes?.length || 0} likes</span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
-                        <Badge
-                          variant="secondary"
-                          className="bg-green-100 text-green-800 text-xs"
-                        >
-                          {pub?.status || "Published"}
-                        </Badge>
-
-                        {/* Dropdown Menu for Publications */}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0 flex-shrink-0"
-                            >
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem asChild>
-                              <Link
-                                href={`/profile/publication/${pub?.pubId}/update`}
-                              >
-                                <Edit2 className="h-4 w-4 mr-2" />
-                                Edit
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleDeletePublication(pub?.pubId, pub?.title)
-                              }
-                              className="text-red-600"
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                    {index < user?.userData?.publications?.length - 1 && (
-                      <Separator className="mt-4" />
-                    )}
-                  </div>
+                  <ProfilePublications
+                    key={index}
+                    index={index}
+                    user={user}
+                    handleDeletePublication={handleDeletePublication}
+                    pub={pub}
+                  />
                 ))}
 
                 {/* Show message if no publications */}
@@ -767,75 +662,13 @@ export default function ProfilePage() {
             <CardContent>
               <div className="space-y-4">
                 {user?.userData?.forums?.map((forum: any, index: any) => (
-                  <div key={forum?.forumId}>
-                    <div className="flex items-start space-x-3 sm:space-x-4">
-                      <div className="p-2 bg-muted rounded-lg flex-shrink-0">
-                        <MessageSquare className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm">
-                          You{" "}
-                          <span className="font-medium">
-                            created a forum titled{" "}
-                          </span>{" "}
-                          <span className="font-medium break-words">
-                            <b>{forum?.topicTitle}</b>
-                          </span>
-                        </p>
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-muted-foreground">
-                          <Badge variant="outline" className="text-xs">
-                            {forum?.category}
-                          </Badge>
-                          <span>{timeAgo(forum?.createdAt)}</span>
-                          <span>
-                            {forum?.forumComments?.length || 0} comments
-                          </span>
-                          <span>{forum?.forumLikes?.length || 0} likes</span>
-                        </div>
-                      </div>
-
-                      {/* Dropdown Menu for Forums */}
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 flex-shrink-0"
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            asChild
-                            // onClick={() => handleEditForum(forum?.forumId)}
-                          >
-                            <Link
-                              href={`/profile/forums/${forum?.forumId}/update`}
-                            >
-                              <Edit2 className="h-4 w-4 mr-2" />
-                              Edit
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() =>
-                              handleDeleteForum(
-                                forum?.forumId,
-                                forum?.topicTitle
-                              )
-                            }
-                            className="text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                    {index < user?.userData?.forums?.length - 1 && (
-                      <Separator className="mt-4" />
-                    )}
-                  </div>
+                  <UserForums
+                    key={forum?.forumId}
+                    index={index}
+                    handleDeleteForum={handleDeleteForum}
+                    forum={forum}
+                    user={user}
+                  />
                 ))}
 
                 {/* Show message if no forums */}
