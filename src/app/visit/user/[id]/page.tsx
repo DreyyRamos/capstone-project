@@ -31,6 +31,9 @@ import {
 } from "@/hooks/useUser";
 import { timeAgo } from "@/lib/timeAgo";
 import ProfilePageLoading from "./loading";
+import RecentActivities from "@/components/visit-user/recent-activities";
+import UserPublication from "@/components/visit-user/user-publication";
+import UserForum from "@/components/visit-user/user-forum";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -264,58 +267,12 @@ export default function ProfilePage({ params }: PageProps) {
             <CardContent>
               <div className="space-y-4">
                 {userActivity?.map((activity: any, index: any) => (
-                  <div key={index}>
-                    <div className="flex items-start space-x-4">
-                      <div className="p-2 bg-muted rounded-lg">
-                        {activity.type === "PUBLISHED" ? (
-                          <FileText className="h-4 w-4" />
-                        ) : (
-                          <MessageSquare className="h-4 w-4" />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm">
-                          {activity.type === "PUBLISHED" && (
-                            <>
-                              This user{" "}
-                              <span className="font-medium">published</span>{" "}
-                              <span className="font-medium">
-                                {activity.title}
-                              </span>
-                            </>
-                          )}
-                          {activity.type === "REPLIED" && (
-                            <>
-                              This user{" "}
-                              <span className="font-medium">replied to</span>{" "}
-                              <span className="font-medium">
-                                {activity.parentTitle}
-                              </span>
-                            </>
-                          )}
-                        </p>
-                        <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
-                          <span>
-                            {new Date(activity.createdAt).toLocaleString()}
-                          </span>
-                          {activity.type === "PUBLISHED" ? (
-                            <>
-                              <span>{activity.likeCounts || 0} likes</span>
-                              <span>{activity.commentCount || 0} comments</span>
-                            </>
-                          ) : (
-                            <>
-                              <span>{activity.replyCount || 0} replies</span>
-                              <span>{activity.likeCount || 0} likes</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    {index < userActivity.length - 1 && (
-                      <Separator className="mt-4" />
-                    )}
-                  </div>
+                  <RecentActivities
+                    key={index}
+                    index={index}
+                    activity={activity}
+                    userActivity={userActivity}
+                  />
                 ))}
               </div>
             </CardContent>
@@ -333,34 +290,12 @@ export default function ProfilePage({ params }: PageProps) {
             <CardContent>
               <div className="space-y-4">
                 {user?.userData?.publications?.map((pub: any, index: any) => (
-                  <div key={pub?.pubId}>
-                    <div className="flex items-start space-x-4">
-                      <div className="p-2 bg-muted rounded-lg">
-                        <FileText className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm">
-                          You <span className="font-medium">published</span>{" "}
-                          <span className="font-medium">{pub?.title}</span>
-                        </p>
-                        <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
-                          <Badge variant="outline">{pub?.category}</Badge>
-                          <span>{timeAgo(pub?.createdAt)}</span>
-                          <span>{pub?.pubComments?.length || 0} comments</span>
-                          <span>{pub?.pubLikes?.length || 0} likes</span>
-                        </div>
-                      </div>
-                      <Badge
-                        variant="secondary"
-                        className="bg-green-100 text-green-800"
-                      >
-                        {pub?.status || "Published"}
-                      </Badge>
-                    </div>
-                    {index < user?.userData?.publications?.length - 1 && (
-                      <Separator className="mt-4" />
-                    )}
-                  </div>
+                  <UserPublication
+                    key={pub?.pubId}
+                    index={index}
+                    pub={pub}
+                    user={user}
+                  />
                 ))}
               </div>
             </CardContent>
@@ -376,35 +311,12 @@ export default function ProfilePage({ params }: PageProps) {
             <CardContent>
               <div className="space-y-4">
                 {user?.userData?.forums?.map((forum: any, index: any) => (
-                  <div key={forum?.forumId}>
-                    <div className="flex items-start space-x-4">
-                      <div className="p-2 bg-muted rounded-lg">
-                        <MessageSquare className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm">
-                          You{" "}
-                          <span className="font-medium">
-                            created a forum titled{" "}
-                          </span>{" "}
-                          <span className="font-medium">
-                            <b>{forum?.topicTitle}</b>
-                          </span>
-                        </p>
-                        <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
-                          <Badge variant="outline">{forum?.category}</Badge>
-                          <span>{timeAgo(forum?.createdAt)}</span>
-                          <span>
-                            {forum?.forumComments?.length || 0} comments
-                          </span>
-                          <span>{forum?.forumLikes?.length || 0} likes</span>
-                        </div>
-                      </div>
-                    </div>
-                    {index < user?.userData?.forums?.length - 1 && (
-                      <Separator className="mt-4" />
-                    )}
-                  </div>
+                  <UserForum
+                    key={forum?.forumId}
+                    forum={forum}
+                    index={index}
+                    user={user}
+                  />
                 ))}
               </div>
             </CardContent>

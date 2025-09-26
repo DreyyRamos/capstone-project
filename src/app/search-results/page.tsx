@@ -19,6 +19,9 @@ import { useSearch, User as SearchUser } from "@/hooks/useSearch";
 import Link from "next/link";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import UserSearchResult from "@/components/search-results-page/user-search-result";
+import PubSearchResult from "@/components/search-results-page/pub-search-result";
+import ForumSearchResult from "@/components/search-results-page/forum-search-result";
 
 function SearchResultsContent() {
   const searchParams = useSearchParams();
@@ -418,50 +421,7 @@ function SearchResultsContent() {
             <TabsContent value="users" className="mt-8">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {results?.users.map((user) => (
-                  <Card
-                    key={user.id}
-                    className="hover:shadow-md transition-shadow"
-                  >
-                    <CardContent className="p-4">
-                      <Link href={`/profile/${user.id}`} className="block">
-                        <div className="text-center">
-                          <Avatar className="h-16 w-16 mx-auto mb-3">
-                            <AvatarImage src={user.profileImage || ""} />
-                            <AvatarFallback className="text-lg">
-                              {getDisplayName(user).charAt(0).toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <h3 className="font-medium mb-2">
-                            {getDisplayName(user)}
-                          </h3>
-                          <div className="flex items-center justify-center gap-2 mb-2">
-                            <Badge variant="secondary">{user.role}</Badge>
-                          </div>
-                          <p className="text-sm text-muted-foreground mb-3">
-                            {user.reputationPoints} reputation points
-                          </p>
-                          {user.bio && (
-                            <p className="text-sm text-muted-foreground line-clamp-3">
-                              {user.bio}
-                            </p>
-                          )}
-                          {user.interests.length > 0 && (
-                            <div className="flex gap-1 mt-2 flex-wrap justify-center">
-                              {user.interests.slice(0, 3).map((interest) => (
-                                <Badge
-                                  key={interest}
-                                  variant="outline"
-                                  className="text-xs"
-                                >
-                                  {interest}
-                                </Badge>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </Link>
-                    </CardContent>
-                  </Card>
+                  <UserSearchResult key={user.id} user={user} />
                 ))}
               </div>
             </TabsContent>
@@ -469,77 +429,10 @@ function SearchResultsContent() {
             <TabsContent value="publications" className="mt-8">
               <div className="space-y-4">
                 {results?.publications.map((publication) => (
-                  <Card
+                  <PubSearchResult
                     key={publication.pubId}
-                    className="hover:shadow-md transition-shadow"
-                  >
-                    <CardContent className="p-6">
-                      <Link href={`/publications/${publication.pubId}`}>
-                        <div className="flex gap-4">
-                          {publication.imageUrl && (
-                            <img
-                              src={publication.imageUrl}
-                              alt=""
-                              className="h-24 w-24 object-cover rounded-lg flex-shrink-0"
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold text-xl truncate">
-                                {publication.title}
-                              </h3>
-                              {publication.isFeatured && (
-                                <Badge className="bg-yellow-500">
-                                  Featured
-                                </Badge>
-                              )}
-                            </div>
-                            <p className="text-muted-foreground line-clamp-4 mb-4">
-                              {publication.excerpt}
-                            </p>
-                            <div className="flex items-center justify-between text-sm text-muted-foreground">
-                              <div className="flex items-center gap-2">
-                                <Avatar className="h-6 w-6">
-                                  <AvatarImage
-                                    src={publication.author?.profileImage || ""}
-                                  />
-                                  <AvatarFallback className="text-xs">
-                                    {getDisplayName(publication.author)
-                                      .charAt(0)
-                                      .toUpperCase()}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <span>
-                                  by {getDisplayName(publication.author)}
-                                </span>
-                                <span>•</span>
-                                <span>{formatDate(publication.updatedAt)}</span>
-                              </div>
-                              <div className="flex items-center gap-4">
-                                <span>{publication._count.pubLikes} likes</span>
-                                <span>
-                                  {publication._count.pubComments} comments
-                                </span>
-                              </div>
-                            </div>
-                            {publication.tags.length > 0 && (
-                              <div className="flex gap-1 mt-3 flex-wrap">
-                                {publication.tags.map((tag) => (
-                                  <Badge
-                                    key={tag}
-                                    variant="outline"
-                                    className="text-xs"
-                                  >
-                                    {tag}
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </Link>
-                    </CardContent>
-                  </Card>
+                    publication={publication}
+                  />
                 ))}
               </div>
             </TabsContent>
@@ -547,68 +440,7 @@ function SearchResultsContent() {
             <TabsContent value="forums" className="mt-8">
               <div className="space-y-4">
                 {results?.forums.map((forum) => (
-                  <Card
-                    key={forum.forumId}
-                    className="hover:shadow-md transition-shadow"
-                  >
-                    <CardContent className="p-6">
-                      <Link href={`/forums/${forum.forumId}`}>
-                        <div className="flex gap-4">
-                          {forum.imageUrl && (
-                            <img
-                              src={forum.imageUrl}
-                              alt=""
-                              className="h-24 w-24 object-cover rounded-lg flex-shrink-0"
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-xl mb-2 truncate">
-                              {forum.topicTitle}
-                            </h3>
-                            <p className="text-muted-foreground line-clamp-4 mb-4">
-                              {forum.description}
-                            </p>
-                            <div className="flex items-center justify-between text-sm text-muted-foreground">
-                              <div className="flex items-center gap-2">
-                                <Avatar className="h-6 w-6">
-                                  <AvatarImage
-                                    src={forum.author?.profileImage || ""}
-                                  />
-                                  <AvatarFallback className="text-xs">
-                                    {getDisplayName(forum.author)
-                                      .charAt(0)
-                                      .toUpperCase()}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <span>by {getDisplayName(forum.author)}</span>
-                                <span>•</span>
-                                <span>{formatDate(forum.updatedAt)}</span>
-                              </div>
-                              <div className="flex items-center gap-4">
-                                <span>{forum._count.forumLikes} likes</span>
-                                <span>
-                                  {forum._count.forumComments} comments
-                                </span>
-                              </div>
-                            </div>
-                            {forum.tags.length > 0 && (
-                              <div className="flex gap-1 mt-3 flex-wrap">
-                                {forum.tags.map((tag) => (
-                                  <Badge
-                                    key={tag}
-                                    variant="outline"
-                                    className="text-xs"
-                                  >
-                                    {tag}
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </Link>
-                    </CardContent>
-                  </Card>
+                  <ForumSearchResult key={forum.forumId} forum={forum} />
                 ))}
               </div>
             </TabsContent>

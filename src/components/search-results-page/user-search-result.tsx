@@ -1,0 +1,59 @@
+"use client";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import { User as SearchUser } from "@/hooks/useSearch";
+
+interface UserProps {
+  user: SearchUser;
+}
+
+const UserSearchResult = ({ user }: UserProps) => {
+  const getDisplayName = (user: SearchUser | any) => {
+    if (!user) return "Unknown User";
+    return (
+      `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email
+    );
+  };
+  return (
+    <Card key={user.id} className="hover:shadow-md transition-shadow">
+      <CardContent className="p-4">
+        <Link href={`/visit/user/${user.id}`} className="block">
+          <div className="text-center">
+            <Avatar className="h-16 w-16 mx-auto mb-3">
+              <AvatarImage src={user.profileImage || ""} />
+              <AvatarFallback className="text-lg">
+                {getDisplayName(user).charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <h3 className="font-medium mb-2">{getDisplayName(user)}</h3>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Badge variant="secondary">{user.role}</Badge>
+            </div>
+            <p className="text-sm text-muted-foreground mb-3">
+              {user.reputationPoints} reputation points
+            </p>
+            {user.bio && (
+              <p className="text-sm text-muted-foreground line-clamp-3">
+                {user.bio}
+              </p>
+            )}
+            {user.interests.length > 0 && (
+              <div className="flex gap-1 mt-2 flex-wrap justify-center">
+                {user.interests.slice(0, 3).map((interest) => (
+                  <Badge key={interest} variant="outline" className="text-xs">
+                    {interest}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+        </Link>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default UserSearchResult;
