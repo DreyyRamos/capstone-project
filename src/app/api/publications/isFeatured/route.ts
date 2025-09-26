@@ -15,11 +15,44 @@ export async function GET() {
       include: {
         author: {
           select: {
+            id: true,
             firstName: true,
             lastName: true,
             profileImage: true,
+            role: true,
           },
         },
+        pubComments: {
+          select: {
+            commentId: true,
+            comment_content: true,
+            createdAt: true,
+            author: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                profileImage: true,
+              },
+            },
+            replies: {
+              select: {
+                replyId: true,
+                reply_content: true,
+                createdAt: true,
+                reply_author: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    profileImage: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        pubLikes: true,
       },
     });
 

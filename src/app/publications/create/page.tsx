@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, X, Save } from "lucide-react";
+import { ArrowLeft, X, Save, Eye } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePostQuery } from "@/hooks/usePost";
@@ -32,6 +32,7 @@ import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
 import Tiptap from "@/components/tiptap";
 import { useConfirmation } from "@/components/confirmation-provider";
+import ContentDisplay from "@/components/content-display";
 import CreatePublicationLoading from "./loading";
 
 export default function CreatePublicationPage() {
@@ -298,7 +299,7 @@ export default function CreatePublicationPage() {
                   </Select>
                 </div>
 
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label>Featured Publication</Label>
                     <p className="text-sm text-muted-foreground">
@@ -309,7 +310,7 @@ export default function CreatePublicationPage() {
                     checked={formData.isFeatured}
                     onCheckedChange={handleFeaturedChange}
                   />
-                </div>
+                </div> */}
 
                 {/* <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
@@ -320,6 +321,52 @@ export default function CreatePublicationPage() {
                   </div>
                   <Switch checked={isDraft} onCheckedChange={setIsDraft} />
                 </div> */}
+              </CardContent>
+            </Card>
+
+            {/* Preview Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Eye className="h-4 w-4" />
+                  Preview
+                </CardTitle>
+                <p className="text-xs text-muted-foreground mt-1">
+                  No image preview and excerpt will be shown.
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {formData.title || formData.content ? (
+                  <div className="space-y-3">
+                    <div>
+                      <h3 className="font-semibold text-lg">
+                        {formData.title || "Untitled Publication"}
+                      </h3>
+                      <div className="flex gap-2 mt-2"></div>
+                    </div>
+                    <ContentDisplay
+                      htmlContent={formData.content || "No content yet..."}
+                    />
+
+                    {tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="flex items-center gap-1"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p className="text-sm">Start typing to see preview</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 

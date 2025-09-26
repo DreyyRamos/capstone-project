@@ -174,41 +174,6 @@ export default function ProfilePage() {
     achievements: 8,
   };
 
-  const achievements = [
-    {
-      id: 1,
-      title: "Top Contributor",
-      description: "Published 20+ articles",
-      icon: Trophy,
-      earned: true,
-      date: "March 2024",
-    },
-    {
-      id: 2,
-      title: "Community Builder",
-      description: "100+ forum posts",
-      icon: Users,
-      earned: true,
-      date: "February 2024",
-    },
-    {
-      id: 3,
-      title: "Rising Star",
-      description: "500+ reputation points",
-      icon: Star,
-      earned: true,
-      date: "January 2024",
-    },
-    {
-      id: 4,
-      title: "Expert Writer",
-      description: "50+ published articles",
-      icon: Award,
-      earned: false,
-      progress: "24/50",
-    },
-  ];
-
   const handleSave = () => {
     // Save to backend - need to pass the updated data
     updateUser({
@@ -538,27 +503,11 @@ export default function ProfilePage() {
             </div>
           </CardContent>
         </Card>
-
-        <Card>
-          <CardContent className="pt-4 sm:pt-6">
-            <div className="flex items-center space-x-2">
-              <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
-              <div>
-                <p className="text-xl sm:text-2xl font-bold">
-                  {stats.achievements}
-                </p>
-                <p className="text-xs sm:text-sm text-muted-foreground">
-                  Achievements
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Tabbed Content */}
       <Tabs defaultValue="activity" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4 text-xs sm:text-sm">
+        <TabsList className="grid w-full grid-cols-3 text-xs sm:text-sm">
           <TabsTrigger value="activity" className="px-2 sm:px-4">
             Activity
           </TabsTrigger>
@@ -567,9 +516,6 @@ export default function ProfilePage() {
           </TabsTrigger>
           <TabsTrigger value="forums" className="px-2 sm:px-4">
             Forums
-          </TabsTrigger>
-          <TabsTrigger value="achievements" className="px-2 sm:px-4">
-            Achievements
           </TabsTrigger>
         </TabsList>
 
@@ -682,62 +628,7 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
         </TabsContent>
-
-        <TabsContent value="achievements" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg sm:text-xl">Achievements</CardTitle>
-              <CardDescription>
-                Your milestones and accomplishments
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-4">
-                {achievements.map((achievement) => (
-                  <div
-                    key={achievement.id}
-                    className={`p-4 border rounded-lg ${
-                      achievement.earned
-                        ? "bg-green-50 border-green-200"
-                        : "bg-gray-50 border-gray-200"
-                    }`}
-                  >
-                    <div className="flex items-start space-x-3">
-                      <div
-                        className={`p-2 rounded-lg flex-shrink-0 ${
-                          achievement.earned
-                            ? "bg-green-100 text-green-600"
-                            : "bg-gray-100 text-gray-400"
-                        }`}
-                      >
-                        <achievement.icon className="h-4 w-4 sm:h-5 sm:w-5" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium text-sm sm:text-base">
-                          {achievement.title}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                          {achievement.description}
-                        </p>
-                        {achievement.earned ? (
-                          <p className="text-xs text-green-600 mt-1">
-                            Earned {achievement.date}
-                          </p>
-                        ) : (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Progress: {achievement.progress}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
     </div>
   );
 }
-
