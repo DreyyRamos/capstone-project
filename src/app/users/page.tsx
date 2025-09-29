@@ -4,9 +4,14 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
@@ -17,34 +22,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Search,
-  Users,
-  UserPlus,
-  MoreHorizontal,
-  Mail,
-  Shield,
-  MessageSquare,
-  BookOpen,
-  TrendingUp,
-  UserCheck,
-  UserX,
-  Crown,
-} from "lucide-react";
+import { Search, Users, UserPlus } from "lucide-react";
 import Cookies from "js-cookie";
 import { useAdminQuery } from "@/hooks/useAdmin";
 import { useConfirmationModal } from "@/hooks/use-confirmation-modal";
 import { toast } from "sonner";
 import UsersLoading from "./loading";
 import UsersList from "@/components/users/users-list";
+import Link from "next/link";
 
 export default function UsersPage() {
   const token = Cookies.get("token") || "";
@@ -160,9 +145,11 @@ export default function UsersPage() {
             Manage users, roles, and permissions
           </p>
         </div>
-        <Button>
-          <UserPlus className="mr-2 h-4 w-4" />
-          Add User
+        <Button asChild>
+          <Link href={"/admissions"}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            User Admissions
+          </Link>
         </Button>
       </div>
 

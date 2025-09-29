@@ -236,7 +236,7 @@ export default function Dashboard() {
                   <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <MessageCircle className="h-3 w-3" />
-                      {topic?.forumComments?.length} replies
+                      {topic?.forumComments?.length} comments
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
@@ -252,56 +252,58 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common tasks and shortcuts</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Button
-              variant="outline"
-              className="h-20 flex-col gap-2 bg-transparent"
-              asChild
-            >
-              <Link href="/publications/create">
-                <BookOpen className="h-6 w-6" />
-                Create Publication
-              </Link>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-20 flex-col gap-2 bg-transparent"
-              asChild
-            >
-              <Link href="/forum/create">
-                <MessageSquare className="h-6 w-6" />
-                Start Discussion
-              </Link>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-20 flex-col gap-2 bg-transparent"
-              asChild
-            >
-              <Link href="/profile">
-                <Users className="h-6 w-6" />
-                Edit Profile
-              </Link>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-20 flex-col gap-2 bg-transparent"
-              asChild
-            >
-              <Link href="/settings">
-                <Calendar className="h-6 w-6" />
-                Settings
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      {token && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+            <CardDescription>Common tasks and shortcuts</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <Button
+                variant="outline"
+                className="h-20 flex-col gap-2 bg-transparent"
+                asChild
+              >
+                <Link href="/publications/create">
+                  <BookOpen className="h-6 w-6" />
+                  Create Publication
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="h-20 flex-col gap-2 bg-transparent"
+                asChild
+              >
+                <Link href="/forum/create">
+                  <MessageSquare className="h-6 w-6" />
+                  Start Discussion
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="h-20 flex-col gap-2 bg-transparent"
+                asChild
+              >
+                <Link href="/profile">
+                  <Users className="h-6 w-6" />
+                  Edit Profile
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="h-20 flex-col gap-2 bg-transparent"
+                asChild
+              >
+                <Link href="/settings">
+                  <Calendar className="h-6 w-6" />
+                  Settings
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

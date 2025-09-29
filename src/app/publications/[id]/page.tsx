@@ -384,12 +384,16 @@ export default function PublicationDetailPage({ params }: PageProps) {
   };
 
   const handleReportPublication = () => {
-    openReportModal(
-      "PUBLICATION",
-      publication?.pubId,
-      publication?.title,
-      publication?.authorId
-    );
+    checkAndExecute("report", async () => {
+      if (requireAuth("report this publication.")) {
+        openReportModal(
+          "PUBLICATION",
+          publication?.pubId,
+          publication?.title,
+          publication?.authorId
+        );
+      }
+    });
   };
 
   const handleReportPublicationComment = (
@@ -397,12 +401,16 @@ export default function PublicationDetailPage({ params }: PageProps) {
     commentContent: string,
     authorId?: string
   ) => {
-    openReportModal(
-      "PUBLICATION_COMMENT",
-      commentId,
-      commentContent.substring(0, 50) + "...",
-      authorId
-    );
+    checkAndExecute("report", async () => {
+      if (requireAuth("report this comment")) {
+        openReportModal(
+          "PUBLICATION_COMMENT",
+          commentId,
+          commentContent.substring(0, 50) + "...",
+          authorId
+        );
+      }
+    });
   };
 
   const handleReportPublicationReply = (
@@ -410,12 +418,16 @@ export default function PublicationDetailPage({ params }: PageProps) {
     replyContent: string,
     authorId?: string
   ) => {
-    openReportModal(
-      "PUBLICATION_REPLY",
-      replyId,
-      replyContent.substring(0, 50) + "...",
-      authorId
-    );
+    checkAndExecute("report", async () => {
+      if (requireAuth("report this comment")) {
+        openReportModal(
+          "PUBLICATION_REPLY",
+          replyId,
+          replyContent.substring(0, 50) + "...",
+          authorId
+        );
+      }
+    });
   };
 
   const handleReportPublicationNestedReply = (
@@ -423,12 +435,16 @@ export default function PublicationDetailPage({ params }: PageProps) {
     nestedReplyContent: string,
     authorId?: string
   ) => {
-    openReportModal(
-      "PUBLICATION_REPLY_TO_REPLY",
-      nestedReplyId,
-      nestedReplyContent.substring(0, 50) + "...",
-      authorId
-    );
+    checkAndExecute("report", async () => {
+      if (requireAuth("report this comment.")) {
+        openReportModal(
+          "PUBLICATION_REPLY_TO_REPLY",
+          nestedReplyId,
+          nestedReplyContent.substring(0, 50) + "...",
+          authorId
+        );
+      }
+    });
   };
 
   const [showAll, setShowAll] = useState(false);

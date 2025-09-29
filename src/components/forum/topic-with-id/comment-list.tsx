@@ -395,14 +395,6 @@ const CommentList = ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleReplyDislike(reply.replyId)}
-                      >
-                        <ThumbsDown className="mr-2 h-4 w-4" />
-                        {reply.dislikes}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
                         onClick={() => handleSecondLevelReply(reply.replyId)}
                       >
                         {replyingToSecondLevel === reply.replyId
@@ -584,16 +576,6 @@ const CommentList = ({
                                   forumId={id}
                                   commentId={reply?.commentId}
                                 />
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() =>
-                                    handleReplyDislike(childReply.replyId)
-                                  }
-                                >
-                                  <ThumbsDown className="mr-2 h-4 w-4" />
-                                  {childReply.dislikes}
-                                </Button>
                                 <Button
                                   variant="ghost"
                                   size="sm"

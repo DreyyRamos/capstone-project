@@ -46,11 +46,6 @@ const adminNavItems = [
     icon: Users,
   },
   {
-    title: "Analytics",
-    href: "/analytics",
-    icon: BarChart3,
-  },
-  {
     title: "Moderation",
     href: "/moderation",
     icon: Shield,
@@ -83,16 +78,16 @@ const slugify = (str: string) => {
 };
 
 const forumCategories = [
-  { name: "General Discussion", count: 45 },
-  { name: "Academic", count: 23 },
-  { name: "Clubs & Activities", count: 18 },
-  { name: "Sports", count: 12 },
-  { name: "Arts & Culture", count: 8 },
-  { name: "Technology", count: 8 },
-  { name: "Study Groups", count: 8 },
-  { name: "Events", count: 8 },
-  { name: "Help & Support", count: 8 },
-  { name: "Uncategorized", count: 8 },
+  { name: "General Discussion" },
+  { name: "Academic" },
+  { name: "Clubs & Activities" },
+  { name: "Sports" },
+  { name: "Arts & Culture" },
+  { name: "Technology" },
+  { name: "Study Groups" },
+  { name: "Events" },
+  { name: "Help & Support" },
+  { name: "Uncategorized" },
 ].map((cat) => ({
   ...cat,
   href: `/forum/category/${slugify(cat.name)}`,
@@ -189,9 +184,6 @@ export function AdminNavigation() {
                       className="flex items-center justify-between"
                     >
                       <span>{category.name}</span>
-                      <Badge variant="secondary" className="text-xs">
-                        {category.count}
-                      </Badge>
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -295,9 +287,6 @@ export function AdminNavigation() {
                       className="flex items-center justify-between"
                     >
                       <span>{category.name}</span>
-                      <Badge variant="secondary" className="text-xs">
-                        {category.count}
-                      </Badge>
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -423,9 +412,6 @@ export function AdminNavigation() {
                         className="flex items-center justify-between px-3 py-2 text-sm rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
                       >
                         <span>{category.name}</span>
-                        <Badge variant="secondary" className="text-xs">
-                          {category.count}
-                        </Badge>
                       </Link>
                     ))}
                   </div>

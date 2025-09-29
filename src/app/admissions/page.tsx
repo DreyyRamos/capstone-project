@@ -56,6 +56,10 @@ export default function AdmissionsPage() {
     }
   );
 
+  const pendingOnly =
+    filteredAdmissions?.filter((a: any) => a.status === "PENDING") ?? [];
+  const pendingCount = pendingOnly.length;
+
   const handleApprove = (admission: Admission) => {
     const displayName = `${admission.firstName} ${admission.lastName || ""}`;
     confirmApprove(`${displayName}'s admission application`, async () => {
@@ -108,7 +112,9 @@ export default function AdmissionsPage() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Pending</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {pendingCount} Total Pending
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>

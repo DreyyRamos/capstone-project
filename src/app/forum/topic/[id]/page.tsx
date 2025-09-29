@@ -328,12 +328,16 @@ export default function ForumTopicPage({ params }: PageProps) {
   };
 
   const handleReportTopic = () => {
-    openReportModal(
-      "FORUM_POST",
-      topic?.forumId,
-      topic?.topicTitle,
-      topic?.authorId
-    );
+    checkAndExecute("report", () => {
+      if (requireAuth("report this forum")) {
+        openReportModal(
+          "FORUM_POST",
+          topic?.forumId,
+          topic?.topicTitle,
+          topic?.authorId
+        );
+      }
+    });
   };
 
   const handleReportForumComment = (
@@ -341,7 +345,11 @@ export default function ForumTopicPage({ params }: PageProps) {
     commentContent: string,
     authorId?: string
   ) => {
-    openReportModal("FORUM_COMMENT", commentId, commentContent, authorId);
+    checkAndExecute("report", () => {
+      if (requireAuth("report this comment")) {
+        openReportModal("FORUM_COMMENT", commentId, commentContent, authorId);
+      }
+    });
   };
 
   const handleReportForumReply = (
@@ -349,7 +357,11 @@ export default function ForumTopicPage({ params }: PageProps) {
     replyContent: string,
     authorId?: string
   ) => {
-    openReportModal("FORUM_REPLY", replyId, replyContent, authorId);
+    checkAndExecute("report", () => {
+      if (requireAuth("report this comment")) {
+        openReportModal("FORUM_REPLY", replyId, replyContent, authorId);
+      }
+    });
   };
 
   const handleReportForumNestedReply = (
@@ -357,12 +369,16 @@ export default function ForumTopicPage({ params }: PageProps) {
     nestedReplyContent: string,
     authorId?: string
   ) => {
-    openReportModal(
-      "FORUM_REPLY_TO_REPLY",
-      nestedReplyId,
-      nestedReplyContent,
-      authorId
-    );
+    checkAndExecute("report", () => {
+      if (requireAuth("report this comment")) {
+        openReportModal(
+          "FORUM_REPLY_TO_REPLY",
+          nestedReplyId,
+          nestedReplyContent,
+          authorId
+        );
+      }
+    });
   };
 
   const [showAll, setShowAll] = useState(false);
@@ -453,10 +469,6 @@ export default function ForumTopicPage({ params }: PageProps) {
 
               <div className="flex items-center gap-2">
                 <ForumLikeButton forum={topic} token={token} forumId={id} />
-                <Button variant="outline" size="sm">
-                  <Share2 className="mr-2 h-4 w-4" />
-                  Share
-                </Button>
                 <Button variant="outline" size="sm" onClick={handleReportTopic}>
                   <Flag className="h-4 w-4" />
                 </Button>
