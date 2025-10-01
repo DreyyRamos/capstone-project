@@ -27,10 +27,6 @@ export const useAdminQuery = (token: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["admin-side-users"],
     queryFn: async () => await fetchAllUsers(token),
-    // refetchOnWindowFocus: false,
-    // refetchOnMount: true,
-    // refetchOnReconnect: false,
-    // refetchInterval: false,
   });
 
   const updateUserRole = useMutation({
@@ -67,10 +63,6 @@ export const useAdminUserAdmissionsQuery = (token: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["user-admissions"],
     queryFn: async () => await fetchAllUserAdmissions(token),
-    // refetchOnWindowFocus: false,
-    // refetchOnMount: true,
-    // refetchOnReconnect: false,
-    // refetchInterval: false,
   });
 
   // Mutation to approve admission
@@ -139,10 +131,6 @@ export const useAdminRoleChangeRequestsQuery = (token: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["role-change-requests"],
     queryFn: async () => await fetchRoleChangeRequests(token),
-    // refetchOnWindowFocus: false,
-    // refetchOnMount: true,
-    // refetchOnReconnect: false,
-    // refetchInterval: false,
   });
 
   const approveRoleChange = useMutation({

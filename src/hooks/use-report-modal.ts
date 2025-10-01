@@ -17,7 +17,7 @@ interface ReportModalState {
   contentType: ContentType;
   contentId: string;
   contentTitle?: string;
-  reportedUserId?: string; // Add this for consistency with the modal component
+  reportedUserId?: string; // for consistency with the modal component
 }
 
 export function useReportModal() {
@@ -26,15 +26,15 @@ export function useReportModal() {
     contentType: "PUBLICATION", // Default to a valid ContentType value
     contentId: "",
     contentTitle: "",
-    reportedUserId: ""
+    reportedUserId: "",
   });
 
   // Updated to use the complete ContentType enum
   const openReportModal = (
-    contentType: ContentType, // Now accepts all content types
+    contentType: ContentType, // accepts all content types
     contentId: string,
     contentTitle?: string,
-    reportedUserId?: string // Optional: ID of user who created the content
+    reportedUserId?: string // ID of user who created the content
   ) => {
     setState({
       isModalOpen: true,

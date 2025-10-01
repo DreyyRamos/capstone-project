@@ -11,7 +11,7 @@ type Props = {
   firstName: string;
   lastName: string;
   send: boolean;
-  emailType: EmailType; // ← only the three literals are allowed
+  emailType: EmailType;
   onSent?: (result: any) => void;
   onError?: (error: any) => void;
 };

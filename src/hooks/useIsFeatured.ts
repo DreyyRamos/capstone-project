@@ -16,14 +16,6 @@ export const useIsFeatured = (token: string) => {
   });
 
   return {
-    // Query results
-    // data,
-    // error,
-    // isLoading,
-    // isError,
-    // isSuccess,
-    // refetch,
-
     // Mutation functions
     makeFeatured: mutation.mutate,
     isLoading: mutation.isPending,

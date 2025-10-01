@@ -36,14 +36,8 @@ import { useAuthModal } from "@/hooks/use-auth-modal";
 import { useFetchOnePostQuery, usePostByIdQuery } from "@/hooks/usePost";
 import { useTokenUser } from "@/hooks/useTokenUser";
 import { useIsFeatured } from "@/hooks/useIsFeatured";
-import {
-  useAddTopReply,
-  useAddNestedReply,
-} from "@/hooks/usePublicationReplies";
+import { useAddTopReply, useAddNestedReply } from "@/hooks/usePost";
 import Cookies from "js-cookie";
-import PublicationCommentLikeButton from "@/components/like-buttons/publication-comment-like-button";
-import PublicationCommentReplyLikeButton from "@/components/like-buttons/publication-comment-reply-like-button";
-import PublicationReplyToReplyLikeButton from "@/components/like-buttons/publication-replyToReply-like-button";
 import { ReportModal } from "@/components/report-modal";
 import { useReportModal } from "@/hooks/use-report-modal";
 import ContentDisplay from "@/components/content-display";

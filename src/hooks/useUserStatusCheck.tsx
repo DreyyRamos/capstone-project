@@ -11,13 +11,6 @@ import {
 import { AlertTriangle, Mail } from "lucide-react";
 import { UserStatus } from "@/generated/prisma";
 
-// interface User {
-//   id: string;
-//   status: UserStatus;
-//   banReason?: string;
-//   suspensionEndDate?: string;
-// }
-
 interface UseUserStatusCheckOptions {
   onBlocked?: (action: string, status: UserStatus) => void;
 }

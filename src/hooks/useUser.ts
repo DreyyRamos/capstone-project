@@ -143,10 +143,6 @@ export const useUserVisitorQuery = (id: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["visit-user"],
     queryFn: async () => await fetchVisitUser(id),
-    // refetchOnWindowFocus: false,
-    // refetchOnMount: false,
-    // refetchOnReconnect: false,
-    // refetchInterval: false,
   });
 
   return {
@@ -167,10 +163,6 @@ export const useUserVisitingUserActivityQuery = (id: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["visit-user-activity"],
     queryFn: async () => await fetchVisitingUserActivity(id),
-    // refetchOnWindowFocus: false,
-    // refetchOnMount: false,
-    // refetchOnReconnect: false,
-    // refetchInterval: false,
   });
 
   return {

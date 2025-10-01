@@ -153,14 +153,14 @@ export default function ForumCategoryPage({ params }: PageProps) {
   // Calculate statistics from filtered topics
   const stats = useMemo(() => {
     const totalTopics = filteredAndSortedTopics.length;
-    const totalPosts = filteredAndSortedTopics.reduce(
+    const totalReplies = filteredAndSortedTopics.reduce(
       (sum, topic) => sum + (topic.forumComments?.length || 0),
       0
     );
     const avgReplies =
-      totalTopics > 0 ? Math.floor(totalPosts / totalTopics) : 0;
+      totalTopics > 0 ? Math.floor(totalReplies / totalTopics) : 0;
 
-    return { totalTopics, totalPosts, avgReplies };
+    return { totalTopics, totalReplies, avgReplies };
   }, [filteredAndSortedTopics]);
 
   if (isLoading) {
@@ -224,8 +224,8 @@ export default function ForumCategoryPage({ params }: PageProps) {
                 <Users className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.totalPosts}</p>
-                <p className="text-sm text-muted-foreground">Posts</p>
+                <p className="text-2xl font-bold">{stats.totalReplies}</p>
+                <p className="text-sm text-muted-foreground">Replies</p>
               </div>
             </div>
           </CardContent>

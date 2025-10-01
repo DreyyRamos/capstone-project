@@ -75,13 +75,6 @@ export const useModeratorQuery = (token: string) => {
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
-
-      // Only invalidate specific content type queries
-      // if (variables.contentType.includes("PUBLICATION")) {
-      //   queryClient.invalidateQueries({ queryKey: ["pubs"] });
-      // } else if (variables.contentType.includes("FORUM")) {
-      //   queryClient.invalidateQueries({ queryKey: ["forums"] });
-      // }
     },
   });
 
@@ -92,38 +85,8 @@ export const useModeratorQuery = (token: string) => {
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
-
-      // Only invalidate specific content type queries
-      // if (variables.contentType.includes("PUBLICATION")) {
-      //   queryClient.invalidateQueries({ queryKey: ["pubs"] });
-      // } else if (variables.contentType.includes("FORUM")) {
-      //   queryClient.invalidateQueries({ queryKey: ["forums"] });
-      // }
     },
   });
-
-  //   const archiveMutation = useMutation({
-  //     mutationFn: (postId: string) => archivePost(token, postId),
-  //     onSuccess: () => {
-  //       queryClient.invalidateQueries({ queryKey: ["pubs"] });
-  //       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
-  //       queryClient.invalidateQueries({ queryKey: ["to-review"] });
-  //       queryClient.invalidateQueries({ queryKey: ["users"] });
-  //       queryClient.invalidateQueries({ queryKey: ["archived-pubs"] });
-  //     },
-  //   });
-
-  //   const restoreArchiveMutation = useMutation({
-  //     mutationFn: async (postId: string) =>
-  //       await restoreArchivePost(token, postId),
-  //     onSuccess: () => {
-  //       queryClient.invalidateQueries({ queryKey: ["pubs"] });
-  //       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
-  //       queryClient.invalidateQueries({ queryKey: ["to-review"] });
-  //       queryClient.invalidateQueries({ queryKey: ["users"] });
-  //       queryClient.invalidateQueries({ queryKey: ["archived-pubs"] });
-  //     },
-  //   });
 
   return {
     // Query results
@@ -151,12 +114,6 @@ export const useModeratorQuery = (token: string) => {
     cleanupReport: cleanupReport.mutate,
     isCleaningUp: cleanupReport.isPending,
     cleanUpSuccess: cleanupReport.isSuccess,
-
-    // restoreArchive: restoreArchiveMutation.mutate,
-    // isRestoring: restoreArchiveMutation.isPending,
-    // restoringError: restoreArchiveMutation.error,
-    // restoringSuccess: restoreArchiveMutation.isSuccess,
-    // restoringReset: restoreArchiveMutation.reset,
   };
 };
 

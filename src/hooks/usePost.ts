@@ -357,3 +357,74 @@ export const useCountPubsQuery = (token: string) => {
     refetch,
   };
 };
+
+
+
+export function useAddTopReply(token: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: {
+      content: string;
+      //   authorId: string;
+      pubId: string;
+      commentId: string;
+    }) =>
+      fetch(
+        `/api/publications/${vars.pubId}/comments/${vars.commentId}/replies`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ reply_content: vars.content }),
+        }
+      ).then((r) => r.json()),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["pubs"] });
+      qc.invalidateQueries({ queryKey: ["pub"] });
+      qc.invalidateQueries({ queryKey: ["replies"] });
+      qc.invalidateQueries({ queryKey: ["featured-pubs"] });
+      qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
+      qc.invalidateQueries({ queryKey: ["to-review"] });
+      qc.invalidateQueries({ queryKey: ["visit-user"] });
+      qc.invalidateQueries({ queryKey: ["visit-user-activity"] });
+    },
+  });
+}
+
+export function useAddNestedReply(token: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: {
+      content: string;
+      //   authorId: string;
+      pubId: string;
+      replyId: string;
+      commentId: string;
+    }) =>
+      fetch(
+        `/api/publications/${vars.pubId}/comments/${vars.commentId}/replies/${vars.replyId}/children`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(vars),
+        }
+      ).then((r) => r.json()),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["pubs"] });
+      qc.invalidateQueries({ queryKey: ["pub"] });
+      qc.invalidateQueries({ queryKey: ["replies"] });
+      qc.invalidateQueries({ queryKey: ["featured-pubs"] });
+      qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["to-review"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
+      qc.invalidateQueries({ queryKey: ["visit-user"] });
+      qc.invalidateQueries({ queryKey: ["visit-user-activity"] });
+    },
+  });
+}

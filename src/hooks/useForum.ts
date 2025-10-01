@@ -215,3 +215,95 @@ export const useFetchForumById = (token: string, forumId: string) => {
     isDeletingReplyToReply: deleteReplyToReply.isPending,
   };
 };
+
+
+
+export function useForumAddComment(token: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: {
+      content: string;
+      //   authorId: string;
+      forumId: string;
+    }) =>
+      fetch(`/api/forums/${vars.forumId}/comments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ comment_content: vars.content }),
+      }).then((r) => r.json()),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["forums"] });
+      qc.invalidateQueries({ queryKey: ["forum", token] });
+      qc.invalidateQueries({ queryKey: ["forum"] });
+      qc.invalidateQueries({ queryKey: ["replies"] });
+      qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
+      qc.invalidateQueries({ queryKey: ["to-review"] });
+    },
+  });
+}
+
+export function useForumAddTopReplyForum(token: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: {
+      content: string;
+      //   authorId: string;
+      forumId: string;
+      commentId: string;
+    }) =>
+      fetch(`/api/forums/${vars.forumId}/comments/${vars.commentId}/replies`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ reply_content: vars.content }),
+      }).then((r) => r.json()),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["forums"] });
+      qc.invalidateQueries({ queryKey: ["forum", token] });
+      qc.invalidateQueries({ queryKey: ["forum"] });
+      qc.invalidateQueries({ queryKey: ["replies"] });
+      qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
+      qc.invalidateQueries({ queryKey: ["to-review"] });
+    },
+  });
+}
+
+export function useForumAddNestedReply(token: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (vars: {
+      content: string;
+      //   authorId: string;
+      forumId: string;
+      replyId: string;
+      commentId: string;
+    }) =>
+      fetch(
+        `/api/forums/${vars.forumId}/comments/${vars.commentId}/replies/${vars.replyId}/children`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(vars),
+        }
+      ).then((r) => r.json()),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["forums"] });
+      qc.invalidateQueries({ queryKey: ["forum", token] });
+      qc.invalidateQueries({ queryKey: ["forum"] });
+      qc.invalidateQueries({ queryKey: ["replies"] });
+      qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user-activity"] });
+      qc.invalidateQueries({ queryKey: ["to-review"] });
+    },
+  });
+}

@@ -14,10 +14,10 @@ import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
 import { useFetchForumById } from "@/hooks/useForum";
 import {
-  useForumAddNestedReply,
-  useForumAddTopReplyForum,
   useForumAddComment,
-} from "@/hooks/useForumReplies";
+  useForumAddTopReplyForum,
+  useForumAddNestedReply,
+} from "@/hooks/useForum";
 import Cookies from "js-cookie";
 import { ReportModal } from "@/components/report-modal";
 import { useReportModal } from "@/hooks/use-report-modal";

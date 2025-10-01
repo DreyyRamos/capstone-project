@@ -40,43 +40,5 @@ export const useNotificationQuery = (token: string) => {
     markAsRead: markAsReadMutation.mutate, // Keep existing function
     markAllAsRead: markAllAsReadMutation, // Expose the new mutation object
   };
-
-  // const mutation = useMutation({
-  //   mutationFn: (id: string) => markAsRead(id, token),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["users"] });
-  //     queryClient.invalidateQueries({ queryKey: ["pubs"] });
-  //     queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
-  //     queryClient.invalidateQueries({ queryKey: ["to-review"] });
-  //   },
-  // });
-
-  // const markAll = useMutation({
-  //   mutationFn: (userId: string) => markAllAsRead(userId, token),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["users"] });
-  //     queryClient.invalidateQueries({ queryKey: ["pubs"] });
-  //     queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
-  //     queryClient.invalidateQueries({ queryKey: ["to-review"] });
-  //   },
-  // });
-
-  // return {
-  //   // Query results
-  //   // data,
-  //   // error,
-  //   // isLoading,
-  //   // isError,
-  //   // isSuccess,
-  //   // refetch,
-
-  //   // Mutation functions
-  //   markAsRead: mutation.mutate,
-  //   markAllAsRead: markAll.mutate,
-  //   isCreating: mutation.isPending,
-  //   createError: mutation.error,
-  //   createSuccess: mutation.isSuccess,
-  //   createReset: mutation.reset,
-  // };
 };
 

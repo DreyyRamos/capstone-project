@@ -33,7 +33,7 @@ export function AuthModal({
   };
 
   const handleRegister = () => {
-    // this might go to a registration page or contact form
+    router.push("/register");
     onClose();
   };
 

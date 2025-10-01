@@ -9,10 +9,6 @@ export const useFetchLeaderboard = () => {
   const { data, error, isLoading, isError, isSuccess } = useQuery({
     queryKey: ["user-leaderboard"],
     queryFn: async () => await fetchUserLeaderboard(),
-    // refetchOnWindowFocus: false,
-    // refetchOnMount: true,
-    // refetchOnReconnect: false,
-    // refetchInterval: false,
   });
 
   return {
