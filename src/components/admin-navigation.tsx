@@ -204,10 +204,18 @@ export function AdminNavigation() {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Quick Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Add User</DropdownMenuItem>
-                <DropdownMenuItem>Create Announcement</DropdownMenuItem>
-                <DropdownMenuItem>Moderate Content</DropdownMenuItem>
-                <DropdownMenuItem>Generate Report</DropdownMenuItem>
+                <Link href={"/users"}>
+                  <DropdownMenuItem> Manage Users</DropdownMenuItem>
+                </Link>
+                <Link href={"/admissions"}>
+                  <DropdownMenuItem>Manage Admissions</DropdownMenuItem>
+                </Link>
+                <Link href={"/moderation"}>
+                  <DropdownMenuItem> Moderate Content</DropdownMenuItem>
+                </Link>
+                <Link href={"content-manager"}>
+                  <DropdownMenuItem>Manage Publications</DropdownMenuItem>
+                </Link>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

@@ -64,7 +64,7 @@ interface Category {
   description: string;
   topics: number;
   replies: number;
-  lastUpdated: string;
+  createdAt: string;
   color: string;
   forums?: ForumTopic[];
 }
@@ -118,7 +118,7 @@ export default function ForumPage() {
         description: `Discussion about ${name}`,
         topics: forums.length,
         replies,
-        lastUpdated: timeAgo(new Date(latest.createdAt)),
+        createdAt: timeAgo(new Date(latest.createdAt)),
         color: `bg-${
           ["blue", "green", "purple", "orange", "pink"][name.length % 5]
         }-100 text-${

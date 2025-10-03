@@ -25,6 +25,7 @@ export async function GET(
         createdAt: true,
         updatedAt: true,
         status: true,
+        reputationPoints: true,
         forums: {
           select: {
             topicTitle: true,

@@ -280,9 +280,13 @@ export default function PublicationDetailPage({ params }: PageProps) {
         if (comment_content.trim()) {
           console.log("Adding comment:", comment_content);
           try {
-            await commentToPost(comment_content);
+            await commentToPost(comment_content, {
+              onSuccess: () => {
+                toast.success("Comment added successfully!");
+              },
+            });
             setCommentContent("");
-            toast.success("Comment added successfully!");
+            toast.success("Sending comment...");
           } catch (error) {
             toast.error("Failed to add comment");
             console.error("Error adding comment:", error);
@@ -325,10 +329,17 @@ export default function PublicationDetailPage({ params }: PageProps) {
       if (replyContent.trim()) {
         console.log("Adding reply to comment:", commentId, replyContent);
         try {
-          await addTopReply({ content: replyContent, pubId, commentId });
+          await addTopReply(
+            { content: replyContent, pubId, commentId },
+            {
+              onSuccess: () => {
+                toast("Comment added successfully!");
+              },
+            }
+          );
           setReplyContent("");
           setReplyingTo(null);
-          toast.success("Reply added successfully!");
+          toast("Sending comment...");
         } catch (error) {
           toast.error("Failed to add reply");
           console.error("Error adding reply:", error);
@@ -350,15 +361,22 @@ export default function PublicationDetailPage({ params }: PageProps) {
           secondLevelReplyContent
         );
         try {
-          await addNestedReply({
-            content: secondLevelReplyContent,
-            pubId,
-            replyId,
-            commentId,
-          });
+          await addNestedReply(
+            {
+              content: secondLevelReplyContent,
+              pubId,
+              replyId,
+              commentId,
+            },
+            {
+              onSuccess: () => {
+                toast("Comment added successfully!");
+              },
+            }
+          );
           setSecondLevelReplyContent("");
           setReplyingToSecondLevel(null);
-          toast.success("Reply added successfully!");
+          toast("Sending comment...");
         } catch (error) {
           toast.error("Failed to add reply");
           console.error("Error adding second-level reply:", error);

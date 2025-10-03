@@ -112,7 +112,7 @@ const TopicList = ({ topic }: TopicListProps) => {
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
-                Updated {new Date(topic.updatedAt).toLocaleDateString()}
+                Created at: {new Date(topic.createdAt).toLocaleDateString()}
               </span>
             </div>
           </div>

@@ -11,6 +11,8 @@ import type { Role, AdmissionStatus } from "@/generated/prisma";
 import EmailTrigger from "@/components/email-trigger";
 import { toast } from "sonner";
 import ApplicationList from "@/components/admissions/application-list";
+import { useRoleGate } from "@/utils/userRoleGate";
+import { useTokenUser } from "@/hooks/useTokenUser";
 
 interface Admission {
   admission_id: string;
@@ -31,6 +33,7 @@ interface Admission {
 
 export default function AdmissionsPage() {
   const token = Cookies.get("token") || "";
+  useRoleGate(["ADMIN"], token);
   const {
     data: pendingAdmissions,
     approveUser,

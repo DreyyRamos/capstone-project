@@ -49,7 +49,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
     excerpt: "",
     content: "",
     imageUrl: "",
-    isFeatured: false,
     category: "",
   });
   const [tags, setTags] = useState<string[]>([]);
@@ -81,12 +80,14 @@ export default function UpdatePublicationPage({ params }: PageProps) {
         excerpt: pubToUpdate.excerpt || "",
         content: pubToUpdate.content || "",
         imageUrl: pubToUpdate.imageUrl || "",
-        isFeatured: pubToUpdate.isFeatured ?? false,
         category: pubToUpdate.category || "",
       });
       setTags(pubToUpdate.tags || []);
     }
   }, [pubToUpdate]);
+
+  console.log("Current category:", formData.category);
+  console.log("pubToUpdate:", pubToUpdate?.category);
 
   const handleAddTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
@@ -97,13 +98,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
 
   const handleRemoveTag = (tagToRemove: string) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
-
-  const handleFeaturedChange = (checked: boolean) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      isFeatured: checked,
-    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -318,7 +312,8 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 <div className="space-y-2">
                   <Label htmlFor="category">Category *</Label>
                   <Select
-                    value={formData.category}
+                    key={formData.category} // Force re-render when category changes
+                    value={formData.category || undefined}
                     onValueChange={handleSelectChange}
                   >
                     <SelectTrigger>
@@ -332,19 +327,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Featured Publication</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Show this publication prominently
-                    </p>
-                  </div>
-                  <Switch
-                    checked={formData.isFeatured}
-                    onCheckedChange={handleFeaturedChange}
-                  />
                 </div>
 
                 {/* <div className="flex items-center justify-between">

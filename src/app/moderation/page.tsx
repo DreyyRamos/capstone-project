@@ -36,6 +36,7 @@ import {
   useFetchReportCountQuery,
 } from "@/hooks/useModerator";
 import Cookies from "js-cookie";
+import { useRoleGate } from "@/utils/userRoleGate";
 import { ContentViewModal } from "@/components/content-view-modal";
 import { useConfirmation } from "@/components/confirmation-provider";
 import ModerationLoading from "./loading";
@@ -79,6 +80,7 @@ export default function ModerationPage() {
   const [activeTab, setActiveTab] = useState("reports");
 
   const token = Cookies.get("token") || "";
+  useRoleGate(["ADMIN", "MODERATOR"], token);
 
   const {
     data: reportedContents,
@@ -172,7 +174,7 @@ export default function ModerationPage() {
     if (!transformedReports.length) return [];
 
     // Filter the reports
-    let filtered = transformedReports.filter((report: TransformedReport) => {
+    const filtered = transformedReports.filter((report: TransformedReport) => {
       const searchLower = searchQuery.toLowerCase();
 
       // Enhanced search across relevant fields

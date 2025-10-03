@@ -229,9 +229,16 @@ export default function ForumTopicPage({ params }: PageProps) {
         if (comment_content.trim()) {
           console.log("Adding comment:", comment_content);
           try {
-            await commentToPost({ content: comment_content, forumId });
+            await commentToPost(
+              { content: comment_content, forumId },
+              {
+                onSuccess: () => {
+                  toast.success("Comment added successfully!");
+                },
+              }
+            );
             setCommentContent("");
-            toast.success("Comment added successfully!");
+            toast.success("Sending comment...");
           } catch (error) {
             toast.error("Failed to add comment");
             console.error("Error adding comment:", error);
@@ -274,10 +281,17 @@ export default function ForumTopicPage({ params }: PageProps) {
       if (replyContent.trim()) {
         console.log("Adding reply to comment:", commentId, replyContent);
         try {
-          await addTopReply({ content: replyContent, forumId, commentId });
+          await addTopReply(
+            { content: replyContent, forumId, commentId },
+            {
+              onSuccess: () => {
+                toast.success("Comment added successfully!");
+              },
+            }
+          );
           setReplyContent("");
           setReplyingTo(null);
-          toast.success("Reply added successfully!");
+          toast.success("Sending comment...");
         } catch (error) {
           toast.error("Failed to add reply");
           console.error("Error adding reply:", error);
@@ -298,14 +312,22 @@ export default function ForumTopicPage({ params }: PageProps) {
           secondLevelReplyContent
         );
         try {
-          await addNestedReply({
-            content: secondLevelReplyContent,
-            forumId: id,
-            replyId,
-            commentId,
-          });
+          await addNestedReply(
+            {
+              content: secondLevelReplyContent,
+              forumId: id,
+              replyId,
+              commentId,
+            },
+            {
+              onSuccess: () => {
+                toast.success("Comment added successfully!");
+              },
+            }
+          );
           setSecondLevelReplyContent("");
           setReplyingToSecondLevel(null);
+          toast.success("Sending comment...");
         } catch (error) {
           console.error("Error adding second-level reply:", error);
         }

@@ -32,6 +32,7 @@ import {
   useArchivedPostsQuery,
   useCountPubsQuery,
 } from "@/hooks/usePost";
+import { useRoleGate } from "@/utils/userRoleGate";
 import { toast } from "sonner";
 import Drafts from "@/components/content-manager/drafts";
 import Published from "@/components/content-manager/published";
@@ -78,6 +79,7 @@ export default function ContentManagerPage() {
   const [activeTab, setActiveTab] = useState("drafts");
 
   const token = Cookies.get("token") || "";
+  useRoleGate(["ADMIN", "EDITOR"], token);
   const {
     data: toReview,
     isLoading,

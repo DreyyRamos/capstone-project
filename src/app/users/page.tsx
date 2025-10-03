@@ -30,9 +30,11 @@ import { toast } from "sonner";
 import UsersLoading from "./loading";
 import UsersList from "@/components/users/users-list";
 import Link from "next/link";
+import { useRoleGate } from "@/utils/userRoleGate";
 
 export default function UsersPage() {
   const token = Cookies.get("token") || "";
+  useRoleGate(["ADMIN"], token);
   const { data: users, isLoading, refetch, updateRole } = useAdminQuery(token);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");

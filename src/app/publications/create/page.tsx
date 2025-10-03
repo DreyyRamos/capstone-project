@@ -77,13 +77,6 @@ export default function CreatePublicationPage() {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleFeaturedChange = (checked: boolean) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      isFeatured: checked,
-    }));
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     confirmAction(

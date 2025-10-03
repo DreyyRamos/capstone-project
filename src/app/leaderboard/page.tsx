@@ -188,32 +188,6 @@ export default function LeaderboardPage() {
                   </span>
                 </div>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <Eye className="h-4 w-4 text-purple-600" />
-                  <span>
-                    <strong>+1 point</strong> - Daily login
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <MessageCircle className="h-4 w-4 text-indigo-600" />
-                  <span>
-                    <strong>+1 point</strong> - Participating in discussions
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Minus className="h-4 w-4 text-red-600" />
-                  <span>
-                    <strong>-5 points</strong> - Content violations
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Minus className="h-4 w-4 text-red-600" />
-                  <span>
-                    <strong>-10 points</strong> - Spam or inappropriate behavior
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
         </AlertDescription>

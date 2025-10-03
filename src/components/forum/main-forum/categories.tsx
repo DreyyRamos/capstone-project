@@ -38,7 +38,7 @@ interface Category {
   description: string;
   topics: number;
   replies: number;
-  lastUpdated: string;
+  createdAt: string;
   color: string;
   forums?: ForumTopic[];
 }
@@ -80,7 +80,7 @@ const Categories = ({ category }: CategoryProps) => {
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="h-4 w-4 shrink-0" />
-                Last updated {category.lastUpdated}
+                Created at: {category.createdAt}
               </span>
             </div>
           </div>

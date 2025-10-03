@@ -51,6 +51,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Cookies from "js-cookie";
+import { useRoleGate } from "@/utils/userRoleGate";
 import { useAdminRoleChangeRequestsQuery } from "@/hooks/useAdmin";
 import { useConfirmation } from "@/components/confirmation-provider";
 import { toast } from "sonner";
@@ -59,6 +60,7 @@ import RoleRequestList from "@/components/role-requests/role-request-list";
 
 export default function RoleRequestsPage() {
   const token = Cookies.get("token") || "";
+  useRoleGate(["ADMIN"], token);
   const {
     data: roleChangeRequests,
     isLoading,

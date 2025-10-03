@@ -64,41 +64,6 @@ export default function ProfilePage({ params }: PageProps) {
     achievements: 8,
   };
 
-  const achievements = [
-    {
-      id: 1,
-      title: "Top Contributor",
-      description: "Published 20+ articles",
-      icon: Trophy,
-      earned: true,
-      date: "March 2024",
-    },
-    {
-      id: 2,
-      title: "Community Builder",
-      description: "100+ forum posts",
-      icon: Users,
-      earned: true,
-      date: "February 2024",
-    },
-    {
-      id: 3,
-      title: "Rising Star",
-      description: "500+ reputation points",
-      icon: Star,
-      earned: true,
-      date: "January 2024",
-    },
-    {
-      id: 4,
-      title: "Expert Writer",
-      description: "50+ published articles",
-      icon: Award,
-      earned: false,
-      progress: "24/50",
-    },
-  ];
-
   const getRoleColor = (role: string) => {
     switch (role.toUpperCase()) {
       case "ADMIN":
@@ -227,20 +192,10 @@ export default function ProfilePage({ params }: PageProps) {
             <div className="flex items-center space-x-2">
               <Star className="h-5 w-5 text-yellow-600" />
               <div>
-                <p className="text-2xl font-bold">{stats.reputation}</p>
+                <p className="text-2xl font-bold">
+                  {user?.userData?.reputationPoints}
+                </p>
                 <p className="text-sm text-muted-foreground">Reputation</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center space-x-2">
-              <Trophy className="h-5 w-5 text-purple-600" />
-              <div>
-                <p className="text-2xl font-bold">{stats.achievements}</p>
-                <p className="text-sm text-muted-foreground">Achievements</p>
               </div>
             </div>
           </CardContent>
@@ -253,7 +208,6 @@ export default function ProfilePage({ params }: PageProps) {
           <TabsTrigger value="activity">Recent Activity</TabsTrigger>
           <TabsTrigger value="publications">Publications</TabsTrigger>
           <TabsTrigger value="forums">Forums</TabsTrigger>
-          <TabsTrigger value="achievements">Achievements</TabsTrigger>
         </TabsList>
 
         <TabsContent value="activity" className="space-y-4">
@@ -317,58 +271,6 @@ export default function ProfilePage({ params }: PageProps) {
                     index={index}
                     user={user}
                   />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="achievements" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Achievements</CardTitle>
-              <CardDescription>
-                Your milestones and accomplishments
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {achievements.map((achievement) => (
-                  <div
-                    key={achievement.id}
-                    className={`p-4 border rounded-lg ${
-                      achievement.earned
-                        ? "bg-green-50 border-green-200"
-                        : "bg-gray-50 border-gray-200"
-                    }`}
-                  >
-                    <div className="flex items-start space-x-3">
-                      <div
-                        className={`p-2 rounded-lg ${
-                          achievement.earned
-                            ? "bg-green-100 text-green-600"
-                            : "bg-gray-100 text-gray-400"
-                        }`}
-                      >
-                        <achievement.icon className="h-5 w-5" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium">{achievement.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {achievement.description}
-                        </p>
-                        {achievement.earned ? (
-                          <p className="text-xs text-green-600 mt-1">
-                            Earned {achievement.date}
-                          </p>
-                        ) : (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Progress: {achievement.progress}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
                 ))}
               </div>
             </CardContent>
