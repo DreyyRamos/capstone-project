@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, X, MessageSquare } from "lucide-react";
+import TiptapForum from "@/components/tiptap-forum";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForumQuery } from "@/hooks/useForum";
@@ -72,7 +73,11 @@ export default function CreateForumTopicPage() {
     });
   };
 
-  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextAreaChange = (
+    e:
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | { target: { name: string; value: string } }
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -158,14 +163,11 @@ export default function CreateForumTopicPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="description">Description *</Label>
-                  <Textarea
+                  <TiptapForum
                     id="description"
-                    placeholder="Provide more details about your topic. What would you like to discuss? What questions do you have?"
                     name="description"
+                    description={formData.description}
                     onChange={handleTextAreaChange}
-                    value={formData.description}
-                    rows={10}
-                    className="min-h-[250px]"
                   />
                   <p className="text-sm text-muted-foreground">
                     Be specific and provide context to help others understand

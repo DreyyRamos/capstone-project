@@ -18,6 +18,7 @@ import {
   useForumAddTopReplyForum,
   useForumAddNestedReply,
 } from "@/hooks/useForum";
+import ContentDisplay from "@/components/content-display";
 import Cookies from "js-cookie";
 import { ReportModal } from "@/components/report-modal";
 import { useReportModal } from "@/hooks/use-report-modal";
@@ -498,7 +499,8 @@ export default function ForumTopicPage({ params }: PageProps) {
             </div>
 
             <div className="pt-4">
-              <p className="text-lg leading-relaxed">{topic?.description}</p>
+              <ContentDisplay htmlContent={topic?.description} />
+              {/* <p className="text-lg leading-relaxed">{topic?.description}</p> */}
             </div>
 
             <div className="flex items-center gap-4 text-sm text-muted-foreground">

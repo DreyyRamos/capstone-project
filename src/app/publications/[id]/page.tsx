@@ -6,16 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Heart,
-  Flag,
-  ArrowLeft,
-  Clock,
-  Star,
-  MoreVertical,
-  Edit2,
-  Trash2,
-} from "lucide-react";
+import { Heart, Flag, ArrowLeft, Clock, Star } from "lucide-react";
 import { toast } from "sonner";
 import {
   Tooltip,
@@ -23,12 +14,6 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import LikeButton from "@/components/like-buttons/publication-like-button";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
