@@ -109,9 +109,9 @@ export default function LoginPage() {
           <div className="text-center space-y-2">
             <div className="flex items-center justify-center gap-2 mb-4">
               <div className="h-10 w-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">LHS</span>
+                <span className="text-white font-bold">RS</span>
               </div>
-              <span className="font-bold text-xl">Lincoln High School</span>
+              <span className="font-bold text-xl">Ramos School</span>
             </div>
             <h1 className="text-2xl font-bold">Welcome back</h1>
             <p className="text-muted-foreground">
@@ -134,7 +134,7 @@ export default function LoginPage() {
                     id="email"
                     type="email"
                     name="email"
-                    placeholder="your.email@lincolnhigh.edu"
+                    placeholder="your.email@gmail.com"
                     value={formData.email}
                     onChange={handleChange}
                     required

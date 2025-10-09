@@ -41,20 +41,49 @@ export async function POST(req: Request) {
 
     const hashedPassword = await hashPassword(password);
 
-    const user = await prisma.userAdmission.create({
-      data: {
-        user_email,
-        firstName,
-        lastName: lastName || "", // Handle optional field
-        password: hashedPassword,
-        profileImage: profileImage || null,
-        id_picture: id_picture || null,
-        bio: bio || null,
-        contactNumber: contactNumber || null,
-        location: location || null,
-        interests: interests,
-      },
+    const existing = await prisma.user.findUnique({
+      where: { email: user_email },
+      select: { id: true },
     });
+    if (existing) {
+      return NextResponse.json(
+        {
+          status: 409,
+          message: "E-mail already registered",
+        },
+        { status: 409 }
+      );
+    } else {
+      const user = await prisma.userAdmission.create({
+        data: {
+          user_email,
+          firstName,
+          lastName: lastName || "", // Handle optional field
+          password: hashedPassword,
+          profileImage: profileImage || null,
+          id_picture: id_picture || null,
+          bio: bio || null,
+          contactNumber: contactNumber || null,
+          location: location || null,
+          interests: interests,
+        },
+      });
+    }
+
+    // const user = await prisma.userAdmission.create({
+    //   data: {
+    //     user_email,
+    //     firstName,
+    //     lastName: lastName || "", // Handle optional field
+    //     password: hashedPassword,
+    //     profileImage: profileImage || null,
+    //     id_picture: id_picture || null,
+    //     bio: bio || null,
+    //     contactNumber: contactNumber || null,
+    //     location: location || null,
+    //     interests: interests,
+    //   },
+    // });
 
     return NextResponse.json({
       message: "User registered successfully",

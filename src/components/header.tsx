@@ -111,9 +111,9 @@ export function Header() {
         <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
             <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">LHS</span>
+              <span className="text-white font-bold text-sm">RS</span>
             </div>
-            <span className="font-bold text-lg">Lincoln High School</span>
+            <span className="font-bold text-lg">Ramos School</span>
           </Link>
 
           <div className="flex items-center gap-4">
@@ -248,12 +248,6 @@ export function Header() {
                       <Link href="/request-role-change">
                         <User className="mr-2 h-4 w-4" />
                         <span>Role Change Request</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/settings">
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>Settings</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />

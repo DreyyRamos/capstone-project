@@ -66,11 +66,6 @@ const adminNavItems = [
     href: "/role-request",
     icon: Users,
   },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-  },
 ];
 
 const slugify = (str: string) => {

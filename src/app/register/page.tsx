@@ -25,6 +25,7 @@ import {
   X,
   Plus,
 } from "lucide-react";
+import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UploadButton } from "@/utils/uploadthing";
@@ -135,8 +136,10 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (!response.ok) {
+        toast(data.message || "Unable to create account!");
         setErrorMessage(data.message || "Unable to create account!");
       } else {
+        toast(data.message);
         setSuccessMessage(
           "Registration successful! Your application is pending admin approval."
         );
@@ -205,9 +208,9 @@ export default function RegisterPage() {
           <div className="text-center space-y-2">
             <div className="flex items-center justify-center gap-2 mb-4">
               <div className="h-10 w-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">LHS</span>
+                <span className="text-white font-bold">RS</span>
               </div>
-              <span className="font-bold text-xl">Lincoln High School</span>
+              <span className="font-bold text-xl">Ramos School</span>
             </div>
             <h1 className="text-2xl font-bold">Join our community</h1>
             <p className="text-muted-foreground">
@@ -282,7 +285,7 @@ export default function RegisterPage() {
                     <Input
                       id="user_email"
                       type="email"
-                      placeholder="john.doe@lincolnhigh.edu"
+                      placeholder="juandelacruz@gmail.com"
                       name="user_email"
                       value={formData.user_email}
                       onChange={handleChange}
@@ -574,7 +577,7 @@ export default function RegisterPage() {
         <div className="max-w-md space-y-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-green-900 dark:text-green-100 mb-4">
-              Join Lincoln High School&apos;s Digital Community
+              Join Ramos School&apos;s Digital Community
             </h2>
             <p className="text-green-700 dark:text-green-200">
               Connect with students, teachers, and staff in our vibrant online

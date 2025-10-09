@@ -47,7 +47,7 @@ export default function Dashboard() {
       <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white">
         <div className="relative z-10">
           <h1 className="text-4xl font-bold mb-4">
-            Welcome to Lincoln High School Publications
+            Welcome to Ramos School Publications
           </h1>
           <p className="text-xl mb-6 opacity-90">
             Stay connected with the latest news, articles, and discussions from
@@ -288,16 +288,6 @@ export default function Dashboard() {
                 <Link href="/profile">
                   <Users className="h-6 w-6" />
                   Edit Profile
-                </Link>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-20 flex-col gap-2 bg-transparent"
-                asChild
-              >
-                <Link href="/settings">
-                  <Calendar className="h-6 w-6" />
-                  Settings
                 </Link>
               </Button>
             </div>
