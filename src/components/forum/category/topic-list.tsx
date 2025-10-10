@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageSquare, Clock, Heart } from "lucide-react";
+import ContentDisplay from "@/components/content-display";
 import Link from "next/link";
 
 interface Author {
@@ -47,7 +48,7 @@ const TopicList = ({ topic }: TopicListProps) => {
               {/* {topic.isPinned && (
                             <Pin className="h-4 w-4 text-blue-600" />
                           )} */}
-              <h3 className="text-lg font-semibold leading-tight">
+              <h3 className="text-lg font-semibold leading-tight truncate max-w-[200px] sm:max-w-[300px]">
                 <Link
                   href={`/forum/topic/${topic?.forumId}`}
                   className="hover:text-blue-600 line-clamp-2"
@@ -58,7 +59,7 @@ const TopicList = ({ topic }: TopicListProps) => {
             </div>
 
             <p className="text-muted-foreground text-sm md:text-base line-clamp-3">
-              {truncate(topic?.description, 150)}
+              <ContentDisplay htmlContent={truncate(topic?.description, 150)} />
             </p>
 
             {topic.tags && topic.tags.length > 0 && (

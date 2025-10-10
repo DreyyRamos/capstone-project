@@ -214,7 +214,7 @@ const PublicationCommentsSection = ({
                   </div>
                 </div>
               ) : (
-                <p className="text-sm leading-relaxed">
+                <p className="text-sm leading-relaxed break-words max-w-prose">
                   {comment?.comment_content}
                 </p>
               )}
@@ -383,7 +383,7 @@ const PublicationCommentsSection = ({
                         </div>
                       </div>
                     ) : (
-                      <p className="text-sm leading-relaxed">
+                      <p className="text-sm leading-relaxed break-words max-w-prose">
                         {reply.reply_content}
                       </p>
                     )}
@@ -577,7 +577,7 @@ const PublicationCommentsSection = ({
                                   </div>
                                 </div>
                               ) : (
-                                <p className="text-sm leading-relaxed">
+                                <p className="text-sm leading-relaxed break-words max-w-prose">
                                   {childReply?.replyToReply_content}
                                 </p>
                               )}

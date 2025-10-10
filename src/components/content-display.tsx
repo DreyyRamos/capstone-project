@@ -15,7 +15,7 @@ const ContentDisplay = ({
 
   return (
     <div
-      className={`rounded-md min-h-[150px] border-input p-3 
+      className={`rounded-md min-h-[150px] border-input p-2 
           focus:outline-none
           [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4
           [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4  

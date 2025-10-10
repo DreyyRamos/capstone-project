@@ -37,6 +37,7 @@ export default function CreateForumTopicPage() {
   });
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
+  const [contentError, setContentError] = useState(false);
   const router = useRouter();
 
   const token = Cookies.get("token") || "";
@@ -93,6 +94,14 @@ export default function CreateForumTopicPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!formData.description.trim()) {
+      setContentError(true);
+      toast.error("Description is required.");
+      return;
+    }
+
+    setContentError(false);
     try {
       createForum(
         {
@@ -148,6 +157,9 @@ export default function CreateForumTopicPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="topicTitle">Topic Title *</Label>
+                  <p className="text-xs text-muted-foreground text-right">
+                    {formData.topicTitle.length}/255
+                  </p>
                   <Input
                     id="topicTitle"
                     placeholder="What would you like to discuss?"
@@ -155,6 +167,7 @@ export default function CreateForumTopicPage() {
                     value={formData.topicTitle}
                     onChange={handleChange}
                     required
+                    maxLength={255}
                   />
                   <p className="text-sm text-muted-foreground">
                     Choose a clear, descriptive title that summarizes your topic

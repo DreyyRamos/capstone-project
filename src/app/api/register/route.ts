@@ -58,7 +58,7 @@ export async function POST(req: Request) {
         data: {
           user_email,
           firstName,
-          lastName: lastName || "", // Handle optional field
+          lastName: lastName || "",
           password: hashedPassword,
           profileImage: profileImage || null,
           id_picture: id_picture || null,
@@ -69,21 +69,6 @@ export async function POST(req: Request) {
         },
       });
     }
-
-    // const user = await prisma.userAdmission.create({
-    //   data: {
-    //     user_email,
-    //     firstName,
-    //     lastName: lastName || "", // Handle optional field
-    //     password: hashedPassword,
-    //     profileImage: profileImage || null,
-    //     id_picture: id_picture || null,
-    //     bio: bio || null,
-    //     contactNumber: contactNumber || null,
-    //     location: location || null,
-    //     interests: interests,
-    //   },
-    // });
 
     return NextResponse.json({
       message: "User registered successfully",

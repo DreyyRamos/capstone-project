@@ -205,7 +205,11 @@ const CommentList = ({
                     value={editCommentContent}
                     onChange={(e) => setEditCommentContent(e.target.value)}
                     rows={3}
+                    maxLength={1000}
                   />
+                  <p className="text-xs text-muted-foreground text-right">
+                    {editingComment.length}/255
+                  </p>
                   <div className="flex items-center gap-2">
                     <Button
                       size="sm"
@@ -224,7 +228,9 @@ const CommentList = ({
                   </div>
                 </div>
               ) : (
-                <p className="leading-relaxed">{comment.comment_content}</p>
+                <p className="leading-relaxed break-words max-w-prose">
+                  {comment.comment_content}
+                </p>
               )}
 
               <div className="flex items-center gap-4">
@@ -266,7 +272,11 @@ const CommentList = ({
                   onChange={(e) => setReplyContent(e.target.value)}
                   rows={2}
                   className="resize-none"
+                  maxLength={1000}
                 />
+                <p className="text-xs text-muted-foreground text-right">
+                  {replyContent.length}/255
+                </p>
                 <div className="flex items-center justify-end gap-2 mt-2">
                   <Button variant="ghost" size="sm" onClick={handleCancelReply}>
                     Cancel
@@ -381,7 +391,7 @@ const CommentList = ({
                         </div>
                       </div>
                     ) : (
-                      <p className="text-sm leading-relaxed">
+                      <p className="text-sm leading-relaxed break-words max-w-prose">
                         {reply.reply_content}
                       </p>
                     )}
@@ -418,7 +428,7 @@ const CommentList = ({
 
                     {replyingToSecondLevel === reply.replyId && (
                       <div className="ml-3 md:ml-6 space-y-3">
-                        <div className="border-l-2 border-muted pl-2 md:pl-4">
+                        <div className="border-l-2 border-muted pl-2 md:pl-4 max-w-prose break-words">
                           <Textarea
                             placeholder="Write your reply..."
                             value={secondLevelReplyContent}
@@ -531,7 +541,7 @@ const CommentList = ({
                               {/* Nested reply content - editable if in edit mode */}
                               {editingNestedReply ===
                               childReply.replyToReplyId ? (
-                                <div className="space-y-2">
+                                <div className="space-y-2 max-w-prose">
                                   <Textarea
                                     value={editNestedReplyContent}
                                     onChange={(e) =>
@@ -564,7 +574,7 @@ const CommentList = ({
                                   </div>
                                 </div>
                               ) : (
-                                <p className="text-sm leading-relaxed">
+                                <p className="text-sm leading-relaxed break-words max-w-prose">
                                   {childReply.replyToReply_content}
                                 </p>
                               )}

@@ -45,6 +45,7 @@ export default function CreatePublicationPage() {
     isFeatured: false,
     category: "",
   });
+  const [contentError, setContentError] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
   const [isDraft, setIsDraft] = useState(true);
@@ -79,6 +80,14 @@ export default function CreatePublicationPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!formData.content.trim()) {
+      setContentError(true);
+      toast.error("Content is required.");
+      return;
+    }
+
+    setContentError(false);
+
     confirmAction(
       "Submit Publication",
       "This publication will be submitted and will be reviewed by editors.",
@@ -176,7 +185,11 @@ export default function CreatePublicationPage() {
                     name="title"
                     onChange={handleChange}
                     required
+                    maxLength={255}
                   />
+                  <p className="text-xs text-muted-foreground text-right">
+                    {formData.title.length}/255
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -187,6 +200,7 @@ export default function CreatePublicationPage() {
                     name="excerpt"
                     onChange={handleTextAreaChange}
                     rows={3}
+                    required
                   />
                   <p className="text-sm text-muted-foreground">
                     This will be shown in publication previews and search
@@ -328,7 +342,7 @@ export default function CreatePublicationPage() {
                   No image preview and excerpt will be shown.
                 </p>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 break-words">
                 {formData.title || formData.content ? (
                   <div className="space-y-3">
                     <div>
