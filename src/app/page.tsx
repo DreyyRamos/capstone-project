@@ -138,41 +138,50 @@ export default function Dashboard() {
               featuredPublications.map((publication: any) => (
                 <div
                   key={publication.pubId}
-                  className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors truncate"
+                  className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
                 >
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="h-8 w-8 flex-shrink-0">
                     <AvatarImage src={publication?.author?.profileImage} />
                     <AvatarFallback>
                       {publication?.author?.firstName[0]}{" "}
                       {publication?.author?.lastName[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <Link href={`/publications/${publication.pubId}`}>
-                      <h4 className="font-medium text-sm leading-tight hover:text-blue-400">
+                  <div className="flex-1 min-w-0 overflow-hidden">
+                    <Link
+                      href={`/publications/${publication.pubId}`}
+                      className="block"
+                    >
+                      <h4
+                        className="font-medium text-sm leading-tight hover:text-blue-400 break-words line-clamp-2"
+                        style={{ overflowWrap: "anywhere" }}
+                      >
                         {publication?.title}
                       </h4>
                     </Link>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      <span className="text-xs text-muted-foreground truncate">
                         by {publication?.author?.firstName}{" "}
                         {publication?.author?.lastName}
                       </span>
-                      <Badge variant="secondary" className="text-xs">
+                      <Badge
+                        variant="secondary"
+                        className="text-xs flex-shrink-0"
+                      >
                         {publication?.category}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                      <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         <Clock className="h-3 w-3" />
                         Date published:{" "}
                         {new Date(publication?.createdAt).toLocaleDateString()}
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         <MessageCircle className="h-3 w-3" />
                         {publication?.pubComments?.length}
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         <Heart className="h-3 w-3" />
                         {publication?.pubLikes?.length}
                       </div>
@@ -206,39 +215,40 @@ export default function Dashboard() {
             {forums?.posts?.slice(0, 3).map((topic: any, index: number) => (
               <div
                 key={index}
-                className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors truncate"
+                className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
               >
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 flex-shrink-0">
                   <AvatarImage src={`/placeholder.svg?height=32&width=32`} />
                   <AvatarFallback>
                     {topic?.author?.firstName[0]} {topic?.author?.lastName[0]}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <Link href={`/forum/topic/${topic.forumId}`}>
-                      <h4 className="font-medium text-sm leading-tight hover:text-blue-400">
-                        {topic.topicTitle}
-                      </h4>
-                    </Link>
-                    {/* {topic.isActive && (
-                      <div className="w-2 h-2 bg-green-500 rounded-full" />
-                    )} */}
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-muted-foreground">
+                <div className="flex-1 min-w-0 overflow-hidden">
+                  <Link
+                    href={`/forum/topic/${topic.forumId}`}
+                    className="block"
+                  >
+                    <h4
+                      className="font-medium text-sm leading-tight hover:text-blue-400 break-words line-clamp-2"
+                      style={{ overflowWrap: "anywhere" }}
+                    >
+                      {topic.topicTitle}
+                    </h4>
+                  </Link>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <span className="text-xs text-muted-foreground truncate">
                       by {topic?.author?.firstName} {topic?.author?.lastName}
                     </span>
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-xs flex-shrink-0">
                       {topic.category}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       <MessageCircle className="h-3 w-3" />
                       {topic?.forumComments?.length} comments
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       <Clock className="h-3 w-3" />
                       Date created:{" "}
                       {new Date(topic?.createdAt).toLocaleDateString()}

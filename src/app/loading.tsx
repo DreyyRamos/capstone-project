@@ -1,19 +1,44 @@
-// app/loading.tsx
+// app/dashboard/loading.tsx
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { BookOpen, MessageSquare, Users, Calendar } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  MessageSquare,
+  Trophy,
+  Star,
+  FileText,
+  Users,
+  Award,
+  BookOpen,
+  TrendingUp,
+  ArrowRight,
+  Clock,
+  Heart,
+  MessageCircle,
+} from "lucide-react";
 
-export default function HomePageLoading() {
+export default function DashboardLoading() {
   return (
     <div className="space-y-8 animate-pulse">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-8">
-        <div className="max-w-4xl">
+      <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white">
+        <div className="relative z-10">
           <Skeleton className="h-10 w-96 mb-4" />
           <Skeleton className="h-6 w-full mb-6" />
           <div className="flex gap-4">
@@ -24,19 +49,19 @@ export default function HomePageLoading() {
               disabled
               size="lg"
               variant="outline"
-              className="text-white border-white"
+              className="border-white text-white"
             >
               Join Forum
             </Button>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Stats Section */}
       <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[...Array(3)].map((_, i) => (
           <Card key={i}>
-            <div className="p-6">
+            <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-muted rounded-lg">
                   {i === 0 && (
@@ -54,105 +79,135 @@ export default function HomePageLoading() {
                   <Skeleton className="h-4 w-24" />
                 </div>
               </div>
-            </div>
+            </CardContent>
           </Card>
         ))}
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid gap-6 lg:grid-cols-2">
         {/* Featured Publications */}
-        <section className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-6">
-            <Skeleton className="h-8 w-48" />
-            <Button disabled variant="outline">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <Skeleton className="h-6 w-48 mb-1" />
+              <Skeleton className="h-4 w-64" />
+            </div>
+            <Button disabled variant="outline" size="sm">
               View All
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-          </div>
-          <div className="space-y-6">
-            {[...Array(2)].map((_, i) => (
-              <Card key={i} className="overflow-hidden">
-                <div className="md:flex">
-                  <div className="md:w-1/3 p-1.5">
-                    <Skeleton className="w-full h-48 md:h-full rounded-md" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="flex items-start space-x-3 p-3 rounded-lg"
+              >
+                <Avatar className="h-8 w-8 flex-shrink-0">
+                  <AvatarFallback>
+                    <Skeleton className="h-full w-full rounded-full" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0 overflow-hidden">
+                  <Skeleton className="h-4 w-full mb-1" />
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-3 w-16 rounded-full" />
                   </div>
-                  <div className="md:w-2/3 p-6">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Skeleton className="h-5 w-16 rounded-full" />
-                      <Skeleton className="h-4 w-20" />
+                  <div className="flex items-center gap-4 mt-2 flex-wrap">
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <Clock className="h-3 w-3 text-muted-foreground" />
+                      <Skeleton className="h-3 w-28" />
                     </div>
-                    <Skeleton className="h-6 w-3/4 mb-2" />
-                    <Skeleton className="h-4 w-full mb-1" />
-                    <Skeleton className="h-4 w-5/6 mb-4" />
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback>
-                            <Skeleton className="h-full w-full rounded-full" />
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <Skeleton className="h-4 w-24 mb-1" />
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3 text-muted-foreground" />
-                            <Skeleton className="h-3 w-28" />
-                          </div>
-                        </div>
-                      </div>
-                      <Button disabled variant="outline" size="sm">
-                        Read More
-                      </Button>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <MessageCircle className="h-3 w-3 text-muted-foreground" />
+                      <Skeleton className="h-3 w-6" />
+                    </div>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <Heart className="h-3 w-3 text-muted-foreground" />
+                      <Skeleton className="h-3 w-6" />
                     </div>
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
-          </div>
-        </section>
+          </CardContent>
+        </Card>
 
         {/* Recent Forum Activity */}
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <Skeleton className="h-8 w-48" />
-            <Button disabled variant="outline">
-              View Forum
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <Skeleton className="h-6 w-48 mb-1" />
+              <Skeleton className="h-4 w-56" />
+            </div>
+            <Button disabled variant="outline" size="sm">
+              View Forums
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-          </div>
-          <div className="space-y-4">
+          </CardHeader>
+          <CardContent className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <Card key={i}>
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <Skeleton className="h-4 w-16 rounded-full" />
-                    <Skeleton className="h-3 w-20" />
-                  </div>
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <div className="flex items-center justify-between text-sm">
+              <div
+                key={i}
+                className="flex items-start space-x-3 p-3 rounded-lg"
+              >
+                <Avatar className="h-8 w-8 flex-shrink-0">
+                  <AvatarFallback>
+                    <Skeleton className="h-full w-full rounded-full" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0 overflow-hidden">
+                  <Skeleton className="h-4 w-full mb-1" />
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
                     <Skeleton className="h-3 w-24" />
-                    <Skeleton className="h-3 w-16" />
+                    <Skeleton className="h-3 w-16 rounded-full" />
+                  </div>
+                  <div className="flex items-center gap-4 mt-2 flex-wrap">
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <MessageCircle className="h-3 w-3 text-muted-foreground" />
+                      <Skeleton className="h-3 w-12" />
+                    </div>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <Clock className="h-3 w-3 text-muted-foreground" />
+                      <Skeleton className="h-3 w-28" />
+                    </div>
                   </div>
                 </div>
-              </Card>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-6 w-24 mb-1" />
+          <Skeleton className="h-4 w-48" />
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {[...Array(3)].map((_, i) => (
+              <Button
+                key={i}
+                disabled
+                variant="outline"
+                className="h-20 flex-col gap-2 bg-transparent"
+              >
+                {i === 0 && <BookOpen className="h-6 w-6" />}
+                {i === 1 && <MessageSquare className="h-6 w-6" />}
+                {i === 2 && <Users className="h-6 w-6" />}
+                <span className="text-xs">
+                  {i === 0 && "Create Publication"}
+                  {i === 1 && "Start Discussion"}
+                  {i === 2 && "Edit Profile"}
+                </span>
+              </Button>
             ))}
           </div>
-
-          <Card className="mt-6">
-            <div>
-              <Skeleton className="h-5 w-32" />
-            </div>
-            <div className="space-y-3">
-              <Button disabled className="w-full" variant="outline">
-                Create Publication
-              </Button>
-              <Button disabled className="w-full" variant="outline">
-                Start Discussion
-              </Button>
-              <Button disabled className="w-full" variant="outline">
-                View Profile
-              </Button>
-            </div>
-          </Card>
-        </section>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
