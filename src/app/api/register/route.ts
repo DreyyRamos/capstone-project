@@ -41,11 +41,17 @@ export async function POST(req: Request) {
 
     const hashedPassword = await hashPassword(password);
 
-    const existing = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email: user_email },
       select: { id: true },
     });
-    if (existing) {
+
+    const existingEmailInAdmission = await prisma.userAdmission.findUnique({
+      where: { user_email: user_email },
+      select: { admission_id: true },
+    });
+
+    if (existingUser || existingEmailInAdmission) {
       return NextResponse.json(
         {
           status: 409,

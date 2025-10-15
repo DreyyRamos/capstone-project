@@ -31,7 +31,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: Home },
+  { name: "Homepage", href: "/", icon: Home },
   { name: "Publications", href: "/publications", icon: BookOpen },
   { name: "Forum", href: "/forum", icon: MessageSquare },
   { name: "Moderation", href: "/moderation", icon: Flag },

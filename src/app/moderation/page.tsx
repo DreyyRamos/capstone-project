@@ -310,7 +310,7 @@ export default function ModerationPage() {
       color: "text-yellow-600",
     },
     {
-      label: "Total Reports",
+      label: "Total Pending Reports",
       value: reportsWithoutAction.length.toString(),
       icon: Ban,
       color: "text-red-600",

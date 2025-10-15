@@ -31,11 +31,13 @@ import {
   Send,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { useUserQuery } from "@/hooks/useUser";
 import RoleRequestLoading from "./loading";
 
 export default function RoleRequestPage() {
+  const router = useRouter();
   const token = Cookies.get("token") || "";
   const {
     data: user,
@@ -116,7 +118,14 @@ export default function RoleRequestPage() {
       };
 
       // Use the mutation properly
-      await roleChange(requestData);
+      await roleChange(requestData, {
+        onSuccess: () => {
+          toast(
+            "Your role change request has been submitted successfully! You will receive an email notification once it's reviewed by an administrator."
+          );
+          router.push("/");
+        },
+      });
 
       setSuccessMessage(
         "Your role change request has been submitted successfully! You will receive an email notification once it's reviewed by an administrator."

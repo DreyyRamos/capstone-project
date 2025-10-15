@@ -138,7 +138,7 @@ export default function Dashboard() {
               featuredPublications.map((publication: any) => (
                 <div
                   key={publication.pubId}
-                  className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
+                  className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors truncate"
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={publication?.author?.profileImage} />
@@ -206,7 +206,7 @@ export default function Dashboard() {
             {forums?.posts?.slice(0, 3).map((topic: any, index: number) => (
               <div
                 key={index}
-                className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
+                className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors truncate"
               >
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={`/placeholder.svg?height=32&width=32`} />

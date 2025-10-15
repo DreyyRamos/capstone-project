@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   MoreHorizontal,
-  Mail,
+  User,
   Shield,
   MessageSquare,
   BookOpen,
@@ -146,9 +147,11 @@ const UsersList = ({
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Mail className="mr-2 h-4 w-4" />
-              Send Message
+            <DropdownMenuItem asChild>
+              <Link href={`/visit/user/${user.id}`}>
+                <User className="mr-2 h-4 w-4" />
+                Visit Profile
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleEditPermissions(user)}>
               <Shield className="mr-2 h-4 w-4" />

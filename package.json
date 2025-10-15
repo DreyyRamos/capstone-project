@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "prisma": {
+    "seed": "ts-node -P prisma/tsconfig.seed.json prisma/seed.ts"
+  },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@getbrevo/brevo": "^3.0.1",

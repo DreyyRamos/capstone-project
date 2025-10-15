@@ -290,7 +290,6 @@ export function ReportModal({
                       Please note:
                     </p>
                     <p className="text-amber-700">
-                      False reports may result in restrictions on your account.
                       Only report content that genuinely violates our community
                       guidelines.
                     </p>

@@ -116,7 +116,7 @@ const Drafts = ({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link
-                    href={`/publications/${publication.pubId}`}
+                    href={`/publications/${publication.pubId}/preview`}
                     className="flex items-center"
                   >
                     <Eye className="mr-2 h-4 w-4" />

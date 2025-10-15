@@ -70,12 +70,16 @@ export default function LoginPage() {
         setSuccessMessage("Login successful! Redirecting to homepage...");
         console.log("User logged in:", user);
 
-        router.push("/");
-
-        // Shorter delay since queries are already invalidated
-        // setTimeout(() => {
-        //   router.push("/");
-        // }, 1000);
+        switch (user.role) {
+          case "EDITOR":
+            router.push("/content-manager");
+            break;
+          case "MODERATOR":
+            router.push("/moderation");
+            break;
+          default:
+            router.push("/");
+        }
       } else {
         setLoading(false);
         setErrorMessage(
@@ -89,17 +93,6 @@ export default function LoginPage() {
     }
   };
 
-  // Show loading spinner while processing
-  // if (loading && !successMessage) {
-  //   return (
-  //     <div className="flex items-center justify-center min-h-screen">
-  //       <div className="text-center">
-  //         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-  //         <p className="mt-2 text-gray-600">Logging in...</p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="min-h-screen flex">

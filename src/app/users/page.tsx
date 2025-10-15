@@ -275,7 +275,7 @@ export default function UsersPage() {
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="reason">Reason for change</Label>
+              <Label htmlFor="reason">Reason for change (optional)</Label>
               <Textarea
                 id="reason"
                 placeholder="Please provide a reason for this role change..."

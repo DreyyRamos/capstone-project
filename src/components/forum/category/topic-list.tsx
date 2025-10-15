@@ -58,9 +58,9 @@ const TopicList = ({ topic }: TopicListProps) => {
               </h3>
             </div>
 
-            <p className="text-muted-foreground text-sm md:text-base line-clamp-3">
-              <ContentDisplay htmlContent={truncate(topic?.description, 150)} />
-            </p>
+            {/* <p className="text-muted-foreground text-sm md:text-base line-clamp-3"> */}
+            <ContentDisplay htmlContent={truncate(topic?.description, 150)} />
+            {/* </p> */}
 
             {topic.tags && topic.tags.length > 0 && (
               <div className="flex flex-wrap gap-1">
