@@ -29,13 +29,17 @@ const RecentActivities = ({ activity, index, userActivity }: ActivityProps) => {
             {activity.type === "PUBLISHED" && (
               <>
                 This user <span className="font-medium">published</span>{" "}
-                <span className="font-medium">{activity.title}</span>
+                <span className="font-medium break-words">
+                  {activity.title}
+                </span>
               </>
             )}
             {activity.type === "REPLIED" && (
               <>
                 This user <span className="font-medium">replied to</span>{" "}
-                <span className="font-medium">{activity.parentTitle}</span>
+                <span className="font-medium break-words">
+                  {activity.parentTitle}
+                </span>
               </>
             )}
           </p>

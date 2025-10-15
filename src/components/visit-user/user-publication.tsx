@@ -24,8 +24,8 @@ const UserPublication = ({ pub, index, user }: PubProps) => {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm">
-            You <span className="font-medium">published</span>{" "}
-            <span className="font-medium">{pub?.title}</span>
+            This user <span className="font-medium">published</span>{" "}
+            <span className="font-medium break-words">{pub?.title}</span>
           </p>
           <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
             <Badge variant="outline">{pub?.category}</Badge>

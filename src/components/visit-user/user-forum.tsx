@@ -20,8 +20,9 @@ const UserForum = ({ forum, index, user }: ForumProps) => {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm">
-            You <span className="font-medium">created a forum titled </span>{" "}
-            <span className="font-medium">
+            This user{" "}
+            <span className="font-medium">created a forum titled </span>{" "}
+            <span className="font-medium break-words">
               <b>{forum?.topicTitle}</b>
             </span>
           </p>
