@@ -133,7 +133,7 @@ const CommentList = ({
 }: CommentListProps) => {
   return (
     <Card key={comment.commentId}>
-      <CardContent className="p-6">
+      <CardContent className="p-2">
         <div className="space-y-4">
           <div className="flex items-start gap-4">
             <Avatar className="h-10 w-10">
@@ -202,14 +202,11 @@ const CommentList = ({
               {editingComment === comment.commentId ? (
                 <div className="space-y-2">
                   <Textarea
+                    className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                     value={editCommentContent}
                     onChange={(e) => setEditCommentContent(e.target.value)}
                     rows={3}
-                    maxLength={1000}
                   />
-                  <p className="text-xs text-muted-foreground text-right">
-                    {editingComment.length}/255
-                  </p>
                   <div className="flex items-center gap-2">
                     <Button
                       size="sm"
@@ -228,7 +225,7 @@ const CommentList = ({
                   </div>
                 </div>
               ) : (
-                <p className="leading-relaxed break-words max-w-prose">
+                <p className="leading-relaxed break-words break-all max-w-prose whitespace-pre-wrap">
                   {comment.comment_content}
                 </p>
               )}
@@ -271,12 +268,8 @@ const CommentList = ({
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
                   rows={2}
-                  className="resize-none"
-                  maxLength={1000}
+                  className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                 />
-                <p className="text-xs text-muted-foreground text-right">
-                  {replyContent.length}/255
-                </p>
                 <div className="flex items-center justify-end gap-2 mt-2">
                   <Button variant="ghost" size="sm" onClick={handleCancelReply}>
                     Cancel
@@ -364,6 +357,7 @@ const CommentList = ({
                     {editingReply === reply.replyId ? (
                       <div className="space-y-2">
                         <Textarea
+                          className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                           value={editReplyContent}
                           onChange={(e) => setEditReplyContent(e.target.value)}
                           rows={2}
@@ -391,7 +385,7 @@ const CommentList = ({
                         </div>
                       </div>
                     ) : (
-                      <p className="text-sm leading-relaxed break-words max-w-prose">
+                      <p className="leading-relaxed break-words break-all max-w-prose whitespace-pre-wrap">
                         {reply.reply_content}
                       </p>
                     )}
@@ -436,7 +430,7 @@ const CommentList = ({
                               setSecondLevelReplyContent(e.target.value)
                             }
                             rows={2}
-                            className="resize-none"
+                            className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                           />
                           <div className="flex items-center justify-end gap-2 mt-2">
                             <Button
@@ -548,6 +542,7 @@ const CommentList = ({
                                       setEditNestedReplyContent(e.target.value)
                                     }
                                     rows={2}
+                                    className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                                   />
                                   <div className="flex items-center gap-2">
                                     <Button
@@ -574,7 +569,7 @@ const CommentList = ({
                                   </div>
                                 </div>
                               ) : (
-                                <p className="text-sm leading-relaxed break-words max-w-prose">
+                                <p className="leading-relaxed break-words break-all max-w-prose whitespace-pre-wrap">
                                   {childReply.replyToReply_content}
                                 </p>
                               )}

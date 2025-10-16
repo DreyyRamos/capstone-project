@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -18,9 +19,11 @@ import {
   Search,
   MessageSquare,
   Users,
+  Clock,
   TrendingUp,
   ArrowLeft,
   Plus,
+  Heart,
 } from "lucide-react";
 import Link from "next/link";
 import { useFetchForumByCategory } from "@/hooks/useForum";
@@ -74,6 +77,9 @@ export default function ForumCategoryPage({ params }: PageProps) {
 
   const { data: topics, isLoading } = useFetchForumByCategory(category);
 
+  const truncate = (str: string, max = 100) =>
+    str?.length > max ? str.slice(0, max) + "…" : str;
+
   console.log("category", topics);
   console.log("decoded category", decodedCategory);
   console.log("processed category", category);
@@ -120,12 +126,6 @@ export default function ForumCategoryPage({ params }: PageProps) {
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
           );
 
-        // case "popular":
-        //   // Sort by views
-        //   const aPopularity = (a.views || 0) + (a.forumLikes?.length || 0) + (a.forumComments?.length || 0)
-        //   const bPopularity = (b.views || 0) + (b.forumLikes?.length || 0) + (b.forumComments?.length || 0)
-        //   return bPopularity - aPopularity
-
         case "replies":
           return (
             (b.forumComments?.length || 0) - (a.forumComments?.length || 0)
@@ -153,14 +153,14 @@ export default function ForumCategoryPage({ params }: PageProps) {
   // Calculate statistics from filtered topics
   const stats = useMemo(() => {
     const totalTopics = filteredAndSortedTopics.length;
-    const totalReplies = filteredAndSortedTopics.reduce(
+    const totalPosts = filteredAndSortedTopics.reduce(
       (sum, topic) => sum + (topic.forumComments?.length || 0),
       0
     );
     const avgReplies =
-      totalTopics > 0 ? Math.floor(totalReplies / totalTopics) : 0;
+      totalTopics > 0 ? Math.floor(totalPosts / totalTopics) : 0;
 
-    return { totalTopics, totalReplies, avgReplies };
+    return { totalTopics, totalPosts, avgReplies };
   }, [filteredAndSortedTopics]);
 
   if (isLoading) {
@@ -168,7 +168,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <AuthModal
         isOpen={isOpen}
         onClose={closeModal}
@@ -176,25 +176,28 @@ export default function ForumCategoryPage({ params }: PageProps) {
         redirectTo={redirectTo}
       />
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button asChild variant="ghost">
+      <div className="space-y-3 md:space-y-0 md:flex md:items-center md:gap-4">
+        <Button asChild variant="ghost" size="sm" className="w-fit">
           <Link href="/forum">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Forum
+            <span className="hidden sm:inline">Back to Forum</span>
+            <span className="sm:hidden">Back</span>
           </Link>
         </Button>
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold">{decodedCategory}</h1>
-            <Badge className="bg-blue-100 text-blue-800">
+        <div className="flex-1 space-y-2">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <h1 className="text-2xl md:text-3xl font-bold">
+              {decodedCategory}
+            </h1>
+            <Badge className="bg-blue-100 text-blue-800 w-fit">
               {stats.totalTopics} topics
             </Badge>
           </div>
-          <p className="text-muted-foreground">
+          <p className="text-sm md:text-base text-muted-foreground">
             Discussion about {decodedCategory.toLowerCase()}
           </p>
         </div>
-        <Button asChild>
+        <Button asChild size="sm" className="w-full sm:w-auto">
           <a className="cursor-pointer" onClick={startDiscussion}>
             <Plus className="mr-2 h-4 w-4" />
             New Topic
@@ -203,42 +206,54 @@ export default function ForumCategoryPage({ params }: PageProps) {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 md:grid-cols-3 gap-2 md:gap-6">
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <MessageSquare className="h-6 w-6 text-blue-600" />
+          <CardContent className="p-3 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+              <div className="p-2 md:p-3 bg-blue-100 rounded-lg w-fit">
+                <MessageSquare className="h-4 w-4 md:h-6 md:w-6 text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.totalTopics}</p>
-                <p className="text-sm text-muted-foreground">Topics</p>
+                <p className="text-lg md:text-2xl font-bold">
+                  {stats.totalTopics}
+                </p>
+                <p className="text-xs md:text-sm text-muted-foreground">
+                  Topics
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <Users className="h-6 w-6 text-green-600" />
+          <CardContent className="p-3 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+              <div className="p-2 md:p-3 bg-green-100 rounded-lg w-fit">
+                <Users className="h-4 w-4 md:h-6 md:w-6 text-green-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.totalReplies}</p>
-                <p className="text-sm text-muted-foreground">Replies</p>
+                <p className="text-lg md:text-2xl font-bold">
+                  {stats.totalPosts}
+                </p>
+                <p className="text-xs md:text-sm text-muted-foreground">
+                  Posts
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <TrendingUp className="h-6 w-6 text-purple-600" />
+          <CardContent className="p-3 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+              <div className="p-2 md:p-3 bg-purple-100 rounded-lg w-fit">
+                <TrendingUp className="h-4 w-4 md:h-6 md:w-6 text-purple-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.avgReplies}</p>
-                <p className="text-sm text-muted-foreground">Avg. Replies</p>
+                <p className="text-lg md:text-2xl font-bold">
+                  {stats.avgReplies}
+                </p>
+                <p className="text-xs md:text-sm text-muted-foreground">
+                  Avg. Replies
+                </p>
               </div>
             </div>
           </CardContent>
@@ -247,15 +262,15 @@ export default function ForumCategoryPage({ params }: PageProps) {
 
       {/* Filters */}
       <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col sm:flex-row gap-4">
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={`Search ${decodedCategory.toLowerCase()} topics, authors, or tags...`}
+                placeholder={`Search ${decodedCategory.toLowerCase()} topics...`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 text-sm md:text-base"
               />
             </div>
             <Select value={sortBy} onValueChange={setSortBy}>
@@ -265,7 +280,6 @@ export default function ForumCategoryPage({ params }: PageProps) {
               <SelectContent>
                 <SelectItem value="recent">Most Recent</SelectItem>
                 <SelectItem value="oldest">Oldest First</SelectItem>
-                <SelectItem value="popular">Most Popular</SelectItem>
                 <SelectItem value="replies">Most Replies</SelectItem>
                 <SelectItem value="likes">Most Liked</SelectItem>
                 <SelectItem value="alphabetical">A to Z</SelectItem>
@@ -276,8 +290,8 @@ export default function ForumCategoryPage({ params }: PageProps) {
       </Card>
 
       {/* Results count */}
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <p className="text-xs md:text-sm text-muted-foreground">
           Showing {filteredAndSortedTopics.length} of {topics?.length || 0}{" "}
           topics
         </p>
@@ -291,8 +305,10 @@ export default function ForumCategoryPage({ params }: PageProps) {
       {/* Topics List */}
       <div className="space-y-4">
         {filteredAndSortedTopics.length > 0 ? (
-          filteredAndSortedTopics.map((topic: ForumTopic) => (
-            <TopicList key={topic.forumId} topic={topic} />
+          filteredAndSortedTopics.map((topic: ForumTopic, i: number) => (
+            <div key={i}>
+              <TopicList topic={topic} />
+            </div>
           ))
         ) : (
           <Card>

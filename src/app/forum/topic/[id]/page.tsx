@@ -597,14 +597,10 @@ export default function ForumTopicPage({ params }: PageProps) {
               value={comment_content}
               onChange={(e) => setCommentContent(e.target.value)}
               rows={4}
-              maxLength={1000}
             />
             <div className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
                 Be respectful and constructive in your responses
-              </p>
-              <p className="text-xs text-muted-foreground text-right">
-                {comment_content.length}/1000
               </p>
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setCommentContent("")}>

@@ -126,7 +126,7 @@ const ApplicationList = ({
         </div>
       </div>
 
-      <div className="flex flex-row sm:flex-col lg:flex-row items-center gap-2 shrink-0">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0 w-full sm:w-auto">
         <Dialog>
           <DialogTrigger asChild>
             <Button
@@ -330,23 +330,25 @@ const ApplicationList = ({
             </ScrollArea>
             {/* Only show action buttons if status is PENDING */}
             {admission.status === "PENDING" && (
-              <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4 border-t mb-2">
+              <>
                 <Button
                   variant="outline"
+                  size="sm"
                   onClick={() => handleReject(admission)}
                   className="w-full sm:w-auto"
                 >
-                  <XCircle className="h-4 w-4 mr-2" />
-                  Reject
+                  <XCircle className="h-4 w-4 sm:mr-2" />
+                  <span className="sm:inline">Reject</span>
                 </Button>
                 <Button
+                  size="sm"
                   onClick={() => handleApprove(admission)}
                   className="w-full sm:w-auto"
                 >
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Approve
+                  <CheckCircle className="h-4 w-4 sm:mr-2" />
+                  <span className="sm:inline">Approve</span>
                 </Button>
-              </div>
+              </>
             )}
           </DialogContent>
         </Dialog>

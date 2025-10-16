@@ -48,7 +48,7 @@ const TopicList = ({ topic }: TopicListProps) => {
               {/* {topic.isPinned && (
                             <Pin className="h-4 w-4 text-blue-600" />
                           )} */}
-              <h3 className="text-lg font-semibold leading-tight truncate max-w-[200px] sm:max-w-[300px]">
+              <h3 className="text-lg font-semibold leading-tight truncate">
                 <Link
                   href={`/forum/topic/${topic?.forumId}`}
                   className="hover:text-blue-600 line-clamp-2"
@@ -58,7 +58,7 @@ const TopicList = ({ topic }: TopicListProps) => {
               </h3>
             </div>
 
-            {/* <p className="text-muted-foreground text-sm md:text-base line-clamp-3"> */}
+            {/* <p className="text-muted-foreground text-sm md:text-base line-clamp-3 truncate break-words"> */}
             <ContentDisplay htmlContent={truncate(topic?.description, 150)} />
             {/* </p> */}
 
@@ -113,7 +113,7 @@ const TopicList = ({ topic }: TopicListProps) => {
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
-                Created at: {new Date(topic.createdAt).toLocaleDateString()}
+                Updated {new Date(topic.updatedAt).toLocaleDateString()}
               </span>
             </div>
           </div>
