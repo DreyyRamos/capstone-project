@@ -60,7 +60,6 @@ export default function CreatePublicationPage() {
     "Academic",
     "News",
     "Events",
-    "Library",
     "Environment",
     "Technology",
     "Health",

@@ -1,7 +1,7 @@
-// prisma/seed.ts
-import prisma from "@/lib/prisma";
-import { Role } from "@/generated/prisma";
+import { PrismaClient, Role } from "../generated/prisma/index.js";
 import bcrypt from "bcryptjs";
+
+const prisma = new PrismaClient();
 
 async function main() {
   const adminEmail = "admin@email.com";
