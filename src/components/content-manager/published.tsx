@@ -29,6 +29,7 @@ enum Status {
   PUBLISHED = 1,
   ARCHIVED = 2,
   PENDING_REVIEW = 3,
+  REJECTED = 4,
 }
 
 interface Author {

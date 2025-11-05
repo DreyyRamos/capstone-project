@@ -18,6 +18,7 @@ import {
   editReplyToReplyPub,
   deleteReplyToReplyPub,
   fetchCountPubs,
+  fetchRejectedPubs,
 } from "@/services/publication";
 
 interface Publication {
@@ -109,6 +110,24 @@ export const useArchivedPostsQuery = (token: string) => {
 
   return { data, isLoading, isError, error, refetch };
 };
+
+export const useRejectedPostsQuery = (token: string) => {
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    // A unique query key to cache this data separately from all posts
+    queryKey: ["rejected-pubs"],
+
+    // The query function is the service you already created
+    queryFn: async () => await fetchRejectedPubs(token),
+
+    // refetchOnWindowFocus: false,
+    // refetchOnMount: false,
+    // refetchOnReconnect: false,
+    // refetchInterval: false,
+  });
+
+  return { data, isLoading, isError, error, refetch };
+};
+
 
 // Separate hook for fetching a single post by ID
 

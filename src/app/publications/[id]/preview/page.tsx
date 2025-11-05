@@ -8,13 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Heart, Flag, ArrowLeft, Clock, Star } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
-import LikeButton from "@/components/like-buttons/publication-like-button";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
@@ -30,34 +23,16 @@ import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
 import { useUserQuery } from "@/hooks/useUser";
 import { useConfirmation } from "@/components/confirmation-provider";
 import PublicationDetailLoading from "../loading";
-import PublicationCommentsSection from "@/components/publication/publication-comments";
+import { useEditorQuery } from "@/hooks/useEditor";
+import { useRoleGate } from "@/utils/userRoleGate";
+import { useRouter } from "next/navigation";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
 export default function PublicationDetailPage({ params }: PageProps) {
-  const { confirmDelete } = useConfirmation();
-  const [comment_content, setCommentContent] = useState("");
-  const [isLiked, setIsLiked] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const [replyContent, setReplyContent] = useState("");
-  const [replyingToSecondLevel, setReplyingToSecondLevel] = useState<
-    string | null
-  >(null);
-  const [secondLevelReplyContent, setSecondLevelReplyContent] = useState("");
-
-  // Edit states
-  const [editingComment, setEditingComment] = useState<string | null>(null);
-  const [editCommentContent, setEditCommentContent] = useState("");
-  const [editingReply, setEditingReply] = useState<string | null>(null);
-  const [editReplyContent, setEditReplyContent] = useState("");
-  const [editingNestedReply, setEditingNestedReply] = useState<string | null>(
-    null
-  );
-  const [editNestedReplyContent, setEditNestedReplyContent] = useState("");
-
+  const { id } = use(params);
   const { isOpen, action, redirectTo, requireAuth, closeModal } =
     useAuthModal();
   const {
@@ -70,16 +45,13 @@ export default function PublicationDetailPage({ params }: PageProps) {
     reportedUserId,
   } = useReportModal();
 
-  const { id } = use(params);
+  const router = useRouter();
 
   const token = Cookies.get("token") || "";
+  useRoleGate(["ADMIN", "EDITOR"], token);
   const { data: currentUser } = useUserQuery(token);
   console.log("current user", currentUser);
   const { data: publication, isLoading, isError } = useFetchOnePostQuery(id);
-  const { makeFeatured, isLoading: isCurrentlyLoading } = useIsFeatured(token);
-  const { commentToPost } = usePostByIdQuery(token, publication?.pubId);
-  const { mutate: addTopReply } = useAddTopReply(token);
-  const { mutate: addNestedReply } = useAddNestedReply(token);
   const { user } = useTokenUser();
   const userRole = user?.role || "STUDENT";
   const { StatusModal, checkComment, checkLike, checkShare, checkAndExecute } =
@@ -89,23 +61,32 @@ export default function PublicationDetailPage({ params }: PageProps) {
       },
     });
 
-  const handleMakeFeature = (id: string) => {
-    if (requireAuth("feature this publication")) {
-      makeFeatured(id);
+  const { data: toReview, approve, reject } = useEditorQuery(token);
+
+  const handleApprove = async (postId: string) => {
+    try {
+      await approve(postId, {
+        onSuccess: () => {
+          toast("Publication approved!");
+          router.push("/content-manager");
+        },
+      });
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const handleReportPublication = () => {
-    checkAndExecute("report", async () => {
-      if (requireAuth("report this publication.")) {
-        openReportModal(
-          "PUBLICATION",
-          publication?.pubId,
-          publication?.title,
-          publication?.authorId
-        );
-      }
-    });
+  const handleReject = async (postId: string) => {
+    try {
+      await reject(postId, {
+        onSuccess: () => {
+          toast("Publication rejected!");
+          router.push("/content-manager");
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (isLoading) {
@@ -183,7 +164,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
               <Button
                 variant="outline"
                 size="sm"
-                // onClick={handleReportPublication}
+                onClick={() => handleApprove(id)}
               >
                 Approve
               </Button>
@@ -191,7 +172,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
               <Button
                 variant="outline"
                 size="sm"
-                // onClick={handleReportPublication}
+                onClick={() => handleReject(id)}
               >
                 Reject
               </Button>

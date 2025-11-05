@@ -92,6 +92,26 @@ export const approvePost = async (
   return response.json();
 };
 
+export const rejectPost = async (
+  token: string,
+  postId: string
+  //   newData: any
+) => {
+  const response = await fetch(
+    `/api/publications/editor/toReview/${postId}/reject`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status: "REJECTED" }),
+    }
+  );
+  if (!response.ok) throw new Error("Error in rejecting post");
+  return response.json();
+};
+
 export const archivePost = async (
   token: string,
   postId: string

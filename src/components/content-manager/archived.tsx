@@ -21,6 +21,7 @@ import {
   Trash2,
   MoreHorizontal,
   Calendar,
+  CircleOff,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -29,6 +30,7 @@ enum Status {
   PUBLISHED = 1,
   ARCHIVED = 2,
   PENDING_REVIEW = 3,
+  REJECTED = 4,
 }
 
 interface Author {
@@ -70,7 +72,8 @@ const Archived = ({
     DRAFT: "bg-gray-100 text-gray-800",
     PENDING_REVIEW: "bg-yellow-100 text-yellow-800",
     PUBLISHED: "bg-green-100 text-green-800",
-    ARCHIVED: "bg-red-100 text-red-800",
+    ARCHIVED: "bg-red-100 text-red-300",
+    REJECTED: "bg-red-100 text-red-900",
   };
 
   const statusIcons = {
@@ -78,6 +81,7 @@ const Archived = ({
     PENDING_REVIEW: Eye,
     PUBLISHED: CheckCircle,
     ARCHIVED: XCircle,
+    REJECTED: CircleOff,
   };
 
   const StatusIcon = statusIcons[publication.status];

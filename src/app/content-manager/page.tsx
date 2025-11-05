@@ -31,18 +31,21 @@ import {
   usePostQuery,
   useArchivedPostsQuery,
   useCountPubsQuery,
+  useRejectedPostsQuery,
 } from "@/hooks/usePost";
 import { useRoleGate } from "@/utils/userRoleGate";
 import { toast } from "sonner";
 import Drafts from "@/components/content-manager/drafts";
 import Published from "@/components/content-manager/published";
 import Archived from "@/components/content-manager/archived";
+import Rejected from "@/components/content-manager/rejected";
 
 enum Status {
   DRAFT = 0,
   PUBLISHED = 1,
   ARCHIVED = 2,
   PENDING_REVIEW = 3,
+  REJECTED = 4,
 }
 
 interface Author {
@@ -85,11 +88,13 @@ export default function ContentManagerPage() {
     isLoading,
     approve,
     archive,
+    reject,
     restoreArchive,
   } = useEditorQuery(token);
 
   const { data: publishedContent } = usePostQuery(token);
   const { data: archivedPost } = useArchivedPostsQuery(token);
+  const { data: rejectedPosts } = useRejectedPostsQuery(token);
   const { data: pubsCount } = useCountPubsQuery(token);
 
   // Get unique categories from all content
@@ -98,12 +103,13 @@ export default function ContentManagerPage() {
       ...(toReview?.postToReview || []),
       ...(publishedContent?.posts || []),
       ...(archivedPost || []),
+      ...(rejectedPosts || []),
     ];
     const uniqueCategories = [
       ...new Set(allContent.map((item: any) => item.category).filter(Boolean)),
     ];
     return ["all", ...uniqueCategories];
-  }, [toReview, publishedContent, archivedPost]);
+  }, [toReview, publishedContent, archivedPost, rejectedPosts]);
 
   // Filtering and sorting logic for drafts/review content
   const filteredDrafts = useMemo(() => {
@@ -134,7 +140,8 @@ export default function ContentManagerPage() {
             publication.status === "PENDING_REVIEW") ||
           (statusFilter === "pending" &&
             publication.status === "PENDING_REVIEW") ||
-          (statusFilter === "archived" && publication.status === "ARCHIVED");
+          (statusFilter === "archived" && publication.status === "ARCHIVED") ||
+          (statusFilter === "rejected" && publication.status === "REJECTED");
 
         // Category filter
         const matchesCategory =
@@ -273,6 +280,51 @@ export default function ContentManagerPage() {
     });
   }, [archivedPost, searchQuery, categoryFilter, sortBy]);
 
+  const filteredRejected = useMemo(() => {
+    if (!rejectedPosts) return [];
+
+    const filtered = rejectedPosts.filter((publication: Publication) => {
+      const searchLower = searchQuery.toLowerCase();
+
+      const matchesSearch =
+        searchQuery === "" ||
+        publication.title?.toLowerCase().includes(searchLower) ||
+        publication.excerpt?.toLowerCase().includes(searchLower) ||
+        `${publication.author?.firstName} ${publication.author?.lastName}`
+          .toLowerCase()
+          .includes(searchLower) ||
+        publication.tags?.some((tag) =>
+          tag.toLowerCase().includes(searchLower)
+        );
+
+      const matchesCategory =
+        categoryFilter === "all" || publication.category === categoryFilter;
+
+      return matchesSearch && matchesCategory;
+    });
+
+    return filtered.sort((a: Publication, b: Publication) => {
+      switch (sortBy) {
+        case "newest":
+          return (
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          );
+        case "oldest":
+          return (
+            new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
+          );
+        case "alphabetical":
+          return (a.title || "").localeCompare(b.title || "");
+        case "author":
+          const aAuthor = `${a.author?.firstName} ${a.author?.lastName}`;
+          const bAuthor = `${b.author?.firstName} ${b.author?.lastName}`;
+          return aAuthor.localeCompare(bAuthor);
+        default:
+          return 0;
+      }
+    });
+  }, [rejectedPosts, searchQuery, categoryFilter, sortBy]);
+
   const handleApprove = async (postId: string) => {
     try {
       await approve(postId);
@@ -293,10 +345,23 @@ export default function ContentManagerPage() {
     }
   };
 
+  const handleReject = async (postId: string) => {
+    try {
+      await reject(postId, {
+        onSuccess: () => {
+          toast("Publication archived!");
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const totalPubs =
     (pubsCount?.publications.PUBLISHED ?? 0) +
     (pubsCount?.publications.ARCHIVED ?? 0) +
-    (pubsCount?.publications.PENDING_REVIEW ?? 0);
+    (pubsCount?.publications.PENDING_REVIEW ?? 0) +
+    (pubsCount?.publications.REJECTED ?? 0);
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -420,6 +485,21 @@ export default function ContentManagerPage() {
             </div>
           </CardContent>
         </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-green-100 rounded-lg">
+                <CheckCircle className="h-6 w-6 text-red-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">
+                  {pubsCount?.publications.REJECTED || 0}
+                </p>
+                <p className="text-sm text-muted-foreground">Rejected</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <Tabs
@@ -454,6 +534,14 @@ export default function ContentManagerPage() {
               </Badge>
             )}
           </TabsTrigger>
+          <TabsTrigger value="rejected">
+            Rejected Content
+            {(searchQuery || categoryFilter !== "all") && (
+              <Badge variant="secondary" className="ml-2 h-4 px-1 text-xs">
+                {filteredRejected.length}
+              </Badge>
+            )}
+          </TabsTrigger>
         </TabsList>
 
         {/* Universal Filters */}
@@ -484,6 +572,7 @@ export default function ContentManagerPage() {
                       <SelectItem value="review">In Review</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="archived">Archived</SelectItem>
+                      <SelectItem value="rejected">Rejected</SelectItem>
                     </SelectContent>
                   </Select>
                 )}
@@ -558,6 +647,12 @@ export default function ContentManagerPage() {
                   {archivedPost?.length || 0} archived items
                 </span>
               )}
+              {activeTab === "rejected" && (
+                <span>
+                  Showing {filteredArchived.length} of{" "}
+                  {rejectedPosts?.length || 0} rejected items
+                </span>
+              )}
             </div>
           </div>
         )}
@@ -572,6 +667,7 @@ export default function ContentManagerPage() {
                     publication={publication}
                     handleArchive={handleArchive}
                     handleApprove={handleApprove}
+                    handleReject={handleReject}
                   />
                 );
               })
@@ -656,6 +752,43 @@ export default function ContentManagerPage() {
                     <XCircle className="mx-auto h-12 w-12 text-muted-foreground" />
                     <h3 className="text-lg font-medium">
                       No archived content found
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {searchQuery || categoryFilter !== "all"
+                        ? "No archived content matches your current filters."
+                        : "No archived content available."}
+                    </p>
+                    {(searchQuery || categoryFilter !== "all") && (
+                      <Button variant="outline" onClick={clearFilters}>
+                        Clear Filters
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="rejected" className="space-y-6">
+          <div className="space-y-4 mb-8">
+            {filteredRejected.length > 0 ? (
+              filteredRejected.map((publication: Publication) => {
+                return (
+                  <Rejected
+                    key={publication.pubId}
+                    publication={publication}
+                    // restoreArchive={restoreArchive}
+                  />
+                );
+              })
+            ) : (
+              <Card>
+                <CardContent className="p-12 text-center">
+                  <div className="space-y-4">
+                    <XCircle className="mx-auto h-12 w-12 text-muted-foreground" />
+                    <h3 className="text-lg font-medium">
+                      No rejected content found
                     </h3>
                     <p className="text-muted-foreground">
                       {searchQuery || categoryFilter !== "all"

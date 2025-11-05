@@ -315,6 +315,7 @@ enum PublicationStatus {
   PUBLISHED
   ARCHIVED
   PENDING_REVIEW
+  REJECTED
 }
 
 model PublicationComments {

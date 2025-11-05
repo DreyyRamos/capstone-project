@@ -4,6 +4,7 @@ import {
   approvePost,
   archivePost,
   restoreArchivePost,
+  rejectPost,
 } from "@/services/editor";
 
 interface Publication {
@@ -38,8 +39,19 @@ export const useEditorQuery = (token: string) => {
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["user-activity"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
-queryClient.invalidateQueries({ queryKey: ["visit-user"] });
-queryClient.invalidateQueries({ queryKey: ["visit-user-activity"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user"] });
+      queryClient.invalidateQueries({ queryKey: ["visit-user-activity"] });
+    },
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: (postId: string) => rejectPost(token, postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["rejected-pubs"] });
     },
   });
 
@@ -81,6 +93,11 @@ queryClient.invalidateQueries({ queryKey: ["visit-user-activity"] });
     createError: mutation.error,
     createSuccess: mutation.isSuccess,
     createReset: mutation.reset,
+
+    reject: rejectMutation.mutate,
+    isRejecting: rejectMutation.isPending,
+    rejectingError: rejectMutation.error,
+    rejectSuccess: rejectMutation.isSuccess,
 
     // archive mutation function
     archive: archiveMutation.mutate,

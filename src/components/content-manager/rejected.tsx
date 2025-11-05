@@ -59,19 +59,15 @@ interface Publication {
   isFeatured?: boolean;
 }
 
-interface DraftPublicationsProps {
+interface RejectedPublicationsProps {
   publication: Publication;
-  handleArchive: (p: string) => void;
-  handleApprove: (P: string) => void;
-  handleReject: (p: string) => void;
+  //   restoreArchive: (p: string) => void;
 }
 
-const Drafts = ({
+const Rejected = ({
   publication,
-  handleArchive,
-  handleApprove,
-  handleReject,
-}: DraftPublicationsProps) => {
+}: //   restoreArchive,
+RejectedPublicationsProps) => {
   const statusColors = {
     DRAFT: "bg-gray-100 text-gray-800",
     PENDING_REVIEW: "bg-yellow-100 text-yellow-800",
@@ -104,11 +100,6 @@ const Drafts = ({
                   {publication?.status.replace("_", " ")}
                 </Badge>
                 <Badge variant="outline">{publication.category}</Badge>
-                {publication.isFeatured && (
-                  <Badge className="bg-yellow-100 text-yellow-800">
-                    Featured
-                  </Badge>
-                )}
               </div>
             </div>
             <DropdownMenu>
@@ -122,7 +113,7 @@ const Drafts = ({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link
-                    href={`/publications/${publication.pubId}/preview`}
+                    href={`/publications/${publication.pubId}`}
                     className="flex items-center"
                   >
                     <Eye className="mr-2 h-4 w-4" />
@@ -138,25 +129,19 @@ const Drafts = ({
                     Edit
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleApprove(publication.pubId)}
+                {/* <DropdownMenuItem
+                  onClick={() => restoreArchive(publication.pubId)}
                 >
                   <CheckCircle className="mr-2 h-4 w-4" />
-                  Approve & Publish
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleArchive(publication.pubId)}
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Archive Post
-                </DropdownMenuItem>
+                  Restore for Review
+                </DropdownMenuItem> */}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => handleReject(publication.pubId)}
+                  onClick={() => console.log("delete")}
                   className="text-red-600"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Reject Post
+                  Delete Publication
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -208,4 +193,4 @@ const Drafts = ({
   );
 };
 
-export default Drafts;
+export default Rejected;

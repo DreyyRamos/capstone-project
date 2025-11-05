@@ -52,6 +52,17 @@ export const fetchArchivedPubs = async (token: string) => {
   return response.json();
 };
 
+export const fetchRejectedPubs = async (token: string) => {
+  const response = await fetch(`/api/publications/isRejected`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) throw new Error("Failed to fetch post by id");
+  return response.json();
+};
+
 export const likePub = async (postId: string, token: string) => {
   const res = await fetch(`/api/publications/${postId}/like`, {
     method: "POST",
