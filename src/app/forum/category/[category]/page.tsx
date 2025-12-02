@@ -303,7 +303,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
       </div>
 
       {/* Topics List */}
-      <div className="space-y-4">
+      <div className="space-y-4 flex-1">
         {filteredAndSortedTopics.length > 0 ? (
           filteredAndSortedTopics.map((topic: ForumTopic, i: number) => (
             <div key={i}>

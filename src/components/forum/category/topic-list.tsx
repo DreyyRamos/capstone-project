@@ -42,16 +42,13 @@ const TopicList = ({ topic }: TopicListProps) => {
   return (
     <Card key={topic?.forumId} className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 md:p-6">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-          <div className="flex-1 space-y-3">
-            <div className="flex items-center gap-2">
-              {/* {topic.isPinned && (
-                            <Pin className="h-4 w-4 text-blue-600" />
-                          )} */}
-              <h3 className="text-lg font-semibold leading-tight truncate">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 min-w-0">
+          <div className="flex-1 min-w-0 space-y-3">
+            <div className="flex-1 min-w-0 items-center gap-2 w-full">
+              <h3 className="text-lg font-semibold leading-tight truncate break-all">
                 <Link
                   href={`/forum/topic/${topic?.forumId}`}
-                  className="hover:text-blue-600 line-clamp-2"
+                  className="hover:text-blue-600 leading-tight break-all"
                 >
                   {topic?.topicTitle}
                 </Link>
