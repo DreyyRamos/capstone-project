@@ -23,6 +23,8 @@ import {
   Calendar,
   CircleOff,
 } from "lucide-react";
+import { useConfirmation } from "../confirmation-provider";
+import { toast } from "sonner";
 import Link from "next/link";
 
 enum Status {
@@ -62,10 +64,12 @@ interface Publication {
 interface RejectedPublicationsProps {
   publication: Publication;
   //   restoreArchive: (p: string) => void;
+  deleteArchive: (p: string) => void;
 }
 
 const Rejected = ({
   publication,
+  deleteArchive,
 }: //   restoreArchive,
 RejectedPublicationsProps) => {
   const statusColors = {
@@ -83,6 +87,8 @@ RejectedPublicationsProps) => {
     ARCHIVED: XCircle,
     REJECTED: CircleOff,
   };
+
+  const { openModal } = useConfirmation();
 
   const StatusIcon = statusIcons[publication.status];
   return (
@@ -137,7 +143,19 @@ RejectedPublicationsProps) => {
                 </DropdownMenuItem> */}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => console.log("delete")}
+                  onClick={() => {
+                    openModal({
+                      title: "Delete Rejected Publication",
+                      description: `Are you sure you want to delete this rejected publication?`,
+                      confirmText: "Reject",
+                      variant: "destructive",
+                      icon: "error",
+                      onConfirm: async () => {
+                        await deleteArchive(publication.pubId);
+                        toast("Rejected Publication Deleted!");
+                      },
+                    });
+                  }}
                   className="text-red-600"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />

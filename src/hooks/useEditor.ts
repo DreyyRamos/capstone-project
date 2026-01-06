@@ -5,6 +5,7 @@ import {
   archivePost,
   restoreArchivePost,
   rejectPost,
+  deletePost,
 } from "@/services/editor";
 
 interface Publication {
@@ -78,6 +79,18 @@ export const useEditorQuery = (token: string) => {
     },
   });
 
+  const deleteArchive = useMutation({
+    mutationFn: async (postId: string) => await deletePost(token, postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["archived-pubs"] });
+      queryClient.invalidateQueries({ queryKey: ["rejected-pubs"] });
+    },
+  });
+
   return {
     // Query results
     data,
@@ -111,5 +124,10 @@ export const useEditorQuery = (token: string) => {
     restoringError: restoreArchiveMutation.error,
     restoringSuccess: restoreArchiveMutation.isSuccess,
     restoringReset: restoreArchiveMutation.reset,
+
+    deleteArchive: deleteArchive.mutate,
+    isDeleting: restoreArchiveMutation.isPending,
+    deletingError: restoreArchiveMutation.error,
+    deleteSSucces: restoreArchiveMutation.isSuccess,
   };
 };

@@ -181,12 +181,12 @@ export default function LoginPage() {
               </form>
 
               <div className="mt-4 text-center">
-                <Link
+                {/* <Link
                   href="/forgot-password"
                   className="text-sm text-blue-600 hover:underline"
                 >
                   Forgot your password?
-                </Link>
+                </Link> */}
               </div>
             </CardContent>
           </Card>
@@ -194,7 +194,7 @@ export default function LoginPage() {
           <div className="text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="text-blue-600 hover:underline">
-              Register here and wait for email for account approval!
+              Register here and check your email for account approval!
             </Link>
           </div>
         </div>

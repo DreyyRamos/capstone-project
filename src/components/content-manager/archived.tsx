@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +24,7 @@ import {
   Calendar,
   CircleOff,
 } from "lucide-react";
+import { useConfirmation } from "../confirmation-provider";
 import Link from "next/link";
 
 enum Status {
@@ -62,11 +64,13 @@ interface Publication {
 interface ArchivedPublicationsProps {
   publication: Publication;
   restoreArchive: (p: string) => void;
+  deleteArchive: (p: string) => void;
 }
 
 const Archived = ({
   publication,
   restoreArchive,
+  deleteArchive,
 }: ArchivedPublicationsProps) => {
   const statusColors = {
     DRAFT: "bg-gray-100 text-gray-800",
@@ -83,6 +87,8 @@ const Archived = ({
     ARCHIVED: XCircle,
     REJECTED: CircleOff,
   };
+
+  const { openModal } = useConfirmation();
 
   const StatusIcon = statusIcons[publication.status];
   return (
@@ -137,7 +143,19 @@ const Archived = ({
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => console.log("delete")}
+                  onClick={() => {
+                    openModal({
+                      title: "Delete Archived Publication",
+                      description: `Are you sure you want to delete this archived publication?`,
+                      confirmText: "Reject",
+                      variant: "destructive",
+                      icon: "error",
+                      onConfirm: async () => {
+                        await deleteArchive(publication.pubId);
+                        toast("Archived Publication Deleted!");
+                      },
+                    });
+                  }}
                   className="text-red-600"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />

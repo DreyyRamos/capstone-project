@@ -90,6 +90,7 @@ export default function ContentManagerPage() {
     archive,
     reject,
     restoreArchive,
+    deleteArchive,
   } = useEditorQuery(token);
 
   const { data: publishedContent } = usePostQuery(token);
@@ -404,16 +405,6 @@ export default function ContentManagerPage() {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2 sm:justify-end">
-          <Button
-            asChild
-            variant="outline"
-            className="w-full sm:w-auto bg-transparent"
-          >
-            <Link href="/categories/manage">
-              <Tag className="mr-2 h-4 w-4" />
-              Manage Categories
-            </Link>
-          </Button>
           <Button asChild className="w-full sm:w-auto">
             <Link href="/publications/create">
               <Plus className="mr-2 h-4 w-4" />
@@ -742,6 +733,7 @@ export default function ContentManagerPage() {
                     key={publication.pubId}
                     publication={publication}
                     restoreArchive={restoreArchive}
+                    deleteArchive={deleteArchive}
                   />
                 );
               })
@@ -778,6 +770,7 @@ export default function ContentManagerPage() {
                   <Rejected
                     key={publication.pubId}
                     publication={publication}
+                    deleteArchive={deleteArchive}
                     // restoreArchive={restoreArchive}
                   />
                 );
