@@ -386,7 +386,8 @@ export default function ModerationPage() {
             variant="outline"
             size="sm"
             onClick={() =>
-              confirmDelete("or clean-up reported contents", handleCleanUp)
+              // confirmDelete("or clean-up reported contents", handleCleanUp)
+              alert("this is currrent disabled, but this works!")
             }
             className="text-xs sm:text-sm"
           >
