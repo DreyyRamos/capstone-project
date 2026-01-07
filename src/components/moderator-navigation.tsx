@@ -24,18 +24,19 @@ import {
   Plus,
   Shield,
   Flag,
-  ChartArea,
+  BarChart3,
 } from "lucide-react";
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Homepage", href: "/", icon: Home },
   { name: "Publications", href: "/publications", icon: BookOpen },
   { name: "Forum", href: "/forum", icon: MessageSquare },
   { name: "Moderation", href: "/moderation", icon: Flag },
-  { name: "Leaderboard", href: "/leaderboard", icon: ChartArea },
+  { name: "Leaderboard", href: "/leaderboard", icon: BarChart3 },
 ];
 
 const quickActions = [
@@ -160,40 +161,50 @@ export function ModeratorNavigation() {
 
         {/* Mobile Navigation */}
         <div className="flex lg:hidden h-14 items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             <Badge
               variant="secondary"
-              className="bg-purple-100 text-purple-800"
+              className="bg-purple-100 text-purple-800 text-xs"
             >
               <Shield className="h-3 w-3 mr-1" />
-              Moderator
+              Mod
             </Badge>
-            {navigation.slice(0, 3).map((item) => {
-              const isActive = pathname === item.href;
-              return (
+            <Link
+              href="/"
+              className={cn(
+                "flex items-center gap-1 px-2 py-1 text-sm font-medium rounded-md transition-colors",
+                pathname === "/"
+                  ? "bg-secondary text-secondary-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+              )}
+            >
+              <Home className="h-4 w-4" />
+            </Link>
+            <Tooltip>
+              <TooltipTrigger>
                 <Link
-                  key={item.name}
-                  href={item.href}
+                  href="/moderation"
                   className={cn(
-                    "flex items-center gap-1 px-2 py-1 text-sm font-medium rounded-md transition-colors",
-                    isActive
-                      ? "bg-secondary text-secondary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                    "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors border-2",
+                    pathname === "/moderation"
+                      ? "bg-purple-100 text-purple-800 border-purple-300"
+                      : "bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100"
                   )}
                 >
-                  <item.icon className="h-4 w-4" />
-                  <span className="hidden sm:inline">{item.name}</span>
+                  <Flag className="h-4 w-4" />
+                  <span className="font-semibold">Moderation Page</span>
                 </Link>
-              );
-            })}
+                <TooltipContent>View reported contents here</TooltipContent>
+              </TooltipTrigger>
+            </Tooltip>
           </div>
 
           {/* Mobile Menu */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost">
+                <span className="text-xs">Menu</span>
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80">

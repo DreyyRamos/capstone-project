@@ -169,9 +169,12 @@ const ReportsList = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 sm:h-10 sm:w-10"
+                  className="h-9 w-auto px-1 sm:h-10 sm:w-10 sm:px-0.5 text-xs sm:text-sm font-medium hover:border-accent-foreground"
                 >
-                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sm:hidden sm:hover:border-accent-foreground sm:border-accent">
+                    Take Action
+                  </span>
+                  <MoreHorizontal className="hidden sm:block h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

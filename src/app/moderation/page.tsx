@@ -387,20 +387,13 @@ export default function ModerationPage() {
             size="sm"
             onClick={() =>
               // confirmDelete("or clean-up reported contents", handleCleanUp)
-              alert("this is currrent disabled, but this works!")
+              alert("this is currently disabled, but this works!")
             }
             className="text-xs sm:text-sm"
           >
             <TriangleAlert className="mr-2 h-4 w-4" />
             <span className="hidden sm:inline">Clean Up Reported Contents</span>
             <span className="sm:hidden">Clean Up</span>
-          </Button>
-          <Button asChild size="sm" className="text-xs sm:text-sm">
-            <Link href="/moderation/reports/new">
-              <Flag className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">Create Report</span>
-              <span className="sm:hidden">New Report</span>
-            </Link>
           </Button>
         </div>
       </div>

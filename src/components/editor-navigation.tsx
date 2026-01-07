@@ -17,7 +17,6 @@ import {
   Home,
   BookOpen,
   MessageSquare,
-  TrendingUp,
   FileText,
   Hash,
   Menu,
@@ -25,18 +24,19 @@ import {
   Plus,
   Edit,
   FolderOpen,
-  ChartArea,
+  BarChart3,
 } from "lucide-react";
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Homepage", href: "/", icon: Home },
   { name: "Publications", href: "/publications", icon: BookOpen },
   { name: "Forum", href: "/forum", icon: MessageSquare },
   { name: "Content Manager", href: "/content-manager", icon: FolderOpen },
-  { name: "Leaderboard", href: "/leaderboard", icon: ChartArea },
+  { name: "Leaderboard", href: "/leaderboard", icon: BarChart3 },
 ];
 
 const quickActions = [
@@ -44,7 +44,7 @@ const quickActions = [
   { name: "Start Discussion", href: "/forum/create", icon: Hash },
   { name: "Review Drafts", href: "/publications/drafts", icon: Edit },
   { name: "Manage Categories", href: "/categories", icon: FolderOpen },
-]
+];
 
 const slugify = (str: string) => {
   return str;
@@ -71,7 +71,7 @@ export function EditorNavigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="sticky top-16 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-16 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-visible">
       <div className="max-w-7xl mx-auto px-6">
         {/* Desktop Navigation */}
         <div className="hidden lg:flex h-14 items-center justify-between">
@@ -158,47 +158,62 @@ export function EditorNavigation() {
 
         {/* Mobile Navigation */}
         <div className="flex lg:hidden h-14 items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+          <div className="flex items-center space-x-2">
+            <Badge
+              variant="secondary"
+              className="bg-blue-100 text-blue-800 text-xs"
+            >
               <Edit className="h-3 w-3 mr-1" />
               Editor
             </Badge>
-            {navigation.slice(0, 3).map((item) => {
-              const isActive = pathname === item.href;
-              return (
+            <Link
+              href="/"
+              className={cn(
+                "flex items-center gap-1 px-2 py-1 text-sm font-medium rounded-md transition-colors",
+                pathname === "/"
+                  ? "bg-secondary text-secondary-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+              )}
+            >
+              <Home className="h-4 w-4" />
+            </Link>
+            <Tooltip>
+              <TooltipTrigger>
                 <Link
-                  key={item.name}
-                  href={item.href}
+                  href="/content-manager"
                   className={cn(
-                    "flex items-center gap-1 px-2 py-1 text-sm font-medium rounded-md transition-colors",
-                    isActive
-                      ? "bg-secondary text-secondary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                    "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors border-2",
+                    pathname === "/content-manager"
+                      ? "bg-blue-100 text-blue-800 border-blue-300"
+                      : "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
                   )}
                 >
-                  <item.icon className="h-4 w-4" />
-                  <span className="hidden sm:inline">{item.name}</span>
+                  <FolderOpen className="h-4 w-4" />
+                  <span className="font-semibold">Content Manager</span>
                 </Link>
-              );
-            })}
+                <TooltipContent>
+                  View submitted publications here.
+                </TooltipContent>
+              </TooltipTrigger>
+            </Tooltip>
           </div>
 
           {/* Mobile Menu */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost">
+                <span className="text-xs">Menu</span>
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80">
+            <SheetContent side="right" className="w-80 overflow-y-auto">
               <SheetHeader>
                 <SheetTitle>Editor Navigation</SheetTitle>
                 <SheetDescription>
                   Content creation and management tools
                 </SheetDescription>
               </SheetHeader>
-              <div className="mt-6 space-y-6">
+              <div className="mt-6 space-y-6 pb-6">
                 {/* Main Navigation */}
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
@@ -275,3 +290,4 @@ export function EditorNavigation() {
     </nav>
   );
 }
+

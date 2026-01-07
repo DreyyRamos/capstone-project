@@ -25,9 +25,10 @@ import {
   GraduationCap,
   ChartArea,
 } from "lucide-react";
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Homepage", href: "/", icon: Home },
@@ -39,7 +40,7 @@ const navigation = [
 const quickActions = [
   { name: "New Publication", href: "/publications/create", icon: FileText },
   { name: "Start Discussion", href: "/forum/create", icon: Hash },
-]
+];
 
 const slugify = (str: string) => {
   return str;
@@ -181,9 +182,9 @@ export function StudentNavigation() {
           {/* Mobile Menu */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost">
+                <span className="text-xs">Menu</span>
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80">
