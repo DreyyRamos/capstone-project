@@ -398,29 +398,6 @@ export default function ModerationPage() {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {stats.map((stat, index) => (
-          <Card key={index}>
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="p-2 sm:p-3 bg-muted rounded-lg flex-shrink-0">
-                  <stat.icon
-                    className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`}
-                  />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xl sm:text-2xl font-bold">{stat.value}</p>
-                  <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                    {stat.label}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
       <Tabs
         defaultValue="reports"
         className="space-y-6"
@@ -702,6 +679,33 @@ export default function ModerationPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Stats */}
+      <h1 className="text-2xl font-bold">Moderator Statistics</h1>
+      <p className="text-muted-foreground">
+        Number of pending reports that the mods taken actions.
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {stats.map((stat, index) => (
+          <Card key={index}>
+            <CardContent className="p-3 sm:p-6">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <div className="p-2 sm:p-3 bg-muted rounded-lg flex-shrink-0">
+                  <stat.icon
+                    className={`h-4 w-4 sm:h-6 sm:w-6 ${stat.color}`}
+                  />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-2xl font-bold">{stat.value}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                    {stat.label}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
