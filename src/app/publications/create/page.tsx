@@ -148,7 +148,7 @@ export default function CreatePublicationPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center flex-wrap gap-4">
           <Button asChild variant="ghost">
             <Link href="/publications">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -159,6 +159,13 @@ export default function CreatePublicationPage() {
             <h1 className="text-3xl font-bold">Create Publication</h1>
             <p className="text-muted-foreground">
               Share news, articles, and updates with the school community
+            </p>
+          </div>
+          <div className="border rounded-md border-green-500 p-2">
+            <h3 className="text-md font-bold text-green-400">Note</h3>
+            <p className="text-green-300">
+              Submitted publications needs to be approved first before you can
+              see it publicly.
             </p>
           </div>
         </div>
