@@ -61,7 +61,7 @@ export function ContentViewModal({
     const baseInfo = {
       reportId: report.id,
       contentId: report.contentId,
-      contentType: report.type,
+      contentType: report.contentType,
       createdAt: report.createdAt || new Date().toISOString(),
       reportedContent:
         report.contentPreview ||
@@ -105,7 +105,18 @@ export function ContentViewModal({
       case "PUBLICATION_COMMENT":
         return {
           ...baseInfo,
-          type: "publication_comment",
+          type: "PUBLICATION_COMMENT",
+          title: report.title || "Publication Comment",
+          category: report.category || "General",
+          icon: MessageSquare,
+          iconColor: "text-purple-600",
+        };
+
+      case "publication_reply_to_reply":
+      case "PUBLICATION_REPLY_TO_REPLY":
+        return {
+          ...baseInfo,
+          type: "publication_reply_to_reply",
           title: report.title || "Publication Comment",
           category: report.category || "General",
           icon: MessageSquare,
@@ -125,6 +136,7 @@ export function ContentViewModal({
   };
 
   const content = getContentInfo();
+  console.log("contentssss", content);
 
   useEffect(() => {
     if (deleteSuccess) {
@@ -173,8 +185,8 @@ export function ContentViewModal({
                       report.priority === "HIGH" || report.priority === "URGENT"
                         ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
                         : report.priority === "MEDIUM"
-                        ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                        : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                          ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                          : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                     }`}
                   >
                     {report.priority || "MEDIUM"}
@@ -321,7 +333,7 @@ export function ContentViewModal({
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
-          {!["RESTORED", "RESOLVED", "DELETED"].includes(content.status) && (
+          {/* {!["RESTORED", "RESOLVED", "DELETED"].includes(content.status) && (
             <Button
               variant="destructive"
               onClick={() =>
@@ -329,18 +341,18 @@ export function ContentViewModal({
                   "reported content",
                   async () =>
                     await handleDelete(
-                      content.contentType.toUpperCase(),
+                      content.type,
                       content.contentId,
                       content.reportId,
-                      content.reportedUser?.id
-                    )
+                      content.reportedUser?.id,
+                    ),
                 )
               }
               disabled={isDeleting}
             >
               {isDeleting ? "Deleting Content" : "Delete this reported content"}
             </Button>
-          )}
+          )} */}
           {/* <Button
             variant="destructive"
             onClick={() =>

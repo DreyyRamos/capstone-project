@@ -22,6 +22,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, X, Save, Eye } from "lucide-react";
@@ -36,7 +43,7 @@ import ContentDisplay from "@/components/content-display";
 import CreatePublicationLoading from "./loading";
 
 export default function CreatePublicationPage() {
-  const { confirmAction } = useConfirmation();
+  const { confirmAction, openModal } = useConfirmation();
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -46,6 +53,7 @@ export default function CreatePublicationPage() {
     category: "",
   });
   const [contentError, setContentError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
   const [isDraft, setIsDraft] = useState(true);
@@ -102,6 +110,7 @@ export default function CreatePublicationPage() {
             {
               onSuccess: () => {
                 toast("Publication created and is pending for review!");
+                setIsModalOpen(true);
                 router.push("/publications");
               },
             }
@@ -452,6 +461,20 @@ export default function CreatePublicationPage() {
                 </Button> */}
               </CardContent>
             </Card>
+
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogContent className="max-w-2xl max-h-[90vh] mx-4">
+                <DialogHeader>
+                  <DialogTitle>
+                    Your publication is submitted and is under review.
+                  </DialogTitle>
+                  <DialogDescription>
+                    You will see it publicly once it is approved by an editor or
+                    an admin.
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </form>
