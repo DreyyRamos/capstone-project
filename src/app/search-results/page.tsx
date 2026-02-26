@@ -92,24 +92,46 @@ function SearchResultsContent() {
         onValueChange={(value) => setSelectedType(value as any)}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-4">
-          <TabsTrigger value="all" className="flex items-center gap-2">
-            <Filter className="h-4 w-4" />
-            All ({totalResults})
-          </TabsTrigger>
-          <TabsTrigger value="users" className="flex items-center gap-2">
-            <User className="h-4 w-4" />
-            Users ({usersCount})
-          </TabsTrigger>
-          <TabsTrigger value="publications" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Publications ({publicationsCount})
-          </TabsTrigger>
-          <TabsTrigger value="forums" className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4" />
-            Forums ({forumsCount})
-          </TabsTrigger>
-        </TabsList>
+        {/* Scrollable tabs container for mobile */}
+        <div className="overflow-x-auto pb-2 -mb-2 scrollbar-hide">
+          <TabsList className="inline-flex w-auto min-w-full h-auto p-1 bg-muted/50">
+            <TabsTrigger
+              value="all"
+              className="flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap data-[state=active]:bg-background"
+            >
+              <Filter className="h-4 w-4 shrink-0" />
+              <span>All</span>
+              <span className="text-xs opacity-70">({totalResults})</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="users"
+              className="flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap data-[state=active]:bg-background"
+            >
+              <User className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">Users</span>
+              <span className="sm:hidden">User</span>
+              <span className="text-xs opacity-70">({usersCount})</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="publications"
+              className="flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap data-[state=active]:bg-background"
+            >
+              <FileText className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">Publications</span>
+              <span className="sm:hidden">Pubs</span>
+              <span className="text-xs opacity-70">({publicationsCount})</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="forums"
+              className="flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap data-[state=active]:bg-background"
+            >
+              <MessageSquare className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline">Forums</span>
+              <span className="sm:hidden">Forum</span>
+              <span className="text-xs opacity-70">({forumsCount})</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {isLoading ? (
           <div className="mt-8 space-y-4">
@@ -236,7 +258,7 @@ function SearchResultsContent() {
                                       {publication.title}
                                     </h3>
                                     {publication.isFeatured && (
-                                      <Badge className="bg-yellow-500">
+                                      <Badge className="bg-yellow-500 shrink-0">
                                         Featured
                                       </Badge>
                                     )}
@@ -244,7 +266,7 @@ function SearchResultsContent() {
                                   <p className="text-muted-foreground line-clamp-3 mb-3">
                                     {publication.excerpt}
                                   </p>
-                                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                                  <div className="flex items-center justify-between text-sm text-muted-foreground flex-wrap gap-2">
                                     <div className="flex items-center gap-2">
                                       <Avatar className="h-6 w-6">
                                         <AvatarImage
@@ -259,11 +281,13 @@ function SearchResultsContent() {
                                             .toUpperCase()}
                                         </AvatarFallback>
                                       </Avatar>
-                                      <span>
+                                      <span className="truncate max-w-[120px] sm:max-w-none">
                                         by {getDisplayName(publication.author)}
                                       </span>
-                                      <span>•</span>
-                                      <span>
+                                      <span className="hidden sm:inline">
+                                        •
+                                      </span>
+                                      <span className="hidden sm:inline">
                                         {formatDate(publication.updatedAt)}
                                       </span>
                                     </div>
@@ -349,7 +373,7 @@ function SearchResultsContent() {
                                   <p className="text-muted-foreground line-clamp-3 mb-3">
                                     {forum.description}
                                   </p>
-                                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                                  <div className="flex items-center justify-between text-sm text-muted-foreground flex-wrap gap-2">
                                     <div className="flex items-center gap-2">
                                       <Avatar className="h-6 w-6">
                                         <AvatarImage
@@ -361,11 +385,15 @@ function SearchResultsContent() {
                                             .toUpperCase()}
                                         </AvatarFallback>
                                       </Avatar>
-                                      <span>
+                                      <span className="truncate max-w-[120px] sm:max-w-none">
                                         by {getDisplayName(forum.author)}
                                       </span>
-                                      <span>•</span>
-                                      <span>{formatDate(forum.updatedAt)}</span>
+                                      <span className="hidden sm:inline">
+                                        •
+                                      </span>
+                                      <span className="hidden sm:inline">
+                                        {formatDate(forum.updatedAt)}
+                                      </span>
                                     </div>
                                     <div className="flex items-center gap-4">
                                       <span>
