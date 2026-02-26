@@ -153,8 +153,8 @@ export async function PUT(req: NextRequest) {
         data: { status: "ACTIVE", warningPoints: 0 },
       });
 
-      let notificationTitle = "Your account is now unsuspended!";
-      let notificationContent = "You can use your account again, thank you";
+      const notificationTitle = "Your account is now unsuspended!";
+      const notificationContent = "You can use your account again, thank you";
 
       // Only create notification if there's content to notify about
       if (notificationTitle && notificationContent) {
