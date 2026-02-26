@@ -41,6 +41,8 @@ import Tiptap from "@/components/tiptap";
 import { useConfirmation } from "@/components/confirmation-provider";
 import ContentDisplay from "@/components/content-display";
 import CreatePublicationLoading from "./loading";
+import { useUserQuery } from "@/hooks/useUser";
+import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
 
 export default function CreatePublicationPage() {
   const { confirmAction, openModal } = useConfirmation();
@@ -60,6 +62,16 @@ export default function CreatePublicationPage() {
   const router = useRouter();
   const token = Cookies.get("token") || "";
   const { createPost, isCreating, isLoading } = usePostQuery(token);
+  const { data: currentUser } = useUserQuery(token);
+
+  const { StatusModal, checkPost } = useUserStatusCheck(
+    currentUser?.userData?.status,
+    {
+      onBlocked: (action, status) => {
+        console.log(`User tried to ${action} but is ${status}`);
+      },
+    },
+  );
 
   const categories = [
     "Science",
@@ -95,31 +107,33 @@ export default function CreatePublicationPage() {
 
     setContentError(false);
 
-    confirmAction(
-      "Submit Publication",
-      "This publication will be submitted and will be reviewed by editors.",
-      () => {
-        try {
-          createPost(
-            {
-              ...formData,
-              category: formData.category || "Academic",
-              tags,
-              imageUrl: formData.imageUrl ?? "",
-            },
-            {
-              onSuccess: () => {
-                toast("Publication created and is pending for review!");
-                setIsModalOpen(true);
-                router.push("/publications");
+    checkPost(async () => {
+      confirmAction(
+        "Submit Publication",
+        "This publication will be submitted and will be reviewed by editors.",
+        () => {
+          try {
+            createPost(
+              {
+                ...formData,
+                category: formData.category || "Academic",
+                tags,
+                imageUrl: formData.imageUrl ?? "",
               },
-            }
-          );
-        } catch (error: any) {
-          console.error(error);
-        }
-      }
-    );
+              {
+                onSuccess: () => {
+                  toast("Publication created and is pending for review!");
+                  setIsModalOpen(true);
+                  router.push("/publications");
+                },
+              },
+            );
+          } catch (error: any) {
+            console.error(error);
+          }
+        },
+      );
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,6 +169,7 @@ export default function CreatePublicationPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      <StatusModal />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center flex-wrap gap-4">

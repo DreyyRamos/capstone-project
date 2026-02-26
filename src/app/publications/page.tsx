@@ -27,6 +27,8 @@ import Link from "next/link";
 import { useAuthModal } from "@/hooks/use-auth-modal";
 import { AuthModal } from "@/components/auth-modal";
 import { useRouter } from "next/navigation";
+import { useUserQuery } from "@/hooks/useUser";
+import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
 import PublicationsLoading from "./loading";
 import PublicationGrid from "@/components/publication/publication-grid";
 
@@ -61,7 +63,16 @@ export default function PublicationsPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const token = Cookies.get("token") || "";
+  const { data: currentUser } = useUserQuery(token);
 
+  const { StatusModal, checkPost } = useUserStatusCheck(
+    currentUser?.userData?.status,
+    {
+      onBlocked: (action, status) => {
+        console.log(`User tried to ${action} but is ${status}`);
+      },
+    },
+  );
   const { data, isLoading } = usePostQuery(token);
 
   console.log("data from puubs", data);
@@ -82,10 +93,12 @@ export default function PublicationsPage() {
   ];
 
   const startDiscussion = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    if (requireAuth("create a publication")) {
-      router.push("/publications/create");
-    }
+    checkPost(async () => {
+      e.preventDefault();
+      if (requireAuth("create a publication")) {
+        router.push("/publications/create");
+      }
+    });
   };
 
   // Improved filtering and sorting logic
@@ -105,7 +118,7 @@ export default function PublicationsPage() {
           .toLowerCase()
           .includes(searchLower) ||
         publication.tags?.some((tag) =>
-          tag.toLowerCase().includes(searchLower)
+          tag.toLowerCase().includes(searchLower),
         );
 
       // Category filter
@@ -127,18 +140,6 @@ export default function PublicationsPage() {
           return (
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
           );
-
-        // case "popular":
-        //   // Sort by views otherwise by likes + comments
-        //   const aPopularity =
-        //     (a.views || 0) +
-        //     (a.pubLikes?.length || 0) +
-        //     (a.pubComments?.length || 0);
-        //   const bPopularity =
-        //     (b.views || 0) +
-        //     (b.pubLikes?.length || 0) +
-        //     (b.pubComments?.length || 0);
-        //   return bPopularity - aPopularity;
 
         case "liked":
           return (b.pubLikes?.length || 0) - (a.pubLikes?.length || 0);
@@ -168,6 +169,7 @@ export default function PublicationsPage() {
 
   return (
     <div className="space-y-6">
+      <StatusModal />
       <AuthModal
         isOpen={isOpen}
         onClose={closeModal}

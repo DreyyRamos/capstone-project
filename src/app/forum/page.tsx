@@ -28,6 +28,8 @@ import { timeAgo } from "@/lib/timeAgo";
 import { useAuthModal } from "@/hooks/use-auth-modal";
 import { AuthModal } from "@/components/auth-modal";
 import { useRouter } from "next/navigation";
+import { useUserQuery } from "@/hooks/useUser";
+import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
 import ForumLoading from "./loading";
 import Categories from "@/components/forum/main-forum/categories";
 import Recents from "@/components/forum/main-forum/recents";
@@ -80,6 +82,17 @@ export default function ForumPage() {
   const { data: rawForums, isLoading } = useForumQuery(token);
   const { data: users } = useFetchUsers();
 
+  const { data: currentUser } = useUserQuery(token);
+
+  const { StatusModal, checkPost } = useUserStatusCheck(
+    currentUser?.userData?.status,
+    {
+      onBlocked: (action, status) => {
+        console.log(`User tried to ${action} but is ${status}`);
+      },
+    },
+  );
+
   const categories = useMemo(() => {
     if (!rawForums?.posts?.length) return [];
 
@@ -96,7 +109,7 @@ export default function ForumPage() {
     return Object.entries(grouped).map(([name, forums]: any) => {
       const latest = forums.sort(
         (a: any, b: any) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       )[0];
 
       // Calculate total replies
@@ -107,7 +120,7 @@ export default function ForumPage() {
           (f.forumComments?.reduce((total: any, comment: any) => {
             return total + (comment.forumCommentReplies?.length || 0);
           }, 0) || 0),
-        0
+        0,
       );
 
       console.log("check forum from memo 2", latest);
@@ -146,8 +159,8 @@ export default function ForumPage() {
             `${topic.author?.firstName} ${topic.author?.lastName}`
               .toLowerCase()
               .includes(searchLower) ||
-            topic.tags?.some((tag) => tag.toLowerCase().includes(searchLower))
-        )
+            topic.tags?.some((tag) => tag.toLowerCase().includes(searchLower)),
+        ),
     );
   }, [categories, searchQuery]);
 
@@ -167,7 +180,7 @@ export default function ForumPage() {
           `${topic.author?.firstName} ${topic.author?.lastName}`
             .toLowerCase()
             .includes(searchLower) ||
-          topic.tags?.some((tag) => tag.toLowerCase().includes(searchLower))
+          topic.tags?.some((tag) => tag.toLowerCase().includes(searchLower)),
       );
     }
 
@@ -186,10 +199,12 @@ export default function ForumPage() {
   console.log("raw forum to check", rawForums);
 
   const startDiscussion = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    if (requireAuth("start a discussion")) {
-      router.push("/forum/create");
-    }
+    checkPost(async () => {
+      e.preventDefault();
+      if (requireAuth("start a discussion")) {
+        router.push("/forum/create");
+      }
+    });
   };
 
   const stats = [
@@ -224,6 +239,7 @@ export default function ForumPage() {
 
   return (
     <div className="space-y-6">
+      <StatusModal />
       <AuthModal
         isOpen={isOpen}
         onClose={closeModal}

@@ -26,6 +26,8 @@ import TiptapForum from "@/components/tiptap-forum";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForumQuery } from "@/hooks/useForum";
+import { useUserQuery } from "@/hooks/useUser";
+import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
 import Cookies from "js-cookie";
 import CreateForumTopicLoading from "./loading";
 
@@ -41,6 +43,17 @@ export default function CreateForumTopicPage() {
   const router = useRouter();
 
   const token = Cookies.get("token") || "";
+
+  const { data: currentUser } = useUserQuery(token);
+
+  const { StatusModal, checkPost } = useUserStatusCheck(
+    currentUser?.userData?.status,
+    {
+      onBlocked: (action, status) => {
+        console.log(`User tried to ${action} but is ${status}`);
+      },
+    },
+  );
 
   const { createForum, isCreatingForum, isLoading } = useForumQuery(token);
 
@@ -77,7 +90,7 @@ export default function CreateForumTopicPage() {
   const handleTextAreaChange = (
     e:
       | React.ChangeEvent<HTMLTextAreaElement>
-      | { target: { name: string; value: string } }
+      | { target: { name: string; value: string } },
   ) => {
     setFormData({
       ...formData,
@@ -102,23 +115,25 @@ export default function CreateForumTopicPage() {
     }
 
     setContentError(false);
-    try {
-      createForum(
-        {
-          ...formData,
-          category: formData.category || "Academic",
-          tags,
-        },
-        {
-          onSuccess: () => {
-            toast("Forum created!");
-            router.push("/forum");
+    checkPost(async () => {
+      try {
+        createForum(
+          {
+            ...formData,
+            category: formData.category || "Academic",
+            tags,
           },
-        }
-      );
-    } catch (error: any) {
-      console.error(error);
-    }
+          {
+            onSuccess: () => {
+              toast("Forum created!");
+              router.push("/forum");
+            },
+          },
+        );
+      } catch (error: any) {
+        console.error(error);
+      }
+    });
   };
 
   if (isLoading) {
@@ -127,6 +142,7 @@ export default function CreateForumTopicPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      <StatusModal />
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button asChild variant="ghost">

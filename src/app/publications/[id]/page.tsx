@@ -121,7 +121,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const handleSaveEditComment = async (commentId: string) => {
     if (editCommentContent.trim()) {
       try {
-        // Add your API call to update comment here
+        // Add API call to update comment here
         // await updateComment(commentId, editCommentContent);
         editComment({ comment: editCommentContent, commentId });
         console.log("Updating comment:", commentId, editCommentContent);
@@ -141,7 +141,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const handleSaveEditReply = async (replyId: string, commentId: string) => {
     if (editReplyContent.trim()) {
       try {
-        // Add your API call to update reply here
+        // Add API call to update reply here
         // await updateReply(replyId, editReplyContent);
         editReply({ comment: editReplyContent, commentId, replyId });
         console.log("Updating reply:", replyId, editReplyContent);
@@ -161,11 +161,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const handleSaveEditNestedReply = async (
     nestedReplyId: string,
     commentId: string,
-    replyId: string
+    replyId: string,
   ) => {
     if (editNestedReplyContent.trim()) {
       try {
-        // Add your API call to update nested reply here
+        // Add API call to update nested reply here
         // await updateNestedReply(nestedReplyId, editNestedReplyContent);
         editReplyToReply({
           comment: editNestedReplyContent,
@@ -176,7 +176,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
         console.log(
           "Updating nested reply:",
           nestedReplyId,
-          editNestedReplyContent
+          editNestedReplyContent,
         );
 
         setEditingNestedReply(null);
@@ -203,7 +203,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
   // Delete handlers
   const handleDeleteComment = async (commentId: string) => {
     try {
-      // Add your API call to delete comment here
+      // Add API call to delete comment here
       // await deleteComment(commentId);
       deleteComment({ commentId });
       console.log("Deleting comment:", commentId);
@@ -219,7 +219,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
 
   const handleDeleteReply = async (replyId: string, commentId: string) => {
     try {
-      // Add your API call to delete reply here
+      // Add API call to delete reply here
       // await deleteReply(replyId);
       deleteReply({ commentId, replyId });
       console.log("Deleting reply:", replyId);
@@ -236,10 +236,10 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const handleDeleteNestedReply = async (
     nestedReplyId: string,
     commentId: string,
-    replyId: string
+    replyId: string,
   ) => {
     try {
-      // Add your API call to delete nested reply here
+      // Add API call to delete nested reply here
       // await deleteNestedReply(nestedReplyId);
       deleteReplyToReply({ commentId, replyId, childId: nestedReplyId });
       console.log("Deleting nested reply:", nestedReplyId);
