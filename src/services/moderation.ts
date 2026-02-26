@@ -95,6 +95,18 @@ export const triggerAction = async (
   return response.json();
 };
 
+export const triggerLiftSuspension = async (token: string, userId: any) => {
+  console.log("triggerAction called with:", { userId });
+  const response = await fetch(`/api/moderator/initiate-actions`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ userId }),
+  });
+  if (!response.ok) throw new Error("Failed to fetch post by id");
+  return response.json();
+};
 
 export const fetchPubById = async (postId: string) => {
   const response = await fetch(`/api/publications/${postId}`, {

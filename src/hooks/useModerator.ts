@@ -5,6 +5,7 @@ import {
   restoreReportedContent,
   cleanupReports,
   fetchUsers,
+  triggerLiftSuspension,
   triggerAction,
   fetchReportCount,
 } from "@/services/moderation";
@@ -50,7 +51,7 @@ export const useModeratorQuery = (token: string) => {
         contentId,
         reportId,
         userId,
-        token
+        token,
       ),
     onSuccess: (data, variables) => {
       // Always invalidate reports
@@ -141,6 +142,17 @@ export const useFetchUsersModerator = (token: string) => {
     },
   });
 
+  const triggerLiftSuspensionAccount = useMutation({
+    mutationFn: async (userId) => await triggerLiftSuspension(token, userId),
+    onSuccess: (data, variables) => {
+      // Always invalidate reports
+      queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
+      queryClient.invalidateQueries({ queryKey: ["to-review"] });
+      queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+
   return {
     // Query results
     data,
@@ -155,6 +167,12 @@ export const useFetchUsersModerator = (token: string) => {
     isBanning: triggerUserStatus.isPending,
     // createError: mutation.error,
     banSuccess: triggerUserStatus.isSuccess,
+    // createReset: mutation.reset,
+
+    triggerLiftSuspension: triggerLiftSuspensionAccount.mutate,
+    isTriggering: triggerLiftSuspensionAccount.isPending,
+    // createError: mutation.error,
+    triggerSuccess: triggerLiftSuspensionAccount.isSuccess,
     // createReset: mutation.reset,
   };
 };

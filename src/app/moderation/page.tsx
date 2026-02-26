@@ -44,6 +44,7 @@ import { ContentType } from "@/generated/prisma";
 import ReportsList from "@/components/moderation/reports-list";
 import ActionsTakenLists from "@/components/moderation/actions-taken-lists";
 import ReportedUsers from "@/components/moderation/reported-users";
+import { toast } from "sonner";
 
 interface TransformedReport {
   id: string;
@@ -93,7 +94,11 @@ export default function ModerationPage() {
   const { data: reportCount } = useFetchReportCountQuery(token);
   console.log("report count: ", reportCount);
 
-  const { data: usersModerator, triggerBan } = useFetchUsersModerator(token);
+  const {
+    data: usersModerator,
+    triggerBan,
+    triggerLiftSuspension,
+  } = useFetchUsersModerator(token);
   console.log("users for moderation", usersModerator);
 
   // Transform API data to match UI expectations
@@ -257,14 +262,14 @@ export default function ModerationPage() {
           .toLowerCase()
           .includes(searchLower) ||
         user.email?.toLowerCase().includes(searchLower) ||
-        user.role?.toLowerCase().includes(searchLower)
+        user.role?.toLowerCase().includes(searchLower),
     );
   }, [usersModerator?.users, searchQuery]);
 
   // Filtered actions
   const filteredActions = useMemo(() => {
     const actionsReports = transformedReports.filter(
-      (report) => report.actionTaken
+      (report) => report.actionTaken,
     );
 
     if (!searchQuery) return actionsReports;
@@ -275,7 +280,7 @@ export default function ModerationPage() {
         report.actionTaken?.toLowerCase().includes(searchLower) ||
         report.title?.toLowerCase().includes(searchLower) ||
         report.reportedBy?.toLowerCase().includes(searchLower) ||
-        report.reason?.toLowerCase().includes(searchLower)
+        report.reason?.toLowerCase().includes(searchLower),
     );
   }, [transformedReports, searchQuery]);
 
@@ -283,11 +288,11 @@ export default function ModerationPage() {
 
   // Calculate stats from real data
   const reportsWithoutAction = transformedReports.filter(
-    (r: TransformedReport) => !r.actionTaken
+    (r: TransformedReport) => !r.actionTaken,
   );
 
   const commentTypes = Object.values(ContentType).filter(
-    (v) => v.includes("COMMENT") || v.includes("REPLY")
+    (v) => v.includes("COMMENT") || v.includes("REPLY"),
   );
 
   const stats = [
@@ -303,7 +308,7 @@ export default function ModerationPage() {
       label: "High Priority",
       value: reportsWithoutAction
         .filter((r: TransformedReport) =>
-          ["URGENT", "HIGH"].includes(r.priority)
+          ["URGENT", "HIGH"].includes(r.priority),
         )
         .length.toString(),
       icon: AlertTriangle,
@@ -326,7 +331,7 @@ export default function ModerationPage() {
     contentType: any,
     contentId: any,
     reportId: any,
-    userId: any
+    userId: any,
   ) => {
     deleteReportedContent({ contentType, contentId, reportId, userId });
   };
@@ -345,6 +350,18 @@ export default function ModerationPage() {
       return;
     }
     triggerBan({ userId, reportId: reportId ?? null });
+  };
+
+  const handleTriggerLiftSuspension = (userId: any) => {
+    if (!userId) {
+      console.error("Cannot trigger action without userId");
+      return;
+    }
+    triggerLiftSuspension(userId, {
+      onSuccess: () => {
+        toast("Suspension Lifted!");
+      },
+    });
   };
 
   const clearFilters = () => {
@@ -554,8 +571,8 @@ export default function ModerationPage() {
                       {transformedReports.length === 0
                         ? "No reports have been submitted yet."
                         : hasActiveFilters
-                        ? "No reports match your current filters."
-                        : "No reports available."}
+                          ? "No reports match your current filters."
+                          : "No reports available."}
                     </p>
                     {hasActiveFilters && (
                       <Button variant="outline" onClick={clearFilters}>
@@ -671,6 +688,7 @@ export default function ModerationPage() {
                       user={user}
                       confirmAction={confirmAction}
                       handleBan={handleBan}
+                      triggerLiftSuspension={handleTriggerLiftSuspension}
                     />
                   ))
                 )}

@@ -9,12 +9,14 @@ interface ReportedUsersProps {
   user: any;
   confirmAction: (title: string, content: string, func: () => void) => void;
   handleBan: (id: string, reportId: string) => void;
+  triggerLiftSuspension: (id: string) => void;
 }
 
 const ReportedUsers = ({
   user,
   confirmAction,
   handleBan,
+  triggerLiftSuspension,
 }: ReportedUsersProps) => {
   return (
     <div key={user.id}>
@@ -52,7 +54,7 @@ const ReportedUsers = ({
               className="text-xs"
               onClick={() =>
                 confirmAction("Warn user", "This will warn the user.", () =>
-                  handleBan(user.id, user?.reportsAgainst?.[0]?.reportId)
+                  handleBan(user.id, user?.reportsAgainst?.[0]?.reportId),
                 )
               }
             >
@@ -70,7 +72,7 @@ const ReportedUsers = ({
               className="text-xs"
               onClick={() =>
                 confirmAction("Ban this user", "This will ban the user.", () =>
-                  handleBan(user?.id, user?.reportsAgainst?.[0]?.reportId)
+                  handleBan(user?.id, user?.reportsAgainst?.[0]?.reportId),
                 )
               }
             >
@@ -82,22 +84,41 @@ const ReportedUsers = ({
 
           {/* Show Suspend button only if user has 5 or more warning points */}
           {user.warningPoints >= 5 && user.warningPoints < 10 && (
-            <Button
-              variant="destructive"
-              size="sm"
-              className="text-xs"
-              onClick={() =>
-                confirmAction(
-                  "Suspend user",
-                  "This will suspend the user.",
-                  () => handleBan(user?.id, user?.reportsAgainst?.[0]?.reportId)
-                )
-              }
-            >
-              <Ban className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Suspend User</span>
-              <span className="sm:hidden">Suspend</span>
-            </Button>
+            <div>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="text-xs"
+                onClick={() =>
+                  confirmAction(
+                    "Suspend user",
+                    "This will suspend the user.",
+                    () =>
+                      handleBan(user?.id, user?.reportsAgainst?.[0]?.reportId),
+                  )
+                }
+              >
+                <Ban className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Suspend User</span>
+                <span className="sm:hidden">Suspend</span>
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="text-xs"
+                onClick={() =>
+                  confirmAction(
+                    "Lift Suspension",
+                    "This will lift the suspension to user.",
+                    () => triggerLiftSuspension(user?.id),
+                  )
+                }
+              >
+                <Ban className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Lift Suspension</span>
+                <span className="sm:hidden">Lift</span>
+              </Button>
+            </div>
           )}
         </div>
       </div>

@@ -111,3 +111,85 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function PUT(req: NextRequest) {
+  try {
+    const authResult = await authMiddleware(req);
+    if (authResult instanceof NextResponse) return authResult;
+
+    if (
+      !([Role.MODERATOR, Role.ADMIN] as Role[]).includes(authResult.user.role)
+    ) {
+      return NextResponse.json(
+        {
+          message:
+            "Unauthorized: You do not have permission to perform this action.",
+        },
+        { status: 403 },
+      );
+    }
+
+    const body = await req.json();
+    const { userId } = body;
+
+    // Validate required parameters
+    if (!userId) {
+      return NextResponse.json(
+        { message: "userId is required" },
+        { status: 400 },
+      );
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      let updatedUser = user;
+
+      updatedUser = await tx.user.update({
+        where: { id: userId },
+        data: { status: "ACTIVE", warningPoints: 0 },
+      });
+
+      let notificationTitle = "Your account is now unsuspended!";
+      let notificationContent = "You can use your account again, thank you";
+
+      // Only create notification if there's content to notify about
+      if (notificationTitle && notificationContent) {
+        await tx.notifications.create({
+          data: {
+            notifType: "reports",
+            notifTitle: notificationTitle,
+            notifContent: notificationContent,
+            userId: userId,
+            reportId: null, // Allow null if reportId is not provided
+          },
+        });
+      }
+
+      return {
+        user: updatedUser,
+        statusChanged: user.status,
+      };
+    });
+
+    return NextResponse.json(result, { status: 200 });
+  } catch (error) {
+    console.error("Failed to check warnings:", error);
+    if (error instanceof Error) {
+      if (error.message === "User not found") {
+        return NextResponse.json(
+          { message: "User not found" },
+          { status: 404 },
+        );
+      }
+      console.error("Error details:", error.message);
+    }
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 },
+    );
+  }
+}
