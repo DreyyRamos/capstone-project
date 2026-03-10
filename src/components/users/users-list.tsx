@@ -157,14 +157,14 @@ const UsersList = ({
               <Shield className="mr-2 h-4 w-4" />
               Edit Permissions
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
+            {/* <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600"
               onClick={() => handleSuspendUser(user)}
             >
               <UserX className="mr-2 h-4 w-4" />
               Suspend User
-            </DropdownMenuItem>
+            </DropdownMenuItem>*/}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
