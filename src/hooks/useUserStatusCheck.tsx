@@ -116,21 +116,50 @@ export const useUserStatusCheck = (
     if (!modalContent) return null;
 
     return (
-      <AlertDialog open={showModal} onOpenChange={setShowModal}>
-        <AlertDialogContent className="max-w-md">
-          <AlertDialogHeader>
-            <div id="useUserStatusCheck-flex-1" data-testId="useUserStatusCheck-flex-1" className="flex items-center gap-2">
+      <AlertDialog
+        data-testId="useUserStatusCheck-a-1"
+        open={showModal}
+        onOpenChange={setShowModal}
+      >
+        <AlertDialogContent
+          id="useUserStatusCheck-a-2"
+          data-testId="useUserStatusCheck-a-2"
+          className="max-w-md"
+        >
+          <AlertDialogHeader
+            id="useUserStatusCheck-a-3"
+            data-testId="useUserStatusCheck-a-3"
+          >
+            <div
+              id="useUserStatusCheck-flex-1"
+              data-testId="useUserStatusCheck-flex-1"
+              className="flex items-center gap-2"
+            >
               <AlertTriangle className="h-5 w-5 text-destructive" />
-              <AlertDialogTitle className="text-destructive">
+              <AlertDialogTitle
+                id="useUserStatusCheck-a-4"
+                data-testId="useUserStatusCheck-a-4"
+                className="text-destructive"
+              >
                 {modalContent.title}
               </AlertDialogTitle>
             </div>
-            <AlertDialogDescription className="text-left">
+            <AlertDialogDescription
+              id="useUserStatusCheck-a-5"
+              data-testId="useUserStatusCheck-a-5"
+              className="text-left"
+            >
               {modalContent.description}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
+          <AlertDialogFooter
+            id="useUserStatusCheck-a-6"
+            data-testId="useUserStatusCheck-a-6"
+            className="flex-col gap-2 sm:flex-row"
+          >
             <AlertDialogAction
+              id="useUserStatusCheck-a-7"
+              data-testId="useUserStatusCheck-a-7"
               onClick={() => {
                 window.location.href =
                   "mailto:admin@yourapp.com?subject=Account Status Inquiry";
@@ -140,7 +169,11 @@ export const useUserStatusCheck = (
               <Mail className="h-4 w-4" />
               Contact Administrator
             </AlertDialogAction>
-            <AlertDialogAction onClick={handleModalClose}>
+            <AlertDialogAction
+              id="useUserStatusCheck-a-8"
+              data-testId="useUserStatusCheck-a-8"
+              onClick={handleModalClose}
+            >
               Close
             </AlertDialogAction>
           </AlertDialogFooter>

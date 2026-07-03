@@ -208,9 +208,9 @@ export default function RegisterPage() {
           <div id="page-div-4" data-testId="page-div-4" className="text-center space-y-2">
             <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center justify-center gap-2 mb-4">
               <div id="page-flex-6" data-testId="page-flex-6" className="h-10 w-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">RS</span>
+                <span id="page-span-1" data-testId="page-span-1" className="text-white font-bold">RS</span>
               </div>
-              <span className="font-bold text-xl">Ramos School</span>
+              <span id="page-span-2" data-testId="page-span-2" className="font-bold text-xl">Ramos School</span>
             </div>
             <h1 className="text-2xl font-bold">Join our community</h1>
             <p className="text-muted-foreground">
@@ -311,7 +311,7 @@ export default function RegisterPage() {
                         onChange={handleChange}
                         className={errors.password ? "border-red-500" : ""}
                       />
-                      <Button
+                      <Button id="page-button-1" data-testId="page-button-1"
                         type="button"
                         variant="ghost"
                         size="sm"
@@ -392,7 +392,7 @@ export default function RegisterPage() {
                               className="flex items-center gap-1"
                             >
                               {interest}
-                              <button
+                              <button id="page-button-2" data-testId="page-button-2"
                                 type="button"
                                 onClick={() => {
                                   console.log("clicked X on", interest);
@@ -420,7 +420,7 @@ export default function RegisterPage() {
                             }
                           }}
                         />
-                        <Button type="button" onClick={addInterest} size="sm">
+                        <Button id="page-button-3" data-testId="page-button-3" type="button" onClick={addInterest} size="sm">
                           <Plus className="h-4 w-4" />
                         </Button>
                       </div>
@@ -526,7 +526,7 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button id="page-button-4" data-testId="page-button-4" type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Creating Account..." : "Create Account"}
                 </Button>
               </form>
@@ -546,7 +546,7 @@ export default function RegisterPage() {
 
           <div id="page-div-35" data-testId="page-div-35" className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="text-blue-600 hover:underline">
+            <Link id="page-link-1" data-testId="page-link-1" href="/login" className="text-blue-600 hover:underline">
               Sign in here
             </Link>
           </div>

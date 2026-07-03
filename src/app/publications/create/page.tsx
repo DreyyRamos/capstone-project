@@ -174,7 +174,7 @@ export default function CreatePublicationPage() {
       <div id="page-flex-2" data-testId="page-flex-2" className="flex items-center justify-between">
         <div id="page-flex-3" data-testId="page-flex-3" className="flex items-center flex-wrap gap-4">
           <Button asChild variant="ghost">
-            <Link href="/publications">
+            <Link id="page-link-1" data-testId="page-link-1" href="/publications">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Link>
@@ -256,7 +256,7 @@ export default function CreatePublicationPage() {
                       alt="Cover"
                       className="w-full h-48 object-cover rounded-lg"
                     />
-                    <Button
+                    <Button id="page-button-1" data-testId="page-button-1"
                       variant="destructive"
                       size="sm"
                       className="absolute top-2 right-2"
@@ -428,7 +428,7 @@ export default function CreatePublicationPage() {
                       }
                     }}
                   />
-                  <Button type="button" onClick={handleAddTag} size="sm">
+                  <Button id="page-button-2" data-testId="page-button-2" type="button" onClick={handleAddTag} size="sm">
                     Add
                   </Button>
                 </div>
@@ -442,7 +442,7 @@ export default function CreatePublicationPage() {
                         className="flex items-center gap-1"
                       >
                         {tag}
-                        <button
+                        <button id="page-button-3" data-testId="page-button-3"
                           onClick={() => handleRemoveTag(tag)}
                           className="ml-1 hover:text-destructive"
                         >
@@ -461,7 +461,7 @@ export default function CreatePublicationPage() {
                 <CardTitle>Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button
+                <Button id="page-button-4" data-testId="page-button-4"
                   type="submit"
                   variant="outline"
                   className="w-full bg-transparent"
@@ -470,7 +470,7 @@ export default function CreatePublicationPage() {
                   <Save className="mr-2 h-4 w-4" />
                   Publish
                 </Button>
-                {/* <Button variant="outline" className="w-full bg-transparent">
+                {/* <Button id="page-button-5" data-testId="page-button-5" variant="outline" className="w-full bg-transparent">
                   <Save className="mr-2 h-4 w-4" />
                   Save Draft
                 </Button> */}

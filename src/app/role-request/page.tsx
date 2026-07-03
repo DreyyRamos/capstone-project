@@ -178,7 +178,11 @@ export default function RoleRequestsPage() {
   }
 
   return (
-    <div id="page-div-1" data-testId="page-div-1" className="space-y-4 md:space-y-6 p-4 md:p-0">
+    <div
+      id="page-div-1"
+      data-testId="page-div-1"
+      className="space-y-4 md:space-y-6 p-4 md:p-0"
+    >
       {/* Header */}
       <div id="page-div-2" data-testId="page-div-2" className="space-y-2">
         <h1 className="text-2xl md:text-3xl font-bold">Role Change Requests</h1>
@@ -188,10 +192,18 @@ export default function RoleRequestsPage() {
       </div>
 
       {/* Statistics Cards */}
-      <div id="page-grid-3" data-testId="page-grid-3" className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+      <div
+        id="page-grid-3"
+        data-testId="page-grid-3"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4"
+      >
         <Card>
           <CardContent className="p-4 md:pt-6">
-            <div id="page-flex-4" data-testId="page-flex-4" className="flex items-center space-x-2">
+            <div
+              id="page-flex-4"
+              data-testId="page-flex-4"
+              className="flex items-center space-x-2"
+            >
               <UserCog className="h-4 w-4 md:h-5 md:w-5 text-blue-600 flex-shrink-0" />
               <div id="page-div-5" data-testId="page-div-5" className="min-w-0">
                 <p className="text-lg md:text-2xl font-bold">{stats.total}</p>
@@ -205,7 +217,11 @@ export default function RoleRequestsPage() {
 
         <Card>
           <CardContent className="p-4 md:pt-6">
-            <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center space-x-2">
+            <div
+              id="page-flex-6"
+              data-testId="page-flex-6"
+              className="flex items-center space-x-2"
+            >
               <Clock className="h-4 w-4 md:h-5 md:w-5 text-yellow-600 flex-shrink-0" />
               <div id="page-div-7" data-testId="page-div-7" className="min-w-0">
                 <p className="text-lg md:text-2xl font-bold">{stats.pending}</p>
@@ -219,7 +235,11 @@ export default function RoleRequestsPage() {
 
         <Card>
           <CardContent className="p-4 md:pt-6">
-            <div id="page-flex-8" data-testId="page-flex-8" className="flex items-center space-x-2">
+            <div
+              id="page-flex-8"
+              data-testId="page-flex-8"
+              className="flex items-center space-x-2"
+            >
               <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-600 flex-shrink-0" />
               <div id="page-div-9" data-testId="page-div-9" className="min-w-0">
                 <p className="text-lg md:text-2xl font-bold">
@@ -235,9 +255,17 @@ export default function RoleRequestsPage() {
 
         <Card>
           <CardContent className="p-4 md:pt-6">
-            <div id="page-flex-10" data-testId="page-flex-10" className="flex items-center space-x-2">
+            <div
+              id="page-flex-10"
+              data-testId="page-flex-10"
+              className="flex items-center space-x-2"
+            >
               <XCircle className="h-4 w-4 md:h-5 md:w-5 text-red-600 flex-shrink-0" />
-              <div id="page-div-11" data-testId="page-div-11" className="min-w-0">
+              <div
+                id="page-div-11"
+                data-testId="page-div-11"
+                className="min-w-0"
+              >
                 <p className="text-lg md:text-2xl font-bold">
                   {stats.rejected}
                 </p>
@@ -253,9 +281,17 @@ export default function RoleRequestsPage() {
       {/* Filters */}
       <Card>
         <CardContent className="p-4 md:pt-6">
-          <div id="page-div-12" data-testId="page-div-12" className="space-y-3 md:space-y-0 md:flex md:flex-row md:gap-4">
+          <div
+            id="page-div-12"
+            data-testId="page-div-12"
+            className="space-y-3 md:space-y-0 md:flex md:flex-row md:gap-4"
+          >
             <div id="page-div-13" data-testId="page-div-13" className="flex-1">
-              <div id="page-div-14" data-testId="page-div-14" className="relative">
+              <div
+                id="page-div-14"
+                data-testId="page-div-14"
+                className="relative"
+              >
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
                   placeholder="Search by name, email, or role..."
@@ -266,7 +302,11 @@ export default function RoleRequestsPage() {
               </div>
             </div>
 
-            <div id="page-grid-15" data-testId="page-grid-15" className="grid grid-cols-2 gap-2 md:flex md:gap-4">
+            <div
+              id="page-grid-15"
+              data-testId="page-grid-15"
+              className="grid grid-cols-2 gap-2 md:flex md:gap-4"
+            >
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-full md:w-[140px]">
                   <SelectValue placeholder="Status" />
@@ -307,7 +347,11 @@ export default function RoleRequestsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 md:p-6 pt-0">
-          <div id="page-div-16" data-testId="page-div-16" className="space-y-3 md:space-y-4">
+          <div
+            id="page-div-16"
+            data-testId="page-div-16"
+            className="space-y-3 md:space-y-4"
+          >
             {filteredRequests?.map((request: any) => (
               <RoleRequestList
                 key={request.request_id}
@@ -319,7 +363,11 @@ export default function RoleRequestsPage() {
             ))}
 
             {filteredRequests?.length === 0 && (
-              <div id="page-div-17" data-testId="page-div-17" className="text-center py-8 md:py-12">
+              <div
+                id="page-div-17"
+                data-testId="page-div-17"
+                className="text-center py-8 md:py-12"
+              >
                 <UserCog className="h-8 w-8 md:h-12 md:w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-base md:text-lg font-semibold mb-2">
                   No requests found
@@ -347,36 +395,72 @@ export default function RoleRequestsPage() {
 
           {selectedRequest && (
             <ScrollArea className="max-h-[60vh]">
-              <div id="page-div-18" data-testId="page-div-18" className="space-y-6">
+              <div
+                id="page-div-18"
+                data-testId="page-div-18"
+                className="space-y-6"
+              >
                 {/* User Information */}
-                <div id="page-div-19" data-testId="page-div-19" className="space-y-4">
+                <div
+                  id="page-div-19"
+                  data-testId="page-div-19"
+                  className="space-y-4"
+                >
                   <h3 className="text-lg font-semibold">User Information</h3>
-                  <div id="page-flex-20" data-testId="page-flex-20" className="flex items-center space-x-4">
-                    <Avatar className="h-16 w-16">
+                  <div
+                    id="page-flex-20"
+                    data-testId="page-flex-20"
+                    className="flex items-center space-x-4"
+                  >
+                    <Avatar
+                      id="page-a-2"
+                      data-testId="page-a-2"
+                      className="h-16 w-16"
+                    >
                       <AvatarImage
                         src={selectedRequest.profileImage || "/placeholder.svg"}
                       />
-                      <AvatarFallback className="text-lg">
+                      <AvatarFallback
+                        id="page-a-3"
+                        data-testId="page-a-3"
+                        className="text-lg"
+                      >
                         {selectedRequest.firstName?.[0]}
                         {selectedRequest.lastName?.[0]}
                       </AvatarFallback>
                     </Avatar>
-                    <div id="page-div-21" data-testId="page-div-21" className="space-y-1">
+                    <div
+                      id="page-div-21"
+                      data-testId="page-div-21"
+                      className="space-y-1"
+                    >
                       <h4 className="text-xl font-semibold">
                         {selectedRequest.firstName} {selectedRequest.lastName}
                       </h4>
-                      <div id="page-flex-22" data-testId="page-flex-22" className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div
+                        id="page-flex-22"
+                        data-testId="page-flex-22"
+                        className="flex items-center gap-2 text-sm text-muted-foreground"
+                      >
                         <Mail className="h-4 w-4" />
                         {selectedRequest.email}
                       </div>
                       {selectedRequest.userPhone && (
-                        <div id="page-flex-23" data-testId="page-flex-23" className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div
+                          id="page-flex-23"
+                          data-testId="page-flex-23"
+                          className="flex items-center gap-2 text-sm text-muted-foreground"
+                        >
                           <Phone className="h-4 w-4" />
                           {selectedRequest.userPhone}
                         </div>
                       )}
                       {selectedRequest.userLocation && (
-                        <div id="page-flex-24" data-testId="page-flex-24" className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div
+                          id="page-flex-24"
+                          data-testId="page-flex-24"
+                          className="flex items-center gap-2 text-sm text-muted-foreground"
+                        >
                           <MapPin className="h-4 w-4" />
                           {selectedRequest.userLocation}
                         </div>
@@ -388,11 +472,19 @@ export default function RoleRequestsPage() {
                 <Separator />
 
                 {/* User Stats */}
-                <div id="page-div-25" data-testId="page-div-25" className="space-y-4">
+                <div
+                  id="page-div-25"
+                  data-testId="page-div-25"
+                  className="space-y-4"
+                >
                   <h3 className="text-lg font-semibold">
                     User Other Informations
                   </h3>
-                  <div id="page-grid-26" data-testId="page-grid-26" className="grid grid-cols-2 gap-4">
+                  <div
+                    id="page-grid-26"
+                    data-testId="page-grid-26"
+                    className="grid grid-cols-2 gap-4"
+                  >
                     <div id="page-div-27" data-testId="page-div-27">
                       <p className="text-sm font-medium text-muted-foreground mb-1">
                         Publications
@@ -439,16 +531,24 @@ export default function RoleRequestsPage() {
                 <Separator />
 
                 {/* Role Change Information */}
-                <div id="page-div-32" data-testId="page-div-32" className="space-y-4">
+                <div
+                  id="page-div-32"
+                  data-testId="page-div-32"
+                  className="space-y-4"
+                >
                   <h3 className="text-lg font-semibold">Role Change Request</h3>
-                  <div id="page-grid-33" data-testId="page-grid-33" className="grid grid-cols-2 gap-4">
+                  <div
+                    id="page-grid-33"
+                    data-testId="page-grid-33"
+                    className="grid grid-cols-2 gap-4"
+                  >
                     <div id="page-div-34" data-testId="page-div-34">
                       <p className="text-sm font-medium text-muted-foreground mb-1">
                         Current Role
                       </p>
                       <Badge
                         className={getRoleBadgeColor(
-                          selectedRequest.currentRole
+                          selectedRequest.currentRole,
                         )}
                         variant="outline"
                       >
@@ -461,7 +561,7 @@ export default function RoleRequestsPage() {
                       </p>
                       <Badge
                         className={getRoleBadgeColor(
-                          selectedRequest.requestedRole
+                          selectedRequest.requestedRole,
                         )}
                         variant="outline"
                       >
@@ -486,7 +586,11 @@ export default function RoleRequestsPage() {
                 <Separator />
 
                 {/* Request Details */}
-                <div id="page-div-37" data-testId="page-div-37" className="space-y-4">
+                <div
+                  id="page-div-37"
+                  data-testId="page-div-37"
+                  className="space-y-4"
+                >
                   <h3 className="text-lg font-semibold">Request Details</h3>
                   <div id="page-div-38" data-testId="page-div-38">
                     <p className="text-sm font-medium text-muted-foreground mb-2">
@@ -512,14 +616,26 @@ export default function RoleRequestsPage() {
                 <Separator />
 
                 {/* Timestamps */}
-                <div id="page-div-40" data-testId="page-div-40" className="space-y-4">
+                <div
+                  id="page-div-40"
+                  data-testId="page-div-40"
+                  className="space-y-4"
+                >
                   <h3 className="text-lg font-semibold">Timeline</h3>
-                  <div id="page-grid-41" data-testId="page-grid-41" className="grid grid-cols-1 gap-4 text-sm">
+                  <div
+                    id="page-grid-41"
+                    data-testId="page-grid-41"
+                    className="grid grid-cols-1 gap-4 text-sm"
+                  >
                     <div id="page-div-42" data-testId="page-div-42">
                       <p className="font-medium text-muted-foreground mb-1">
                         Request Date
                       </p>
-                      <div id="page-flex-43" data-testId="page-flex-43" className="flex items-center gap-2">
+                      <div
+                        id="page-flex-43"
+                        data-testId="page-flex-43"
+                        className="flex items-center gap-2"
+                      >
                         <Calendar className="h-4 w-4 text-muted-foreground" />
                         {new Date(selectedRequest.createdAt).toLocaleString()}
                       </div>
@@ -531,8 +647,14 @@ export default function RoleRequestsPage() {
                 {selectedRequest.status === "PENDING" && (
                   <>
                     <Separator />
-                    <div id="page-flex-44" data-testId="page-flex-44" className="flex flex-col sm:flex-row gap-2 pt-4">
+                    <div
+                      id="page-flex-44"
+                      data-testId="page-flex-44"
+                      className="flex flex-col sm:flex-row gap-2 pt-4"
+                    >
                       <Button
+                        id="page-button-1"
+                        data-testId="page-button-1"
                         className="flex-1"
                         onClick={() => {
                           setIsModalOpen(false);
@@ -543,6 +665,8 @@ export default function RoleRequestsPage() {
                         Approve Request
                       </Button>
                       <Button
+                        id="page-button-2"
+                        data-testId="page-button-2"
                         variant="destructive"
                         className="flex-1"
                         onClick={() => {

@@ -19,7 +19,7 @@ export default function UsersLoading() {
           <Skeleton className="h-9 w-64" />
           <Skeleton className="h-5 w-96" />
         </div>
-        <Button disabled>
+        <Button id="loading-button-1" data-testId="loading-button-1" disabled>
           <UserPlus className="mr-2 h-4 w-4" />
           Add User
         </Button>
@@ -117,7 +117,7 @@ export default function UsersLoading() {
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" disabled>
+                      <Button id="loading-button-2" data-testId="loading-button-2" variant="ghost" size="icon" disabled>
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>

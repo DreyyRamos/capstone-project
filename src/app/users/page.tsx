@@ -140,7 +140,11 @@ export default function UsersPage() {
   return (
     <div id="page-div-1" data-testId="page-div-1" className="space-y-6">
       {/* Header */}
-      <div id="page-flex-2" data-testId="page-flex-2" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div
+        id="page-flex-2"
+        data-testId="page-flex-2"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
         <div id="page-div-3" data-testId="page-div-3">
           <h1 className="text-3xl font-bold">User Management</h1>
           <p className="text-muted-foreground">
@@ -148,7 +152,7 @@ export default function UsersPage() {
           </p>
         </div>
         <Button asChild>
-          <Link href={"/admissions"}>
+          <Link id="page-link-1" data-testId="page-link-1" href={"/admissions"}>
             <UserPlus className="mr-2 h-4 w-4" />
             User Admissions
           </Link>
@@ -156,16 +160,28 @@ export default function UsersPage() {
       </div>
 
       {/* Stats */}
-      <div id="page-grid-4" data-testId="page-grid-4" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        id="page-grid-4"
+        data-testId="page-grid-4"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
         {stats.map((stat, index) => (
           <Card key={index}>
             <CardContent className="p-6">
-              <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center justify-between">
+              <div
+                id="page-flex-5"
+                data-testId="page-flex-5"
+                className="flex items-center justify-between"
+              >
                 <div id="page-div-6" data-testId="page-div-6">
                   <p className="text-2xl font-bold">{stat.value}</p>
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
                 </div>
-                <div id="page-flex-7" data-testId="page-flex-7" className="flex items-center gap-2">
+                <div
+                  id="page-flex-7"
+                  data-testId="page-flex-7"
+                  className="flex items-center gap-2"
+                >
                   <stat.icon className="h-5 w-5 text-muted-foreground" />
                   <Badge variant="secondary" className="text-xs text-green-600">
                     {stat.change}
@@ -180,8 +196,16 @@ export default function UsersPage() {
       {/* Filters */}
       <Card>
         <CardContent className="p-6">
-          <div id="page-flex-8" data-testId="page-flex-8" className="flex flex-col sm:flex-row gap-4">
-            <div id="page-div-9" data-testId="page-div-9" className="relative flex-1">
+          <div
+            id="page-flex-8"
+            data-testId="page-flex-8"
+            className="flex flex-col sm:flex-row gap-4"
+          >
+            <div
+              id="page-div-9"
+              data-testId="page-div-9"
+              className="relative flex-1"
+            >
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search users..."
@@ -235,7 +259,11 @@ export default function UsersPage() {
             ))}
 
             {filteredUsers?.length === 0 && (
-              <div id="page-div-11" data-testId="page-div-11" className="text-center py-12">
+              <div
+                id="page-div-11"
+                data-testId="page-div-11"
+                className="text-center py-12"
+              >
                 <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">No users found</h3>
                 <p className="text-muted-foreground">
@@ -259,8 +287,16 @@ export default function UsersPage() {
               {selectedUser?.lastName}
             </DialogDescription>
           </DialogHeader>
-          <div id="page-grid-12" data-testId="page-grid-12" className="grid gap-4 py-4">
-            <div id="page-grid-13" data-testId="page-grid-13" className="grid gap-2">
+          <div
+            id="page-grid-12"
+            data-testId="page-grid-12"
+            className="grid gap-4 py-4"
+          >
+            <div
+              id="page-grid-13"
+              data-testId="page-grid-13"
+              className="grid gap-2"
+            >
               <Label htmlFor="role">New Role</Label>
               <Select value={newRole} onValueChange={setNewRole}>
                 <SelectTrigger>
@@ -274,7 +310,11 @@ export default function UsersPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div id="page-grid-14" data-testId="page-grid-14" className="grid gap-2">
+            <div
+              id="page-grid-14"
+              data-testId="page-grid-14"
+              className="grid gap-2"
+            >
               <Label htmlFor="reason">Reason for change (optional)</Label>
               <Textarea
                 id="reason"
@@ -287,6 +327,8 @@ export default function UsersPage() {
           </div>
           <DialogFooter>
             <Button
+              id="page-button-1"
+              data-testId="page-button-1"
               variant="outline"
               onClick={() => setIsEditRoleOpen(false)}
               disabled={isUpdating}
@@ -294,6 +336,8 @@ export default function UsersPage() {
               Cancel
             </Button>
             <Button
+              id="page-button-2"
+              data-testId="page-button-2"
               onClick={() => handleRoleUpdate(selectedUser)}
               disabled={!newRole || !reason.trim() || isUpdating}
             >

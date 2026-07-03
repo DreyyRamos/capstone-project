@@ -186,7 +186,7 @@ export default function PublicationsPage() {
           </p>
         </div>
         <Button asChild>
-          <a className="cursor-pointer" onClick={startDiscussion}>
+          <a id="page-a-1" data-testId="page-a-1" className="cursor-pointer" onClick={startDiscussion}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Create Publication
           </a>
@@ -244,7 +244,7 @@ export default function PublicationsPage() {
           publications
         </p>
         {searchQuery && (
-          <Button variant="ghost" size="sm" onClick={() => setSearchQuery("")}>
+          <Button id="page-button-1" data-testId="page-button-1" variant="ghost" size="sm" onClick={() => setSearchQuery("")}>
             Clear search
           </Button>
         )}
@@ -270,7 +270,7 @@ export default function PublicationsPage() {
               </p>
               <div id="page-flex-9" data-testId="page-flex-9" className="flex flex-col sm:flex-row gap-2 justify-center">
                 {(searchQuery || selectedCategory !== "all") && (
-                  <Button
+                  <Button id="page-button-2" data-testId="page-button-2"
                     variant="outline"
                     onClick={() => {
                       setSearchQuery("");
@@ -281,7 +281,7 @@ export default function PublicationsPage() {
                   </Button>
                 )}
                 <Button asChild>
-                  <Link href="/publications/create">
+                  <Link id="page-link-1" data-testId="page-link-1" href="/publications/create">
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Create Publication
                   </Link>

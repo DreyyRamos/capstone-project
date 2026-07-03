@@ -136,11 +136,11 @@ const CommentList = ({
       <CardContent className="p-2">
         <div id="comment-list-div-1" data-testId="comment-list-div-1" className="space-y-4">
           <div id="comment-list-flex-2" data-testId="comment-list-flex-2" className="flex items-start gap-4">
-            <Avatar className="h-10 w-10">
+            <Avatar id="comment-list-a-1" data-testId="comment-list-a-1" className="h-10 w-10">
               <AvatarImage
                 src={comment.author.profileImage || "/placeholder.svg"}
               />
-              <AvatarFallback>{comment.author.firstName[0]}</AvatarFallback>
+              <AvatarFallback id="comment-list-a-2" data-testId="comment-list-a-2">{comment.author.firstName[0]}</AvatarFallback>
             </Avatar>
             <div id="comment-list-div-3" data-testId="comment-list-div-3" className="flex-1 space-y-3">
               <div id="comment-list-flex-4" data-testId="comment-list-flex-4" className="flex items-center justify-between">
@@ -171,7 +171,7 @@ const CommentList = ({
                 {isCurrentUserContent(comment.authorId) && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm">
+                      <Button id="comment-list-button-1" data-testId="comment-list-button-1" variant="ghost" size="sm">
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -208,14 +208,14 @@ const CommentList = ({
                     rows={3}
                   />
                   <div id="comment-list-flex-8" data-testId="comment-list-flex-8" className="flex items-center gap-2">
-                    <Button
+                    <Button id="comment-list-button-2" data-testId="comment-list-button-2"
                       size="sm"
                       onClick={() => handleSaveEditComment(comment.commentId)}
                       disabled={!editCommentContent.trim()}
                     >
                       Save
                     </Button>
-                    <Button
+                    <Button id="comment-list-button-3" data-testId="comment-list-button-3"
                       variant="ghost"
                       size="sm"
                       onClick={handleCancelEdit}
@@ -236,14 +236,14 @@ const CommentList = ({
                   token={token}
                   forumId={id}
                 />
-                <Button
+                <Button id="comment-list-button-4" data-testId="comment-list-button-4"
                   variant="ghost"
                   size="sm"
                   onClick={() => handleReply(comment.commentId)}
                 >
                   {replyingTo === comment.commentId ? "Cancel" : "Reply"}
                 </Button>
-                <Button
+                <Button id="comment-list-button-5" data-testId="comment-list-button-5"
                   variant="ghost"
                   size="sm"
                   onClick={() =>
@@ -271,10 +271,10 @@ const CommentList = ({
                   className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                 />
                 <div id="comment-list-flex-12" data-testId="comment-list-flex-12" className="flex items-center justify-end gap-2 mt-2">
-                  <Button variant="ghost" size="sm" onClick={handleCancelReply}>
+                  <Button id="comment-list-button-6" data-testId="comment-list-button-6" variant="ghost" size="sm" onClick={handleCancelReply}>
                     Cancel
                   </Button>
-                  <Button
+                  <Button id="comment-list-button-7" data-testId="comment-list-button-7"
                     size="sm"
                     onClick={() =>
                       handleSubmitReply(topic?.forumId, comment.commentId)
@@ -292,7 +292,7 @@ const CommentList = ({
             <div id="comment-list-div-13" data-testId="comment-list-div-13" className="ml-6 md:ml-14 space-y-4 border-l-2 border-muted pl-2 md:pl-4">
               {comment.replies.map((reply: any) => (
                 <div id="comment-list-flex-14" data-testId="comment-list-flex-14" key={reply.replyId} className="flex items-start gap-4">
-                  <Avatar className="h-8 w-8">
+                  <Avatar id="comment-list-a-3" data-testId="comment-list-a-3" className="h-8 w-8">
                     <AvatarImage
                       src={
                         reply.reply_author.profileImage ||
@@ -300,7 +300,7 @@ const CommentList = ({
                         "/placeholder.svg"
                       }
                     />
-                    <AvatarFallback>
+                    <AvatarFallback id="comment-list-a-4" data-testId="comment-list-a-4">
                       {reply.reply_author.firstName[0]}
                     </AvatarFallback>
                   </Avatar>
@@ -314,7 +314,7 @@ const CommentList = ({
                         <Badge variant="outline" className="text-xs">
                           {reply.reply_author.role}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">
+                        <span id="comment-list-span-1" data-testId="comment-list-span-1" className="text-xs text-muted-foreground">
                           {new Date(reply.createdAt).toLocaleDateString()}
                         </span>
                       </div>
@@ -323,7 +323,7 @@ const CommentList = ({
                       {isCurrentUserContent(reply.reply_authorId) && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
+                            <Button id="comment-list-button-8" data-testId="comment-list-button-8" variant="ghost" size="sm">
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -363,7 +363,7 @@ const CommentList = ({
                           rows={2}
                         />
                         <div id="comment-list-flex-19" data-testId="comment-list-flex-19" className="flex items-center gap-2">
-                          <Button
+                          <Button id="comment-list-button-9" data-testId="comment-list-button-9"
                             size="sm"
                             onClick={() =>
                               handleSaveEditReply(
@@ -375,7 +375,7 @@ const CommentList = ({
                           >
                             Save
                           </Button>
-                          <Button
+                          <Button id="comment-list-button-10" data-testId="comment-list-button-10"
                             variant="ghost"
                             size="sm"
                             onClick={handleCancelEdit}
@@ -396,7 +396,7 @@ const CommentList = ({
                         token={token}
                         forumId={id}
                       />
-                      <Button
+                      <Button id="comment-list-button-11" data-testId="comment-list-button-11"
                         variant="ghost"
                         size="sm"
                         onClick={() => handleSecondLevelReply(reply.replyId)}
@@ -405,7 +405,7 @@ const CommentList = ({
                           ? "Cancel"
                           : "Reply"}
                       </Button>
-                      <Button
+                      <Button id="comment-list-button-12" data-testId="comment-list-button-12"
                         variant="ghost"
                         size="sm"
                         onClick={() =>
@@ -433,14 +433,14 @@ const CommentList = ({
                             className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                           />
                           <div id="comment-list-flex-23" data-testId="comment-list-flex-23" className="flex items-center justify-end gap-2 mt-2">
-                            <Button
+                            <Button id="comment-list-button-13" data-testId="comment-list-button-13"
                               variant="ghost"
                               size="sm"
                               onClick={handleCancelSecondLevelReply}
                             >
                               Cancel
                             </Button>
-                            <Button
+                            <Button id="comment-list-button-14" data-testId="comment-list-button-14"
                               size="sm"
                               onClick={() =>
                                 handleSubmitSecondLevelReply(
@@ -464,7 +464,7 @@ const CommentList = ({
                             key={childReply.replyToReplyId}
                             className="flex items-start gap-4"
                           >
-                            <Avatar className="h-8 w-8">
+                            <Avatar id="comment-list-a-5" data-testId="comment-list-a-5" className="h-8 w-8">
                               <AvatarImage
                                 src={
                                   childReply.reply_author.profileImage ||
@@ -472,7 +472,7 @@ const CommentList = ({
                                   "/placeholder.svg"
                                 }
                               />
-                              <AvatarFallback>
+                              <AvatarFallback id="comment-list-a-6" data-testId="comment-list-a-6">
                                 {childReply.reply_author.firstName[0]}
                               </AvatarFallback>
                             </Avatar>
@@ -486,7 +486,7 @@ const CommentList = ({
                                   <Badge variant="outline" className="text-xs">
                                     {childReply.reply_author.role}
                                   </Badge>
-                                  <span className="text-xs text-muted-foreground">
+                                  <span id="comment-list-span-2" data-testId="comment-list-span-2" className="text-xs text-muted-foreground">
                                     {new Date(
                                       childReply.createdAt
                                     ).toLocaleDateString()}
@@ -499,7 +499,7 @@ const CommentList = ({
                                 ) && (
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                      <Button variant="ghost" size="sm">
+                                      <Button id="comment-list-button-15" data-testId="comment-list-button-15" variant="ghost" size="sm">
                                         <MoreVertical className="h-4 w-4" />
                                       </Button>
                                     </DropdownMenuTrigger>
@@ -545,7 +545,7 @@ const CommentList = ({
                                     className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                                   />
                                   <div id="comment-list-flex-30" data-testId="comment-list-flex-30" className="flex items-center gap-2">
-                                    <Button
+                                    <Button id="comment-list-button-16" data-testId="comment-list-button-16"
                                       size="sm"
                                       onClick={() =>
                                         handleSaveEditNestedReply(
@@ -559,7 +559,7 @@ const CommentList = ({
                                     >
                                       Save
                                     </Button>
-                                    <Button
+                                    <Button id="comment-list-button-17" data-testId="comment-list-button-17"
                                       variant="ghost"
                                       size="sm"
                                       onClick={handleCancelEdit}
@@ -581,7 +581,7 @@ const CommentList = ({
                                   forumId={id}
                                   commentId={reply?.commentId}
                                 />
-                                <Button
+                                <Button id="comment-list-button-18" data-testId="comment-list-button-18"
                                   variant="ghost"
                                   size="sm"
                                   onClick={() =>

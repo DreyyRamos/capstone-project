@@ -186,11 +186,27 @@ export default function RoleRequestPage() {
   }
 
   return (
-    <div id="page-div-1" data-testId="page-div-1" className="max-w-2xl mx-auto space-y-6">
+    <div
+      id="page-div-1"
+      data-testId="page-div-1"
+      className="max-w-2xl mx-auto space-y-6"
+    >
       {/* Header */}
-      <div id="page-div-2" data-testId="page-div-2" className="text-center space-y-2">
-        <div id="page-flex-3" data-testId="page-flex-3" className="flex items-center justify-center gap-2 mb-4">
-          <div id="page-flex-4" data-testId="page-flex-4" className="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
+      <div
+        id="page-div-2"
+        data-testId="page-div-2"
+        className="text-center space-y-2"
+      >
+        <div
+          id="page-flex-3"
+          data-testId="page-flex-3"
+          className="flex items-center justify-center gap-2 mb-4"
+        >
+          <div
+            id="page-flex-4"
+            data-testId="page-flex-4"
+            className="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center"
+          >
             <UserCog className="h-6 w-6 text-white" />
           </div>
         </div>
@@ -202,9 +218,17 @@ export default function RoleRequestPage() {
 
       {/* Success Message */}
       {successMessage && (
-        <Alert className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20">
+        <Alert
+          id="page-a-1"
+          data-testId="page-a-1"
+          className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20"
+        >
           <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-800 dark:text-green-200">
+          <AlertDescription
+            id="page-a-2"
+            data-testId="page-a-2"
+            className="text-green-800 dark:text-green-200"
+          >
             {successMessage}
           </AlertDescription>
         </Alert>
@@ -212,9 +236,11 @@ export default function RoleRequestPage() {
 
       {/* Error Message */}
       {errorMessage && (
-        <Alert variant="destructive">
+        <Alert id="page-a-3" data-testId="page-a-3" variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{errorMessage}</AlertDescription>
+          <AlertDescription id="page-a-4" data-testId="page-a-4">
+            {errorMessage}
+          </AlertDescription>
         </Alert>
       )}
 
@@ -228,7 +254,11 @@ export default function RoleRequestPage() {
         </CardHeader>
         <CardContent>
           <div id="page-div-5" data-testId="page-div-5" className="space-y-4">
-            <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center justify-between">
+            <div
+              id="page-flex-6"
+              data-testId="page-flex-6"
+              className="flex items-center justify-between"
+            >
               <div id="page-div-7" data-testId="page-div-7">
                 <p className="font-medium">
                   {user?.userData?.firstName} {user?.userData?.lastName}
@@ -276,9 +306,23 @@ export default function RoleRequestPage() {
                 <SelectContent>
                   {roleOptions.map((role) => (
                     <SelectItem key={role.value} value={role.value}>
-                      <div id="page-flex-9" data-testId="page-flex-9" className="flex flex-col">
-                        <span className="font-medium">{role.label}</span>
-                        <span className="text-xs text-muted-foreground">
+                      <div
+                        id="page-flex-9"
+                        data-testId="page-flex-9"
+                        className="flex flex-col"
+                      >
+                        <span
+                          id="page-span-1"
+                          data-testId="page-span-1"
+                          className="font-medium"
+                        >
+                          {role.label}
+                        </span>
+                        <span
+                          id="page-span-2"
+                          data-testId="page-span-2"
+                          className="text-xs text-muted-foreground"
+                        >
                           {role.description}
                         </span>
                       </div>
@@ -293,12 +337,20 @@ export default function RoleRequestPage() {
 
             {/* Role Transition Preview */}
             {formData.requestedRole && (
-              <div id="page-div-10" data-testId="page-div-10" className="bg-muted p-4 rounded-lg">
+              <div
+                id="page-div-10"
+                data-testId="page-div-10"
+                className="bg-muted p-4 rounded-lg"
+              >
                 <p className="text-sm font-medium mb-2">Role Change Preview:</p>
-                <div id="page-flex-11" data-testId="page-flex-11" className="flex items-center gap-2">
+                <div
+                  id="page-flex-11"
+                  data-testId="page-flex-11"
+                  className="flex items-center gap-2"
+                >
                   <Badge
                     className={getRoleBadgeColor(
-                      user?.userData?.role || "student"
+                      user?.userData?.role || "student",
                     )}
                     variant="outline"
                   >
@@ -325,7 +377,11 @@ export default function RoleRequestPage() {
             )}
 
             {/* Reason */}
-            <div id="page-div-12" data-testId="page-div-12" className="space-y-2">
+            <div
+              id="page-div-12"
+              data-testId="page-div-12"
+              className="space-y-2"
+            >
               <Label htmlFor="reason">Reason for Role Change *</Label>
               <Textarea
                 id="reason"
@@ -335,7 +391,11 @@ export default function RoleRequestPage() {
                 className={errors.reason ? "border-red-500" : ""}
                 rows={5}
               />
-              <div id="page-flex-13" data-testId="page-flex-13" className="flex justify-between items-center">
+              <div
+                id="page-flex-13"
+                data-testId="page-flex-13"
+                className="flex justify-between items-center"
+              >
                 {errors.reason && (
                   <p className="text-xs text-red-600">{errors.reason}</p>
                 )}
@@ -346,7 +406,11 @@ export default function RoleRequestPage() {
             </div>
 
             {/* Additional Information */}
-            <div id="page-div-14" data-testId="page-div-14" className="space-y-2">
+            <div
+              id="page-div-14"
+              data-testId="page-div-14"
+              className="space-y-2"
+            >
               <Label htmlFor="additionalInfo">Additional Information</Label>
               <Textarea
                 id="additionalInfo"
@@ -364,10 +428,20 @@ export default function RoleRequestPage() {
             </div>
 
             {/* Submit Button */}
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button
+              id="page-button-1"
+              data-testId="page-button-1"
+              type="submit"
+              className="w-full"
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <>
-                  <div id="page-div-15" data-testId="page-div-15" className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                  <div
+                    id="page-div-15"
+                    data-testId="page-div-15"
+                    className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"
+                  />
                   Submitting Request...
                 </>
               ) : (
@@ -384,9 +458,17 @@ export default function RoleRequestPage() {
       {/* Information Card */}
       <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
         <CardContent className="pt-4">
-          <div id="page-flex-16" data-testId="page-flex-16" className="flex items-start gap-3">
+          <div
+            id="page-flex-16"
+            data-testId="page-flex-16"
+            className="flex items-start gap-3"
+          >
             <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
-            <div id="page-div-17" data-testId="page-div-17" className="space-y-2">
+            <div
+              id="page-div-17"
+              data-testId="page-div-17"
+              className="space-y-2"
+            >
               <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
                 What happens next?
               </p>

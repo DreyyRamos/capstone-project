@@ -200,7 +200,7 @@ export function ReportModal({
               Report {getContentTypeLabel()}
             </CardTitle>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleClose}>
+          <Button id="report-modal-button-1" data-testId="report-modal-button-1" variant="ghost" size="sm" onClick={handleClose}>
             <X className="h-4 w-4" />
           </Button>
         </CardHeader>
@@ -223,7 +223,7 @@ export function ReportModal({
                 <div id="report-modal-div-5" data-testId="report-modal-div-5" className="p-3 bg-muted rounded-lg">
                   <div id="report-modal-flex-6" data-testId="report-modal-flex-6" className="flex items-center justify-between mb-2">
                     <p className="text-sm text-muted-foreground">Reporting:</p>
-                    <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
+                    <span id="report-modal-span-1" data-testId="report-modal-span-1" className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
                       {getContentHierarchy()}
                     </span>
                   </div>
@@ -298,7 +298,7 @@ export function ReportModal({
               </div>
 
               <div id="report-modal-flex-15" data-testId="report-modal-flex-15" className="flex gap-3 pt-2">
-                <Button
+                <Button id="report-modal-button-2" data-testId="report-modal-button-2"
                   type="button"
                   variant="outline"
                   onClick={handleClose}
@@ -306,7 +306,7 @@ export function ReportModal({
                 >
                   Cancel
                 </Button>
-                <Button
+                <Button id="report-modal-button-3" data-testId="report-modal-button-3"
                   type="submit"
                   disabled={!selectedReason || isSubmitting}
                   className="flex-1"

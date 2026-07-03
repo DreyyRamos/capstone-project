@@ -77,7 +77,11 @@ function SearchResultsContent() {
   const forumsCount = results?.forums.length || 0;
 
   return (
-    <div id="page-div-3" data-testId="page-div-3" className="container mx-auto px-4 py-8">
+    <div
+      id="page-div-3"
+      data-testId="page-div-3"
+      className="container mx-auto px-4 py-8"
+    >
       <div id="page-div-4" data-testId="page-div-4" className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Search Results</h1>
         <p className="text-muted-foreground">
@@ -93,48 +97,118 @@ function SearchResultsContent() {
         className="w-full"
       >
         {/* Scrollable tabs container for mobile */}
-        <div id="page-div-5" data-testId="page-div-5" className="overflow-x-auto pb-2 -mb-2 scrollbar-hide">
+        <div
+          id="page-div-5"
+          data-testId="page-div-5"
+          className="overflow-x-auto pb-2 -mb-2 scrollbar-hide"
+        >
           <TabsList className="inline-flex w-auto min-w-full h-auto p-1 bg-muted/50">
             <TabsTrigger
               value="all"
               className="flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap data-[state=active]:bg-background"
             >
               <Filter className="h-4 w-4 shrink-0" />
-              <span>All</span>
-              <span className="text-xs opacity-70">({totalResults})</span>
+              <span id="page-span-1" data-testId="page-span-1">
+                All
+              </span>
+              <span
+                id="page-span-2"
+                data-testId="page-span-2"
+                className="text-xs opacity-70"
+              >
+                ({totalResults})
+              </span>
             </TabsTrigger>
             <TabsTrigger
               value="users"
               className="flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap data-[state=active]:bg-background"
             >
               <User className="h-4 w-4 shrink-0" />
-              <span className="hidden sm:inline">Users</span>
-              <span className="sm:hidden">User</span>
-              <span className="text-xs opacity-70">({usersCount})</span>
+              <span
+                id="page-span-3"
+                data-testId="page-span-3"
+                className="hidden sm:inline"
+              >
+                Users
+              </span>
+              <span
+                id="page-span-4"
+                data-testId="page-span-4"
+                className="sm:hidden"
+              >
+                User
+              </span>
+              <span
+                id="page-span-5"
+                data-testId="page-span-5"
+                className="text-xs opacity-70"
+              >
+                ({usersCount})
+              </span>
             </TabsTrigger>
             <TabsTrigger
               value="publications"
               className="flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap data-[state=active]:bg-background"
             >
               <FileText className="h-4 w-4 shrink-0" />
-              <span className="hidden sm:inline">Publications</span>
-              <span className="sm:hidden">Pubs</span>
-              <span className="text-xs opacity-70">({publicationsCount})</span>
+              <span
+                id="page-span-6"
+                data-testId="page-span-6"
+                className="hidden sm:inline"
+              >
+                Publications
+              </span>
+              <span
+                id="page-span-7"
+                data-testId="page-span-7"
+                className="sm:hidden"
+              >
+                Pubs
+              </span>
+              <span
+                id="page-span-8"
+                data-testId="page-span-8"
+                className="text-xs opacity-70"
+              >
+                ({publicationsCount})
+              </span>
             </TabsTrigger>
             <TabsTrigger
               value="forums"
               className="flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap data-[state=active]:bg-background"
             >
               <MessageSquare className="h-4 w-4 shrink-0" />
-              <span className="hidden sm:inline">Forums</span>
-              <span className="sm:hidden">Forum</span>
-              <span className="text-xs opacity-70">({forumsCount})</span>
+              <span
+                id="page-span-9"
+                data-testId="page-span-9"
+                className="hidden sm:inline"
+              >
+                Forums
+              </span>
+              <span
+                id="page-span-10"
+                data-testId="page-span-10"
+                className="sm:hidden"
+              >
+                Forum
+              </span>
+              <span
+                id="page-span-11"
+                data-testId="page-span-11"
+                className="text-xs opacity-70"
+              >
+                ({forumsCount})
+              </span>
             </TabsTrigger>
           </TabsList>
         </div>
 
         {isLoading ? (
-          <div id="page-div-6" data-testId="page-div-6" className="mt-8 space-y-4">
+          <div
+            id="page-div-6"
+            data-testId="page-div-6"
+            className="mt-8 space-y-4"
+          >
             {[...Array(5)].map((_, i) => (
               <Card key={i}>
                 <CardHeader>
@@ -149,13 +223,21 @@ function SearchResultsContent() {
             ))}
           </div>
         ) : error ? (
-          <div id="page-div-7" data-testId="page-div-7" className="mt-8 text-center">
+          <div
+            id="page-div-7"
+            data-testId="page-div-7"
+            className="mt-8 text-center"
+          >
             <p className="text-red-500">
               Something went wrong. Please try again.
             </p>
           </div>
         ) : totalResults === 0 ? (
-          <div id="page-div-8" data-testId="page-div-8" className="mt-8 text-center">
+          <div
+            id="page-div-8"
+            data-testId="page-div-8"
+            className="mt-8 text-center"
+          >
             <Search className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
             <h2 className="text-xl font-semibold mb-2">No results found</h2>
             <p className="text-muted-foreground">
@@ -165,7 +247,11 @@ function SearchResultsContent() {
         ) : (
           <>
             <TabsContent value="all" className="mt-8">
-              <div id="page-div-9" data-testId="page-div-9" className="space-y-6">
+              <div
+                id="page-div-9"
+                data-testId="page-div-9"
+                className="space-y-6"
+              >
                 {/* Users Results */}
                 {usersCount > 0 && (
                   <div id="page-div-10" data-testId="page-div-10">
@@ -173,7 +259,11 @@ function SearchResultsContent() {
                       <User className="h-5 w-5" />
                       Users ({usersCount})
                     </h2>
-                    <div id="page-grid-11" data-testId="page-grid-11" className="grid gap-4 md:grid-cols-2">
+                    <div
+                      id="page-grid-11"
+                      data-testId="page-grid-11"
+                      className="grid gap-4 md:grid-cols-2"
+                    >
                       {results?.users.slice(0, 4).map((user) => (
                         <Card
                           key={user.id}
@@ -181,27 +271,52 @@ function SearchResultsContent() {
                         >
                           <CardContent className="p-4">
                             <Link
+                              id="page-link-1"
+                              data-testId="page-link-1"
                               href={`/visit/user/${user.id}`}
                               className="block"
                             >
-                              <div id="page-flex-12" data-testId="page-flex-12" className="flex items-center gap-3">
-                                <Avatar className="h-12 w-12">
+                              <div
+                                id="page-flex-12"
+                                data-testId="page-flex-12"
+                                className="flex items-center gap-3"
+                              >
+                                <Avatar
+                                  id="page-a-1"
+                                  data-testId="page-a-1"
+                                  className="h-12 w-12"
+                                >
                                   <AvatarImage src={user.profileImage || ""} />
-                                  <AvatarFallback>
+                                  <AvatarFallback
+                                    id="page-a-2"
+                                    data-testId="page-a-2"
+                                  >
                                     {getDisplayName(user)
                                       .charAt(0)
                                       .toUpperCase()}
                                   </AvatarFallback>
                                 </Avatar>
-                                <div id="page-div-13" data-testId="page-div-13" className="flex-1 min-w-0">
+                                <div
+                                  id="page-div-13"
+                                  data-testId="page-div-13"
+                                  className="flex-1 min-w-0"
+                                >
                                   <h3 className="font-medium truncate">
                                     {getDisplayName(user)}
                                   </h3>
-                                  <div id="page-flex-14" data-testId="page-flex-14" className="flex items-center gap-2 mt-1">
+                                  <div
+                                    id="page-flex-14"
+                                    data-testId="page-flex-14"
+                                    className="flex items-center gap-2 mt-1"
+                                  >
                                     <Badge variant="secondary">
                                       {user.role}
                                     </Badge>
-                                    <span className="text-sm text-muted-foreground">
+                                    <span
+                                      id="page-span-12"
+                                      data-testId="page-span-12"
+                                      className="text-sm text-muted-foreground"
+                                    >
                                       {user.reputationPoints} reputation points
                                     </span>
                                   </div>
@@ -219,6 +334,8 @@ function SearchResultsContent() {
                     </div>
                     {usersCount > 4 && (
                       <Button
+                        id="page-button-1"
+                        data-testId="page-button-1"
                         variant="outline"
                         className="mt-4"
                         onClick={() => setSelectedType("users")}
@@ -236,15 +353,27 @@ function SearchResultsContent() {
                       <FileText className="h-5 w-5" />
                       Publications ({publicationsCount})
                     </h2>
-                    <div id="page-div-16" data-testId="page-div-16" className="space-y-4">
+                    <div
+                      id="page-div-16"
+                      data-testId="page-div-16"
+                      className="space-y-4"
+                    >
                       {results?.publications.slice(0, 3).map((publication) => (
                         <Card
                           key={publication.pubId}
                           className="hover:shadow-md transition-shadow"
                         >
                           <CardContent className="p-6">
-                            <Link href={`/publications/${publication.pubId}`}>
-                              <div id="page-flex-17" data-testId="page-flex-17" className="flex gap-4">
+                            <Link
+                              id="page-link-2"
+                              data-testId="page-link-2"
+                              href={`/publications/${publication.pubId}`}
+                            >
+                              <div
+                                id="page-flex-17"
+                                data-testId="page-flex-17"
+                                className="flex gap-4"
+                              >
                                 {publication.imageUrl && (
                                   <img
                                     src={publication.imageUrl}
@@ -252,8 +381,16 @@ function SearchResultsContent() {
                                     className="h-20 w-20 object-cover rounded-lg flex-shrink-0"
                                   />
                                 )}
-                                <div id="page-div-18" data-testId="page-div-18" className="flex-1 min-w-0">
-                                  <div id="page-flex-19" data-testId="page-flex-19" className="flex items-center gap-2 mb-2">
+                                <div
+                                  id="page-div-18"
+                                  data-testId="page-div-18"
+                                  className="flex-1 min-w-0"
+                                >
+                                  <div
+                                    id="page-flex-19"
+                                    data-testId="page-flex-19"
+                                    className="flex items-center gap-2 mb-2"
+                                  >
                                     <h3 className="font-semibold text-lg truncate">
                                       {publication.title}
                                     </h3>
@@ -266,43 +403,85 @@ function SearchResultsContent() {
                                   <p className="text-muted-foreground line-clamp-3 mb-3">
                                     {publication.excerpt}
                                   </p>
-                                  <div id="page-flex-20" data-testId="page-flex-20" className="flex items-center justify-between text-sm text-muted-foreground flex-wrap gap-2">
-                                    <div id="page-flex-21" data-testId="page-flex-21" className="flex items-center gap-2">
-                                      <Avatar className="h-6 w-6">
+                                  <div
+                                    id="page-flex-20"
+                                    data-testId="page-flex-20"
+                                    className="flex items-center justify-between text-sm text-muted-foreground flex-wrap gap-2"
+                                  >
+                                    <div
+                                      id="page-flex-21"
+                                      data-testId="page-flex-21"
+                                      className="flex items-center gap-2"
+                                    >
+                                      <Avatar
+                                        id="page-a-3"
+                                        data-testId="page-a-3"
+                                        className="h-6 w-6"
+                                      >
                                         <AvatarImage
                                           src={
                                             publication.author?.profileImage ||
                                             ""
                                           }
                                         />
-                                        <AvatarFallback className="text-xs">
+                                        <AvatarFallback
+                                          id="page-a-4"
+                                          data-testId="page-a-4"
+                                          className="text-xs"
+                                        >
                                           {getDisplayName(publication.author)
                                             .charAt(0)
                                             .toUpperCase()}
                                         </AvatarFallback>
                                       </Avatar>
-                                      <span className="truncate max-w-[120px] sm:max-w-none">
+                                      <span
+                                        id="page-span-13"
+                                        data-testId="page-span-13"
+                                        className="truncate max-w-[120px] sm:max-w-none"
+                                      >
                                         by {getDisplayName(publication.author)}
                                       </span>
-                                      <span className="hidden sm:inline">
+                                      <span
+                                        id="page-span-14"
+                                        data-testId="page-span-14"
+                                        className="hidden sm:inline"
+                                      >
                                         •
                                       </span>
-                                      <span className="hidden sm:inline">
+                                      <span
+                                        id="page-span-15"
+                                        data-testId="page-span-15"
+                                        className="hidden sm:inline"
+                                      >
                                         {formatDate(publication.updatedAt)}
                                       </span>
                                     </div>
-                                    <div id="page-flex-22" data-testId="page-flex-22" className="flex items-center gap-4">
-                                      <span>
+                                    <div
+                                      id="page-flex-22"
+                                      data-testId="page-flex-22"
+                                      className="flex items-center gap-4"
+                                    >
+                                      <span
+                                        id="page-span-16"
+                                        data-testId="page-span-16"
+                                      >
                                         {publication._count.pubLikes} likes
                                       </span>
-                                      <span>
+                                      <span
+                                        id="page-span-17"
+                                        data-testId="page-span-17"
+                                      >
                                         {publication._count.pubComments}{" "}
                                         comments
                                       </span>
                                     </div>
                                   </div>
                                   {publication.tags.length > 0 && (
-                                    <div id="page-flex-23" data-testId="page-flex-23" className="flex gap-1 mt-2 flex-wrap">
+                                    <div
+                                      id="page-flex-23"
+                                      data-testId="page-flex-23"
+                                      className="flex gap-1 mt-2 flex-wrap"
+                                    >
                                       {publication.tags
                                         .slice(0, 3)
                                         .map((tag) => (
@@ -333,6 +512,8 @@ function SearchResultsContent() {
                     </div>
                     {publicationsCount > 3 && (
                       <Button
+                        id="page-button-2"
+                        data-testId="page-button-2"
                         variant="outline"
                         className="mt-4"
                         onClick={() => setSelectedType("publications")}
@@ -350,15 +531,27 @@ function SearchResultsContent() {
                       <MessageSquare className="h-5 w-5" />
                       Forums ({forumsCount})
                     </h2>
-                    <div id="page-div-25" data-testId="page-div-25" className="space-y-4">
+                    <div
+                      id="page-div-25"
+                      data-testId="page-div-25"
+                      className="space-y-4"
+                    >
                       {results?.forums.slice(0, 3).map((forum) => (
                         <Card
                           key={forum.forumId}
                           className="hover:shadow-md transition-shadow"
                         >
                           <CardContent className="p-6">
-                            <Link href={`/forum/topic/${forum.forumId}`}>
-                              <div id="page-flex-26" data-testId="page-flex-26" className="flex gap-4">
+                            <Link
+                              id="page-link-3"
+                              data-testId="page-link-3"
+                              href={`/forum/topic/${forum.forumId}`}
+                            >
+                              <div
+                                id="page-flex-26"
+                                data-testId="page-flex-26"
+                                className="flex gap-4"
+                              >
                                 {forum.imageUrl && (
                                   <img
                                     src={forum.imageUrl}
@@ -366,46 +559,92 @@ function SearchResultsContent() {
                                     className="h-20 w-20 object-cover rounded-lg flex-shrink-0"
                                   />
                                 )}
-                                <div id="page-div-27" data-testId="page-div-27" className="flex-1 min-w-0">
+                                <div
+                                  id="page-div-27"
+                                  data-testId="page-div-27"
+                                  className="flex-1 min-w-0"
+                                >
                                   <h3 className="font-semibold text-lg mb-2 truncate">
                                     {forum.topicTitle}
                                   </h3>
                                   <p className="text-muted-foreground line-clamp-3 mb-3">
                                     {forum.description}
                                   </p>
-                                  <div id="page-flex-28" data-testId="page-flex-28" className="flex items-center justify-between text-sm text-muted-foreground flex-wrap gap-2">
-                                    <div id="page-flex-29" data-testId="page-flex-29" className="flex items-center gap-2">
-                                      <Avatar className="h-6 w-6">
+                                  <div
+                                    id="page-flex-28"
+                                    data-testId="page-flex-28"
+                                    className="flex items-center justify-between text-sm text-muted-foreground flex-wrap gap-2"
+                                  >
+                                    <div
+                                      id="page-flex-29"
+                                      data-testId="page-flex-29"
+                                      className="flex items-center gap-2"
+                                    >
+                                      <Avatar
+                                        id="page-a-5"
+                                        data-testId="page-a-5"
+                                        className="h-6 w-6"
+                                      >
                                         <AvatarImage
                                           src={forum.author?.profileImage || ""}
                                         />
-                                        <AvatarFallback className="text-xs">
+                                        <AvatarFallback
+                                          id="page-a-6"
+                                          data-testId="page-a-6"
+                                          className="text-xs"
+                                        >
                                           {getDisplayName(forum.author)
                                             .charAt(0)
                                             .toUpperCase()}
                                         </AvatarFallback>
                                       </Avatar>
-                                      <span className="truncate max-w-[120px] sm:max-w-none">
+                                      <span
+                                        id="page-span-18"
+                                        data-testId="page-span-18"
+                                        className="truncate max-w-[120px] sm:max-w-none"
+                                      >
                                         by {getDisplayName(forum.author)}
                                       </span>
-                                      <span className="hidden sm:inline">
+                                      <span
+                                        id="page-span-19"
+                                        data-testId="page-span-19"
+                                        className="hidden sm:inline"
+                                      >
                                         •
                                       </span>
-                                      <span className="hidden sm:inline">
+                                      <span
+                                        id="page-span-20"
+                                        data-testId="page-span-20"
+                                        className="hidden sm:inline"
+                                      >
                                         {formatDate(forum.updatedAt)}
                                       </span>
                                     </div>
-                                    <div id="page-flex-30" data-testId="page-flex-30" className="flex items-center gap-4">
-                                      <span>
+                                    <div
+                                      id="page-flex-30"
+                                      data-testId="page-flex-30"
+                                      className="flex items-center gap-4"
+                                    >
+                                      <span
+                                        id="page-span-21"
+                                        data-testId="page-span-21"
+                                      >
                                         {forum._count.forumLikes} likes
                                       </span>
-                                      <span>
+                                      <span
+                                        id="page-span-22"
+                                        data-testId="page-span-22"
+                                      >
                                         {forum._count.forumComments} comments
                                       </span>
                                     </div>
                                   </div>
                                   {forum.tags.length > 0 && (
-                                    <div id="page-flex-31" data-testId="page-flex-31" className="flex gap-1 mt-2 flex-wrap">
+                                    <div
+                                      id="page-flex-31"
+                                      data-testId="page-flex-31"
+                                      className="flex gap-1 mt-2 flex-wrap"
+                                    >
                                       {forum.tags.slice(0, 3).map((tag) => (
                                         <Badge
                                           key={tag}
@@ -434,6 +673,8 @@ function SearchResultsContent() {
                     </div>
                     {forumsCount > 3 && (
                       <Button
+                        id="page-button-3"
+                        data-testId="page-button-3"
                         variant="outline"
                         className="mt-4"
                         onClick={() => setSelectedType("forums")}
@@ -447,7 +688,11 @@ function SearchResultsContent() {
             </TabsContent>
 
             <TabsContent value="users" className="mt-8">
-              <div id="page-grid-32" data-testId="page-grid-32" className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div
+                id="page-grid-32"
+                data-testId="page-grid-32"
+                className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+              >
                 {results?.users.map((user) => (
                   <UserSearchResult key={user.id} user={user} />
                 ))}
@@ -455,7 +700,11 @@ function SearchResultsContent() {
             </TabsContent>
 
             <TabsContent value="publications" className="mt-8">
-              <div id="page-div-33" data-testId="page-div-33" className="space-y-4">
+              <div
+                id="page-div-33"
+                data-testId="page-div-33"
+                className="space-y-4"
+              >
                 {results?.publications.map((publication) => (
                   <PubSearchResult
                     key={publication.pubId}
@@ -466,7 +715,11 @@ function SearchResultsContent() {
             </TabsContent>
 
             <TabsContent value="forums" className="mt-8">
-              <div id="page-div-34" data-testId="page-div-34" className="space-y-4">
+              <div
+                id="page-div-34"
+                data-testId="page-div-34"
+                className="space-y-4"
+              >
                 {results?.forums.map((forum) => (
                   <ForumSearchResult key={forum.forumId} forum={forum} />
                 ))}

@@ -102,9 +102,9 @@ export default function LoginPage() {
           <div id="page-div-4" data-testId="page-div-4" className="text-center space-y-2">
             <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center justify-center gap-2 mb-4">
               <div id="page-flex-6" data-testId="page-flex-6" className="h-10 w-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">RS</span>
+                <span id="page-span-1" data-testId="page-span-1" className="text-white font-bold">RS</span>
               </div>
-              <span className="font-bold text-xl">Ramos School</span>
+              <span id="page-span-2" data-testId="page-span-2" className="font-bold text-xl">Ramos School</span>
             </div>
             <h1 className="text-2xl font-bold">Welcome back</h1>
             <p className="text-muted-foreground">
@@ -146,7 +146,7 @@ export default function LoginPage() {
                       onChange={handleChange}
                       required
                     />
-                    <Button
+                    <Button id="page-button-1" data-testId="page-button-1"
                       type="button"
                       variant="ghost"
                       size="sm"
@@ -175,13 +175,13 @@ export default function LoginPage() {
                   </div>
                 )}
 
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button id="page-button-2" data-testId="page-button-2" type="submit" className="w-full" disabled={loading}>
                   {loading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
 
               <div id="page-div-13" data-testId="page-div-13" className="mt-4 text-center">
-                {/* <Link
+                {/* <Link id="page-link-1" data-testId="page-link-1"
                   href="/forgot-password"
                   className="text-sm text-blue-600 hover:underline"
                 >
@@ -193,7 +193,7 @@ export default function LoginPage() {
 
           <div id="page-div-14" data-testId="page-div-14" className="text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-blue-600 hover:underline">
+            <Link id="page-link-2" data-testId="page-link-2" href="/register" className="text-blue-600 hover:underline">
               Register here and check your email for account approval!
             </Link>
           </div>

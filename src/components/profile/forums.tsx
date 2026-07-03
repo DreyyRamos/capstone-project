@@ -34,8 +34,8 @@ const UserForums = ({
         </div>
         <div id="forums-div-4" data-testId="forums-div-4" className="flex-1 min-w-0">
           <p className="text-sm">
-            You <span className="font-medium">created a forum titled </span>{" "}
-            <span className="font-medium break-words">
+            You <span id="forums-span-1" data-testId="forums-span-1" className="font-medium">created a forum titled </span>{" "}
+            <span id="forums-span-2" data-testId="forums-span-2" className="font-medium break-words">
               <b>{forum?.topicTitle}</b>
             </span>
           </p>
@@ -43,16 +43,16 @@ const UserForums = ({
             <Badge variant="outline" className="text-xs">
               {forum?.category}
             </Badge>
-            <span>{timeAgo(forum?.createdAt)}</span>
-            <span>{forum?.forumComments?.length || 0} comments</span>
-            <span>{forum?.forumLikes?.length || 0} likes</span>
+            <span id="forums-span-3" data-testId="forums-span-3">{timeAgo(forum?.createdAt)}</span>
+            <span id="forums-span-4" data-testId="forums-span-4">{forum?.forumComments?.length || 0} comments</span>
+            <span id="forums-span-5" data-testId="forums-span-5">{forum?.forumLikes?.length || 0} likes</span>
           </div>
         </div>
 
         {/* Dropdown Menu for Forums */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
+            <Button id="forums-button-1" data-testId="forums-button-1"
               variant="ghost"
               size="sm"
               className="h-8 w-8 p-0 flex-shrink-0"
@@ -65,7 +65,7 @@ const UserForums = ({
               asChild
               // onClick={() => handleEditForum(forum?.forumId)}
             >
-              <Link href={`/profile/forums/${forum?.forumId}/update`}>
+              <Link id="forums-link-1" data-testId="forums-link-1" href={`/profile/forums/${forum?.forumId}/update`}>
                 <Edit2 className="h-4 w-4 mr-2" />
                 Edit
               </Link>

@@ -42,10 +42,10 @@ export default function DashboardLoading() {
           <Skeleton className="h-10 w-96 mb-4" />
           <Skeleton className="h-6 w-full mb-6" />
           <div id="loading-flex-4" data-testId="loading-flex-4" className="flex gap-4">
-            <Button disabled size="lg" variant="secondary">
+            <Button id="loading-button-1" data-testId="loading-button-1" disabled size="lg" variant="secondary">
               Browse Publications
             </Button>
-            <Button
+            <Button id="loading-button-2" data-testId="loading-button-2"
               disabled
               size="lg"
               variant="outline"
@@ -92,7 +92,7 @@ export default function DashboardLoading() {
               <Skeleton className="h-6 w-48 mb-1" />
               <Skeleton className="h-4 w-64" />
             </div>
-            <Button disabled variant="outline" size="sm">
+            <Button id="loading-button-3" data-testId="loading-button-3" disabled variant="outline" size="sm">
               View All
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -103,8 +103,8 @@ export default function DashboardLoading() {
                 key={i}
                 className="flex items-start space-x-3 p-3 rounded-lg"
               >
-                <Avatar className="h-8 w-8 flex-shrink-0">
-                  <AvatarFallback>
+                <Avatar id="loading-a-1" data-testId="loading-a-1" className="h-8 w-8 flex-shrink-0">
+                  <AvatarFallback id="loading-a-2" data-testId="loading-a-2">
                     <Skeleton className="h-full w-full rounded-full" />
                   </AvatarFallback>
                 </Avatar>
@@ -141,7 +141,7 @@ export default function DashboardLoading() {
               <Skeleton className="h-6 w-48 mb-1" />
               <Skeleton className="h-4 w-56" />
             </div>
-            <Button disabled variant="outline" size="sm">
+            <Button id="loading-button-4" data-testId="loading-button-4" disabled variant="outline" size="sm">
               View Forums
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -152,8 +152,8 @@ export default function DashboardLoading() {
                 key={i}
                 className="flex items-start space-x-3 p-3 rounded-lg"
               >
-                <Avatar className="h-8 w-8 flex-shrink-0">
-                  <AvatarFallback>
+                <Avatar id="loading-a-3" data-testId="loading-a-3" className="h-8 w-8 flex-shrink-0">
+                  <AvatarFallback id="loading-a-4" data-testId="loading-a-4">
                     <Skeleton className="h-full w-full rounded-full" />
                   </AvatarFallback>
                 </Avatar>
@@ -189,7 +189,7 @@ export default function DashboardLoading() {
         <CardContent>
           <div id="loading-grid-24" data-testId="loading-grid-24" className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {[...Array(3)].map((_, i) => (
-              <Button
+              <Button id="loading-button-5" data-testId="loading-button-5"
                 key={i}
                 disabled
                 variant="outline"
@@ -198,7 +198,7 @@ export default function DashboardLoading() {
                 {i === 0 && <BookOpen className="h-6 w-6" />}
                 {i === 1 && <MessageSquare className="h-6 w-6" />}
                 {i === 2 && <Users className="h-6 w-6" />}
-                <span className="text-xs">
+                <span id="loading-span-1" data-testId="loading-span-1" className="text-xs">
                   {i === 0 && "Create Publication"}
                   {i === 1 && "Start Discussion"}
                   {i === 2 && "Edit Profile"}

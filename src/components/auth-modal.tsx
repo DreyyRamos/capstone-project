@@ -66,12 +66,12 @@ export function AuthModal({
           </div>
 
           <div id="auth-modal-flex-3" data-testId="auth-modal-flex-3" className="flex flex-col gap-3">
-            <Button onClick={handleSignIn} className="w-full">
+            <Button id="auth-modal-button-1" data-testId="auth-modal-button-1" onClick={handleSignIn} className="w-full">
               <LogIn className="mr-2 h-4 w-4" />
               Sign In
             </Button>
 
-            <Button
+            <Button id="auth-modal-button-2" data-testId="auth-modal-button-2"
               variant="outline"
               onClick={handleRegister}
               className="w-full bg-transparent"
@@ -82,7 +82,7 @@ export function AuthModal({
           </div>
 
           <div id="auth-modal-div-4" data-testId="auth-modal-div-4" className="text-center">
-            <Button variant="ghost" onClick={onClose} className="text-sm">
+            <Button id="auth-modal-button-3" data-testId="auth-modal-button-3" variant="ghost" onClick={onClose} className="text-sm">
               Continue browsing without signing in
             </Button>
           </div>

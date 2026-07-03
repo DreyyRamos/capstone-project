@@ -147,7 +147,7 @@ const ForumCommentLikeButton = ({
         action={action}
         redirectTo={redirectTo}
       />
-      <Button
+      <Button id="forum-comment-like-button-button-1" data-testId="forum-comment-like-button-button-1"
         variant={"ghost"}
         onClick={handleLikeToggle}
         disabled={likeMutation.isPending}
@@ -163,11 +163,11 @@ const ForumCommentLikeButton = ({
           ) : (
             <Heart className="text-gray-500" />
           )}
-          <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
+          <span id="forum-comment-like-button-span-1" data-testId="forum-comment-like-button-span-1" className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
             {userLike && userLike?.isLiked ? "Unlike" : "Like"}
           </span>
         </div>
-        <span className="text-gray-100 ml-1">{likeCount}</span>
+        <span id="forum-comment-like-button-span-2" data-testId="forum-comment-like-button-span-2" className="text-gray-100 ml-1">{likeCount}</span>
       </Button>
     </>
   );

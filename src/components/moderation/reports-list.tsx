@@ -138,27 +138,27 @@ const ReportsList = ({
             <div id="reports-list-div-7" data-testId="reports-list-div-7" className="space-y-2">
               <div id="reports-list-grid-8" data-testId="reports-list-grid-8" className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-muted-foreground">
                 <div id="reports-list-flex-9" data-testId="reports-list-flex-9" className="flex items-start gap-1">
-                  <span className="font-medium flex-shrink-0">
+                  <span id="reports-list-span-1" data-testId="reports-list-span-1" className="font-medium flex-shrink-0">
                     Reported By:
                   </span>
-                  <span className="truncate">{report.reportedBy}</span>
+                  <span id="reports-list-span-2" data-testId="reports-list-span-2" className="truncate">{report.reportedBy}</span>
                 </div>
                 <div id="reports-list-flex-10" data-testId="reports-list-flex-10" className="flex items-start gap-1">
-                  <span className="font-medium flex-shrink-0">Against:</span>
-                  <span className="truncate">{report.reportedUser}</span>
+                  <span id="reports-list-span-3" data-testId="reports-list-span-3" className="font-medium flex-shrink-0">Against:</span>
+                  <span id="reports-list-span-4" data-testId="reports-list-span-4" className="truncate">{report.reportedUser}</span>
                 </div>
                 <div id="reports-list-flex-11" data-testId="reports-list-flex-11" className="flex items-start gap-1">
-                  <span className="font-medium flex-shrink-0">Reason:</span>
-                  <span className="truncate">{report.reason}</span>
+                  <span id="reports-list-span-5" data-testId="reports-list-span-5" className="font-medium flex-shrink-0">Reason:</span>
+                  <span id="reports-list-span-6" data-testId="reports-list-span-6" className="truncate">{report.reason}</span>
                 </div>
                 <div id="reports-list-flex-12" data-testId="reports-list-flex-12" className="flex items-start gap-1">
-                  <span className="font-medium flex-shrink-0">Category:</span>
-                  <span className="truncate">{report.category}</span>
+                  <span id="reports-list-span-7" data-testId="reports-list-span-7" className="font-medium flex-shrink-0">Category:</span>
+                  <span id="reports-list-span-8" data-testId="reports-list-span-8" className="truncate">{report.category}</span>
                 </div>
               </div>
               <div id="reports-list-flex-13" data-testId="reports-list-flex-13" className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
                 <Calendar className="h-4 w-4 flex-shrink-0" />
-                <span>{new Date(report.createdAt).toLocaleDateString()}</span>
+                <span id="reports-list-span-9" data-testId="reports-list-span-9">{new Date(report.createdAt).toLocaleDateString()}</span>
               </div>
             </div>
           </div>
@@ -166,12 +166,12 @@ const ReportsList = ({
           <div id="reports-list-div-14" data-testId="reports-list-div-14" className="flex-shrink-0">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
+                <Button id="reports-list-button-1" data-testId="reports-list-button-1"
                   variant="ghost"
                   size="icon"
                   className="h-9 w-auto px-1 sm:h-10 sm:w-10 sm:px-0.5 text-xs sm:text-sm font-medium hover:border-accent-foreground"
                 >
-                  <span className="sm:hidden sm:hover:border-accent-foreground sm:border-accent">
+                  <span id="reports-list-span-10" data-testId="reports-list-span-10" className="sm:hidden sm:hover:border-accent-foreground sm:border-accent">
                     Take Action
                   </span>
                   <MoreHorizontal className="hidden sm:block h-4 w-4" />

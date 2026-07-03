@@ -55,7 +55,7 @@ const Categories = ({ category }: CategoryProps) => {
           <div id="categories-div-2" data-testId="categories-div-2" className="flex-1 min-w-0">
             <div id="categories-flex-3" data-testId="categories-flex-3" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
               <h3 className="text-lg font-semibold truncate">
-                <Link
+                <Link id="categories-link-1" data-testId="categories-link-1"
                   href={`/forum/category/${encodeURIComponent(category.name)}`}
                   className="hover:text-blue-600"
                 >
@@ -70,15 +70,15 @@ const Categories = ({ category }: CategoryProps) => {
               {category.description}
             </p>
             <div id="categories-flex-4" data-testId="categories-flex-4" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
+              <span id="categories-span-1" data-testId="categories-span-1" className="flex items-center gap-1">
                 <MessageSquare className="h-4 w-4 shrink-0" />
                 {category.topics} topics
               </span>
-              <span className="flex items-center gap-1">
+              <span id="categories-span-2" data-testId="categories-span-2" className="flex items-center gap-1">
                 <Users className="h-4 w-4 shrink-0" />
                 {category.replies} replies
               </span>
-              <span className="flex items-center gap-1">
+              <span id="categories-span-3" data-testId="categories-span-3" className="flex items-center gap-1">
                 <Clock className="h-4 w-4 shrink-0" />
                 Last topic created: {category.createdAt}
               </span>
@@ -91,7 +91,7 @@ const Categories = ({ category }: CategoryProps) => {
               size="sm"
               className="w-full md:w-auto bg-transparent"
             >
-              <Link
+              <Link id="categories-link-2" data-testId="categories-link-2"
                 href={`/forum/category/${encodeURIComponent(category.name)}`}
               >
                 View Category

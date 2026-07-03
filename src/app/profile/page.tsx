@@ -212,14 +212,34 @@ export default function ProfilePage() {
   }
 
   return (
-    <div id="page-div-1" data-testId="page-div-1" className="max-w-4xl mx-auto space-y-6 p-4 sm:p-0">
+    <div
+      id="page-div-1"
+      data-testId="page-div-1"
+      className="max-w-4xl mx-auto space-y-6 p-4 sm:p-0"
+    >
       {/* Profile Header */}
       <Card>
         <CardContent className="pt-6">
-          <div id="page-flex-2" data-testId="page-flex-2" className="flex flex-col md:flex-row gap-6">
-            <div id="page-flex-3" data-testId="page-flex-3" className="flex flex-col items-center space-y-4">
-              <div id="page-div-4" data-testId="page-div-4" className="relative">
-                <Avatar className="h-24 w-24 sm:h-32 sm:w-32">
+          <div
+            id="page-flex-2"
+            data-testId="page-flex-2"
+            className="flex flex-col md:flex-row gap-6"
+          >
+            <div
+              id="page-flex-3"
+              data-testId="page-flex-3"
+              className="flex flex-col items-center space-y-4"
+            >
+              <div
+                id="page-div-4"
+                data-testId="page-div-4"
+                className="relative"
+              >
+                <Avatar
+                  id="page-a-1"
+                  data-testId="page-a-1"
+                  className="h-24 w-24 sm:h-32 sm:w-32"
+                >
                   {profileData.profileImage.length ? (
                     <AvatarImage
                       src={
@@ -228,7 +248,11 @@ export default function ProfilePage() {
                       }
                     />
                   ) : null}
-                  <AvatarFallback className="text-xl sm:text-2xl">
+                  <AvatarFallback
+                    id="page-a-2"
+                    data-testId="page-a-2"
+                    className="text-xl sm:text-2xl"
+                  >
                     {profileData.firstName?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
@@ -277,14 +301,24 @@ export default function ProfilePage() {
               </Badge>
             </div>
 
-            <div id="page-div-5" data-testId="page-div-5" className="flex-1 space-y-4">
+            <div
+              id="page-div-5"
+              data-testId="page-div-5"
+              className="flex-1 space-y-4"
+            >
               {!isEditing ? (
                 <>
-                  <div id="page-flex-6" data-testId="page-flex-6" className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                  <div
+                    id="page-flex-6"
+                    data-testId="page-flex-6"
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2"
+                  >
                     <h1 className="text-2xl sm:text-3xl font-bold">
                       {profileData.firstName} {profileData.lastName}
                     </h1>
                     <Button
+                      id="page-button-1"
+                      data-testId="page-button-1"
                       onClick={() => setIsEditing(true)}
                       variant="outline"
                       size="sm"
@@ -299,22 +333,52 @@ export default function ProfilePage() {
                     {profileData.bio}
                   </p>
 
-                  <div id="page-grid-7" data-testId="page-grid-7" className="grid grid-cols-1 gap-3 text-sm">
-                    <div id="page-flex-8" data-testId="page-flex-8" className="flex items-center gap-2">
+                  <div
+                    id="page-grid-7"
+                    data-testId="page-grid-7"
+                    className="grid grid-cols-1 gap-3 text-sm"
+                  >
+                    <div
+                      id="page-flex-8"
+                      data-testId="page-flex-8"
+                      className="flex items-center gap-2"
+                    >
                       <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      <span className="break-all">{profileData.email}</span>
+                      <span
+                        id="page-span-1"
+                        data-testId="page-span-1"
+                        className="break-all"
+                      >
+                        {profileData.email}
+                      </span>
                     </div>
-                    <div id="page-flex-9" data-testId="page-flex-9" className="flex items-center gap-2">
+                    <div
+                      id="page-flex-9"
+                      data-testId="page-flex-9"
+                      className="flex items-center gap-2"
+                    >
                       <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      <span>{profileData.contactNumber}</span>
+                      <span id="page-span-2" data-testId="page-span-2">
+                        {profileData.contactNumber}
+                      </span>
                     </div>
-                    <div id="page-flex-10" data-testId="page-flex-10" className="flex items-center gap-2">
+                    <div
+                      id="page-flex-10"
+                      data-testId="page-flex-10"
+                      className="flex items-center gap-2"
+                    >
                       <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      <span>{profileData.location}</span>
+                      <span id="page-span-3" data-testId="page-span-3">
+                        {profileData.location}
+                      </span>
                     </div>
-                    <div id="page-flex-11" data-testId="page-flex-11" className="flex items-center gap-2">
+                    <div
+                      id="page-flex-11"
+                      data-testId="page-flex-11"
+                      className="flex items-center gap-2"
+                    >
                       <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      <span>
+                      <span id="page-span-4" data-testId="page-span-4">
                         Joined{" "}
                         {profileData.createdAt
                           ? new Date(profileData.createdAt).toLocaleDateString()
@@ -323,7 +387,11 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
-                  <div id="page-flex-12" data-testId="page-flex-12" className="flex flex-wrap gap-2">
+                  <div
+                    id="page-flex-12"
+                    data-testId="page-flex-12"
+                    className="flex flex-wrap gap-2"
+                  >
                     {profileData.interests?.map((interest) => (
                       <Badge
                         key={interest}
@@ -336,9 +404,21 @@ export default function ProfilePage() {
                   </div>
                 </>
               ) : (
-                <div id="page-div-13" data-testId="page-div-13" className="space-y-4">
-                  <div id="page-grid-14" data-testId="page-grid-14" className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div id="page-div-15" data-testId="page-div-15" className="space-y-2">
+                <div
+                  id="page-div-13"
+                  data-testId="page-div-13"
+                  className="space-y-4"
+                >
+                  <div
+                    id="page-grid-14"
+                    data-testId="page-grid-14"
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                  >
+                    <div
+                      id="page-div-15"
+                      data-testId="page-div-15"
+                      className="space-y-2"
+                    >
                       <Label htmlFor="firstName">First Name</Label>
                       <Input
                         id="firstName"
@@ -347,7 +427,11 @@ export default function ProfilePage() {
                         onChange={handleChange}
                       />
                     </div>
-                    <div id="page-div-16" data-testId="page-div-16" className="space-y-2">
+                    <div
+                      id="page-div-16"
+                      data-testId="page-div-16"
+                      className="space-y-2"
+                    >
                       <Label htmlFor="lastName">Last Name</Label>
                       <Input
                         id="lastName"
@@ -356,7 +440,11 @@ export default function ProfilePage() {
                         onChange={handleChange}
                       />
                     </div>
-                    <div id="page-div-17" data-testId="page-div-17" className="space-y-2 sm:col-span-2">
+                    <div
+                      id="page-div-17"
+                      data-testId="page-div-17"
+                      className="space-y-2 sm:col-span-2"
+                    >
                       <Label htmlFor="email">Email</Label>
                       <Input
                         id="email"
@@ -367,7 +455,11 @@ export default function ProfilePage() {
                         disabled={true} // Keep disabled if email shouldn't be editable
                       />
                     </div>
-                    <div id="page-div-18" data-testId="page-div-18" className="space-y-2">
+                    <div
+                      id="page-div-18"
+                      data-testId="page-div-18"
+                      className="space-y-2"
+                    >
                       <Label htmlFor="contactNumber">Phone</Label>
                       <Input
                         id="contactNumber"
@@ -376,7 +468,11 @@ export default function ProfilePage() {
                         onChange={handleChange}
                       />
                     </div>
-                    <div id="page-div-19" data-testId="page-div-19" className="space-y-2">
+                    <div
+                      id="page-div-19"
+                      data-testId="page-div-19"
+                      className="space-y-2"
+                    >
                       <Label htmlFor="location">Location</Label>
                       <Input
                         id="location"
@@ -387,7 +483,11 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
-                  <div id="page-div-20" data-testId="page-div-20" className="space-y-2">
+                  <div
+                    id="page-div-20"
+                    data-testId="page-div-20"
+                    className="space-y-2"
+                  >
                     <Label htmlFor="bio">Bio</Label>
                     <Textarea
                       id="bio"
@@ -398,7 +498,11 @@ export default function ProfilePage() {
                     />
                   </div>
 
-                  <div id="page-flex-21" data-testId="page-flex-21" className="flex gap-2">
+                  <div
+                    id="page-flex-21"
+                    data-testId="page-flex-21"
+                    className="flex gap-2"
+                  >
                     <Input
                       placeholder="Add your interests..."
                       value={newInterests}
@@ -410,13 +514,23 @@ export default function ProfilePage() {
                         }
                       }}
                     />
-                    <Button type="button" onClick={handleAddInterest} size="sm">
+                    <Button
+                      id="page-button-2"
+                      data-testId="page-button-2"
+                      type="button"
+                      onClick={handleAddInterest}
+                      size="sm"
+                    >
                       Add
                     </Button>
                   </div>
 
                   {interests.length > 0 && (
-                    <div id="page-flex-22" data-testId="page-flex-22" className="flex flex-wrap gap-2">
+                    <div
+                      id="page-flex-22"
+                      data-testId="page-flex-22"
+                      className="flex flex-wrap gap-2"
+                    >
                       {interests.map((interest) => (
                         <Badge
                           key={interest}
@@ -425,6 +539,8 @@ export default function ProfilePage() {
                         >
                           {interest}
                           <button
+                            id="page-button-3"
+                            data-testId="page-button-3"
                             onClick={() => handleRemoveTag(interest)}
                             className="ml-1 hover:text-destructive"
                           >
@@ -435,11 +551,22 @@ export default function ProfilePage() {
                     </div>
                   )}
 
-                  <div id="page-flex-23" data-testId="page-flex-23" className="flex flex-col sm:flex-row gap-2">
-                    <Button onClick={handleSave} className="w-full sm:w-auto">
+                  <div
+                    id="page-flex-23"
+                    data-testId="page-flex-23"
+                    className="flex flex-col sm:flex-row gap-2"
+                  >
+                    <Button
+                      id="page-button-4"
+                      data-testId="page-button-4"
+                      onClick={handleSave}
+                      className="w-full sm:w-auto"
+                    >
                       Save Changes
                     </Button>
                     <Button
+                      id="page-button-5"
+                      data-testId="page-button-5"
                       variant="outline"
                       onClick={() => setIsEditing(false)}
                       className="w-full sm:w-auto"
@@ -455,10 +582,18 @@ export default function ProfilePage() {
       </Card>
 
       {/* Stats Cards */}
-      <div id="page-grid-24" data-testId="page-grid-24" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div
+        id="page-grid-24"
+        data-testId="page-grid-24"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
+      >
         <Card>
           <CardContent className="pt-4 sm:pt-6">
-            <div id="page-flex-25" data-testId="page-flex-25" className="flex items-center space-x-2">
+            <div
+              id="page-flex-25"
+              data-testId="page-flex-25"
+              className="flex items-center space-x-2"
+            >
               <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
               <div id="page-div-26" data-testId="page-div-26">
                 <p className="text-xl sm:text-2xl font-bold">
@@ -474,7 +609,11 @@ export default function ProfilePage() {
 
         <Card>
           <CardContent className="pt-4 sm:pt-6">
-            <div id="page-flex-27" data-testId="page-flex-27" className="flex items-center space-x-2">
+            <div
+              id="page-flex-27"
+              data-testId="page-flex-27"
+              className="flex items-center space-x-2"
+            >
               <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
               <div id="page-div-28" data-testId="page-div-28">
                 <p className="text-xl sm:text-2xl font-bold">
@@ -490,7 +629,11 @@ export default function ProfilePage() {
 
         <Card>
           <CardContent className="pt-4 sm:pt-6">
-            <div id="page-flex-29" data-testId="page-flex-29" className="flex items-center space-x-2">
+            <div
+              id="page-flex-29"
+              data-testId="page-flex-29"
+              className="flex items-center space-x-2"
+            >
               <Star className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600" />
               <div id="page-div-30" data-testId="page-div-30">
                 <p className="text-xl sm:text-2xl font-bold">
@@ -530,7 +673,11 @@ export default function ProfilePage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div id="page-div-31" data-testId="page-div-31" className="space-y-4">
+              <div
+                id="page-div-31"
+                data-testId="page-div-31"
+                className="space-y-4"
+              >
                 {visibleActivities.map((activity: any, index: number) => (
                   <Activities
                     key={index}
@@ -542,8 +689,14 @@ export default function ProfilePage() {
 
                 {/* Load More Button */}
                 {hasMoreActivities && (
-                  <div id="page-flex-32" data-testId="page-flex-32" className="flex justify-center pt-4">
+                  <div
+                    id="page-flex-32"
+                    data-testId="page-flex-32"
+                    className="flex justify-center pt-4"
+                  >
                     <Button
+                      id="page-button-6"
+                      data-testId="page-button-6"
                       variant="outline"
                       onClick={handleLoadMoreActivity}
                       className="w-full sm:w-auto"
@@ -556,7 +709,11 @@ export default function ProfilePage() {
                 {/* Show message if no activities */}
                 {!userActivity ||
                   (userActivity.length === 0 && (
-                    <div id="page-div-33" data-testId="page-div-33" className="text-center py-8 text-muted-foreground">
+                    <div
+                      id="page-div-33"
+                      data-testId="page-div-33"
+                      className="text-center py-8 text-muted-foreground"
+                    >
                       <p>No recent activity to display.</p>
                     </div>
                   ))}
@@ -576,7 +733,11 @@ export default function ProfilePage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div id="page-div-34" data-testId="page-div-34" className="space-y-4">
+              <div
+                id="page-div-34"
+                data-testId="page-div-34"
+                className="space-y-4"
+              >
                 {user?.userData?.publications?.map((pub: any, index: any) => (
                   <ProfilePublications
                     key={index}
@@ -590,7 +751,11 @@ export default function ProfilePage() {
                 {/* Show message if no publications */}
                 {!user?.userData?.publications ||
                   (user.userData.publications.length === 0 && (
-                    <div id="page-div-35" data-testId="page-div-35" className="text-center py-8 text-muted-foreground">
+                    <div
+                      id="page-div-35"
+                      data-testId="page-div-35"
+                      className="text-center py-8 text-muted-foreground"
+                    >
                       <p>No publications to display.</p>
                     </div>
                   ))}
@@ -606,7 +771,11 @@ export default function ProfilePage() {
               <CardDescription>Forums you&apos;ve joined in.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div id="page-div-36" data-testId="page-div-36" className="space-y-4">
+              <div
+                id="page-div-36"
+                data-testId="page-div-36"
+                className="space-y-4"
+              >
                 {user?.userData?.forums?.map((forum: any, index: any) => (
                   <UserForums
                     key={forum?.forumId}
@@ -620,7 +789,11 @@ export default function ProfilePage() {
                 {/* Show message if no forums */}
                 {!user?.userData?.forums ||
                   (user.userData.forums.length === 0 && (
-                    <div id="page-div-37" data-testId="page-div-37" className="text-center py-8 text-muted-foreground">
+                    <div
+                      id="page-div-37"
+                      data-testId="page-div-37"
+                      className="text-center py-8 text-muted-foreground"
+                    >
                       <p>No forums to display.</p>
                     </div>
                   ))}

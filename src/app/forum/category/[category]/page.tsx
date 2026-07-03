@@ -178,10 +178,10 @@ export default function ForumCategoryPage({ params }: PageProps) {
       {/* Header */}
       <div id="page-div-2" data-testId="page-div-2" className="space-y-3 md:space-y-0 md:flex md:items-center md:gap-4">
         <Button asChild variant="ghost" size="sm" className="w-fit">
-          <Link href="/forum">
+          <Link id="page-link-1" data-testId="page-link-1" href="/forum">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Back to Forum</span>
-            <span className="sm:hidden">Back</span>
+            <span id="page-span-1" data-testId="page-span-1" className="hidden sm:inline">Back to Forum</span>
+            <span id="page-span-2" data-testId="page-span-2" className="sm:hidden">Back</span>
           </Link>
         </Button>
         <div id="page-div-3" data-testId="page-div-3" className="flex-1 space-y-2">
@@ -198,7 +198,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
           </p>
         </div>
         <Button asChild size="sm" className="w-full sm:w-auto">
-          <a className="cursor-pointer" onClick={startDiscussion}>
+          <a id="page-a-1" data-testId="page-a-1" className="cursor-pointer" onClick={startDiscussion}>
             <Plus className="mr-2 h-4 w-4" />
             New Topic
           </a>
@@ -296,7 +296,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
           topics
         </p>
         {searchQuery && (
-          <Button variant="ghost" size="sm" onClick={() => setSearchQuery("")}>
+          <Button id="page-button-1" data-testId="page-button-1" variant="ghost" size="sm" onClick={() => setSearchQuery("")}>
             Clear search
           </Button>
         )}
@@ -323,7 +323,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
                 </p>
                 <div id="page-flex-21" data-testId="page-flex-21" className="flex flex-col sm:flex-row gap-2 justify-center">
                   {searchQuery && (
-                    <Button
+                    <Button id="page-button-2" data-testId="page-button-2"
                       variant="outline"
                       onClick={() => setSearchQuery("")}
                     >
@@ -331,7 +331,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
                     </Button>
                   )}
                   <Button asChild>
-                    <a className="cursor-pointer" onClick={startDiscussion}>
+                    <a id="page-a-2" data-testId="page-a-2" className="cursor-pointer" onClick={startDiscussion}>
                       <Plus className="mr-2 h-4 w-4" />
                       Start the first discussion
                     </a>

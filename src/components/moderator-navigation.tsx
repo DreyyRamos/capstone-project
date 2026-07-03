@@ -89,7 +89,7 @@ export function ModeratorNavigation() {
             {navigation.map((item) => {
               const isActive = pathname === item.href;
               return (
-                <Link
+                <Link id="moderator-navigation-link-1" data-testId="moderator-navigation-link-1"
                   key={item.name}
                   href={item.href}
                   className={cn(
@@ -108,7 +108,7 @@ export function ModeratorNavigation() {
             {/* Forum Categories Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
+                <Button id="moderator-navigation-button-1" data-testId="moderator-navigation-button-1"
                   variant="ghost"
                   className="flex items-center gap-1 text-sm font-medium"
                 >
@@ -121,11 +121,11 @@ export function ModeratorNavigation() {
                 <DropdownMenuSeparator />
                 {forumCategories.map((category) => (
                   <DropdownMenuItem key={category.name} asChild>
-                    <Link
+                    <Link id="moderator-navigation-link-2" data-testId="moderator-navigation-link-2"
                       href={category.href}
                       className="flex items-center justify-between"
                     >
-                      <span>{category.name}</span>
+                      <span id="moderator-navigation-span-1" data-testId="moderator-navigation-span-1">{category.name}</span>
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -150,11 +150,11 @@ export function ModeratorNavigation() {
               className="bg-purple-100 text-purple-800 text-xs shrink-0"
             >
               <Shield className="h-3 w-3 mr-1" />
-              <span className="hidden sm:inline">Mod</span>
+              <span id="moderator-navigation-span-2" data-testId="moderator-navigation-span-2" className="hidden sm:inline">Mod</span>
             </Badge>
 
             <div id="moderator-navigation-flex-6" data-testId="moderator-navigation-flex-6" className="flex items-center space-x-1">
-              <Link
+              <Link id="moderator-navigation-link-3" data-testId="moderator-navigation-link-3"
                 href="/"
                 className={cn(
                   "flex items-center gap-1 px-2 py-1.5 text-sm font-medium rounded-md transition-colors",
@@ -164,12 +164,12 @@ export function ModeratorNavigation() {
                 )}
               >
                 <Home className="h-4 w-4" />
-                <span className="hidden sm:inline">Home</span>
+                <span id="moderator-navigation-span-3" data-testId="moderator-navigation-span-3" className="hidden sm:inline">Home</span>
               </Link>
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Link
+                  <Link id="moderator-navigation-link-4" data-testId="moderator-navigation-link-4"
                     href="/moderation"
                     className={cn(
                       "flex items-center gap-1.5 px-2 py-1.5 text-sm font-medium rounded-md transition-colors border-2",
@@ -179,7 +179,7 @@ export function ModeratorNavigation() {
                     )}
                   >
                     <Flag className="h-4 w-4" />
-                    <span className="hidden sm:inline font-semibold">
+                    <span id="moderator-navigation-span-4" data-testId="moderator-navigation-span-4" className="hidden sm:inline font-semibold">
                       Moderation
                     </span>
                   </Link>
@@ -205,7 +205,7 @@ export function ModeratorNavigation() {
                     onClose={() => setSearchOpen(false)}
                   />
                 </div>
-                <Button
+                <Button id="moderator-navigation-button-2" data-testId="moderator-navigation-button-2"
                   variant="ghost"
                   size="icon"
                   onClick={() => setSearchOpen(false)}
@@ -215,7 +215,7 @@ export function ModeratorNavigation() {
                 </Button>
               </div>
             ) : (
-              <Button
+              <Button id="moderator-navigation-button-3" data-testId="moderator-navigation-button-3"
                 variant="ghost"
                 size="icon"
                 onClick={() => setSearchOpen(true)}
@@ -237,9 +237,9 @@ export function ModeratorNavigation() {
           >
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button id="moderator-navigation-button-4" data-testId="moderator-navigation-button-4" variant="ghost" size="icon">
                   <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle menu</span>
+                  <span id="moderator-navigation-span-5" data-testId="moderator-navigation-span-5" className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-80">
@@ -258,7 +258,7 @@ export function ModeratorNavigation() {
                     {navigation.map((item) => {
                       const isActive = pathname === item.href;
                       return (
-                        <Link
+                        <Link id="moderator-navigation-link-5" data-testId="moderator-navigation-link-5"
                           key={item.name}
                           href={item.href}
                           onClick={() => setMobileMenuOpen(false)}
@@ -287,13 +287,13 @@ export function ModeratorNavigation() {
                     {/* scrollable area */}
                     <div id="moderator-navigation-div-14" data-testId="moderator-navigation-div-14" className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
                       {forumCategories.map((category) => (
-                        <Link
+                        <Link id="moderator-navigation-link-6" data-testId="moderator-navigation-link-6"
                           key={category.name}
                           href={category.href}
                           onClick={() => setMobileMenuOpen(false)}
                           className="flex items-center justify-between px-3 py-2 text-sm rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
                         >
-                          <span>{category.name}</span>
+                          <span id="moderator-navigation-span-6" data-testId="moderator-navigation-span-6">{category.name}</span>
                         </Link>
                       ))}
                     </div>

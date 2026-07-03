@@ -96,7 +96,7 @@ export default function RoleRequestLoading() {
           </div>
 
           {/* Submit Button */}
-          <Button className="w-full" disabled>
+          <Button id="loading-button-1" data-testId="loading-button-1" className="w-full" disabled>
             <Send className="h-4 w-4 mr-2" />
             Submit Role Change Request
           </Button>

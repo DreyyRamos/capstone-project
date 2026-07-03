@@ -130,29 +130,64 @@ const PublicationCommentsSection = ({
   return (
     <Card key={comment.commentId}>
       <CardContent className="p-6">
-        <div id="publication-comments-div-1" data-testId="publication-comments-div-1" className="space-y-4">
-          <div id="publication-comments-flex-2" data-testId="publication-comments-flex-2" className="flex items-start gap-4">
-            <Avatar className="h-10 w-10">
+        <div
+          id="publication-comments-div-1"
+          data-testId="publication-comments-div-1"
+          className="space-y-4"
+        >
+          <div
+            id="publication-comments-flex-2"
+            data-testId="publication-comments-flex-2"
+            className="flex items-start gap-4"
+          >
+            <Avatar
+              id="publication-comments-a-1"
+              data-testId="publication-comments-a-1"
+              className="h-10 w-10"
+            >
               <AvatarImage
                 src={comment.author?.profileImage || "/placeholder.svg"}
               />
-              <AvatarFallback>
+              <AvatarFallback
+                id="publication-comments-a-2"
+                data-testId="publication-comments-a-2"
+              >
                 {comment.author?.firstName?.[0]}
                 {comment.author?.lastName?.[0]}
               </AvatarFallback>
             </Avatar>
-            <div id="publication-comments-div-3" data-testId="publication-comments-div-3" className="flex-1 space-y-2">
-              <div id="publication-comments-flex-4" data-testId="publication-comments-flex-4" className="flex items-center justify-between">
-                <div id="publication-comments-flex-5" data-testId="publication-comments-flex-5" className="flex items-center gap-2">
+            <div
+              id="publication-comments-div-3"
+              data-testId="publication-comments-div-3"
+              className="flex-1 space-y-2"
+            >
+              <div
+                id="publication-comments-flex-4"
+                data-testId="publication-comments-flex-4"
+                className="flex items-center justify-between"
+              >
+                <div
+                  id="publication-comments-flex-5"
+                  data-testId="publication-comments-flex-5"
+                  className="flex items-center gap-2"
+                >
                   <p className="font-medium">
-                    <Link href={`/visit/user/${comment?.authorId}`}>
+                    <Link
+                      id="publication-comments-link-1"
+                      data-testId="publication-comments-link-1"
+                      href={`/visit/user/${comment?.authorId}`}
+                    >
                       {comment?.author?.firstName} {comment?.author?.lastName}
                     </Link>
                   </p>
                   <Badge variant="outline" className="text-xs">
                     {comment?.author?.role}
                   </Badge>
-                  <span className="text-sm text-muted-foreground">
+                  <span
+                    id="publication-comments-span-1"
+                    data-testId="publication-comments-span-1"
+                    className="text-sm text-muted-foreground"
+                  >
                     {new Date(comment?.createdAt).toLocaleDateString()}
                   </span>
                 </div>
@@ -161,7 +196,12 @@ const PublicationCommentsSection = ({
                 {isCurrentUserContent(comment.authorId) && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm">
+                      <Button
+                        id="publication-comments-button-1"
+                        data-testId="publication-comments-button-1"
+                        variant="ghost"
+                        size="sm"
+                      >
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -175,7 +215,7 @@ const PublicationCommentsSection = ({
                       <DropdownMenuItem
                         onClick={() => {
                           confirmDelete("comment", () =>
-                            handleDeleteComment(comment.commentId)
+                            handleDeleteComment(comment.commentId),
                           );
                         }}
                         className="text-red-600"
@@ -190,14 +230,24 @@ const PublicationCommentsSection = ({
 
               {/* Comment content - editable if in edit mode */}
               {editingComment === comment.commentId ? (
-                <div id="publication-comments-div-6" data-testId="publication-comments-div-6" className="space-y-2">
+                <div
+                  id="publication-comments-div-6"
+                  data-testId="publication-comments-div-6"
+                  className="space-y-2"
+                >
                   <Textarea
                     value={editCommentContent}
                     onChange={(e) => setEditCommentContent(e.target.value)}
                     rows={3}
                   />
-                  <div id="publication-comments-flex-7" data-testId="publication-comments-flex-7" className="flex items-center gap-2">
+                  <div
+                    id="publication-comments-flex-7"
+                    data-testId="publication-comments-flex-7"
+                    className="flex items-center gap-2"
+                  >
                     <Button
+                      id="publication-comments-button-2"
+                      data-testId="publication-comments-button-2"
                       size="sm"
                       onClick={() => handleSaveEditComment(comment.commentId)}
                       disabled={!editCommentContent.trim()}
@@ -205,6 +255,8 @@ const PublicationCommentsSection = ({
                       Save
                     </Button>
                     <Button
+                      id="publication-comments-button-3"
+                      data-testId="publication-comments-button-3"
                       variant="ghost"
                       size="sm"
                       onClick={handleCancelEdit}
@@ -219,13 +271,19 @@ const PublicationCommentsSection = ({
                 </p>
               )}
 
-              <div id="publication-comments-flex-8" data-testId="publication-comments-flex-8" className="flex items-center gap-4">
+              <div
+                id="publication-comments-flex-8"
+                data-testId="publication-comments-flex-8"
+                className="flex items-center gap-4"
+              >
                 <PublicationCommentLikeButton
                   comment={comment}
                   token={token}
                   forumId={id}
                 />
                 <Button
+                  id="publication-comments-button-4"
+                  data-testId="publication-comments-button-4"
                   variant="ghost"
                   size="sm"
                   onClick={() => handleReply(comment.commentId)}
@@ -233,13 +291,15 @@ const PublicationCommentsSection = ({
                   {replyingTo === comment.commentId ? "Cancel" : "Reply"}
                 </Button>
                 <Button
+                  id="publication-comments-button-5"
+                  data-testId="publication-comments-button-5"
                   variant="ghost"
                   size="sm"
                   onClick={() =>
                     handleReportPublicationComment(
                       comment.commentId,
                       comment.comment_content,
-                      comment.authorId
+                      comment.authorId,
                     )
                   }
                 >
@@ -250,8 +310,16 @@ const PublicationCommentsSection = ({
           </div>
 
           {replyingTo === comment.commentId && (
-            <div id="publication-comments-div-9" data-testId="publication-comments-div-9" className="ml-6 md:ml-14 space-y-3">
-              <div id="publication-comments-div-10" data-testId="publication-comments-div-10" className="border-l-2 border-muted pl-2 md:pl-4">
+            <div
+              id="publication-comments-div-9"
+              data-testId="publication-comments-div-9"
+              className="ml-6 md:ml-14 space-y-3"
+            >
+              <div
+                id="publication-comments-div-10"
+                data-testId="publication-comments-div-10"
+                className="border-l-2 border-muted pl-2 md:pl-4"
+              >
                 <Textarea
                   placeholder="Write your reply..."
                   value={replyContent}
@@ -259,11 +327,23 @@ const PublicationCommentsSection = ({
                   rows={2}
                   className="resize-none"
                 />
-                <div id="publication-comments-flex-11" data-testId="publication-comments-flex-11" className="flex items-center justify-end gap-2 mt-2">
-                  <Button variant="ghost" size="sm" onClick={handleCancelReply}>
+                <div
+                  id="publication-comments-flex-11"
+                  data-testId="publication-comments-flex-11"
+                  className="flex items-center justify-end gap-2 mt-2"
+                >
+                  <Button
+                    id="publication-comments-button-6"
+                    data-testId="publication-comments-button-6"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCancelReply}
+                  >
                     Cancel
                   </Button>
                   <Button
+                    id="publication-comments-button-7"
+                    data-testId="publication-comments-button-7"
                     size="sm"
                     onClick={() =>
                       handleSubmitReply(comment.commentId, publication.pubId)
@@ -278,13 +358,23 @@ const PublicationCommentsSection = ({
           )}
 
           {comment?.replies && comment?.replies?.length > 0 && (
-            <div id="publication-comments-div-12" data-testId="publication-comments-div-12" className="ml-6 md:ml-14 space-y-4 border-l-2 border-muted pl-2 md:pl-4">
+            <div
+              id="publication-comments-div-12"
+              data-testId="publication-comments-div-12"
+              className="ml-6 md:ml-14 space-y-4 border-l-2 border-muted pl-2 md:pl-4"
+            >
               {comment?.replies?.map((reply: any) => (
-                <div id="publication-comments-flex-13" data-testId="publication-comments-flex-13"
+                <div
+                  id="publication-comments-flex-13"
+                  data-testId="publication-comments-flex-13"
                   key={reply.replyId}
                   className="flex items-start gap-2 md:gap-4"
                 >
-                  <Avatar className="h-6 w-6 md:h-8 md:w-8 shrink-0">
+                  <Avatar
+                    id="publication-comments-a-3"
+                    data-testId="publication-comments-a-3"
+                    className="h-6 w-6 md:h-8 md:w-8 shrink-0"
+                  >
                     <AvatarImage
                       src={
                         reply?.reply_author?.profileImage ||
@@ -292,23 +382,47 @@ const PublicationCommentsSection = ({
                         "/placeholder.svg"
                       }
                     />
-                    <AvatarFallback className="text-xs">
+                    <AvatarFallback
+                      id="publication-comments-a-4"
+                      data-testId="publication-comments-a-4"
+                      className="text-xs"
+                    >
                       {reply?.reply_author?.firstName?.[0]}
                       {reply?.reply_author?.lastName?.[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <div id="publication-comments-div-14" data-testId="publication-comments-div-14" className="flex-1 min-w-0 space-y-2">
-                    <div id="publication-comments-flex-15" data-testId="publication-comments-flex-15" className="flex items-start justify-between gap-2">
-                      <div id="publication-comments-flex-16" data-testId="publication-comments-flex-16" className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 min-w-0">
+                  <div
+                    id="publication-comments-div-14"
+                    data-testId="publication-comments-div-14"
+                    className="flex-1 min-w-0 space-y-2"
+                  >
+                    <div
+                      id="publication-comments-flex-15"
+                      data-testId="publication-comments-flex-15"
+                      className="flex items-start justify-between gap-2"
+                    >
+                      <div
+                        id="publication-comments-flex-16"
+                        data-testId="publication-comments-flex-16"
+                        className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 min-w-0"
+                      >
                         <p className="font-medium text-sm truncate">
                           {reply?.reply_author?.firstName}{" "}
                           {reply?.reply_author?.lastName}
                         </p>
-                        <div id="publication-comments-flex-17" data-testId="publication-comments-flex-17" className="flex items-center gap-2">
+                        <div
+                          id="publication-comments-flex-17"
+                          data-testId="publication-comments-flex-17"
+                          className="flex items-center gap-2"
+                        >
                           <Badge variant="outline" className="text-xs shrink-0">
                             {reply?.reply_author?.role}
                           </Badge>
-                          <span className="text-xs text-muted-foreground shrink-0">
+                          <span
+                            id="publication-comments-span-2"
+                            data-testId="publication-comments-span-2"
+                            className="text-xs text-muted-foreground shrink-0"
+                          >
                             {new Date(reply?.createdAt).toLocaleDateString()}
                           </span>
                         </div>
@@ -319,6 +433,8 @@ const PublicationCommentsSection = ({
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button
+                              id="publication-comments-button-8"
+                              data-testId="publication-comments-button-8"
                               variant="ghost"
                               size="sm"
                               className="shrink-0"
@@ -338,8 +454,8 @@ const PublicationCommentsSection = ({
                                 confirmDelete("reply", () =>
                                   handleDeleteReply(
                                     reply.replyId,
-                                    comment.commentId
-                                  )
+                                    comment.commentId,
+                                  ),
                                 );
                               }}
                               className="text-red-600"
@@ -354,19 +470,29 @@ const PublicationCommentsSection = ({
 
                     {/* Reply content - editable if in edit mode */}
                     {editingReply === reply.replyId ? (
-                      <div id="publication-comments-div-18" data-testId="publication-comments-div-18" className="space-y-2">
+                      <div
+                        id="publication-comments-div-18"
+                        data-testId="publication-comments-div-18"
+                        className="space-y-2"
+                      >
                         <Textarea
                           value={editReplyContent}
                           onChange={(e) => setEditReplyContent(e.target.value)}
                           rows={2}
                         />
-                        <div id="publication-comments-flex-19" data-testId="publication-comments-flex-19" className="flex items-center gap-2">
+                        <div
+                          id="publication-comments-flex-19"
+                          data-testId="publication-comments-flex-19"
+                          className="flex items-center gap-2"
+                        >
                           <Button
+                            id="publication-comments-button-9"
+                            data-testId="publication-comments-button-9"
                             size="sm"
                             onClick={() =>
                               handleSaveEditReply(
                                 reply.replyId,
-                                comment.commentId
+                                comment.commentId,
                               )
                             }
                             disabled={!editReplyContent.trim()}
@@ -374,6 +500,8 @@ const PublicationCommentsSection = ({
                             Save
                           </Button>
                           <Button
+                            id="publication-comments-button-10"
+                            data-testId="publication-comments-button-10"
                             variant="ghost"
                             size="sm"
                             onClick={handleCancelEdit}
@@ -388,13 +516,19 @@ const PublicationCommentsSection = ({
                       </p>
                     )}
 
-                    <div id="publication-comments-flex-20" data-testId="publication-comments-flex-20" className="flex items-center gap-2 md:gap-4 flex-wrap">
+                    <div
+                      id="publication-comments-flex-20"
+                      data-testId="publication-comments-flex-20"
+                      className="flex items-center gap-2 md:gap-4 flex-wrap"
+                    >
                       <PublicationCommentReplyLikeButton
                         reply={reply}
                         token={token}
                         pubId={id}
                       />
                       <Button
+                        id="publication-comments-button-11"
+                        data-testId="publication-comments-button-11"
                         variant="ghost"
                         size="sm"
                         onClick={() => handleSecondLevelReply(reply.replyId)}
@@ -405,13 +539,15 @@ const PublicationCommentsSection = ({
                           : "Reply"}
                       </Button>
                       <Button
+                        id="publication-comments-button-12"
+                        data-testId="publication-comments-button-12"
                         variant="ghost"
                         size="sm"
                         onClick={() =>
                           handleReportPublicationReply(
                             reply.replyId,
                             reply.reply_content,
-                            reply.reply_authorId
+                            reply.reply_authorId,
                           )
                         }
                         className="p-1 md:p-2"
@@ -421,8 +557,16 @@ const PublicationCommentsSection = ({
                     </div>
 
                     {replyingToSecondLevel === reply.replyId && (
-                      <div id="publication-comments-div-21" data-testId="publication-comments-div-21" className="ml-2 md:ml-6 space-y-3">
-                        <div id="publication-comments-div-22" data-testId="publication-comments-div-22" className="border-l-2 border-muted pl-2 md:pl-4">
+                      <div
+                        id="publication-comments-div-21"
+                        data-testId="publication-comments-div-21"
+                        className="ml-2 md:ml-6 space-y-3"
+                      >
+                        <div
+                          id="publication-comments-div-22"
+                          data-testId="publication-comments-div-22"
+                          className="border-l-2 border-muted pl-2 md:pl-4"
+                        >
                           <Textarea
                             placeholder="Write your reply..."
                             value={secondLevelReplyContent}
@@ -432,8 +576,14 @@ const PublicationCommentsSection = ({
                             rows={2}
                             className="resize-none"
                           />
-                          <div id="publication-comments-flex-23" data-testId="publication-comments-flex-23" className="flex items-center justify-end gap-2 mt-2">
+                          <div
+                            id="publication-comments-flex-23"
+                            data-testId="publication-comments-flex-23"
+                            className="flex items-center justify-end gap-2 mt-2"
+                          >
                             <Button
+                              id="publication-comments-button-13"
+                              data-testId="publication-comments-button-13"
                               variant="ghost"
                               size="sm"
                               onClick={handleCancelSecondLevelReply}
@@ -441,12 +591,14 @@ const PublicationCommentsSection = ({
                               Cancel
                             </Button>
                             <Button
+                              id="publication-comments-button-14"
+                              data-testId="publication-comments-button-14"
                               size="sm"
                               onClick={() =>
                                 handleSubmitSecondLevelReply(
                                   publication.pubId,
                                   reply.replyId,
-                                  comment.commentId
+                                  comment.commentId,
                                 )
                               }
                               disabled={!secondLevelReplyContent.trim()}
@@ -459,41 +611,75 @@ const PublicationCommentsSection = ({
                     )}
 
                     {reply?.children && reply.children.length > 0 && (
-                      <div id="publication-comments-div-24" data-testId="publication-comments-div-24" className="ml-2 md:ml-6 space-y-4 border-l-2 border-muted pl-2 md:pl-4 mt-4">
+                      <div
+                        id="publication-comments-div-24"
+                        data-testId="publication-comments-div-24"
+                        className="ml-2 md:ml-6 space-y-4 border-l-2 border-muted pl-2 md:pl-4 mt-4"
+                      >
                         {reply.children.map((childReply: any) => (
-                          <div id="publication-comments-flex-25" data-testId="publication-comments-flex-25"
+                          <div
+                            id="publication-comments-flex-25"
+                            data-testId="publication-comments-flex-25"
                             key={childReply.replyToReplyId}
                             className="flex items-start gap-2 md:gap-4"
                           >
-                            <Avatar className="h-6 w-6 md:h-8 md:w-8 shrink-0">
+                            <Avatar
+                              id="publication-comments-a-5"
+                              data-testId="publication-comments-a-5"
+                              className="h-6 w-6 md:h-8 md:w-8 shrink-0"
+                            >
                               <AvatarImage
                                 src={
                                   childReply?.reply_author?.profileImage ||
                                   "/placeholder.svg"
                                 }
                               />
-                              <AvatarFallback className="text-xs">
+                              <AvatarFallback
+                                id="publication-comments-a-6"
+                                data-testId="publication-comments-a-6"
+                                className="text-xs"
+                              >
                                 {childReply?.reply_author?.firstName?.[0]}
                                 {childReply?.reply_author?.lastName?.[0]}
                               </AvatarFallback>
                             </Avatar>
-                            <div id="publication-comments-div-26" data-testId="publication-comments-div-26" className="flex-1 min-w-0 space-y-2">
-                              <div id="publication-comments-flex-27" data-testId="publication-comments-flex-27" className="flex items-start justify-between gap-2">
-                                <div id="publication-comments-flex-28" data-testId="publication-comments-flex-28" className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 min-w-0">
+                            <div
+                              id="publication-comments-div-26"
+                              data-testId="publication-comments-div-26"
+                              className="flex-1 min-w-0 space-y-2"
+                            >
+                              <div
+                                id="publication-comments-flex-27"
+                                data-testId="publication-comments-flex-27"
+                                className="flex items-start justify-between gap-2"
+                              >
+                                <div
+                                  id="publication-comments-flex-28"
+                                  data-testId="publication-comments-flex-28"
+                                  className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 min-w-0"
+                                >
                                   <p className="font-medium text-sm truncate">
                                     {childReply?.reply_author?.firstName}{" "}
                                     {childReply?.reply_author?.lastName}
                                   </p>
-                                  <div id="publication-comments-flex-29" data-testId="publication-comments-flex-29" className="flex items-center gap-2">
+                                  <div
+                                    id="publication-comments-flex-29"
+                                    data-testId="publication-comments-flex-29"
+                                    className="flex items-center gap-2"
+                                  >
                                     <Badge
                                       variant="outline"
                                       className="text-xs shrink-0"
                                     >
                                       {childReply?.reply_author?.role}
                                     </Badge>
-                                    <span className="text-xs text-muted-foreground shrink-0">
+                                    <span
+                                      id="publication-comments-span-3"
+                                      data-testId="publication-comments-span-3"
+                                      className="text-xs text-muted-foreground shrink-0"
+                                    >
                                       {new Date(
-                                        childReply?.createdAt
+                                        childReply?.createdAt,
                                       ).toLocaleDateString()}
                                     </span>
                                   </div>
@@ -501,11 +687,13 @@ const PublicationCommentsSection = ({
 
                                 {/* Dropdown menu for nested reply owner */}
                                 {isCurrentUserContent(
-                                  childReply.reply_authorId
+                                  childReply.reply_authorId,
                                 ) && (
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                       <Button
+                                        id="publication-comments-button-15"
+                                        data-testId="publication-comments-button-15"
                                         variant="ghost"
                                         size="sm"
                                         className="shrink-0"
@@ -528,8 +716,8 @@ const PublicationCommentsSection = ({
                                             handleDeleteNestedReply(
                                               childReply.replyToReplyId,
                                               comment.commentId,
-                                              reply.replyId
-                                            )
+                                              reply.replyId,
+                                            ),
                                           );
                                         }}
                                         className="text-red-600"
@@ -545,7 +733,11 @@ const PublicationCommentsSection = ({
                               {/* Nested reply content - editable if in edit mode */}
                               {editingNestedReply ===
                               childReply.replyToReplyId ? (
-                                <div id="publication-comments-div-30" data-testId="publication-comments-div-30" className="space-y-2">
+                                <div
+                                  id="publication-comments-div-30"
+                                  data-testId="publication-comments-div-30"
+                                  className="space-y-2"
+                                >
                                   <Textarea
                                     value={editNestedReplyContent}
                                     onChange={(e) =>
@@ -553,14 +745,20 @@ const PublicationCommentsSection = ({
                                     }
                                     rows={2}
                                   />
-                                  <div id="publication-comments-flex-31" data-testId="publication-comments-flex-31" className="flex items-center gap-2">
+                                  <div
+                                    id="publication-comments-flex-31"
+                                    data-testId="publication-comments-flex-31"
+                                    className="flex items-center gap-2"
+                                  >
                                     <Button
+                                      id="publication-comments-button-16"
+                                      data-testId="publication-comments-button-16"
                                       size="sm"
                                       onClick={() =>
                                         handleSaveEditNestedReply(
                                           childReply.replyToReplyId,
                                           comment.commentId,
-                                          reply.replyId
+                                          reply.replyId,
                                         )
                                       }
                                       disabled={!editNestedReplyContent.trim()}
@@ -568,6 +766,8 @@ const PublicationCommentsSection = ({
                                       Save
                                     </Button>
                                     <Button
+                                      id="publication-comments-button-17"
+                                      data-testId="publication-comments-button-17"
                                       variant="ghost"
                                       size="sm"
                                       onClick={handleCancelEdit}
@@ -582,7 +782,11 @@ const PublicationCommentsSection = ({
                                 </p>
                               )}
 
-                              <div id="publication-comments-flex-32" data-testId="publication-comments-flex-32" className="flex items-center gap-2 md:gap-4">
+                              <div
+                                id="publication-comments-flex-32"
+                                data-testId="publication-comments-flex-32"
+                                className="flex items-center gap-2 md:gap-4"
+                              >
                                 <PublicationReplyToReplyLikeButton
                                   replyToReply={childReply}
                                   token={token}
@@ -590,13 +794,15 @@ const PublicationCommentsSection = ({
                                   commentId={reply.commentId}
                                 />
                                 <Button
+                                  id="publication-comments-button-18"
+                                  data-testId="publication-comments-button-18"
                                   variant="ghost"
                                   size="sm"
                                   onClick={() =>
                                     handleReportPublicationNestedReply(
                                       childReply.replyToReplyId,
                                       childReply.replyToReply_content,
-                                      childReply.reply_authorId
+                                      childReply.reply_authorId,
                                     )
                                   }
                                   className="p-1 md:p-2"

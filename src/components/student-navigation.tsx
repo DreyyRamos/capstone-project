@@ -83,7 +83,7 @@ export function StudentNavigation() {
             {navigation.map((item) => {
               const isActive = pathname === item.href;
               return (
-                <Link
+                <Link id="student-navigation-link-1" data-testId="student-navigation-link-1"
                   key={item.name}
                   href={item.href}
                   className={cn(
@@ -102,7 +102,7 @@ export function StudentNavigation() {
             {/* Forum Categories Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
+                <Button id="student-navigation-button-1" data-testId="student-navigation-button-1"
                   variant="ghost"
                   className="flex items-center gap-1 text-sm font-medium"
                 >
@@ -115,11 +115,11 @@ export function StudentNavigation() {
                 <DropdownMenuSeparator />
                 {forumCategories.map((category) => (
                   <DropdownMenuItem key={category.name} asChild>
-                    <Link
+                    <Link id="student-navigation-link-2" data-testId="student-navigation-link-2"
                       href={category.href}
                       className="flex items-center justify-between"
                     >
-                      <span>{category.name}</span>
+                      <span id="student-navigation-span-1" data-testId="student-navigation-span-1">{category.name}</span>
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -131,7 +131,7 @@ export function StudentNavigation() {
           <div id="student-navigation-flex-4" data-testId="student-navigation-flex-4" className="flex items-center space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="sm" className="flex items-center gap-1">
+                <Button id="student-navigation-button-2" data-testId="student-navigation-button-2" size="sm" className="flex items-center gap-1">
                   <Plus className="h-4 w-4" />
                   Create
                   <ChevronDown className="h-4 w-4" />
@@ -142,7 +142,7 @@ export function StudentNavigation() {
                 <DropdownMenuSeparator />
                 {quickActions.map((action) => (
                   <DropdownMenuItem key={action.name} asChild>
-                    <Link
+                    <Link id="student-navigation-link-3" data-testId="student-navigation-link-3"
                       href={action.href}
                       className="flex items-center gap-2"
                     >
@@ -165,14 +165,14 @@ export function StudentNavigation() {
           )}>
             <Badge variant="secondary" className="bg-green-100 text-green-800 shrink-0">
               <GraduationCap className="h-3 w-3 mr-1" />
-              <span className="hidden sm:inline">Student</span>
+              <span id="student-navigation-span-2" data-testId="student-navigation-span-2" className="hidden sm:inline">Student</span>
             </Badge>
 
             <div id="student-navigation-flex-7" data-testId="student-navigation-flex-7" className="flex items-center space-x-1 sm:space-x-2">
               {navigation.map((item) => {
                 const isActive = pathname === item.href;
                 return (
-                  <Link
+                  <Link id="student-navigation-link-4" data-testId="student-navigation-link-4"
                     key={item.name}
                     href={item.href}
                     className={cn(
@@ -183,7 +183,7 @@ export function StudentNavigation() {
                     )}
                   >
                     <item.icon className="h-4 w-4" />
-                    <span className="hidden sm:inline">{item.name}</span>
+                    <span id="student-navigation-span-3" data-testId="student-navigation-span-3" className="hidden sm:inline">{item.name}</span>
                   </Link>
                 );
               })}
@@ -200,7 +200,7 @@ export function StudentNavigation() {
                 <div id="student-navigation-div-10" data-testId="student-navigation-div-10" className="flex-1">
                   <SearchBar placeholder="Search publications, forums..." />
                 </div>
-                <Button
+                <Button id="student-navigation-button-3" data-testId="student-navigation-button-3"
                   variant="ghost"
                   size="icon"
                   onClick={() => setSearchOpen(false)}
@@ -210,7 +210,7 @@ export function StudentNavigation() {
                 </Button>
               </div>
             ) : (
-              <Button
+              <Button id="student-navigation-button-4" data-testId="student-navigation-button-4"
                 variant="ghost"
                 size="icon"
                 onClick={() => setSearchOpen(true)}
@@ -228,7 +228,7 @@ export function StudentNavigation() {
           )}>
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button id="student-navigation-button-5" data-testId="student-navigation-button-5" variant="ghost" size="icon">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
@@ -249,7 +249,7 @@ export function StudentNavigation() {
                     {navigation.map((item) => {
                       const isActive = pathname === item.href;
                       return (
-                        <Link
+                        <Link id="student-navigation-link-5" data-testId="student-navigation-link-5"
                           key={item.name}
                           href={item.href}
                           onClick={() => setMobileMenuOpen(false)}
@@ -275,7 +275,7 @@ export function StudentNavigation() {
                       Quick Actions
                     </h3>
                     {quickActions.map((action) => (
-                      <Link
+                      <Link id="student-navigation-link-6" data-testId="student-navigation-link-6"
                         key={action.name}
                         href={action.href}
                         onClick={() => setMobileMenuOpen(false)}
@@ -296,13 +296,13 @@ export function StudentNavigation() {
                     </h3>
                     <div id="student-navigation-div-16" data-testId="student-navigation-div-16" className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
                       {forumCategories.map((category) => (
-                        <Link
+                        <Link id="student-navigation-link-7" data-testId="student-navigation-link-7"
                           key={category.name}
                           href={category.href}
                           onClick={() => setMobileMenuOpen(false)}
                           className="flex items-center justify-between px-3 py-2 text-sm rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
                         >
-                          <span>{category.name}</span>
+                          <span id="student-navigation-span-4" data-testId="student-navigation-span-4">{category.name}</span>
                         </Link>
                       ))}
                     </div>
@@ -400,7 +400,7 @@ export function StudentNavigation() {
 //             {navigation.map((item) => {
 //               const isActive = pathname === item.href;
 //               return (
-//                 <Link
+//                 <Link id="student-navigation-link-8" data-testId="student-navigation-link-8"
 //                   key={item.name}
 //                   href={item.href}
 //                   className={cn(
@@ -419,7 +419,7 @@ export function StudentNavigation() {
 //             {/* Forum Categories Dropdown */}
 //             <DropdownMenu>
 //               <DropdownMenuTrigger asChild>
-//                 <Button
+//                 <Button id="student-navigation-button-6" data-testId="student-navigation-button-6"
 //                   variant="ghost"
 //                   className="flex items-center gap-1 text-sm font-medium"
 //                 >
@@ -432,11 +432,11 @@ export function StudentNavigation() {
 //                 <DropdownMenuSeparator />
 //                 {forumCategories.map((category) => (
 //                   <DropdownMenuItem key={category.name} asChild>
-//                     <Link
+//                     <Link id="student-navigation-link-9" data-testId="student-navigation-link-9"
 //                       href={category.href}
 //                       className="flex items-center justify-between"
 //                     >
-//                       <span>{category.name}</span>
+//                       <span id="student-navigation-span-5" data-testId="student-navigation-span-5">{category.name}</span>
 //                     </Link>
 //                   </DropdownMenuItem>
 //                 ))}
@@ -448,7 +448,7 @@ export function StudentNavigation() {
 //           <div id="student-navigation-flex-20" data-testId="student-navigation-flex-20" className="flex items-center space-x-2">
 //             <DropdownMenu>
 //               <DropdownMenuTrigger asChild>
-//                 <Button size="sm" className="flex items-center gap-1">
+//                 <Button id="student-navigation-button-7" data-testId="student-navigation-button-7" size="sm" className="flex items-center gap-1">
 //                   <Plus className="h-4 w-4" />
 //                   Create
 //                   <ChevronDown className="h-4 w-4" />
@@ -459,7 +459,7 @@ export function StudentNavigation() {
 //                 <DropdownMenuSeparator />
 //                 {quickActions.map((action) => (
 //                   <DropdownMenuItem key={action.name} asChild>
-//                     <Link
+//                     <Link id="student-navigation-link-10" data-testId="student-navigation-link-10"
 //                       href={action.href}
 //                       className="flex items-center gap-2"
 //                     >
@@ -487,7 +487,7 @@ export function StudentNavigation() {
 //             {navigation.map((item) => {
 //               const isActive = pathname === item.href;
 //               return (
-//                 <Link
+//                 <Link id="student-navigation-link-11" data-testId="student-navigation-link-11"
 //                   key={item.name}
 //                   href={item.href}
 //                   className={cn(
@@ -498,7 +498,7 @@ export function StudentNavigation() {
 //                   )}
 //                 >
 //                   <item.icon className="h-4 w-4" />
-//                   <span className="hidden sm:inline">{item.name}</span>
+//                   <span id="student-navigation-span-6" data-testId="student-navigation-span-6" className="hidden sm:inline">{item.name}</span>
 //                 </Link>
 //               );
 //             })}
@@ -507,8 +507,8 @@ export function StudentNavigation() {
 //           {/* Mobile Menu */}
 //           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
 //             <SheetTrigger asChild>
-//               <Button variant="ghost">
-//                 <span className="text-xs">Menu</span>
+//               <Button id="student-navigation-button-8" data-testId="student-navigation-button-8" variant="ghost">
+//                 <span id="student-navigation-span-7" data-testId="student-navigation-span-7" className="text-xs">Menu</span>
 //                 <Menu className="h-5 w-5" />
 //               </Button>
 //             </SheetTrigger>
@@ -529,7 +529,7 @@ export function StudentNavigation() {
 //                   {navigation.map((item) => {
 //                     const isActive = pathname === item.href;
 //                     return (
-//                       <Link
+//                       <Link id="student-navigation-link-12" data-testId="student-navigation-link-12"
 //                         key={item.name}
 //                         href={item.href}
 //                         onClick={() => setMobileMenuOpen(false)}
@@ -555,7 +555,7 @@ export function StudentNavigation() {
 //                     Quick Actions
 //                   </h3>
 //                   {quickActions.map((action) => (
-//                     <Link
+//                     <Link id="student-navigation-link-13" data-testId="student-navigation-link-13"
 //                       key={action.name}
 //                       href={action.href}
 //                       onClick={() => setMobileMenuOpen(false)}
@@ -576,13 +576,13 @@ export function StudentNavigation() {
 //                   </h3>
 //                   <div id="student-navigation-div-28" data-testId="student-navigation-div-28" className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
 //                     {forumCategories.map((category) => (
-//                       <Link
+//                       <Link id="student-navigation-link-14" data-testId="student-navigation-link-14"
 //                         key={category.name}
 //                         href={category.href}
 //                         onClick={() => setMobileMenuOpen(false)}
 //                         className="flex items-center justify-between px-3 py-2 text-sm rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
 //                       >
-//                         <span>{category.name}</span>
+//                         <span id="student-navigation-span-8" data-testId="student-navigation-span-8">{category.name}</span>
 //                       </Link>
 //                     ))}
 //                   </div>

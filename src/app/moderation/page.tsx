@@ -391,15 +391,25 @@ export default function ModerationPage() {
         report={selectedReport}
       />
       {/* Header */}
-      <div id="page-flex-2" data-testId="page-flex-2" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div
+        id="page-flex-2"
+        data-testId="page-flex-2"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
         <div id="page-div-3" data-testId="page-div-3">
           <h1 className="text-3xl font-bold">Moderation Center</h1>
           <p className="text-muted-foreground">
             Review reports, manage content, and maintain community standards
           </p>
         </div>
-        <div id="page-flex-4" data-testId="page-flex-4" className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+        <div
+          id="page-flex-4"
+          data-testId="page-flex-4"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
+        >
           <Button
+            id="page-button-1"
+            data-testId="page-button-1"
             variant="outline"
             size="sm"
             onClick={() =>
@@ -409,8 +419,20 @@ export default function ModerationPage() {
             className="text-xs sm:text-sm"
           >
             <TriangleAlert className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Clean Up Reported Contents</span>
-            <span className="sm:hidden">Clean Up</span>
+            <span
+              id="page-span-1"
+              data-testId="page-span-1"
+              className="hidden sm:inline"
+            >
+              Clean Up Reported Contents
+            </span>
+            <span
+              id="page-span-2"
+              data-testId="page-span-2"
+              className="sm:hidden"
+            >
+              Clean Up
+            </span>
           </Button>
         </div>
       </div>
@@ -420,7 +442,11 @@ export default function ModerationPage() {
         className="space-y-6"
         onValueChange={setActiveTab}
       >
-        <div id="page-div-5" data-testId="page-div-5" className="overflow-x-auto">
+        <div
+          id="page-div-5"
+          data-testId="page-div-5"
+          className="overflow-x-auto"
+        >
           <TabsList className="w-full sm:w-auto">
             <TabsTrigger value="reports" className="text-xs sm:text-sm">
               Reports ({transformedReports.length})
@@ -453,9 +479,21 @@ export default function ModerationPage() {
           {/* Enhanced Filters */}
           <Card>
             <CardContent className="p-4 sm:p-6">
-              <div id="page-div-6" data-testId="page-div-6" className="space-y-4">
-                <div id="page-flex-7" data-testId="page-flex-7" className="flex flex-col sm:flex-row gap-4">
-                  <div id="page-div-8" data-testId="page-div-8" className="relative flex-1">
+              <div
+                id="page-div-6"
+                data-testId="page-div-6"
+                className="space-y-4"
+              >
+                <div
+                  id="page-flex-7"
+                  data-testId="page-flex-7"
+                  className="flex flex-col sm:flex-row gap-4"
+                >
+                  <div
+                    id="page-div-8"
+                    data-testId="page-div-8"
+                    className="relative flex-1"
+                  >
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="Search reports, users, reasons, or content..."
@@ -466,6 +504,8 @@ export default function ModerationPage() {
                   </div>
                   {hasActiveFilters && (
                     <Button
+                      id="page-button-2"
+                      data-testId="page-button-2"
                       variant="outline"
                       onClick={clearFilters}
                       className="shrink-0"
@@ -476,7 +516,11 @@ export default function ModerationPage() {
                   )}
                 </div>
 
-                <div id="page-grid-9" data-testId="page-grid-9" className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div
+                  id="page-grid-9"
+                  data-testId="page-grid-9"
+                  className="grid grid-cols-2 sm:grid-cols-4 gap-4"
+                >
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger>
                       <SelectValue placeholder="Status" />
@@ -551,8 +595,12 @@ export default function ModerationPage() {
 
           {/* Results Summary */}
           {hasActiveFilters && (
-            <div id="page-flex-10" data-testId="page-flex-10" className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>
+            <div
+              id="page-flex-10"
+              data-testId="page-flex-10"
+              className="flex items-center justify-between text-sm text-muted-foreground"
+            >
+              <span id="page-span-3" data-testId="page-span-3">
                 Showing {filteredAndSortedReports.length} of{" "}
                 {transformedReports.length} reports
               </span>
@@ -564,7 +612,11 @@ export default function ModerationPage() {
             {filteredAndSortedReports.length === 0 ? (
               <Card>
                 <CardContent className="p-8 text-center">
-                  <div id="page-div-12" data-testId="page-div-12" className="space-y-4">
+                  <div
+                    id="page-div-12"
+                    data-testId="page-div-12"
+                    className="space-y-4"
+                  >
                     <Flag className="h-12 w-12 text-muted-foreground mx-auto" />
                     <h3 className="text-lg font-semibold">No reports found</h3>
                     <p className="text-muted-foreground">
@@ -575,7 +627,12 @@ export default function ModerationPage() {
                           : "No reports available."}
                     </p>
                     {hasActiveFilters && (
-                      <Button variant="outline" onClick={clearFilters}>
+                      <Button
+                        id="page-button-3"
+                        data-testId="page-button-3"
+                        variant="outline"
+                        onClick={clearFilters}
+                      >
                         Clear Filters
                       </Button>
                     )}
@@ -604,7 +661,11 @@ export default function ModerationPage() {
           {/* Search for actions */}
           <Card>
             <CardContent className="p-4 sm:p-6">
-              <div id="page-div-13" data-testId="page-div-13" className="relative">
+              <div
+                id="page-div-13"
+                data-testId="page-div-13"
+                className="relative"
+              >
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search moderation actions..."
@@ -624,9 +685,17 @@ export default function ModerationPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div id="page-div-14" data-testId="page-div-14" className="space-y-4">
+              <div
+                id="page-div-14"
+                data-testId="page-div-14"
+                className="space-y-4"
+              >
                 {filteredActions.length === 0 ? (
-                  <div id="page-div-15" data-testId="page-div-15" className="text-center py-8">
+                  <div
+                    id="page-div-15"
+                    data-testId="page-div-15"
+                    className="text-center py-8"
+                  >
                     <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                     <p className="text-muted-foreground">
                       {searchQuery
@@ -651,7 +720,11 @@ export default function ModerationPage() {
           {/* Search for users */}
           <Card>
             <CardContent className="p-4 sm:p-6">
-              <div id="page-div-16" data-testId="page-div-16" className="relative">
+              <div
+                id="page-div-16"
+                data-testId="page-div-16"
+                className="relative"
+              >
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search users by name, email, or role..."
@@ -671,9 +744,17 @@ export default function ModerationPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div id="page-div-17" data-testId="page-div-17" className="space-y-4">
+              <div
+                id="page-div-17"
+                data-testId="page-div-17"
+                className="space-y-4"
+              >
                 {filteredUsers.length === 0 ? (
-                  <div id="page-div-18" data-testId="page-div-18" className="text-center py-8">
+                  <div
+                    id="page-div-18"
+                    data-testId="page-div-18"
+                    className="text-center py-8"
+                  >
                     <User className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                     <p className="text-muted-foreground">
                       {searchQuery
@@ -703,17 +784,33 @@ export default function ModerationPage() {
       <p className="text-muted-foreground">
         Number of pending reports that the mods taken actions.
       </p>
-      <div id="page-grid-19" data-testId="page-grid-19" className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div
+        id="page-grid-19"
+        data-testId="page-grid-19"
+        className="grid grid-cols-1 md:grid-cols-3 gap-3"
+      >
         {stats.map((stat, index) => (
           <Card key={index}>
             <CardContent className="p-3 sm:p-6">
-              <div id="page-flex-20" data-testId="page-flex-20" className="flex items-center gap-2 sm:gap-4">
-                <div id="page-div-21" data-testId="page-div-21" className="p-2 sm:p-3 bg-muted rounded-lg flex-shrink-0">
+              <div
+                id="page-flex-20"
+                data-testId="page-flex-20"
+                className="flex items-center gap-2 sm:gap-4"
+              >
+                <div
+                  id="page-div-21"
+                  data-testId="page-div-21"
+                  className="p-2 sm:p-3 bg-muted rounded-lg flex-shrink-0"
+                >
                   <stat.icon
                     className={`h-4 w-4 sm:h-6 sm:w-6 ${stat.color}`}
                   />
                 </div>
-                <div id="page-div-22" data-testId="page-div-22" className="min-w-0">
+                <div
+                  id="page-div-22"
+                  data-testId="page-div-22"
+                  className="min-w-0"
+                >
                   <p className="text-lg sm:text-2xl font-bold">{stat.value}</p>
                   <p className="text-xs sm:text-sm text-muted-foreground truncate">
                     {stat.label}

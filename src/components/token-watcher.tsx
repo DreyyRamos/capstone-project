@@ -49,7 +49,7 @@ export function TokenProvider({ children }: { children: React.ReactNode }) {
             </DialogDescription>
           </DialogHeader>
           <div id="token-watcher-flex-1" data-testId="token-watcher-flex-1" className="flex justify-end gap-2">
-            <button
+            <button id="token-watcher-button-1" data-testId="token-watcher-button-1"
               onClick={() => {
                 setOpen(false);
                 router.push("/login");

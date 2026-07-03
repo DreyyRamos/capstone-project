@@ -127,7 +127,7 @@ export default function SearchBar({
           className="pl-10 pr-10 w-full"
         />
         {query && (
-          <Button
+          <Button id="search-bar-button-1" data-testId="search-bar-button-1"
             variant="ghost"
             size="sm"
             onClick={handleClear}
@@ -161,7 +161,7 @@ export default function SearchBar({
                   count: results?.forums.length || 0,
                 },
               ].map(({ key, label, count }) => (
-                <Button
+                <Button id="search-bar-button-2" data-testId="search-bar-button-2"
                   key={key}
                   variant={selectedType === key ? "default" : "ghost"}
                   size="sm"
@@ -204,16 +204,16 @@ export default function SearchBar({
                         Users ({results.users.length})
                       </div>
                       {results.users.map((user) => (
-                        <Link
+                        <Link id="search-bar-link-1" data-testId="search-bar-link-1"
                           key={user.id}
                           href={`/visit/user/${user.id}`}
                           onClick={handleResultClick}
                           className="block px-3 py-2 hover:bg-muted/50 transition-colors"
                         >
                           <div id="search-bar-flex-13" data-testId="search-bar-flex-13" className="flex items-center gap-3">
-                            <Avatar className="h-8 w-8">
+                            <Avatar id="search-bar-a-1" data-testId="search-bar-a-1" className="h-8 w-8">
                               <AvatarImage src={user.profileImage || ""} />
-                              <AvatarFallback className="text-xs">
+                              <AvatarFallback id="search-bar-a-2" data-testId="search-bar-a-2" className="text-xs">
                                 {getDisplayName(user).charAt(0).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
@@ -225,7 +225,7 @@ export default function SearchBar({
                                 <Badge variant="secondary" className="text-xs">
                                   {user.role}
                                 </Badge>
-                                <span className="text-xs text-muted-foreground">
+                                <span id="search-bar-span-1" data-testId="search-bar-span-1" className="text-xs text-muted-foreground">
                                   {user.reputationPoints} pts
                                 </span>
                               </div>
@@ -246,7 +246,7 @@ export default function SearchBar({
                         Publications ({results.publications.length})
                       </div>
                       {results.publications.map((publication) => (
-                        <Link
+                        <Link id="search-bar-link-2" data-testId="search-bar-link-2"
                           key={publication.pubId}
                           href={`/publications/${publication.pubId}`}
                           onClick={handleResultClick}
@@ -280,10 +280,10 @@ export default function SearchBar({
                                   • {formatDate(publication.updatedAt)}
                                 </p>
                                 <div id="search-bar-flex-22" data-testId="search-bar-flex-22" className="flex items-center gap-2 text-xs text-muted-foreground">
-                                  <span>
+                                  <span id="search-bar-span-2" data-testId="search-bar-span-2">
                                     {publication._count.pubLikes} likes
                                   </span>
-                                  <span>
+                                  <span id="search-bar-span-3" data-testId="search-bar-span-3">
                                     {publication._count.pubComments} comments
                                   </span>
                                 </div>
@@ -305,7 +305,7 @@ export default function SearchBar({
                         Forums ({results.forums.length})
                       </div>
                       {results.forums.map((forum) => (
-                        <Link
+                        <Link id="search-bar-link-3" data-testId="search-bar-link-3"
                           key={forum.forumId}
                           href={`/forum/topic/${forum.forumId}`}
                           onClick={handleResultClick}
@@ -332,8 +332,8 @@ export default function SearchBar({
                                   {formatDate(forum.updatedAt)}
                                 </p>
                                 <div id="search-bar-flex-28" data-testId="search-bar-flex-28" className="flex items-center gap-2 text-xs text-muted-foreground">
-                                  <span>{forum._count.forumLikes} likes</span>
-                                  <span>
+                                  <span id="search-bar-span-4" data-testId="search-bar-span-4">{forum._count.forumLikes} likes</span>
+                                  <span id="search-bar-span-5" data-testId="search-bar-span-5">
                                     {forum._count.forumComments} comments
                                   </span>
                                 </div>
@@ -350,7 +350,7 @@ export default function SearchBar({
 
           {totalResults > 0 && (
             <div id="search-bar-div-29" data-testId="search-bar-div-29" className="p-3 border-t">
-              <Link
+              <Link id="search-bar-link-4" data-testId="search-bar-link-4"
                 href={`/search-results?q=${encodeURIComponent(
                   debouncedQuery
                 )}&type=${selectedType}`}
@@ -485,7 +485,7 @@ export default function SearchBar({
 //           className="pl-10 pr-10 w-64"
 //         />
 //         {query && (
-//           <Button
+//           <Button id="search-bar-button-3" data-testId="search-bar-button-3"
 //             variant="ghost"
 //             size="sm"
 //             onClick={handleClear}
@@ -519,7 +519,7 @@ export default function SearchBar({
 //                   count: results?.forums.length || 0,
 //                 },
 //               ].map(({ key, label, count }) => (
-//                 <Button
+//                 <Button id="search-bar-button-4" data-testId="search-bar-button-4"
 //                   key={key}
 //                   variant={selectedType === key ? "default" : "ghost"}
 //                   size="sm"
@@ -562,16 +562,16 @@ export default function SearchBar({
 //                         Users ({results.users.length})
 //                       </div>
 //                       {results.users.map((user) => (
-//                         <Link
+//                         <Link id="search-bar-link-5" data-testId="search-bar-link-5"
 //                           key={user.id}
 //                           href={`/visit/user/${user.id}`}
 //                           onClick={handleResultClick}
 //                           className="block px-3 py-2 hover:bg-muted/50 transition-colors"
 //                         >
 //                           <div id="search-bar-flex-42" data-testId="search-bar-flex-42" className="flex items-center gap-3">
-//                             <Avatar className="h-8 w-8">
+//                             <A id="search-bar-a-3" data-testId="search-bar-a-3"vatar className="h-8 w-8">
 //                               <AvatarImage src={user.profileImage || ""} />
-//                               <AvatarFallback className="text-xs">
+//                               <A id="search-bar-a-4" data-testId="search-bar-a-4"vatarFallback className="text-xs">
 //                                 {getDisplayName(user).charAt(0).toUpperCase()}
 //                               </AvatarFallback>
 //                             </Avatar>
@@ -583,7 +583,7 @@ export default function SearchBar({
 //                                 <Badge variant="secondary" className="text-xs">
 //                                   {user.role}
 //                                 </Badge>
-//                                 <span className="text-xs text-muted-foreground">
+//                                 <span id="search-bar-span-6" data-testId="search-bar-span-6" className="text-xs text-muted-foreground">
 //                                   {user.reputationPoints} pts
 //                                 </span>
 //                               </div>
@@ -604,7 +604,7 @@ export default function SearchBar({
 //                         Publications ({results.publications.length})
 //                       </div>
 //                       {results.publications.map((publication) => (
-//                         <Link
+//                         <Link id="search-bar-link-6" data-testId="search-bar-link-6"
 //                           key={publication.pubId}
 //                           href={`/publications/${publication.pubId}`}
 //                           onClick={handleResultClick}
@@ -638,10 +638,10 @@ export default function SearchBar({
 //                                   • {formatDate(publication.updatedAt)}
 //                                 </p>
 //                                 <div id="search-bar-flex-51" data-testId="search-bar-flex-51" className="flex items-center gap-2 text-xs text-muted-foreground">
-//                                   <span>
+//                                   <span id="search-bar-span-7" data-testId="search-bar-span-7">
 //                                     {publication._count.pubLikes} likes
 //                                   </span>
-//                                   <span>
+//                                   <span id="search-bar-span-8" data-testId="search-bar-span-8">
 //                                     {publication._count.pubComments} comments
 //                                   </span>
 //                                 </div>
@@ -663,7 +663,7 @@ export default function SearchBar({
 //                         Forums ({results.forums.length})
 //                       </div>
 //                       {results.forums.map((forum) => (
-//                         <Link
+//                         <Link id="search-bar-link-7" data-testId="search-bar-link-7"
 //                           key={forum.forumId}
 //                           href={`/forum/topic/${forum.forumId}`}
 //                           onClick={handleResultClick}
@@ -690,8 +690,8 @@ export default function SearchBar({
 //                                   {formatDate(forum.updatedAt)}
 //                                 </p>
 //                                 <div id="search-bar-flex-57" data-testId="search-bar-flex-57" className="flex items-center gap-2 text-xs text-muted-foreground">
-//                                   <span>{forum._count.forumLikes} likes</span>
-//                                   <span>
+//                                   <span id="search-bar-span-9" data-testId="search-bar-span-9">{forum._count.forumLikes} likes</span>
+//                                   <span id="search-bar-span-10" data-testId="search-bar-span-10">
 //                                     {forum._count.forumComments} comments
 //                                   </span>
 //                                 </div>
@@ -708,7 +708,7 @@ export default function SearchBar({
 
 //           {totalResults > 0 && (
 //             <div id="search-bar-div-58" data-testId="search-bar-div-58" className="p-3 border-t">
-//               <Link
+//               <Link id="search-bar-link-8" data-testId="search-bar-link-8"
 //                 href={`/search-results?q=${encodeURIComponent(
 //                   debouncedQuery
 //                 )}&type=${selectedType}`}

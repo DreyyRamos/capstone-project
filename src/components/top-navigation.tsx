@@ -78,7 +78,7 @@ export function TopNavigation() {
             {navigation.map((item) => {
               const isActive = pathname === item.href;
               return (
-                <Link
+                <Link id="top-navigation-link-1" data-testId="top-navigation-link-1"
                   key={item.name}
                   href={item.href}
                   className={cn(
@@ -97,7 +97,7 @@ export function TopNavigation() {
             {/* Forum Categories Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
+                <Button id="top-navigation-button-1" data-testId="top-navigation-button-1"
                   variant="ghost"
                   className="flex items-center gap-1 text-sm font-medium"
                 >
@@ -110,11 +110,11 @@ export function TopNavigation() {
                 <DropdownMenuSeparator />
                 {forumCategories.map((category) => (
                   <DropdownMenuItem key={category.name} asChild>
-                    <Link
+                    <Link id="top-navigation-link-2" data-testId="top-navigation-link-2"
                       href={category.href}
                       className="flex items-center justify-between"
                     >
-                      <span>{category.name}</span>
+                      <span id="top-navigation-span-1" data-testId="top-navigation-span-1">{category.name}</span>
                       <Badge variant="secondary" className="text-xs">
                         {category.count}
                       </Badge>
@@ -129,7 +129,7 @@ export function TopNavigation() {
           <div id="top-navigation-flex-4" data-testId="top-navigation-flex-4" className="flex items-center space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="sm" className="flex items-center gap-1">
+                <Button id="top-navigation-button-2" data-testId="top-navigation-button-2" size="sm" className="flex items-center gap-1">
                   <Plus className="h-4 w-4" />
                   Create
                   <ChevronDown className="h-4 w-4" />
@@ -140,7 +140,7 @@ export function TopNavigation() {
                 <DropdownMenuSeparator />
                 {quickActions.map((action) => (
                   <DropdownMenuItem key={action.name} asChild>
-                    <Link
+                    <Link id="top-navigation-link-3" data-testId="top-navigation-link-3"
                       href={action.href}
                       className="flex items-center gap-2"
                     >
@@ -160,7 +160,7 @@ export function TopNavigation() {
             {navigation.slice(0, 3).map((item) => {
               const isActive = pathname === item.href;
               return (
-                <Link
+                <Link id="top-navigation-link-4" data-testId="top-navigation-link-4"
                   key={item.name}
                   href={item.href}
                   className={cn(
@@ -171,7 +171,7 @@ export function TopNavigation() {
                   )}
                 >
                   <item.icon className="h-4 w-4" />
-                  <span className="hidden sm:inline">{item.name}</span>
+                  <span id="top-navigation-span-2" data-testId="top-navigation-span-2" className="hidden sm:inline">{item.name}</span>
                 </Link>
               );
             })}
@@ -180,9 +180,9 @@ export function TopNavigation() {
           {/* Mobile Menu */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button id="top-navigation-button-3" data-testId="top-navigation-button-3" variant="ghost" size="icon">
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
+                <span id="top-navigation-span-3" data-testId="top-navigation-span-3" className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80">
@@ -201,7 +201,7 @@ export function TopNavigation() {
                   {navigation.map((item) => {
                     const isActive = pathname === item.href;
                     return (
-                      <Link
+                      <Link id="top-navigation-link-5" data-testId="top-navigation-link-5"
                         key={item.name}
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
@@ -227,7 +227,7 @@ export function TopNavigation() {
                     Quick Actions
                   </h3>
                   {quickActions.map((action) => (
-                    <Link
+                    <Link id="top-navigation-link-6" data-testId="top-navigation-link-6"
                       key={action.name}
                       href={action.href}
                       onClick={() => setMobileMenuOpen(false)}
@@ -247,13 +247,13 @@ export function TopNavigation() {
                     Forum Categories
                   </h3>
                   {forumCategories.map((category) => (
-                    <Link
+                    <Link id="top-navigation-link-7" data-testId="top-navigation-link-7"
                       key={category.name}
                       href={category.href}
                       onClick={() => setMobileMenuOpen(false)}
                       className="flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
                     >
-                      <span>{category.name}</span>
+                      <span id="top-navigation-span-4" data-testId="top-navigation-span-4">{category.name}</span>
                       <Badge variant="secondary" className="text-xs">
                         {category.count}
                       </Badge>

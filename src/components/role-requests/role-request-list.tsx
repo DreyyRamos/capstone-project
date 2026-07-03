@@ -52,29 +52,55 @@ const RoleRequestList = ({
     }
   };
   return (
-    <div id="role-request-list-div-1" data-testId="role-request-list-div-1"
+    <div
+      id="role-request-list-div-1"
+      data-testId="role-request-list-div-1"
       key={request.request_id}
       className="border rounded-lg p-3 md:p-4 hover:bg-muted/50 transition-colors"
     >
       {/* Mobile Layout */}
-      <div id="role-request-list-div-2" data-testId="role-request-list-div-2" className="block md:hidden space-y-3">
+      <div
+        id="role-request-list-div-2"
+        data-testId="role-request-list-div-2"
+        className="block md:hidden space-y-3"
+      >
         {/* User Info */}
-        <div id="role-request-list-flex-3" data-testId="role-request-list-flex-3" className="flex items-start space-x-3">
-          <Avatar className="h-10 w-10 flex-shrink-0">
+        <div
+          id="role-request-list-flex-3"
+          data-testId="role-request-list-flex-3"
+          className="flex items-start space-x-3"
+        >
+          <Avatar
+            id="role-request-list-a-1"
+            data-testId="role-request-list-a-1"
+            className="h-10 w-10 flex-shrink-0"
+          >
             <AvatarImage src={request.profileImage || "/placeholder.svg"} />
-            <AvatarFallback className="text-sm">
+            <AvatarFallback
+              id="role-request-list-a-2"
+              data-testId="role-request-list-a-2"
+              className="text-sm"
+            >
               {request.firstName?.[0]}
               {request.lastName?.[0]}
             </AvatarFallback>
           </Avatar>
-          <div id="role-request-list-div-4" data-testId="role-request-list-div-4" className="flex-1 min-w-0">
-            <div id="role-request-list-flex-5" data-testId="role-request-list-flex-5" className="flex items-center gap-2 mb-1">
+          <div
+            id="role-request-list-div-4"
+            data-testId="role-request-list-div-4"
+            className="flex-1 min-w-0"
+          >
+            <div
+              id="role-request-list-flex-5"
+              data-testId="role-request-list-flex-5"
+              className="flex items-center gap-2 mb-1"
+            >
               <h3 className="font-semibold text-sm truncate">
                 {request.firstName} {request.lastName}
               </h3>
               <Badge
                 className={`${getStatusBadgeColor(
-                  request.status
+                  request.status,
                 )} text-xs px-2 py-0.5`}
                 variant="secondary"
               >
@@ -84,10 +110,14 @@ const RoleRequestList = ({
             <p className="text-xs text-muted-foreground truncate mb-2">
               {request.userEmail}
             </p>
-            <div id="role-request-list-flex-6" data-testId="role-request-list-flex-6" className="flex items-center gap-1 text-xs mb-2">
+            <div
+              id="role-request-list-flex-6"
+              data-testId="role-request-list-flex-6"
+              className="flex items-center gap-1 text-xs mb-2"
+            >
               <Badge
                 className={`${getRoleBadgeColor(
-                  request.currentRole
+                  request.currentRole,
                 )} text-xs px-1.5 py-0.5`}
                 variant="outline"
               >
@@ -96,7 +126,7 @@ const RoleRequestList = ({
               <ArrowRight className="h-3 w-3 text-muted-foreground" />
               <Badge
                 className={`${getRoleBadgeColor(
-                  request.requestedRole
+                  request.requestedRole,
                 )} text-xs px-1.5 py-0.5`}
                 variant="outline"
               >
@@ -110,17 +140,38 @@ const RoleRequestList = ({
         </div>
 
         {/* Reason */}
-        <div id="role-request-list-div-7" data-testId="role-request-list-div-7" className="pl-0">
+        <div
+          id="role-request-list-div-7"
+          data-testId="role-request-list-div-7"
+          className="pl-0"
+        >
           <p className="text-xs text-muted-foreground line-clamp-2">
-            <span className="font-medium">Reason:</span> {request.reason}
+            <span
+              id="role-request-list-span-1"
+              data-testId="role-request-list-span-1"
+              className="font-medium"
+            >
+              Reason:
+            </span>{" "}
+            {request.reason}
           </p>
         </div>
 
         {/* Actions */}
-        <div id="role-request-list-flex-8" data-testId="role-request-list-flex-8" className="flex items-center justify-between pt-2 border-t">
+        <div
+          id="role-request-list-flex-8"
+          data-testId="role-request-list-flex-8"
+          className="flex items-center justify-between pt-2 border-t"
+        >
           {request.status === "PENDING" ? (
-            <div id="role-request-list-flex-9" data-testId="role-request-list-flex-9" className="flex gap-2 flex-1">
+            <div
+              id="role-request-list-flex-9"
+              data-testId="role-request-list-flex-9"
+              className="flex gap-2 flex-1"
+            >
               <Button
+                id="role-request-list-button-1"
+                data-testId="role-request-list-button-1"
                 size="sm"
                 variant="outline"
                 className="text-green-600 border-green-600 hover:bg-green-50 bg-transparent flex-1 text-xs h-8"
@@ -130,6 +181,8 @@ const RoleRequestList = ({
                 Approve
               </Button>
               <Button
+                id="role-request-list-button-2"
+                data-testId="role-request-list-button-2"
                 size="sm"
                 variant="outline"
                 className="text-red-600 border-red-600 hover:bg-red-50 bg-transparent flex-1 text-xs h-8"
@@ -140,10 +193,16 @@ const RoleRequestList = ({
               </Button>
             </div>
           ) : (
-            <div id="role-request-list-div-10" data-testId="role-request-list-div-10" className="flex-1" />
+            <div
+              id="role-request-list-div-10"
+              data-testId="role-request-list-div-10"
+              className="flex-1"
+            />
           )}
 
           <Button
+            id="role-request-list-button-3"
+            data-testId="role-request-list-button-3"
             variant="ghost"
             size="sm"
             className="h-8 w-8 p-0 ml-2"
@@ -155,19 +214,46 @@ const RoleRequestList = ({
       </div>
 
       {/* Desktop Layout */}
-      <div id="role-request-list-div-11" data-testId="role-request-list-div-11" className="hidden md:block">
-        <div id="role-request-list-flex-12" data-testId="role-request-list-flex-12" className="flex items-center justify-between">
-          <div id="role-request-list-flex-13" data-testId="role-request-list-flex-13" className="flex items-center space-x-4 flex-1">
-            <Avatar className="h-12 w-12">
+      <div
+        id="role-request-list-div-11"
+        data-testId="role-request-list-div-11"
+        className="hidden md:block"
+      >
+        <div
+          id="role-request-list-flex-12"
+          data-testId="role-request-list-flex-12"
+          className="flex items-center justify-between"
+        >
+          <div
+            id="role-request-list-flex-13"
+            data-testId="role-request-list-flex-13"
+            className="flex items-center space-x-4 flex-1"
+          >
+            <Avatar
+              id="role-request-list-a-3"
+              data-testId="role-request-list-a-3"
+              className="h-12 w-12"
+            >
               <AvatarImage src={request.profileImage || "/placeholder.svg"} />
-              <AvatarFallback>
+              <AvatarFallback
+                id="role-request-list-a-4"
+                data-testId="role-request-list-a-4"
+              >
                 {request.firstName?.[0]}
                 {request.lastName?.[0]}
               </AvatarFallback>
             </Avatar>
 
-            <div id="role-request-list-div-14" data-testId="role-request-list-div-14" className="flex-1 min-w-0">
-              <div id="role-request-list-flex-15" data-testId="role-request-list-flex-15" className="flex items-center gap-2 mb-1">
+            <div
+              id="role-request-list-div-14"
+              data-testId="role-request-list-div-14"
+              className="flex-1 min-w-0"
+            >
+              <div
+                id="role-request-list-flex-15"
+                data-testId="role-request-list-flex-15"
+                className="flex items-center gap-2 mb-1"
+              >
                 <h3 className="font-semibold">
                   {request.firstName} {request.lastName}
                 </h3>
@@ -183,7 +269,11 @@ const RoleRequestList = ({
                 {request.userEmail}
               </p>
 
-              <div id="role-request-list-flex-16" data-testId="role-request-list-flex-16" className="flex items-center gap-2 text-sm">
+              <div
+                id="role-request-list-flex-16"
+                data-testId="role-request-list-flex-16"
+                className="flex items-center gap-2 text-sm"
+              >
                 <Badge
                   className={getRoleBadgeColor(request.currentRole)}
                   variant="outline"
@@ -201,14 +291,28 @@ const RoleRequestList = ({
             </div>
           </div>
 
-          <div id="role-request-list-flex-17" data-testId="role-request-list-flex-17" className="flex items-center gap-2">
-            <div id="role-request-list-div-18" data-testId="role-request-list-div-18" className="text-right text-sm text-muted-foreground mr-4">
+          <div
+            id="role-request-list-flex-17"
+            data-testId="role-request-list-flex-17"
+            className="flex items-center gap-2"
+          >
+            <div
+              id="role-request-list-div-18"
+              data-testId="role-request-list-div-18"
+              className="text-right text-sm text-muted-foreground mr-4"
+            >
               <p>{new Date(request.createdAt).toLocaleDateString()}</p>
             </div>
 
             {request.status === "PENDING" && (
-              <div id="role-request-list-flex-19" data-testId="role-request-list-flex-19" className="flex gap-2">
+              <div
+                id="role-request-list-flex-19"
+                data-testId="role-request-list-flex-19"
+                className="flex gap-2"
+              >
                 <Button
+                  id="role-request-list-button-4"
+                  data-testId="role-request-list-button-4"
                   size="sm"
                   variant="outline"
                   className="text-green-600 border-green-600 hover:bg-green-50 bg-transparent"
@@ -218,6 +322,8 @@ const RoleRequestList = ({
                   Approve
                 </Button>
                 <Button
+                  id="role-request-list-button-5"
+                  data-testId="role-request-list-button-5"
                   size="sm"
                   variant="outline"
                   className="text-red-600 border-red-600 hover:bg-red-50 bg-transparent"
@@ -231,7 +337,12 @@ const RoleRequestList = ({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
+                <Button
+                  id="role-request-list-button-6"
+                  data-testId="role-request-list-button-6"
+                  variant="ghost"
+                  size="sm"
+                >
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -245,9 +356,20 @@ const RoleRequestList = ({
           </div>
         </div>
 
-        <div id="role-request-list-div-20" data-testId="role-request-list-div-20" className="mt-3 pl-16">
+        <div
+          id="role-request-list-div-20"
+          data-testId="role-request-list-div-20"
+          className="mt-3 pl-16"
+        >
           <p className="text-sm text-muted-foreground line-clamp-2">
-            <span className="font-medium">Reason:</span> {request.reason}
+            <span
+              id="role-request-list-span-2"
+              data-testId="role-request-list-span-2"
+              className="font-medium"
+            >
+              Reason:
+            </span>{" "}
+            {request.reason}
           </p>
         </div>
       </div>

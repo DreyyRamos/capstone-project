@@ -174,7 +174,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
       {/* Header */}
       <div id="page-flex-2" data-testId="page-flex-2" className="flex items-center gap-4">
         <Button asChild variant="ghost">
-          <Link href="/forum">
+          <Link id="page-link-1" data-testId="page-link-1" href="/forum">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Forum
           </Link>
@@ -287,7 +287,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                       }
                     }}
                   />
-                  <Button type="button" onClick={handleAddTag} size="sm">
+                  <Button id="page-button-1" data-testId="page-button-1" type="button" onClick={handleAddTag} size="sm">
                     Add
                   </Button>
                 </div>
@@ -301,7 +301,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                         className="flex items-center gap-1"
                       >
                         {tag}
-                        <button
+                        <button id="page-button-2" data-testId="page-button-2"
                           onClick={() => handleRemoveTag(tag)}
                           className="ml-1 hover:text-destructive"
                         >
@@ -335,7 +335,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
             {/* Actions */}
             <Card>
               <CardContent className="p-4">
-                <Button type="submit" className="w-full" disabled={isEditing}>
+                <Button id="page-button-3" data-testId="page-button-3" type="submit" className="w-full" disabled={isEditing}>
                   <MessageSquare className="mr-2 h-4 w-4" />
                   Update Topic
                 </Button>

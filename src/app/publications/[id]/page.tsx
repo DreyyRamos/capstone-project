@@ -457,7 +457,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
   if (isError) return <div id="page-div-1" data-testId="page-div-1">Error loading publication.</div>;
 
   return (
-    <div id="page-div-2" data-testId="page-div-2" className="max-w-4xl mx-auto space-y-6">
+    <div
+      id="page-div-2"
+      data-testId="page-div-2"
+      className="max-w-4xl mx-auto space-y-6"
+    >
       <StatusModal />
       <AuthModal
         isOpen={isOpen}
@@ -475,15 +479,19 @@ export default function PublicationDetailPage({ params }: PageProps) {
       />
 
       <Button asChild variant="ghost">
-        <Link href="/publications">
+        <Link id="page-link-1" data-testId="page-link-1" href="/publications">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Publications
         </Link>
       </Button>
 
-      <article className="space-y-6">
+      <article id="page-a-1" data-testId="page-a-1" className="space-y-6">
         <div id="page-div-3" data-testId="page-div-3" className="space-y-4">
-          <div id="page-flex-4" data-testId="page-flex-4" className="flex items-center gap-2 flex-wrap">
+          <div
+            id="page-flex-4"
+            data-testId="page-flex-4"
+            className="flex items-center gap-2 flex-wrap"
+          >
             {publication?.tags?.map((tag: any) => (
               <Badge key={tag} variant="outline" className="text-xs">
                 {tag}
@@ -495,13 +503,25 @@ export default function PublicationDetailPage({ params }: PageProps) {
             {publication?.title}
           </h1>
 
-          <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center justify-between flex-wrap gap-4">
-            <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center gap-4">
-              <Avatar className="h-12 w-12">
+          <div
+            id="page-flex-5"
+            data-testId="page-flex-5"
+            className="flex items-center justify-between flex-wrap gap-4"
+          >
+            <div
+              id="page-flex-6"
+              data-testId="page-flex-6"
+              className="flex items-center gap-4"
+            >
+              <Avatar
+                id="page-a-2"
+                data-testId="page-a-2"
+                className="h-12 w-12"
+              >
                 <AvatarImage
                   src={publication.author?.profileImage || "/placeholder.svg"}
                 />
-                <AvatarFallback>
+                <AvatarFallback id="page-a-3" data-testId="page-a-3">
                   {publication.author?.firstName?.[0]}
                   {publication.author?.lastName?.[0]}
                 </AvatarFallback>
@@ -513,8 +533,16 @@ export default function PublicationDetailPage({ params }: PageProps) {
                 <p className="text-sm text-muted-foreground">
                   {publication?.author.role}
                 </p>
-                <div id="page-flex-8" data-testId="page-flex-8" className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1">
+                <div
+                  id="page-flex-8"
+                  data-testId="page-flex-8"
+                  className="flex items-center gap-4 text-sm text-muted-foreground"
+                >
+                  <span
+                    id="page-span-1"
+                    data-testId="page-span-1"
+                    className="flex items-center gap-1"
+                  >
                     <Clock className="h-3 w-3" />
                     {new Date(publication?.createdAt).toLocaleDateString()}
                   </span>
@@ -522,16 +550,22 @@ export default function PublicationDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div id="page-flex-9" data-testId="page-flex-9" className="flex items-center gap-2">
+            <div
+              id="page-flex-9"
+              data-testId="page-flex-9"
+              className="flex items-center gap-2"
+            >
               <LikeButton post={publication} token={token} pubId={id} />
               {(userRole === "EDITOR" || userRole === "ADMIN") &&
                 !["DRAFT", "PENDING_REVIEW", "ARCHIVED"].includes(
-                  publication?.status
+                  publication?.status,
                 ) && (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
+                          id="page-button-1"
+                          data-testId="page-button-1"
                           variant="outline"
                           size="sm"
                           disabled={isCurrentlyLoading}
@@ -539,7 +573,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
                             if (publication?.isFeatured) {
                               handleMakeFeature(publication.pubId);
                               toast(
-                                "Publication has been removed from featured!"
+                                "Publication has been removed from featured!",
                               );
                             } else {
                               handleMakeFeature(publication.pubId);
@@ -566,6 +600,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
                   </TooltipProvider>
                 )}
               <Button
+                id="page-button-2"
+                data-testId="page-button-2"
                 variant="outline"
                 size="sm"
                 onClick={handleReportPublication}
@@ -577,7 +613,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
         </div>
 
         {publication?.imageUrl && (
-          <div id="page-div-10" data-testId="page-div-10" className="relative aspect-video rounded-lg overflow-hidden">
+          <div
+            id="page-div-10"
+            data-testId="page-div-10"
+            className="relative aspect-video rounded-lg overflow-hidden"
+          >
             <img
               src={publication?.imageUrl || "/placeholder.svg"}
               alt={publication?.title}
@@ -587,9 +627,21 @@ export default function PublicationDetailPage({ params }: PageProps) {
         )}
         <ContentDisplay htmlContent={publication?.content} />
 
-        <div id="page-flex-11" data-testId="page-flex-11" className="flex items-center justify-between pt-6 border-t">
-          <div id="page-flex-12" data-testId="page-flex-12" className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
+        <div
+          id="page-flex-11"
+          data-testId="page-flex-11"
+          className="flex items-center justify-between pt-6 border-t"
+        >
+          <div
+            id="page-flex-12"
+            data-testId="page-flex-12"
+            className="flex items-center gap-4 text-sm text-muted-foreground"
+          >
+            <span
+              id="page-span-2"
+              data-testId="page-span-2"
+              className="flex items-center gap-1"
+            >
               <Heart className="h-4 w-4" />
               {publication?.pubLikes?.length ?? 0} likes
             </span>
@@ -600,18 +652,28 @@ export default function PublicationDetailPage({ params }: PageProps) {
       <div id="page-div-13" data-testId="page-div-13" className="space-y-6">
         <Card>
           <CardContent className="p-6">
-            <div id="page-div-14" data-testId="page-div-14" className="space-y-4">
+            <div
+              id="page-div-14"
+              data-testId="page-div-14"
+              className="space-y-4"
+            >
               <Textarea
                 placeholder="Share your thoughts about this publication..."
                 value={comment_content}
                 onChange={(e) => setCommentContent(e.target.value)}
                 rows={3}
               />
-              <div id="page-flex-15" data-testId="page-flex-15" className="flex items-center justify-between">
+              <div
+                id="page-flex-15"
+                data-testId="page-flex-15"
+                className="flex items-center justify-between"
+              >
                 <p className="text-sm text-muted-foreground">
                   Be respectful and constructive in your comments
                 </p>
                 <Button
+                  id="page-button-3"
+                  data-testId="page-button-3"
                   onClick={handleComment}
                   disabled={!comment_content.trim()}
                 >
@@ -624,8 +686,14 @@ export default function PublicationDetailPage({ params }: PageProps) {
 
         <div id="page-div-16" data-testId="page-div-16" className="space-y-4">
           {publication?.pubComments?.length > 3 && (
-            <div id="page-div-17" data-testId="page-div-17" className="group relative">
+            <div
+              id="page-div-17"
+              data-testId="page-div-17"
+              className="group relative"
+            >
               <span
+                id="page-span-3"
+                data-testId="page-span-3"
                 className="text-muted-foreground text-sm cursor-pointer"
                 onClick={() => setShowAll(!showAll)}
               >
@@ -634,7 +702,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
                   : `View all ${publication?.pubComments?.length} comments`}
               </span>
               {!showAll && (
-                <div id="page-div-18" data-testId="page-div-18" className="absolute hidden bg-gray-100 p-2 rounded shadow">
+                <div
+                  id="page-div-18"
+                  data-testId="page-div-18"
+                  className="absolute hidden bg-gray-100 p-2 rounded shadow"
+                >
                   Click to view all comments
                 </div>
               )}

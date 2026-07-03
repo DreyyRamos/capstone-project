@@ -255,7 +255,7 @@ export default function ForumPage() {
           </p>
         </div>
         <Button asChild>
-          <a className="cursor-pointer" onClick={startDiscussion}>
+          <a id="page-a-1" data-testId="page-a-1" className="cursor-pointer" onClick={startDiscussion}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Start Discussion
           </a>
@@ -297,7 +297,7 @@ export default function ForumPage() {
               />
             </div>
             {searchQuery && (
-              <Button
+              <Button id="page-button-1" data-testId="page-button-1"
                 variant="ghost"
                 size="sm"
                 onClick={() => setSearchQuery("")}
@@ -314,12 +314,12 @@ export default function ForumPage() {
         <div id="page-flex-9" data-testId="page-flex-9" className="flex items-center justify-between text-sm text-muted-foreground">
           <div id="page-div-10" data-testId="page-div-10">
             {activeTab === "categories" ? (
-              <span>
+              <span id="page-span-1" data-testId="page-span-1">
                 Found {filteredCategories.length} categories matching &quot;
                 {searchQuery}&quot;
               </span>
             ) : (
-              <span>
+              <span id="page-span-2" data-testId="page-span-2">
                 Found {filteredRecentTopics.length} topics matching &quot;
                 {searchQuery}&quot;
               </span>
@@ -369,7 +369,7 @@ export default function ForumPage() {
                       : "No forum categories available yet."}
                   </p>
                   {searchQuery && (
-                    <Button
+                    <Button id="page-button-2" data-testId="page-button-2"
                       variant="outline"
                       onClick={() => setSearchQuery("")}
                     >
@@ -400,7 +400,7 @@ export default function ForumPage() {
                   </p>
                   <div id="page-flex-13" data-testId="page-flex-13" className="flex flex-col sm:flex-row gap-2 justify-center">
                     {searchQuery && (
-                      <Button
+                      <Button id="page-button-3" data-testId="page-button-3"
                         variant="outline"
                         onClick={() => setSearchQuery("")}
                       >
@@ -408,7 +408,7 @@ export default function ForumPage() {
                       </Button>
                     )}
                     <Button asChild>
-                      <a className="cursor-pointer" onClick={startDiscussion}>
+                      <a id="page-a-2" data-testId="page-a-2" className="cursor-pointer" onClick={startDiscussion}>
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Start the first discussion
                       </a>

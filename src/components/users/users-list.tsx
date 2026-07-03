@@ -47,29 +47,51 @@ const UsersList = ({
     BANNED: "bg-red-300 text-red-800",
   };
   return (
-    <div id="users-list-flex-1" data-testId="users-list-flex-1"
+    <div
+      id="users-list-flex-1"
+      data-testId="users-list-flex-1"
       key={user.id}
       className="flex items-center justify-between p-3 sm:p-4 border rounded-lg hover:bg-muted/50"
     >
-      <div id="users-list-flex-2" data-testId="users-list-flex-2" className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
-        <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
+      <div
+        id="users-list-flex-2"
+        data-testId="users-list-flex-2"
+        className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1"
+      >
+        <Avatar
+          id="users-list-a-1"
+          data-testId="users-list-a-1"
+          className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0"
+        >
           <AvatarImage
             src={user.profileImage || "/placeholder.svg"}
             alt={user.firstName}
           />
-          <AvatarFallback>
+          <AvatarFallback id="users-list-a-2" data-testId="users-list-a-2">
             {user.firstName
               .split(" ")
               .map((n: any) => n[0])
               .join("")}
           </AvatarFallback>
         </Avatar>
-        <div id="users-list-div-3" data-testId="users-list-div-3" className="min-w-0 flex-1">
-          <div id="users-list-flex-4" data-testId="users-list-flex-4" className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
+        <div
+          id="users-list-div-3"
+          data-testId="users-list-div-3"
+          className="min-w-0 flex-1"
+        >
+          <div
+            id="users-list-flex-4"
+            data-testId="users-list-flex-4"
+            className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1"
+          >
             <h3 className="font-semibold text-sm sm:text-base truncate">
               {user.firstName} {user.lastName}
             </h3>
-            <div id="users-list-flex-5" data-testId="users-list-flex-5" className="flex flex-wrap gap-1">
+            <div
+              id="users-list-flex-5"
+              data-testId="users-list-flex-5"
+              className="flex flex-wrap gap-1"
+            >
               <Badge
                 className={roleColors[user.role as keyof typeof roleColors]}
                 // size="sm"
@@ -89,54 +111,122 @@ const UsersList = ({
           <p className="text-xs sm:text-sm text-muted-foreground truncate">
             {user.email}
           </p>
-          <div id="users-list-flex-6" data-testId="users-list-flex-6" className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-muted-foreground mt-1">
-            <span className="truncate">
+          <div
+            id="users-list-flex-6"
+            data-testId="users-list-flex-6"
+            className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-muted-foreground mt-1"
+          >
+            <span
+              id="users-list-span-1"
+              data-testId="users-list-span-1"
+              className="truncate"
+            >
               Joined {new Date(user.createdAt).toLocaleDateString()}
             </span>
-            <span className="hidden sm:inline">•</span>
-            <span className="truncate">
+            <span
+              id="users-list-span-2"
+              data-testId="users-list-span-2"
+              className="hidden sm:inline"
+            >
+              •
+            </span>
+            <span
+              id="users-list-span-3"
+              data-testId="users-list-span-3"
+              className="truncate"
+            >
               Last active {user.lastActive || "Recently"}
             </span>
           </div>
 
           {/* Mobile stats - show only on small screens */}
-          <div id="users-list-flex-7" data-testId="users-list-flex-7" className="flex sm:hidden items-center gap-3 text-xs text-muted-foreground mt-2">
-            <div id="users-list-flex-8" data-testId="users-list-flex-8" className="flex items-center gap-1">
+          <div
+            id="users-list-flex-7"
+            data-testId="users-list-flex-7"
+            className="flex sm:hidden items-center gap-3 text-xs text-muted-foreground mt-2"
+          >
+            <div
+              id="users-list-flex-8"
+              data-testId="users-list-flex-8"
+              className="flex items-center gap-1"
+            >
               <BookOpen className="h-3 w-3" />
-              <span>{user._count?.publications || 0}</span>
+              <span id="users-list-span-4" data-testId="users-list-span-4">
+                {user._count?.publications || 0}
+              </span>
             </div>
-            <div id="users-list-flex-9" data-testId="users-list-flex-9" className="flex items-center gap-1">
+            <div
+              id="users-list-flex-9"
+              data-testId="users-list-flex-9"
+              className="flex items-center gap-1"
+            >
               <MessageSquare className="h-3 w-3" />
-              <span>{user._count?.forums || 0}</span>
+              <span id="users-list-span-5" data-testId="users-list-span-5">
+                {user._count?.forums || 0}
+              </span>
             </div>
-            <div id="users-list-flex-10" data-testId="users-list-flex-10" className="flex items-center gap-1">
+            <div
+              id="users-list-flex-10"
+              data-testId="users-list-flex-10"
+              className="flex items-center gap-1"
+            >
               <TrendingUp className="h-3 w-3" />
-              <span>{user.reputation || 0}</span>
+              <span id="users-list-span-6" data-testId="users-list-span-6">
+                {user.reputation || 0}
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="users-list-flex-11" data-testId="users-list-flex-11" className="flex items-center gap-2 sm:gap-6 flex-shrink-0">
+      <div
+        id="users-list-flex-11"
+        data-testId="users-list-flex-11"
+        className="flex items-center gap-2 sm:gap-6 flex-shrink-0"
+      >
         {/* Desktop stats - show only on larger screens */}
-        <div id="users-list-div-12" data-testId="users-list-div-12" className="hidden sm:flex items-center gap-4 text-sm text-muted-foreground">
-          <div id="users-list-flex-13" data-testId="users-list-flex-13" className="flex items-center gap-1">
+        <div
+          id="users-list-div-12"
+          data-testId="users-list-div-12"
+          className="hidden sm:flex items-center gap-4 text-sm text-muted-foreground"
+        >
+          <div
+            id="users-list-flex-13"
+            data-testId="users-list-flex-13"
+            className="flex items-center gap-1"
+          >
             <BookOpen className="h-4 w-4" />
-            <span>{user._count?.publications || 0}</span>
+            <span id="users-list-span-7" data-testId="users-list-span-7">
+              {user._count?.publications || 0}
+            </span>
           </div>
-          <div id="users-list-flex-14" data-testId="users-list-flex-14" className="flex items-center gap-1">
+          <div
+            id="users-list-flex-14"
+            data-testId="users-list-flex-14"
+            className="flex items-center gap-1"
+          >
             <MessageSquare className="h-4 w-4" />
-            <span>{user._count?.forums || 0}</span>
+            <span id="users-list-span-8" data-testId="users-list-span-8">
+              {user._count?.forums || 0}
+            </span>
           </div>
-          <div id="users-list-flex-15" data-testId="users-list-flex-15" className="flex items-center gap-1">
+          <div
+            id="users-list-flex-15"
+            data-testId="users-list-flex-15"
+            className="flex items-center gap-1"
+          >
             <TrendingUp className="h-4 w-4" />
-            <span>{user.reputation || 0}</span>
+            <span id="users-list-span-9" data-testId="users-list-span-9">
+              {user.reputation || 0}
+            </span>
           </div>
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
+              id="users-list-button-1"
+              data-testId="users-list-button-1"
               variant="ghost"
               size="icon"
               className="h-8 w-8 sm:h-10 sm:w-10"
@@ -148,7 +238,11 @@ const UsersList = ({
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href={`/visit/user/${user.id}`}>
+              <Link
+                id="users-list-link-1"
+                data-testId="users-list-link-1"
+                href={`/visit/user/${user.id}`}
+              >
                 <User className="mr-2 h-4 w-4" />
                 Visit Profile
               </Link>

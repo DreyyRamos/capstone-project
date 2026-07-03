@@ -19,17 +19,40 @@ const ReportedUsers = ({
   triggerLiftSuspension,
 }: ReportedUsersProps) => {
   return (
-    <div id="reported-users-div-1" data-testId="reported-users-div-1" key={user.id}>
-      <div id="reported-users-flex-2" data-testId="reported-users-flex-2" className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
-        <div id="reported-users-flex-3" data-testId="reported-users-flex-3" className="flex items-center gap-4 min-w-0 flex-1">
-          <Avatar className="h-10 w-10 flex-shrink-0">
+    <div
+      id="reported-users-div-1"
+      data-testId="reported-users-div-1"
+      key={user.id}
+    >
+      <div
+        id="reported-users-flex-2"
+        data-testId="reported-users-flex-2"
+        className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4"
+      >
+        <div
+          id="reported-users-flex-3"
+          data-testId="reported-users-flex-3"
+          className="flex items-center gap-4 min-w-0 flex-1"
+        >
+          <Avatar
+            id="reported-users-a-1"
+            data-testId="reported-users-a-1"
+            className="h-10 w-10 flex-shrink-0"
+          >
             <AvatarImage src={user.profileImage} />
-            <AvatarFallback>
+            <AvatarFallback
+              id="reported-users-a-2"
+              data-testId="reported-users-a-2"
+            >
               {user.firstName?.[0]}
               {user.lastName?.[0]}
             </AvatarFallback>
           </Avatar>
-          <div id="reported-users-div-4" data-testId="reported-users-div-4" className="min-w-0 flex-1">
+          <div
+            id="reported-users-div-4"
+            data-testId="reported-users-div-4"
+            className="min-w-0 flex-1"
+          >
             <p className="font-medium text-sm sm:text-base truncate">
               {user.firstName} {user.lastName}
             </p>
@@ -41,7 +64,11 @@ const ReportedUsers = ({
             </Badge>
           </div>
         </div>
-        <div id="reported-users-flex-5" data-testId="reported-users-flex-5" className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-shrink-0">
+        <div
+          id="reported-users-flex-5"
+          data-testId="reported-users-flex-5"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-shrink-0"
+        >
           <Badge className="bg-yellow-100 text-yellow-800 text-xs text-center">
             {user.warningPoints || 0} Warning(s)
           </Badge>
@@ -49,6 +76,8 @@ const ReportedUsers = ({
           {/* Show Warn button only if user has 3 or more warning points */}
           {user.warningPoints >= 3 && user.warningPoints < 5 && (
             <Button
+              id="reported-users-button-1"
+              data-testId="reported-users-button-1"
               variant="outline"
               size="sm"
               className="text-xs"
@@ -59,14 +88,28 @@ const ReportedUsers = ({
               }
             >
               <AlertTriangle className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Warn User</span>
-              <span className="sm:hidden">Warn</span>
+              <span
+                id="reported-users-span-1"
+                data-testId="reported-users-span-1"
+                className="hidden sm:inline"
+              >
+                Warn User
+              </span>
+              <span
+                id="reported-users-span-2"
+                data-testId="reported-users-span-2"
+                className="sm:hidden"
+              >
+                Warn
+              </span>
             </Button>
           )}
 
           {/* Show Ban button only if user has 10 or more warning points */}
           {user.warningPoints >= 10 && (
             <Button
+              id="reported-users-button-2"
+              data-testId="reported-users-button-2"
               variant="destructive"
               size="sm"
               className="text-xs"
@@ -77,8 +120,20 @@ const ReportedUsers = ({
               }
             >
               <X className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Ban User</span>
-              <span className="sm:hidden">Ban</span>
+              <span
+                id="reported-users-span-3"
+                data-testId="reported-users-span-3"
+                className="hidden sm:inline"
+              >
+                Ban User
+              </span>
+              <span
+                id="reported-users-span-4"
+                data-testId="reported-users-span-4"
+                className="sm:hidden"
+              >
+                Ban
+              </span>
             </Button>
           )}
 
@@ -86,6 +141,8 @@ const ReportedUsers = ({
           {user.warningPoints >= 5 && user.warningPoints < 10 && (
             <div id="reported-users-div-6" data-testId="reported-users-div-6">
               <Button
+                id="reported-users-button-3"
+                data-testId="reported-users-button-3"
                 variant="destructive"
                 size="sm"
                 className="text-xs"
@@ -99,10 +156,24 @@ const ReportedUsers = ({
                 }
               >
                 <Ban className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Suspend User</span>
-                <span className="sm:hidden">Suspend</span>
+                <span
+                  id="reported-users-span-5"
+                  data-testId="reported-users-span-5"
+                  className="hidden sm:inline"
+                >
+                  Suspend User
+                </span>
+                <span
+                  id="reported-users-span-6"
+                  data-testId="reported-users-span-6"
+                  className="sm:hidden"
+                >
+                  Suspend
+                </span>
               </Button>
               <Button
+                id="reported-users-button-4"
+                data-testId="reported-users-button-4"
                 variant="secondary"
                 size="sm"
                 className="text-xs"
@@ -115,8 +186,20 @@ const ReportedUsers = ({
                 }
               >
                 <Ban className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Lift Suspension</span>
-                <span className="sm:hidden">Lift</span>
+                <span
+                  id="reported-users-span-7"
+                  data-testId="reported-users-span-7"
+                  className="hidden sm:inline"
+                >
+                  Lift Suspension
+                </span>
+                <span
+                  id="reported-users-span-8"
+                  data-testId="reported-users-span-8"
+                  className="sm:hidden"
+                >
+                  Lift
+                </span>
               </Button>
             </div>
           )}

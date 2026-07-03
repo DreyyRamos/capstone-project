@@ -29,8 +29,16 @@ const PubSearchResult = ({ publication }: PubProps) => {
   return (
     <Card key={publication.pubId} className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">
-        <Link href={`/publications/${publication.pubId}`}>
-          <div id="pub-search-result-flex-1" data-testId="pub-search-result-flex-1" className="flex gap-4">
+        <Link
+          id="pub-search-result-link-1"
+          data-testId="pub-search-result-link-1"
+          href={`/publications/${publication.pubId}`}
+        >
+          <div
+            id="pub-search-result-flex-1"
+            data-testId="pub-search-result-flex-1"
+            className="flex gap-4"
+          >
             {publication.imageUrl && (
               <img
                 src={publication.imageUrl}
@@ -38,8 +46,16 @@ const PubSearchResult = ({ publication }: PubProps) => {
                 className="h-24 w-24 object-cover rounded-lg flex-shrink-0"
               />
             )}
-            <div id="pub-search-result-div-2" data-testId="pub-search-result-div-2" className="flex-1 min-w-0">
-              <div id="pub-search-result-flex-3" data-testId="pub-search-result-flex-3" className="flex items-center gap-2 mb-2">
+            <div
+              id="pub-search-result-div-2"
+              data-testId="pub-search-result-div-2"
+              className="flex-1 min-w-0"
+            >
+              <div
+                id="pub-search-result-flex-3"
+                data-testId="pub-search-result-flex-3"
+                className="flex items-center gap-2 mb-2"
+              >
                 <h3 className="font-semibold text-xl truncate">
                   {publication.title}
                 </h3>
@@ -50,27 +66,76 @@ const PubSearchResult = ({ publication }: PubProps) => {
               <p className="text-muted-foreground line-clamp-4 mb-4">
                 {publication.excerpt}
               </p>
-              <div id="pub-search-result-flex-4" data-testId="pub-search-result-flex-4" className="flex items-center justify-between text-sm text-muted-foreground">
-                <div id="pub-search-result-flex-5" data-testId="pub-search-result-flex-5" className="flex items-center gap-2">
-                  <Avatar className="h-6 w-6">
+              <div
+                id="pub-search-result-flex-4"
+                data-testId="pub-search-result-flex-4"
+                className="flex items-center justify-between text-sm text-muted-foreground"
+              >
+                <div
+                  id="pub-search-result-flex-5"
+                  data-testId="pub-search-result-flex-5"
+                  className="flex items-center gap-2"
+                >
+                  <Avatar
+                    id="pub-search-result-a-1"
+                    data-testId="pub-search-result-a-1"
+                    className="h-6 w-6"
+                  >
                     <AvatarImage src={publication.author?.profileImage || ""} />
-                    <AvatarFallback className="text-xs">
+                    <AvatarFallback
+                      id="pub-search-result-a-2"
+                      data-testId="pub-search-result-a-2"
+                      className="text-xs"
+                    >
                       {getDisplayName(publication.author)
                         .charAt(0)
                         .toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <span>by {getDisplayName(publication.author)}</span>
-                  <span>•</span>
-                  <span>{formatDate(publication.updatedAt)}</span>
+                  <span
+                    id="pub-search-result-span-1"
+                    data-testId="pub-search-result-span-1"
+                  >
+                    by {getDisplayName(publication.author)}
+                  </span>
+                  <span
+                    id="pub-search-result-span-2"
+                    data-testId="pub-search-result-span-2"
+                  >
+                    •
+                  </span>
+                  <span
+                    id="pub-search-result-span-3"
+                    data-testId="pub-search-result-span-3"
+                  >
+                    {formatDate(publication.updatedAt)}
+                  </span>
                 </div>
-                <div id="pub-search-result-flex-6" data-testId="pub-search-result-flex-6" className="flex items-center gap-4">
-                  <span>{publication._count.pubLikes} likes</span>
-                  <span>{publication._count.pubComments} comments</span>
+                <div
+                  id="pub-search-result-flex-6"
+                  data-testId="pub-search-result-flex-6"
+                  className="flex items-center gap-4"
+                >
+                  <span
+                    id="pub-search-result-span-4"
+                    data-testId="pub-search-result-span-4"
+                  >
+                    {publication._count.pubLikes} likes
+                  </span>
+                  <span
+                    id="pub-search-result-span-5"
+                    data-testId="pub-search-result-span-5"
+                  >
+                    {publication._count.pubComments} comments
+                  </span>
                 </div>
               </div>
               {publication.tags.length > 0 && (
-                <div id="pub-search-result-flex-7" data-testId="pub-search-result-flex-7" className="flex gap-1 mt-3 flex-wrap">
+                <div
+                  id="pub-search-result-flex-7"
+                  data-testId="pub-search-result-flex-7"
+                  className="flex gap-1 mt-3 flex-wrap"
+                >
                   {publication.tags.map((tag: any) => (
                     <Badge key={tag} variant="outline" className="text-xs">
                       {tag}

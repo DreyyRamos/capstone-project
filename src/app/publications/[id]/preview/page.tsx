@@ -95,7 +95,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
   if (isError) return <div id="page-div-1" data-testId="page-div-1">Error loading publication.</div>;
 
   return (
-    <div id="page-div-2" data-testId="page-div-2" className="max-w-4xl mx-auto space-y-6">
+    <div
+      id="page-div-2"
+      data-testId="page-div-2"
+      className="max-w-4xl mx-auto space-y-6"
+    >
       <StatusModal />
       <AuthModal
         isOpen={isOpen}
@@ -113,15 +117,19 @@ export default function PublicationDetailPage({ params }: PageProps) {
       />
 
       <Button asChild variant="ghost">
-        <Link href="/publications">
+        <Link id="page-link-1" data-testId="page-link-1" href="/publications">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Publications
         </Link>
       </Button>
 
-      <article className="space-y-6">
+      <article id="page-a-1" data-testId="page-a-1" className="space-y-6">
         <div id="page-div-3" data-testId="page-div-3" className="space-y-4">
-          <div id="page-flex-4" data-testId="page-flex-4" className="flex items-center gap-2 flex-wrap">
+          <div
+            id="page-flex-4"
+            data-testId="page-flex-4"
+            className="flex items-center gap-2 flex-wrap"
+          >
             {publication?.tags?.map((tag: any) => (
               <Badge key={tag} variant="outline" className="text-xs">
                 {tag}
@@ -133,13 +141,25 @@ export default function PublicationDetailPage({ params }: PageProps) {
             {publication?.title}
           </h1>
 
-          <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center justify-between flex-wrap gap-4">
-            <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center gap-4">
-              <Avatar className="h-12 w-12">
+          <div
+            id="page-flex-5"
+            data-testId="page-flex-5"
+            className="flex items-center justify-between flex-wrap gap-4"
+          >
+            <div
+              id="page-flex-6"
+              data-testId="page-flex-6"
+              className="flex items-center gap-4"
+            >
+              <Avatar
+                id="page-a-2"
+                data-testId="page-a-2"
+                className="h-12 w-12"
+              >
                 <AvatarImage
                   src={publication.author?.profileImage || "/placeholder.svg"}
                 />
-                <AvatarFallback>
+                <AvatarFallback id="page-a-3" data-testId="page-a-3">
                   {publication.author?.firstName?.[0]}
                   {publication.author?.lastName?.[0]}
                 </AvatarFallback>
@@ -151,8 +171,16 @@ export default function PublicationDetailPage({ params }: PageProps) {
                 <p className="text-sm text-muted-foreground">
                   {publication?.author.role}
                 </p>
-                <div id="page-flex-8" data-testId="page-flex-8" className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1">
+                <div
+                  id="page-flex-8"
+                  data-testId="page-flex-8"
+                  className="flex items-center gap-4 text-sm text-muted-foreground"
+                >
+                  <span
+                    id="page-span-1"
+                    data-testId="page-span-1"
+                    className="flex items-center gap-1"
+                  >
                     <Clock className="h-3 w-3" />
                     {new Date(publication?.createdAt).toLocaleDateString()}
                   </span>
@@ -160,8 +188,14 @@ export default function PublicationDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div id="page-flex-9" data-testId="page-flex-9" className="flex items-center gap-2">
+            <div
+              id="page-flex-9"
+              data-testId="page-flex-9"
+              className="flex items-center gap-2"
+            >
               <Button
+                id="page-button-1"
+                data-testId="page-button-1"
                 variant="outline"
                 size="sm"
                 onClick={() => handleApprove(id)}
@@ -170,6 +204,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
               </Button>
 
               <Button
+                id="page-button-2"
+                data-testId="page-button-2"
                 variant="outline"
                 size="sm"
                 onClick={() => handleReject(id)}
@@ -181,7 +217,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
         </div>
 
         {publication?.imageUrl && (
-          <div id="page-div-10" data-testId="page-div-10" className="relative aspect-video rounded-lg overflow-hidden">
+          <div
+            id="page-div-10"
+            data-testId="page-div-10"
+            className="relative aspect-video rounded-lg overflow-hidden"
+          >
             <img
               src={publication?.imageUrl || "/placeholder.svg"}
               alt={publication?.title}

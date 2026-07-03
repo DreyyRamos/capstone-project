@@ -88,7 +88,7 @@ const Published = ({ content, handleArchive }: PublishedPublicationsProps) => {
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0">
+                <Button id="published-button-1" data-testId="published-button-1" variant="ghost" size="icon" className="shrink-0">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -96,7 +96,7 @@ const Published = ({ content, handleArchive }: PublishedPublicationsProps) => {
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link
+                  <Link id="published-link-1" data-testId="published-link-1"
                     href={`/publications/${content?.pubId}`}
                     className="flex items-center"
                   >
@@ -105,7 +105,7 @@ const Published = ({ content, handleArchive }: PublishedPublicationsProps) => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link
+                  <Link id="published-link-2" data-testId="published-link-2"
                     href={`/publications/${content?.pubId}/update`}
                     className="flex items-center"
                   >
@@ -144,14 +144,14 @@ const Published = ({ content, handleArchive }: PublishedPublicationsProps) => {
           <div id="published-flex-6" data-testId="published-flex-6" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
             <div id="published-flex-7" data-testId="published-flex-7" className="flex items-center gap-2 min-w-0">
               <User className="h-4 w-4 shrink-0" />
-              <span className="truncate">
+              <span id="published-span-1" data-testId="published-span-1" className="truncate">
                 {content?.author?.firstName} {content?.author?.lastName}
               </span>
               <Badge variant="secondary" className="text-xs shrink-0">
                 {content?.author?.role}
               </Badge>
             </div>
-            <span className="flex items-center gap-1 shrink-0">
+            <span id="published-span-2" data-testId="published-span-2" className="flex items-center gap-1 shrink-0">
               <Calendar className="h-4 w-4" />
               {new Date(content.createdAt).toLocaleDateString()}
             </span>
@@ -159,16 +159,16 @@ const Published = ({ content, handleArchive }: PublishedPublicationsProps) => {
 
           <div id="published-flex-8" data-testId="published-flex-8" className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-muted-foreground">
             {content.views && (
-              <span className="flex items-center gap-1">
+              <span id="published-span-3" data-testId="published-span-3" className="flex items-center gap-1">
                 <Eye className="h-4 w-4" />
                 {content.views} views
               </span>
             )}
-            <span className="flex items-center gap-1">
+            <span id="published-span-4" data-testId="published-span-4" className="flex items-center gap-1">
               <Heart className="h-4 w-4" />
               {content?.pubLikes?.length || 0} likes
             </span>
-            <span className="flex items-center gap-1">
+            <span id="published-span-5" data-testId="published-span-5" className="flex items-center gap-1">
               <MessageCircle className="h-4 w-4" />
               {content?.pubComments?.length || 0} comments
             </span>

@@ -161,7 +161,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
       <div id="page-flex-2" data-testId="page-flex-2" className="flex items-center justify-between">
         <div id="page-flex-3" data-testId="page-flex-3" className="flex items-center gap-4">
           <Button asChild variant="ghost">
-            <Link href="/publications">
+            <Link id="page-link-1" data-testId="page-link-1" href="/publications">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Link>
@@ -175,11 +175,11 @@ export default function UpdatePublicationPage({ params }: PageProps) {
         </div>
         {/* save to drafat */}
         {/* <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => handleSubmit(false)}>
+          <Button id="page-button-1" data-testId="page-button-1" variant="outline" onClick={() => handleSubmit(false)}>
             <Save className="mr-2 h-4 w-4" />
             Save Draft
           </Button>
-          <Button onClick={() => handleSubmit(true)}>Publish</Button>
+          <Button id="page-button-2" data-testId="page-button-2" onClick={() => handleSubmit(true)}>Publish</Button>
         </div> */}
       </div>
       <form onSubmit={handleSubmit}>
@@ -240,7 +240,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                       alt="Cover"
                       className="w-full h-48 object-cover rounded-lg"
                     />
-                    <Button
+                    <Button id="page-button-3" data-testId="page-button-3"
                       variant="destructive"
                       size="sm"
                       className="absolute top-2 right-2"
@@ -289,7 +289,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   onChange={handleContentChange}
                 />
               </CardContent>
-              {/* <Button
+              {/* <Button id="page-button-4" data-testId="page-button-4"
                 type="submit"
                 variant="outline"
                 className="w-full bg-transparent"
@@ -362,7 +362,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                       }
                     }}
                   />
-                  <Button type="button" onClick={handleAddTag} size="sm">
+                  <Button id="page-button-5" data-testId="page-button-5" type="button" onClick={handleAddTag} size="sm">
                     Add
                   </Button>
                 </div>
@@ -376,7 +376,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                         className="flex items-center gap-1"
                       >
                         {tag}
-                        <button
+                        <button id="page-button-6" data-testId="page-button-6"
                           onClick={() => handleRemoveTag(tag)}
                           className="ml-1 hover:text-destructive"
                         >
@@ -395,7 +395,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 <CardTitle>Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button
+                <Button id="page-button-7" data-testId="page-button-7"
                   type="submit"
                   variant="outline"
                   className="w-full bg-transparent"
@@ -404,7 +404,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   <Eye className="mr-2 h-4 w-4" />
                   Update
                 </Button>
-                {/* <Button variant="outline" className="w-full bg-transparent">
+                {/* <Button id="page-button-8" data-testId="page-button-8" variant="outline" className="w-full bg-transparent">
                   <Save className="mr-2 h-4 w-4" />
                   Save Draft
                 </Button> */}

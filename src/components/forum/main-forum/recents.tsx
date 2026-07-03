@@ -59,7 +59,7 @@ const Recents = ({ topic }: RecentProps) => {
                 <TrendingUp className="h-4 w-4 text-red-600 shrink-0" />
               )}
               <h3 className="text-lg font-semibold min-w-0">
-                <Link
+                <Link id="recents-link-1" data-testId="recents-link-1"
                   href={`/forum/topic/${topic.forumId}`}
                   className="hover:text-blue-600 line-clamp-2"
                 >
@@ -95,14 +95,14 @@ const Recents = ({ topic }: RecentProps) => {
 
             <div id="recents-flex-5" data-testId="recents-flex-5" className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
               <div id="recents-flex-6" data-testId="recents-flex-6" className="flex items-center gap-2">
-                <Avatar className="h-6 w-6 shrink-0">
+                <A id="recents-a-1" data-testId="recents-a-1"vatar className="h-6 w-6 shrink-0">
                   <AvatarImage src={topic?.author?.profileImage || undefined} />
-                  <AvatarFallback className="text-xs">
+                  <A id="recents-a-2" data-testId="recents-a-2"vatarFallback className="text-xs">
                     {topic?.author?.firstName?.charAt(0)}
                     {topic?.author?.lastName?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm text-muted-foreground truncate">
+                <span id="recents-span-1" data-testId="recents-span-1" className="text-sm text-muted-foreground truncate">
                   by {topic?.author?.firstName} {topic?.author?.lastName}
                 </span>
               </div>
@@ -119,23 +119,23 @@ const Recents = ({ topic }: RecentProps) => {
             </div>
 
             <div id="recents-flex-8" data-testId="recents-flex-8" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
+              <span id="recents-span-2" data-testId="recents-span-2" className="flex items-center gap-1">
                 <MessageSquare className="h-4 w-4 shrink-0" />
                 {topic.forumComments?.length || 0} replies
               </span>
               {topic.forumLikes && (
-                <span className="flex items-center gap-1">
+                <span id="recents-span-3" data-testId="recents-span-3" className="flex items-center gap-1">
                   <Heart className="h-4 w-4 shrink-0" />
                   {topic.forumLikes.length} likes
                 </span>
               )}
               {topic.views && (
-                <span className="flex items-center gap-1">
+                <span id="recents-span-4" data-testId="recents-span-4" className="flex items-center gap-1">
                   <Eye className="h-4 w-4 shrink-0" />
                   {topic.views} views
                 </span>
               )}
-              <span className="flex items-center gap-1">
+              <span id="recents-span-5" data-testId="recents-span-5" className="flex items-center gap-1">
                 <Clock className="h-4 w-4 shrink-0" />
                 {timeAgo(new Date(topic.createdAt))}
               </span>
@@ -148,7 +148,7 @@ const Recents = ({ topic }: RecentProps) => {
               size="sm"
               className="w-full md:w-auto bg-transparent"
             >
-              <Link href={`/forum/topic/${topic.forumId}`}>View Topic</Link>
+              <Link id="recents-link-2" data-testId="recents-link-2" href={`/forum/topic/${topic.forumId}`}>View Topic</Link>
             </Button>
           </div>
         </div>

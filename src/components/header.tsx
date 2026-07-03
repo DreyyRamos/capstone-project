@@ -108,34 +108,81 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div id="header-flex-1" data-testId="header-flex-1" className="max-w-7xl mx-auto flex h-16 items-center justify-between px-6">
-          <Link href="/" className="flex items-center gap-2">
-            <div id="header-flex-2" data-testId="header-flex-2" className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">RS</span>
+        <div
+          id="header-flex-1"
+          data-testId="header-flex-1"
+          className="max-w-7xl mx-auto flex h-16 items-center justify-between px-6"
+        >
+          <Link
+            id="header-link-1"
+            data-testId="header-link-1"
+            href="/"
+            className="flex items-center gap-2"
+          >
+            <div
+              id="header-flex-2"
+              data-testId="header-flex-2"
+              className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center"
+            >
+              <span
+                id="header-span-1"
+                data-testId="header-span-1"
+                className="text-white font-bold text-sm"
+              >
+                RS
+              </span>
             </div>
-            <span className="font-bold text-lg">Ramos School</span>
+            <span
+              id="header-span-2"
+              data-testId="header-span-2"
+              className="font-bold text-lg"
+            >
+              Ramos School
+            </span>
           </Link>
 
-          <div id="header-flex-3" data-testId="header-flex-3" className="flex items-center gap-4">
-            <div id="header-div-4" data-testId="header-div-4" className="relative hidden md:block">
+          <div
+            id="header-flex-3"
+            data-testId="header-flex-3"
+            className="flex items-center gap-4"
+          >
+            <div
+              id="header-div-4"
+              data-testId="header-div-4"
+              className="relative hidden md:block"
+            >
               <SearchBar className="hidden md:block" />
             </div>
 
             <Button
+              id="header-button-1"
+              data-testId="header-button-1"
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
             >
               <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
+              <span
+                id="header-span-3"
+                data-testId="header-span-3"
+                className="sr-only"
+              >
+                Toggle theme
+              </span>
             </Button>
 
             {user ? (
               <>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="relative">
+                    <Button
+                      id="header-button-2"
+                      data-testId="header-button-2"
+                      variant="ghost"
+                      size="icon"
+                      className="relative"
+                    >
                       <Bell className="h-4 w-4" />
                       {unreadCount > 0 && (
                         <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
@@ -145,12 +192,18 @@ export function Header() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-80">
-                    <div id="header-flex-5" data-testId="header-flex-5" className="flex items-center justify-between px-2 py-1.5">
+                    <div
+                      id="header-flex-5"
+                      data-testId="header-flex-5"
+                      className="flex items-center justify-between px-2 py-1.5"
+                    >
                       <DropdownMenuLabel className="p-0">
                         Notifications
                       </DropdownMenuLabel>
                       {unreadCount > 0 && (
                         <Button
+                          id="header-button-3"
+                          data-testId="header-button-3"
                           variant="link"
                           className="h-auto p-0 text-xs"
                           onClick={handleMarkAllAsRead}
@@ -167,8 +220,16 @@ export function Header() {
                           onClick={() => handleNotificationClick(notif)}
                           className="w-full cursor-pointer"
                         >
-                          <div id="header-flex-6" data-testId="header-flex-6" className="flex flex-col gap-1 w-full">
-                            <div id="header-flex-7" data-testId="header-flex-7" className="flex items-center gap-2">
+                          <div
+                            id="header-flex-6"
+                            data-testId="header-flex-6"
+                            className="flex flex-col gap-1 w-full"
+                          >
+                            <div
+                              id="header-flex-7"
+                              data-testId="header-flex-7"
+                              className="flex items-center gap-2"
+                            >
                               {(notif.notifType === "reports" ||
                                 notif.notifTitle
                                   ?.toLowerCase()
@@ -202,23 +263,32 @@ export function Header() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
+                      id="header-button-4"
+                      data-testId="header-button-4"
                       variant="ghost"
                       className="relative h-auto w-auto rounded-full flex flex-col items-center gap-0.5 py-0.5 px-1"
                     >
-                      <Avatar className="h-8 w-8">
+                      <Avatar
+                        id="header-a-2"
+                        data-testId="header-a-2"
+                        className="h-8 w-8"
+                      >
                         <AvatarImage
                           src={
                             user?.userData?.profileImage || "/placeholder.svg"
                           }
                         />
-                        <AvatarFallback>
+                        <AvatarFallback
+                          id="header-a-3"
+                          data-testId="header-a-3"
+                        >
                           {user?.userData?.firstName?.[0]}
                           {user?.userData?.lastName?.[0]}
                         </AvatarFallback>
                       </Avatar>
                       <Badge
                         className={getStatusBadgeClasses(
-                          user?.userData?.status
+                          user?.userData?.status,
                         )}
                       >
                         {user?.userData?.status}
@@ -227,7 +297,11 @@ export function Header() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
-                      <div id="header-flex-8" data-testId="header-flex-8" className="flex flex-col space-y-1">
+                      <div
+                        id="header-flex-8"
+                        data-testId="header-flex-8"
+                        className="flex flex-col space-y-1"
+                      >
                         <p className="text-sm font-medium leading-none">
                           {user?.userData?.firstName || "User"}{" "}
                           {user?.userData?.lastName || "Lastname"}
@@ -239,15 +313,27 @@ export function Header() {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href="/profile">
+                      <Link
+                        id="header-link-2"
+                        data-testId="header-link-2"
+                        href="/profile"
+                      >
                         <User className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
+                        <span id="header-span-4" data-testId="header-span-4">
+                          Profile
+                        </span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/request-role-change">
+                      <Link
+                        id="header-link-3"
+                        data-testId="header-link-3"
+                        href="/request-role-change"
+                      >
                         <User className="mr-2 h-4 w-4" />
-                        <span>Role Change Request</span>
+                        <span id="header-span-5" data-testId="header-span-5">
+                          Role Change Request
+                        </span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
@@ -256,19 +342,25 @@ export function Header() {
                         confirmAction(
                           "Logout",
                           "Are you sure you want to logout?",
-                          handleLogout
+                          handleLogout,
                         )
                       }
                     >
                       <LogOut className="mr-2 h-4 w-4" />
-                      <span>Log out</span>
+                      <span id="header-span-6" data-testId="header-span-6">
+                        Log out
+                      </span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </>
             ) : (
               <Button asChild>
-                <Link href="/login">
+                <Link
+                  id="header-link-4"
+                  data-testId="header-link-4"
+                  href="/login"
+                >
                   <LogIn className="mr-2 h-4 w-4" />
                   Sign In
                 </Link>
@@ -292,7 +384,11 @@ export function Header() {
                 violations.
               </p>
               {selectedBanNotification && (
-                <div id="header-div-9" data-testId="header-div-9" className="bg-red-50 dark:bg-red-950 p-3 rounded-md border border-red-200 dark:border-red-800">
+                <div
+                  id="header-div-9"
+                  data-testId="header-div-9"
+                  className="bg-red-50 dark:bg-red-950 p-3 rounded-md border border-red-200 dark:border-red-800"
+                >
                   <p className="font-medium text-red-800 dark:text-red-200">
                     {selectedBanNotification.notifTitle}
                   </p>
@@ -312,7 +408,7 @@ export function Header() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex gap-2 sm:gap-0">
-            {/* <Button
+            {/* <Button id="header-button-5" data-testId="header-button-5"
               variant="outline"
               className="mx-1.5"
               onClick={() => {
@@ -323,7 +419,13 @@ export function Header() {
             >
               Contact Admin
             </Button> */}
-            <Button onClick={handleBanModalClose}>I Understand</Button>
+            <Button
+              id="header-button-6"
+              data-testId="header-button-6"
+              onClick={handleBanModalClose}
+            >
+              I Understand
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

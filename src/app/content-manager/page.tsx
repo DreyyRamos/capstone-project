@@ -404,7 +404,7 @@ export default function ContentManagerPage() {
         </div>
         <div id="page-flex-4" data-testId="page-flex-4" className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2 sm:justify-end">
           <Button asChild className="w-full sm:w-auto">
-            <Link href="/publications/create">
+            <Link id="page-link-1" data-testId="page-link-1" href="/publications/create">
               <Plus className="mr-2 h-4 w-4" />
               New Publication
             </Link>
@@ -504,7 +504,7 @@ export default function ContentManagerPage() {
                   statusFilter !== "all" ||
                   categoryFilter !== "all" ||
                   sortBy !== "newest") && (
-                  <Button
+                  <Button id="page-button-1" data-testId="page-button-1"
                     variant="outline"
                     onClick={clearFilters}
                     className="sm:col-span-1 bg-transparent"
@@ -524,25 +524,25 @@ export default function ContentManagerPage() {
           <div id="page-flex-8" data-testId="page-flex-8" className="flex items-center justify-between text-sm text-muted-foreground">
             <div id="page-div-9" data-testId="page-div-9">
               {activeTab === "drafts" && (
-                <span>
+                <span id="page-span-1" data-testId="page-span-1">
                   Showing {filteredDrafts.length} of{" "}
                   {toReview?.postToReview?.length || 0} draft items
                 </span>
               )}
               {activeTab === "published" && (
-                <span>
+                <span id="page-span-2" data-testId="page-span-2">
                   Showing {filteredPublished.length} of{" "}
                   {publishedContent?.posts?.length || 0} published items
                 </span>
               )}
               {activeTab === "archived" && (
-                <span>
+                <span id="page-span-3" data-testId="page-span-3">
                   Showing {filteredArchived.length} of{" "}
                   {archivedPost?.length || 0} archived items
                 </span>
               )}
               {activeTab === "rejected" && (
-                <span>
+                <span id="page-span-4" data-testId="page-span-4">
                   Showing {filteredArchived.length} of{" "}
                   {rejectedPosts?.length || 0} rejected items
                 </span>
@@ -581,7 +581,7 @@ export default function ContentManagerPage() {
                     {(searchQuery ||
                       statusFilter !== "all" ||
                       categoryFilter !== "all") && (
-                      <Button variant="outline" onClick={clearFilters}>
+                      <Button id="page-button-2" data-testId="page-button-2" variant="outline" onClick={clearFilters}>
                         Clear Filters
                       </Button>
                     )}
@@ -616,7 +616,7 @@ export default function ContentManagerPage() {
                         : "No published content available."}
                     </p>
                     {(searchQuery || categoryFilter !== "all") && (
-                      <Button variant="outline" onClick={clearFilters}>
+                      <Button id="page-button-3" data-testId="page-button-3" variant="outline" onClick={clearFilters}>
                         Clear Filters
                       </Button>
                     )}
@@ -654,7 +654,7 @@ export default function ContentManagerPage() {
                         : "No archived content available."}
                     </p>
                     {(searchQuery || categoryFilter !== "all") && (
-                      <Button variant="outline" onClick={clearFilters}>
+                      <Button id="page-button-4" data-testId="page-button-4" variant="outline" onClick={clearFilters}>
                         Clear Filters
                       </Button>
                     )}
@@ -692,7 +692,7 @@ export default function ContentManagerPage() {
                         : "No archived content available."}
                     </p>
                     {(searchQuery || categoryFilter !== "all") && (
-                      <Button variant="outline" onClick={clearFilters}>
+                      <Button id="page-button-5" data-testId="page-button-5" variant="outline" onClick={clearFilters}>
                         Clear Filters
                       </Button>
                     )}

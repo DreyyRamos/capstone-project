@@ -23,7 +23,7 @@ export default function PublicationsLoading() {
           <Skeleton className="h-9 w-48" />
           <Skeleton className="h-5 w-96" />
         </div>
-        <Button disabled>
+        <Button id="loading-button-1" data-testId="loading-button-1" disabled>
           <PlusCircle className="mr-2 h-4 w-4" />
           Create Publication
         </Button>

@@ -127,7 +127,7 @@ export function ConfirmationModal({
         </DialogHeader>
 
         <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 mt-6">
-          <Button
+          <Button id="confirmation-modal-button-1" data-testId="confirmation-modal-button-1"
             variant="outline"
             onClick={handleClose}
             disabled={showLoading}
@@ -135,7 +135,7 @@ export function ConfirmationModal({
           >
             {cancelText}
           </Button>
-          <Button
+          <Button id="confirmation-modal-button-2" data-testId="confirmation-modal-button-2"
             onClick={handleConfirm}
             disabled={disabled || showLoading}
             className={`w-full sm:w-auto ${styles.confirmButton}`}

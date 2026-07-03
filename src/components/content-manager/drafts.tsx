@@ -93,12 +93,24 @@ const Drafts = ({
     <Card key={publication.pubId} className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 sm:p-6">
         <div id="drafts-div-1" data-testId="drafts-div-1" className="space-y-3">
-          <div id="drafts-flex-2" data-testId="drafts-flex-2" className="flex items-start justify-between gap-2">
-            <div id="drafts-div-3" data-testId="drafts-div-3" className="flex-1 min-w-0">
+          <div
+            id="drafts-flex-2"
+            data-testId="drafts-flex-2"
+            className="flex items-start justify-between gap-2"
+          >
+            <div
+              id="drafts-div-3"
+              data-testId="drafts-div-3"
+              className="flex-1 min-w-0"
+            >
               <h3 className="text-lg font-semibold truncate mb-2">
                 {publication.title}
               </h3>
-              <div id="drafts-flex-4" data-testId="drafts-flex-4" className="flex flex-wrap items-center gap-1 mb-2">
+              <div
+                id="drafts-flex-4"
+                data-testId="drafts-flex-4"
+                className="flex flex-wrap items-center gap-1 mb-2"
+              >
                 <Badge className={statusColors[publication.status]}>
                   <StatusIcon className="h-3 w-3 mr-1" />
                   {publication?.status.replace("_", " ")}
@@ -113,7 +125,13 @@ const Drafts = ({
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0">
+                <Button
+                  id="drafts-button-1"
+                  data-testId="drafts-button-1"
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0"
+                >
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -122,6 +140,8 @@ const Drafts = ({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link
+                    id="drafts-link-1"
+                    data-testId="drafts-link-1"
                     href={`/publications/${publication.pubId}/preview`}
                     className="flex items-center"
                   >
@@ -131,6 +151,8 @@ const Drafts = ({
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link
+                    id="drafts-link-2"
+                    data-testId="drafts-link-2"
                     href={`/publications/${publication.pubId}/update`}
                     className="flex items-center"
                   >
@@ -168,7 +190,11 @@ const Drafts = ({
 
           {/* Tags */}
           {publication.tags && publication.tags.length > 0 && (
-            <div id="drafts-flex-5" data-testId="drafts-flex-5" className="flex flex-wrap gap-1">
+            <div
+              id="drafts-flex-5"
+              data-testId="drafts-flex-5"
+              className="flex flex-wrap gap-1"
+            >
               {publication.tags.slice(0, 2).map((tag, index) => (
                 <Badge key={index} variant="outline" className="text-xs">
                   {tag}
@@ -182,22 +208,46 @@ const Drafts = ({
             </div>
           )}
 
-          <div id="drafts-flex-6" data-testId="drafts-flex-6" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-            <div id="drafts-flex-7" data-testId="drafts-flex-7" className="flex items-center gap-2 min-w-0">
-              <Avatar className="h-6 w-6 shrink-0">
-                <AvatarFallback className="text-xs">
+          <div
+            id="drafts-flex-6"
+            data-testId="drafts-flex-6"
+            className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground"
+          >
+            <div
+              id="drafts-flex-7"
+              data-testId="drafts-flex-7"
+              className="flex items-center gap-2 min-w-0"
+            >
+              <Avatar
+                id="drafts-a-1"
+                data-testId="drafts-a-1"
+                className="h-6 w-6 shrink-0"
+              >
+                <AvatarFallback
+                  id="drafts-a-2"
+                  data-testId="drafts-a-2"
+                  className="text-xs"
+                >
                   {publication?.author?.firstName?.charAt(0)}
                   {publication?.author?.lastName?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <span className="truncate">
+              <span
+                id="drafts-span-1"
+                data-testId="drafts-span-1"
+                className="truncate"
+              >
                 {publication?.author?.firstName} {publication?.author?.lastName}
               </span>
               <Badge variant="secondary" className="text-xs shrink-0">
                 {publication?.author?.role}
               </Badge>
             </div>
-            <span className="flex items-center gap-1 shrink-0">
+            <span
+              id="drafts-span-2"
+              data-testId="drafts-span-2"
+              className="flex items-center gap-1 shrink-0"
+            >
               <Calendar className="h-4 w-4" />
               {new Date(publication.updatedAt).toLocaleDateString()}
             </span>
