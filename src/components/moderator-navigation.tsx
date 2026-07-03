@@ -75,10 +75,10 @@ export function ModeratorNavigation() {
 
   return (
     <nav className="sticky top-16 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="max-w-7xl mx-auto px-6">
+      <div id="moderator-navigation-div-1" data-testId="moderator-navigation-div-1" className="max-w-7xl mx-auto px-6">
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex h-14 items-center justify-between">
-          <div className="flex items-center space-x-6">
+        <div id="moderator-navigation-div-2" data-testId="moderator-navigation-div-2" className="hidden lg:flex h-14 items-center justify-between">
+          <div id="moderator-navigation-flex-3" data-testId="moderator-navigation-flex-3" className="flex items-center space-x-6">
             <Badge
               variant="secondary"
               className="bg-purple-100 text-purple-800"
@@ -135,9 +135,9 @@ export function ModeratorNavigation() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="flex lg:hidden h-14 items-center justify-between">
+        <div id="moderator-navigation-flex-4" data-testId="moderator-navigation-flex-4" className="flex lg:hidden h-14 items-center justify-between">
           {/* Left side: Badge + Navigation (hidden when search is open) */}
-          <div
+          <div id="moderator-navigation-div-5" data-testId="moderator-navigation-div-5"
             className={cn(
               "flex items-center space-x-2 transition-all duration-300",
               searchOpen
@@ -153,7 +153,7 @@ export function ModeratorNavigation() {
               <span className="hidden sm:inline">Mod</span>
             </Badge>
 
-            <div className="flex items-center space-x-1">
+            <div id="moderator-navigation-flex-6" data-testId="moderator-navigation-flex-6" className="flex items-center space-x-1">
               <Link
                 href="/"
                 className={cn(
@@ -190,15 +190,15 @@ export function ModeratorNavigation() {
           </div>
 
           {/* Search Area */}
-          <div
+          <div id="moderator-navigation-div-7" data-testId="moderator-navigation-div-7"
             className={cn(
               "flex items-center transition-all duration-300",
               searchOpen ? "flex-1" : "shrink-0",
             )}
           >
             {searchOpen ? (
-              <div className="flex items-center gap-2 w-full animate-in fade-in slide-in-from-right-2 duration-200">
-                <div className="flex-1">
+              <div id="moderator-navigation-flex-8" data-testId="moderator-navigation-flex-8" className="flex items-center gap-2 w-full animate-in fade-in slide-in-from-right-2 duration-200">
+                <div id="moderator-navigation-div-9" data-testId="moderator-navigation-div-9" className="flex-1">
                   <SearchBar
                     placeholder="Search..."
                     autoFocus
@@ -227,7 +227,7 @@ export function ModeratorNavigation() {
           </div>
 
           {/* Mobile Menu (hidden when search is open) */}
-          <div
+          <div id="moderator-navigation-div-10" data-testId="moderator-navigation-div-10"
             className={cn(
               "transition-all duration-300 shrink-0",
               searchOpen
@@ -249,9 +249,9 @@ export function ModeratorNavigation() {
                     Content moderation and community management
                   </SheetDescription>
                 </SheetHeader>
-                <div className="mt-6 space-y-6">
+                <div id="moderator-navigation-div-11" data-testId="moderator-navigation-div-11" className="mt-6 space-y-6">
                   {/* Main Navigation */}
-                  <div className="space-y-2">
+                  <div id="moderator-navigation-div-12" data-testId="moderator-navigation-div-12" className="space-y-2">
                     <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                       Main
                     </h3>
@@ -279,13 +279,13 @@ export function ModeratorNavigation() {
                   <Separator />
 
                   {/* Forum Categories */}
-                  <div className="space-y-2">
+                  <div id="moderator-navigation-div-13" data-testId="moderator-navigation-div-13" className="space-y-2">
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                       Forum Categories
                     </h3>
 
                     {/* scrollable area */}
-                    <div className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
+                    <div id="moderator-navigation-div-14" data-testId="moderator-navigation-div-14" className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
                       {forumCategories.map((category) => (
                         <Link
                           key={category.name}

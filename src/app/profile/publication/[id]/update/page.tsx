@@ -156,17 +156,17 @@ export default function UpdatePublicationPage({ params }: PageProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div id="page-div-1" data-testId="page-div-1" className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div id="page-flex-2" data-testId="page-flex-2" className="flex items-center justify-between">
+        <div id="page-flex-3" data-testId="page-flex-3" className="flex items-center gap-4">
           <Button asChild variant="ghost">
             <Link href="/publications">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Link>
           </Button>
-          <div>
+          <div id="page-div-4" data-testId="page-div-4">
             <h1 className="text-3xl font-bold">Edit Publication</h1>
             <p className="text-muted-foreground">
               Share news, articles, and updates with the school community
@@ -174,7 +174,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
           </div>
         </div>
         {/* save to drafat */}
-        {/* <div className="flex items-center gap-2">
+        {/* <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center gap-2">
           <Button variant="outline" onClick={() => handleSubmit(false)}>
             <Save className="mr-2 h-4 w-4" />
             Save Draft
@@ -183,9 +183,9 @@ export default function UpdatePublicationPage({ params }: PageProps) {
         </div> */}
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div id="page-grid-6" data-testId="page-grid-6" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div id="page-div-7" data-testId="page-div-7" className="lg:col-span-2 space-y-6">
             {/* Basic Information */}
             <Card>
               <CardHeader>
@@ -195,7 +195,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
+                <div id="page-div-8" data-testId="page-div-8" className="space-y-2">
                   <Label htmlFor="title">Title *</Label>
                   <Input
                     id="title"
@@ -206,7 +206,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div id="page-div-9" data-testId="page-div-9" className="space-y-2">
                   <Label htmlFor="excerpt">Excerpt</Label>
                   <Textarea
                     id="excerpt"
@@ -234,7 +234,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
               </CardHeader>
               <CardContent>
                 {formData.imageUrl ? (
-                  <div className="relative">
+                  <div id="page-div-10" data-testId="page-div-10" className="relative">
                     <img
                       src={formData.imageUrl || "/placeholder.svg"}
                       alt="Cover"
@@ -302,14 +302,14 @@ export default function UpdatePublicationPage({ params }: PageProps) {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div id="page-div-11" data-testId="page-div-11" className="space-y-6">
             {/* Publication Settings */}
             <Card>
               <CardHeader>
                 <CardTitle>Publication Settings</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
+                <div id="page-div-12" data-testId="page-div-12" className="space-y-2">
                   <Label htmlFor="category">Category *</Label>
                   <Select
                     key={formData.category} // Force re-render when category changes
@@ -329,8 +329,8 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   </Select>
                 </div>
 
-                {/* <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
+                {/* <div id="page-flex-13" data-testId="page-flex-13" className="flex items-center justify-between">
+                  <div id="page-div-14" data-testId="page-div-14" className="space-y-0.5">
                     <Label>Save as Draft</Label>
                     <p className="text-sm text-muted-foreground">
                       Don&apos;t publish immediately
@@ -350,7 +350,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex gap-2">
+                <div id="page-flex-15" data-testId="page-flex-15" className="flex gap-2">
                   <Input
                     placeholder="Add tag..."
                     value={newTag}
@@ -368,7 +368,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 </div>
 
                 {tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
+                  <div id="page-flex-16" data-testId="page-flex-16" className="flex flex-wrap gap-2">
                     {tags.map((tag) => (
                       <Badge
                         key={tag}

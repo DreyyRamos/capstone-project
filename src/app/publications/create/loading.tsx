@@ -3,21 +3,21 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function CreatePublicationLoading() {
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div id="loading-div-1" data-testId="loading-div-1" className="max-w-4xl mx-auto space-y-6">
       {/* Header Skeleton */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div id="loading-flex-2" data-testId="loading-flex-2" className="flex items-center justify-between">
+        <div id="loading-flex-3" data-testId="loading-flex-3" className="flex items-center gap-4">
           <Skeleton className="h-10 w-20" /> {/* Back button */}
-          <div>
+          <div id="loading-div-4" data-testId="loading-div-4">
             <Skeleton className="h-9 w-48 mb-2" /> {/* Title */}
             <Skeleton className="h-5 w-96" /> {/* Description */}
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div id="loading-grid-5" data-testId="loading-grid-5" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content Skeleton */}
-        <div className="lg:col-span-2 space-y-6">
+        <div id="loading-div-6" data-testId="loading-div-6" className="lg:col-span-2 space-y-6">
           {/* Basic Information Card */}
           <Card>
             <CardHeader>
@@ -25,12 +25,12 @@ export default function CreatePublicationLoading() {
               <Skeleton className="h-4 w-64" /> {/* Card description */}
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
+              <div id="loading-div-7" data-testId="loading-div-7" className="space-y-2">
                 <Skeleton className="h-4 w-12" /> {/* Title label */}
                 <Skeleton className="h-10 w-full" /> {/* Title input */}
               </div>
 
-              <div className="space-y-2">
+              <div id="loading-div-8" data-testId="loading-div-8" className="space-y-2">
                 <Skeleton className="h-4 w-16" /> {/* Excerpt label */}
                 <Skeleton className="h-20 w-full" /> {/* Excerpt textarea */}
                 <Skeleton className="h-4 w-80" /> {/* Helper text */}
@@ -63,20 +63,20 @@ export default function CreatePublicationLoading() {
         </div>
 
         {/* Sidebar Skeleton */}
-        <div className="space-y-6">
+        <div id="loading-div-9" data-testId="loading-div-9" className="space-y-6">
           {/* Publication Settings Card */}
           <Card>
             <CardHeader>
               <Skeleton className="h-6 w-44" /> {/* Card title */}
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
+              <div id="loading-div-10" data-testId="loading-div-10" className="space-y-2">
                 <Skeleton className="h-4 w-20" /> {/* Category label */}
                 <Skeleton className="h-10 w-full" /> {/* Category select */}
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
+              <div id="loading-flex-11" data-testId="loading-flex-11" className="flex items-center justify-between">
+                <div id="loading-div-12" data-testId="loading-div-12" className="space-y-1">
                   <Skeleton className="h-4 w-36" /> {/* Featured label */}
                   <Skeleton className="h-4 w-48" /> {/* Featured description */}
                 </div>
@@ -92,13 +92,13 @@ export default function CreatePublicationLoading() {
               <Skeleton className="h-4 w-64" /> {/* Description */}
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex gap-2">
+              <div id="loading-flex-13" data-testId="loading-flex-13" className="flex gap-2">
                 <Skeleton className="h-10 flex-1" /> {/* Tag input */}
                 <Skeleton className="h-10 w-16" /> {/* Add button */}
               </div>
 
               {/* Existing tags skeleton */}
-              <div className="flex flex-wrap gap-2">
+              <div id="loading-flex-14" data-testId="loading-flex-14" className="flex flex-wrap gap-2">
                 <Skeleton className="h-6 w-16 rounded-full" />
                 <Skeleton className="h-6 w-20 rounded-full" />
                 <Skeleton className="h-6 w-14 rounded-full" />

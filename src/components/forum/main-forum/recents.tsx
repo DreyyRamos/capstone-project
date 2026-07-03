@@ -49,9 +49,9 @@ const Recents = ({ topic }: RecentProps) => {
   return (
     <Card key={topic.forumId} className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 md:p-6">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
+        <div id="recents-flex-1" data-testId="recents-flex-1" className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div id="recents-div-2" data-testId="recents-div-2" className="flex-1 min-w-0">
+            <div id="recents-flex-3" data-testId="recents-flex-3" className="flex items-center gap-2 mb-2 flex-wrap">
               {topic.isPinned && (
                 <Pin className="h-4 w-4 text-blue-600 shrink-0" />
               )}
@@ -79,7 +79,7 @@ const Recents = ({ topic }: RecentProps) => {
 
             {/* Tags */}
             {topic.tags && topic.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-3">
+              <div id="recents-flex-4" data-testId="recents-flex-4" className="flex flex-wrap gap-1 mb-3">
                 {topic.tags.slice(0, 3).map((tag, index) => (
                   <Badge key={index} variant="outline" className="text-xs">
                     {tag}
@@ -93,8 +93,8 @@ const Recents = ({ topic }: RecentProps) => {
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
-              <div className="flex items-center gap-2">
+            <div id="recents-flex-5" data-testId="recents-flex-5" className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
+              <div id="recents-flex-6" data-testId="recents-flex-6" className="flex items-center gap-2">
                 <Avatar className="h-6 w-6 shrink-0">
                   <AvatarImage src={topic?.author?.profileImage || undefined} />
                   <AvatarFallback className="text-xs">
@@ -106,7 +106,7 @@ const Recents = ({ topic }: RecentProps) => {
                   by {topic?.author?.firstName} {topic?.author?.lastName}
                 </span>
               </div>
-              <div className="flex items-center gap-2 flex-wrap">
+              <div id="recents-flex-7" data-testId="recents-flex-7" className="flex items-center gap-2 flex-wrap">
                 {topic?.author?.role && (
                   <Badge variant="outline" className="text-xs">
                     {topic?.author?.role}
@@ -118,7 +118,7 @@ const Recents = ({ topic }: RecentProps) => {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
+            <div id="recents-flex-8" data-testId="recents-flex-8" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <MessageSquare className="h-4 w-4 shrink-0" />
                 {topic.forumComments?.length || 0} replies
@@ -141,7 +141,7 @@ const Recents = ({ topic }: RecentProps) => {
               </span>
             </div>
           </div>
-          <div className="w-full md:w-auto">
+          <div id="recents-div-9" data-testId="recents-div-9" className="w-full md:w-auto">
             <Button
               asChild
               variant="outline"

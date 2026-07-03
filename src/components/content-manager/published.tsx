@@ -67,13 +67,13 @@ const Published = ({ content, handleArchive }: PublishedPublicationsProps) => {
   return (
     <Card key={content.pubId} className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 sm:p-6">
-        <div className="space-y-3">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
+        <div id="published-div-1" data-testId="published-div-1" className="space-y-3">
+          <div id="published-flex-2" data-testId="published-flex-2" className="flex items-start justify-between gap-2">
+            <div id="published-div-3" data-testId="published-div-3" className="flex-1 min-w-0">
               <h3 className="text-lg font-semibold truncate mb-2">
                 {content?.title}
               </h3>
-              <div className="flex flex-wrap items-center gap-1 mb-2">
+              <div id="published-flex-4" data-testId="published-flex-4" className="flex flex-wrap items-center gap-1 mb-2">
                 <Badge className="bg-green-100 text-green-800">
                   <CheckCircle className="h-3 w-3 mr-1" />
                   Published
@@ -127,7 +127,7 @@ const Published = ({ content, handleArchive }: PublishedPublicationsProps) => {
 
           {/* Tags */}
           {content.tags && content.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
+            <div id="published-flex-5" data-testId="published-flex-5" className="flex flex-wrap gap-1">
               {content.tags.slice(0, 2).map((tag, index) => (
                 <Badge key={index} variant="outline" className="text-xs">
                   {tag}
@@ -141,8 +141,8 @@ const Published = ({ content, handleArchive }: PublishedPublicationsProps) => {
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2 min-w-0">
+          <div id="published-flex-6" data-testId="published-flex-6" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
+            <div id="published-flex-7" data-testId="published-flex-7" className="flex items-center gap-2 min-w-0">
               <User className="h-4 w-4 shrink-0" />
               <span className="truncate">
                 {content?.author?.firstName} {content?.author?.lastName}
@@ -157,7 +157,7 @@ const Published = ({ content, handleArchive }: PublishedPublicationsProps) => {
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-muted-foreground">
+          <div id="published-flex-8" data-testId="published-flex-8" className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-muted-foreground">
             {content.views && (
               <span className="flex items-center gap-1">
                 <Eye className="h-4 w-4" />

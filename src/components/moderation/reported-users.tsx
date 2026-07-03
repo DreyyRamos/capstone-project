@@ -19,9 +19,9 @@ const ReportedUsers = ({
   triggerLiftSuspension,
 }: ReportedUsersProps) => {
   return (
-    <div key={user.id}>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
-        <div className="flex items-center gap-4 min-w-0 flex-1">
+    <div id="reported-users-div-1" data-testId="reported-users-div-1" key={user.id}>
+      <div id="reported-users-flex-2" data-testId="reported-users-flex-2" className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
+        <div id="reported-users-flex-3" data-testId="reported-users-flex-3" className="flex items-center gap-4 min-w-0 flex-1">
           <Avatar className="h-10 w-10 flex-shrink-0">
             <AvatarImage src={user.profileImage} />
             <AvatarFallback>
@@ -29,7 +29,7 @@ const ReportedUsers = ({
               {user.lastName?.[0]}
             </AvatarFallback>
           </Avatar>
-          <div className="min-w-0 flex-1">
+          <div id="reported-users-div-4" data-testId="reported-users-div-4" className="min-w-0 flex-1">
             <p className="font-medium text-sm sm:text-base truncate">
               {user.firstName} {user.lastName}
             </p>
@@ -41,7 +41,7 @@ const ReportedUsers = ({
             </Badge>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-shrink-0">
+        <div id="reported-users-flex-5" data-testId="reported-users-flex-5" className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-shrink-0">
           <Badge className="bg-yellow-100 text-yellow-800 text-xs text-center">
             {user.warningPoints || 0} Warning(s)
           </Badge>
@@ -84,7 +84,7 @@ const ReportedUsers = ({
 
           {/* Show Suspend button only if user has 5 or more warning points */}
           {user.warningPoints >= 5 && user.warningPoints < 10 && (
-            <div>
+            <div id="reported-users-div-6" data-testId="reported-users-div-6">
               <Button
                 variant="destructive"
                 size="sm"

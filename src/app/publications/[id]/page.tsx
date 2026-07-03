@@ -454,10 +454,10 @@ export default function PublicationDetailPage({ params }: PageProps) {
   if (isLoading) {
     return <PublicationDetailLoading />;
   }
-  if (isError) return <div>Error loading publication.</div>;
+  if (isError) return <div id="page-div-1" data-testId="page-div-1">Error loading publication.</div>;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div id="page-div-2" data-testId="page-div-2" className="max-w-4xl mx-auto space-y-6">
       <StatusModal />
       <AuthModal
         isOpen={isOpen}
@@ -482,8 +482,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
       </Button>
 
       <article className="space-y-6">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 flex-wrap">
+        <div id="page-div-3" data-testId="page-div-3" className="space-y-4">
+          <div id="page-flex-4" data-testId="page-flex-4" className="flex items-center gap-2 flex-wrap">
             {publication?.tags?.map((tag: any) => (
               <Badge key={tag} variant="outline" className="text-xs">
                 {tag}
@@ -495,8 +495,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
             {publication?.title}
           </h1>
 
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
+          <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center justify-between flex-wrap gap-4">
+            <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center gap-4">
               <Avatar className="h-12 w-12">
                 <AvatarImage
                   src={publication.author?.profileImage || "/placeholder.svg"}
@@ -506,14 +506,14 @@ export default function PublicationDetailPage({ params }: PageProps) {
                   {publication.author?.lastName?.[0]}
                 </AvatarFallback>
               </Avatar>
-              <div>
+              <div id="page-div-7" data-testId="page-div-7">
                 <p className="font-medium">
                   {publication?.author.firstName} {publication?.author.lastName}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {publication?.author.role}
                 </p>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div id="page-flex-8" data-testId="page-flex-8" className="flex items-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     {new Date(publication?.createdAt).toLocaleDateString()}
@@ -522,7 +522,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div id="page-flex-9" data-testId="page-flex-9" className="flex items-center gap-2">
               <LikeButton post={publication} token={token} pubId={id} />
               {(userRole === "EDITOR" || userRole === "ADMIN") &&
                 !["DRAFT", "PENDING_REVIEW", "ARCHIVED"].includes(
@@ -577,7 +577,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
         </div>
 
         {publication?.imageUrl && (
-          <div className="relative aspect-video rounded-lg overflow-hidden">
+          <div id="page-div-10" data-testId="page-div-10" className="relative aspect-video rounded-lg overflow-hidden">
             <img
               src={publication?.imageUrl || "/placeholder.svg"}
               alt={publication?.title}
@@ -587,8 +587,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
         )}
         <ContentDisplay htmlContent={publication?.content} />
 
-        <div className="flex items-center justify-between pt-6 border-t">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <div id="page-flex-11" data-testId="page-flex-11" className="flex items-center justify-between pt-6 border-t">
+          <div id="page-flex-12" data-testId="page-flex-12" className="flex items-center gap-4 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
               <Heart className="h-4 w-4" />
               {publication?.pubLikes?.length ?? 0} likes
@@ -597,17 +597,17 @@ export default function PublicationDetailPage({ params }: PageProps) {
         </div>
       </article>
 
-      <div className="space-y-6">
+      <div id="page-div-13" data-testId="page-div-13" className="space-y-6">
         <Card>
           <CardContent className="p-6">
-            <div className="space-y-4">
+            <div id="page-div-14" data-testId="page-div-14" className="space-y-4">
               <Textarea
                 placeholder="Share your thoughts about this publication..."
                 value={comment_content}
                 onChange={(e) => setCommentContent(e.target.value)}
                 rows={3}
               />
-              <div className="flex items-center justify-between">
+              <div id="page-flex-15" data-testId="page-flex-15" className="flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">
                   Be respectful and constructive in your comments
                 </p>
@@ -622,9 +622,9 @@ export default function PublicationDetailPage({ params }: PageProps) {
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
+        <div id="page-div-16" data-testId="page-div-16" className="space-y-4">
           {publication?.pubComments?.length > 3 && (
-            <div className="group relative">
+            <div id="page-div-17" data-testId="page-div-17" className="group relative">
               <span
                 className="text-muted-foreground text-sm cursor-pointer"
                 onClick={() => setShowAll(!showAll)}
@@ -634,7 +634,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
                   : `View all ${publication?.pubComments?.length} comments`}
               </span>
               {!showAll && (
-                <div className="absolute hidden bg-gray-100 p-2 rounded shadow">
+                <div id="page-div-18" data-testId="page-div-18" className="absolute hidden bg-gray-100 p-2 rounded shadow">
                   Click to view all comments
                 </div>
               )}

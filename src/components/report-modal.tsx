@@ -191,10 +191,10 @@ export function ReportModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div id="report-modal-flex-1" data-testId="report-modal-flex-1" className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <Card className="w-full max-w-md max-h-[90vh] overflow-y-auto">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <div className="flex items-center gap-2">
+          <div id="report-modal-flex-2" data-testId="report-modal-flex-2" className="flex items-center gap-2">
             <Flag className="h-5 w-5 text-red-600" />
             <CardTitle className="text-lg">
               Report {getContentTypeLabel()}
@@ -207,8 +207,8 @@ export function ReportModal({
 
         <CardContent>
           {isSubmitted ? (
-            <div className="text-center py-8">
-              <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <div id="report-modal-div-3" data-testId="report-modal-div-3" className="text-center py-8">
+              <div id="report-modal-flex-4" data-testId="report-modal-flex-4" className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
                 <Flag className="h-6 w-6 text-green-600" />
               </div>
               <h3 className="text-lg font-semibold mb-2">Report Submitted</h3>
@@ -220,8 +220,8 @@ export function ReportModal({
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               {contentTitle && (
-                <div className="p-3 bg-muted rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
+                <div id="report-modal-div-5" data-testId="report-modal-div-5" className="p-3 bg-muted rounded-lg">
+                  <div id="report-modal-flex-6" data-testId="report-modal-flex-6" className="flex items-center justify-between mb-2">
                     <p className="text-sm text-muted-foreground">Reporting:</p>
                     <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
                       {getContentHierarchy()}
@@ -231,8 +231,8 @@ export function ReportModal({
                 </div>
               )}
 
-              <div className="space-y-4">
-                <div>
+              <div id="report-modal-div-7" data-testId="report-modal-div-7" className="space-y-4">
+                <div id="report-modal-div-8" data-testId="report-modal-div-8">
                   <Label className="text-base font-medium">
                     Why are you reporting this {getContentTypeLabel()}?
                   </Label>
@@ -246,7 +246,7 @@ export function ReportModal({
                   onValueChange={setSelectedReason}
                 >
                   {reportReasons.map((reason) => (
-                    <div
+                    <div id="report-modal-flex-9" data-testId="report-modal-flex-9"
                       key={reason.id}
                       className="flex items-start space-x-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
@@ -255,7 +255,7 @@ export function ReportModal({
                         id={reason.id}
                         className="mt-1"
                       />
-                      <div className="flex-1">
+                      <div id="report-modal-div-10" data-testId="report-modal-div-10" className="flex-1">
                         <Label
                           htmlFor={reason.id}
                           className="font-medium cursor-pointer"
@@ -271,7 +271,7 @@ export function ReportModal({
                 </RadioGroup>
               </div>
 
-              <div className="space-y-2">
+              <div id="report-modal-div-11" data-testId="report-modal-div-11" className="space-y-2">
                 <Label htmlFor="details">Additional details (optional)</Label>
                 <Textarea
                   id="details"
@@ -282,10 +282,10 @@ export function ReportModal({
                 />
               </div>
 
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                <div className="flex items-start gap-2">
+              <div id="report-modal-div-12" data-testId="report-modal-div-12" className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div id="report-modal-flex-13" data-testId="report-modal-flex-13" className="flex items-start gap-2">
                   <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                  <div className="text-sm">
+                  <div id="report-modal-div-14" data-testId="report-modal-div-14" className="text-sm">
                     <p className="font-medium text-amber-800 mb-1">
                       Please note:
                     </p>
@@ -297,7 +297,7 @@ export function ReportModal({
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-2">
+              <div id="report-modal-flex-15" data-testId="report-modal-flex-15" className="flex gap-3 pt-2">
                 <Button
                   type="button"
                   variant="outline"

@@ -48,7 +48,7 @@ export function TokenProvider({ children }: { children: React.ReactNode }) {
               Your token has expired. Please log in again.
             </DialogDescription>
           </DialogHeader>
-          <div className="flex justify-end gap-2">
+          <div id="token-watcher-flex-1" data-testId="token-watcher-flex-1" className="flex justify-end gap-2">
             <button
               onClick={() => {
                 setOpen(false);

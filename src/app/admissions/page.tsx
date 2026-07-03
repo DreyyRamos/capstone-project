@@ -102,9 +102,9 @@ export default function AdmissionsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div id="page-div-1" data-testId="page-div-1" className="space-y-6">
       {/* Header */}
-      <div>
+      <div id="page-div-2" data-testId="page-div-2">
         <h1 className="text-3xl font-bold">User Admissions</h1>
         <p className="text-muted-foreground">
           Review and approve pending admission applications
@@ -112,7 +112,7 @@ export default function AdmissionsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div id="page-grid-3" data-testId="page-grid-3" className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -121,7 +121,7 @@ export default function AdmissionsPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {/* <div className="text-2xl font-bold">{stats.total}</div> */}
+            {/* <div id="page-div-4" data-testId="page-div-4" className="text-2xl font-bold">{stats.total}</div> */}
             <p className="text-xs text-muted-foreground">Awaiting approval</p>
           </CardContent>
         </Card>
@@ -133,9 +133,9 @@ export default function AdmissionsPage() {
           <CardTitle>Search Applications</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <div className="relative">
+          <div id="page-flex-5" data-testId="page-flex-5" className="flex gap-4">
+            <div id="page-div-6" data-testId="page-div-6" className="flex-1">
+              <div id="page-div-7" data-testId="page-div-7" className="relative">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search by name or email..."
@@ -155,7 +155,7 @@ export default function AdmissionsPage() {
           <CardTitle>Applications ({filteredAdmissions?.length})</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div id="page-div-8" data-testId="page-div-8" className="space-y-4">
             {filteredAdmissions?.map((admission: Admission) => (
               <ApplicationList
                 key={admission.admission_id}
@@ -166,7 +166,7 @@ export default function AdmissionsPage() {
               />
             ))}
             {filteredAdmissions?.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
+              <div id="page-div-9" data-testId="page-div-9" className="text-center py-8 text-muted-foreground">
                 No applications found.
               </div>
             )}

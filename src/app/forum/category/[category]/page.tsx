@@ -168,7 +168,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
   }
 
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div id="page-div-1" data-testId="page-div-1" className="space-y-4 md:space-y-6">
       <AuthModal
         isOpen={isOpen}
         onClose={closeModal}
@@ -176,7 +176,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
         redirectTo={redirectTo}
       />
       {/* Header */}
-      <div className="space-y-3 md:space-y-0 md:flex md:items-center md:gap-4">
+      <div id="page-div-2" data-testId="page-div-2" className="space-y-3 md:space-y-0 md:flex md:items-center md:gap-4">
         <Button asChild variant="ghost" size="sm" className="w-fit">
           <Link href="/forum">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -184,8 +184,8 @@ export default function ForumCategoryPage({ params }: PageProps) {
             <span className="sm:hidden">Back</span>
           </Link>
         </Button>
-        <div className="flex-1 space-y-2">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+        <div id="page-div-3" data-testId="page-div-3" className="flex-1 space-y-2">
+          <div id="page-flex-4" data-testId="page-flex-4" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
             <h1 className="text-2xl md:text-3xl font-bold">
               {decodedCategory}
             </h1>
@@ -206,14 +206,14 @@ export default function ForumCategoryPage({ params }: PageProps) {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 md:grid-cols-3 gap-2 md:gap-6">
+      <div id="page-grid-5" data-testId="page-grid-5" className="grid grid-cols-3 md:grid-cols-3 gap-2 md:gap-6">
         <Card>
           <CardContent className="p-3 md:p-6">
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <div className="p-2 md:p-3 bg-blue-100 rounded-lg w-fit">
+            <div id="page-flex-6" data-testId="page-flex-6" className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+              <div id="page-div-7" data-testId="page-div-7" className="p-2 md:p-3 bg-blue-100 rounded-lg w-fit">
                 <MessageSquare className="h-4 w-4 md:h-6 md:w-6 text-blue-600" />
               </div>
-              <div>
+              <div id="page-div-8" data-testId="page-div-8">
                 <p className="text-lg md:text-2xl font-bold">
                   {stats.totalTopics}
                 </p>
@@ -226,11 +226,11 @@ export default function ForumCategoryPage({ params }: PageProps) {
         </Card>
         <Card>
           <CardContent className="p-3 md:p-6">
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <div className="p-2 md:p-3 bg-green-100 rounded-lg w-fit">
+            <div id="page-flex-9" data-testId="page-flex-9" className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+              <div id="page-div-10" data-testId="page-div-10" className="p-2 md:p-3 bg-green-100 rounded-lg w-fit">
                 <Users className="h-4 w-4 md:h-6 md:w-6 text-green-600" />
               </div>
-              <div>
+              <div id="page-div-11" data-testId="page-div-11">
                 <p className="text-lg md:text-2xl font-bold">
                   {stats.totalPosts}
                 </p>
@@ -243,11 +243,11 @@ export default function ForumCategoryPage({ params }: PageProps) {
         </Card>
         <Card>
           <CardContent className="p-3 md:p-6">
-            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <div className="p-2 md:p-3 bg-purple-100 rounded-lg w-fit">
+            <div id="page-flex-12" data-testId="page-flex-12" className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+              <div id="page-div-13" data-testId="page-div-13" className="p-2 md:p-3 bg-purple-100 rounded-lg w-fit">
                 <TrendingUp className="h-4 w-4 md:h-6 md:w-6 text-purple-600" />
               </div>
-              <div>
+              <div id="page-div-14" data-testId="page-div-14">
                 <p className="text-lg md:text-2xl font-bold">
                   {stats.avgReplies}
                 </p>
@@ -263,8 +263,8 @@ export default function ForumCategoryPage({ params }: PageProps) {
       {/* Filters */}
       <Card>
         <CardContent className="p-4 md:p-6">
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
-            <div className="relative flex-1">
+          <div id="page-flex-15" data-testId="page-flex-15" className="flex flex-col sm:flex-row gap-3 md:gap-4">
+            <div id="page-div-16" data-testId="page-div-16" className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={`Search ${decodedCategory.toLowerCase()} topics...`}
@@ -290,7 +290,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
       </Card>
 
       {/* Results count */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div id="page-flex-17" data-testId="page-flex-17" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <p className="text-xs md:text-sm text-muted-foreground">
           Showing {filteredAndSortedTopics.length} of {topics?.length || 0}{" "}
           topics
@@ -303,17 +303,17 @@ export default function ForumCategoryPage({ params }: PageProps) {
       </div>
 
       {/* Topics List */}
-      <div className="space-y-4 flex-1">
+      <div id="page-div-18" data-testId="page-div-18" className="space-y-4 flex-1">
         {filteredAndSortedTopics.length > 0 ? (
           filteredAndSortedTopics.map((topic: ForumTopic, i: number) => (
-            <div key={i}>
+            <div id="page-div-19" data-testId="page-div-19" key={i}>
               <TopicList topic={topic} />
             </div>
           ))
         ) : (
           <Card>
             <CardContent className="p-12 text-center">
-              <div className="space-y-4">
+              <div id="page-div-20" data-testId="page-div-20" className="space-y-4">
                 <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground" />
                 <h3 className="text-lg font-medium">No topics found</h3>
                 <p className="text-muted-foreground">
@@ -321,7 +321,7 @@ export default function ForumCategoryPage({ params }: PageProps) {
                     ? `No topics match your search for "${searchQuery}" in ${decodedCategory.toLowerCase()}.`
                     : `No topics found in ${decodedCategory.toLowerCase()}.`}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                <div id="page-flex-21" data-testId="page-flex-21" className="flex flex-col sm:flex-row gap-2 justify-center">
                   {searchQuery && (
                     <Button
                       variant="outline"

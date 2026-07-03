@@ -17,17 +17,17 @@ interface PubProps {
 
 const UserPublication = ({ pub, index, user }: PubProps) => {
   return (
-    <div key={pub?.pubId}>
-      <div className="flex items-start space-x-4">
-        <div className="p-2 bg-muted rounded-lg">
+    <div id="user-publication-div-1" data-testId="user-publication-div-1" key={pub?.pubId}>
+      <div id="user-publication-flex-2" data-testId="user-publication-flex-2" className="flex items-start space-x-4">
+        <div id="user-publication-div-3" data-testId="user-publication-div-3" className="p-2 bg-muted rounded-lg">
           <FileText className="h-4 w-4" />
         </div>
-        <div className="flex-1 min-w-0">
+        <div id="user-publication-div-4" data-testId="user-publication-div-4" className="flex-1 min-w-0">
           <p className="text-sm">
             This user <span className="font-medium">published</span>{" "}
             <span className="font-medium break-words">{pub?.title}</span>
           </p>
-          <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
+          <div id="user-publication-flex-5" data-testId="user-publication-flex-5" className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
             <Badge variant="outline">{pub?.category}</Badge>
             <span>{timeAgo(pub?.createdAt)}</span>
             <span>{pub?.pubComments?.length || 0} comments</span>

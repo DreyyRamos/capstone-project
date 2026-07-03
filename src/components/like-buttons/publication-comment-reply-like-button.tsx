@@ -152,7 +152,7 @@ const PublicationCommentReplyLikeButton = ({ reply, token, pubId }: any) => {
           likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <div className="relative group">
+        <div id="publication-comment-reply-like-button-div-1" data-testId="publication-comment-reply-like-button-div-1" className="relative group">
           {currentLikeCommentId === reply?.replyId ? (
             <Loader className="animate-spin" />
           ) : userLike && userLike?.isLiked ? (

@@ -71,10 +71,10 @@ export function TopNavigation() {
 
   return (
     <nav className="sticky top-16 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="max-w-7xl mx-auto px-6">
+      <div id="top-navigation-div-1" data-testId="top-navigation-div-1" className="max-w-7xl mx-auto px-6">
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex h-14 items-center justify-between">
-          <div className="flex items-center space-x-6">
+        <div id="top-navigation-div-2" data-testId="top-navigation-div-2" className="hidden lg:flex h-14 items-center justify-between">
+          <div id="top-navigation-flex-3" data-testId="top-navigation-flex-3" className="flex items-center space-x-6">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -126,7 +126,7 @@ export function TopNavigation() {
           </div>
 
           {/* Quick Actions */}
-          <div className="flex items-center space-x-2">
+          <div id="top-navigation-flex-4" data-testId="top-navigation-flex-4" className="flex items-center space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button size="sm" className="flex items-center gap-1">
@@ -155,8 +155,8 @@ export function TopNavigation() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="flex lg:hidden h-14 items-center justify-between">
-          <div className="flex items-center space-x-4">
+        <div id="top-navigation-flex-5" data-testId="top-navigation-flex-5" className="flex lg:hidden h-14 items-center justify-between">
+          <div id="top-navigation-flex-6" data-testId="top-navigation-flex-6" className="flex items-center space-x-4">
             {navigation.slice(0, 3).map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -192,9 +192,9 @@ export function TopNavigation() {
                   Access all sections and features
                 </SheetDescription>
               </SheetHeader>
-              <div className="mt-6 space-y-6">
+              <div id="top-navigation-div-7" data-testId="top-navigation-div-7" className="mt-6 space-y-6">
                 {/* Main Navigation */}
-                <div className="space-y-2">
+                <div id="top-navigation-div-8" data-testId="top-navigation-div-8" className="space-y-2">
                   <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                     Main
                   </h3>
@@ -222,7 +222,7 @@ export function TopNavigation() {
                 <Separator />
 
                 {/* Quick Actions */}
-                <div className="space-y-2">
+                <div id="top-navigation-div-9" data-testId="top-navigation-div-9" className="space-y-2">
                   <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                     Quick Actions
                   </h3>
@@ -242,7 +242,7 @@ export function TopNavigation() {
                 <Separator />
 
                 {/* Forum Categories */}
-                <div className="space-y-2">
+                <div id="top-navigation-div-10" data-testId="top-navigation-div-10" className="space-y-2">
                   <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                     Forum Categories
                   </h3>

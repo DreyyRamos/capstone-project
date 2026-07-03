@@ -87,13 +87,13 @@ export default function ProfilePage({ params }: PageProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div id="page-div-1" data-testId="page-div-1" className="max-w-4xl mx-auto space-y-6">
       {/* Profile Header */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="relative">
+          <div id="page-flex-2" data-testId="page-flex-2" className="flex flex-col md:flex-row gap-6">
+            <div id="page-flex-3" data-testId="page-flex-3" className="flex flex-col items-center space-y-4">
+              <div id="page-div-4" data-testId="page-div-4" className="relative">
                 <Avatar className="h-32 w-32">
                   <AvatarImage
                     src={
@@ -112,8 +112,8 @@ export default function ProfilePage({ params }: PageProps) {
               </Badge>
             </div>
 
-            <div className="flex-1 space-y-4">
-              <div className="flex items-center justify-between">
+            <div id="page-div-5" data-testId="page-div-5" className="flex-1 space-y-4">
+              <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold">
                   {user?.userData?.firstName} {user?.userData?.lastName}
                 </h1>
@@ -121,20 +121,20 @@ export default function ProfilePage({ params }: PageProps) {
 
               <p className="text-muted-foreground">{user?.userData?.bio}</p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center gap-2">
+              <div id="page-grid-7" data-testId="page-grid-7" className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div id="page-flex-8" data-testId="page-flex-8" className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-muted-foreground" />
                   <span>{user?.userData?.email}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div id="page-flex-9" data-testId="page-flex-9" className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-muted-foreground" />
                   <span>{user?.userData?.contactNumber}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div id="page-flex-10" data-testId="page-flex-10" className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <span>{user?.userData?.location}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div id="page-flex-11" data-testId="page-flex-11" className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   <span>
                     Joined{" "}
@@ -145,7 +145,7 @@ export default function ProfilePage({ params }: PageProps) {
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <div id="page-flex-12" data-testId="page-flex-12" className="flex flex-wrap gap-2">
                 {user?.userData?.interests?.map((interest: any) => (
                   <Badge key={interest} variant="secondary">
                     {interest}
@@ -158,12 +158,12 @@ export default function ProfilePage({ params }: PageProps) {
       </Card>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div id="page-grid-13" data-testId="page-grid-13" className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-6">
-            <div className="flex items-center space-x-2">
+            <div id="page-flex-14" data-testId="page-flex-14" className="flex items-center space-x-2">
               <FileText className="h-5 w-5 text-blue-600" />
-              <div>
+              <div id="page-div-15" data-testId="page-div-15">
                 <p className="text-2xl font-bold">
                   {user?.userData?.publications?.length || 0}
                 </p>
@@ -175,9 +175,9 @@ export default function ProfilePage({ params }: PageProps) {
 
         <Card>
           <CardContent className="pt-6">
-            <div className="flex items-center space-x-2">
+            <div id="page-flex-16" data-testId="page-flex-16" className="flex items-center space-x-2">
               <MessageSquare className="h-5 w-5 text-green-600" />
-              <div>
+              <div id="page-div-17" data-testId="page-div-17">
                 <p className="text-2xl font-bold">
                   {user?.userData?.forums?.length || 0}
                 </p>
@@ -189,9 +189,9 @@ export default function ProfilePage({ params }: PageProps) {
 
         <Card>
           <CardContent className="pt-6">
-            <div className="flex items-center space-x-2">
+            <div id="page-flex-18" data-testId="page-flex-18" className="flex items-center space-x-2">
               <Star className="h-5 w-5 text-yellow-600" />
-              <div>
+              <div id="page-div-19" data-testId="page-div-19">
                 <p className="text-2xl font-bold">
                   {user?.userData?.reputationPoints}
                 </p>
@@ -219,7 +219,7 @@ export default function ProfilePage({ params }: PageProps) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div id="page-div-20" data-testId="page-div-20" className="space-y-4">
                 {userActivity?.map((activity: any, index: any) => (
                   <RecentActivities
                     key={index}
@@ -242,7 +242,7 @@ export default function ProfilePage({ params }: PageProps) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div id="page-div-21" data-testId="page-div-21" className="space-y-4">
                 {user?.userData?.publications?.map((pub: any, index: any) => (
                   <UserPublication
                     key={pub?.pubId}
@@ -263,7 +263,7 @@ export default function ProfilePage({ params }: PageProps) {
               <CardDescription>Forums you&apos;ve joined in.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div id="page-div-22" data-testId="page-div-22" className="space-y-4">
                 {user?.userData?.forums?.map((forum: any, index: any) => (
                   <UserForum
                     key={forum?.forumId}

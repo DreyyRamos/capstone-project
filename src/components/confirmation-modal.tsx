@@ -109,9 +109,9 @@ export function ConfirmationModal({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center sm:text-left">
-          <div className="flex items-center gap-3 mb-2">
+          <div id="confirmation-modal-flex-1" data-testId="confirmation-modal-flex-1" className="flex items-center gap-3 mb-2">
             {IconComponent && (
-              <div className={`p-2 rounded-full bg-gray-100 dark:bg-gray-800`}>
+              <div id="confirmation-modal-div-2" data-testId="confirmation-modal-div-2" className={`p-2 rounded-full bg-gray-100 dark:bg-gray-800`}>
                 <IconComponent className={`h-6 w-6 ${styles.iconColor}`} />
               </div>
             )}

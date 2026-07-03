@@ -83,11 +83,11 @@ const ApplicationList = ({
     }
   };
   return (
-    <div
+    <div id="application-list-flex-1" data-testId="application-list-flex-1"
       key={admission.admission_id}
       className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors gap-4"
     >
-      <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
+      <div id="application-list-flex-2" data-testId="application-list-flex-2" className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
         <Avatar className="h-12 w-12 shrink-0">
           <AvatarImage src={admission.profileImage || "/placeholder.svg"} />
           <AvatarFallback>
@@ -95,8 +95,8 @@ const ApplicationList = ({
             {admission.lastName?.[0] || ""}
           </AvatarFallback>
         </Avatar>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+        <div id="application-list-div-3" data-testId="application-list-div-3" className="min-w-0 flex-1">
+          <div id="application-list-flex-4" data-testId="application-list-flex-4" className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
             <h3 className="font-semibold truncate">
               {admission.firstName} {admission.lastName || ""}
             </h3>
@@ -111,7 +111,7 @@ const ApplicationList = ({
           <p className="text-sm text-muted-foreground truncate mb-2">
             {admission.user_email}
           </p>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
+          <div id="application-list-flex-5" data-testId="application-list-flex-5" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1 shrink-0">
               <Calendar className="h-3 w-3" />
               {new Date(admission.createdAt).toLocaleDateString()}
@@ -126,7 +126,7 @@ const ApplicationList = ({
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0 w-full sm:w-auto">
+      <div id="application-list-flex-6" data-testId="application-list-flex-6" className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0 w-full sm:w-auto">
         <Dialog>
           <DialogTrigger asChild>
             <Button
@@ -150,14 +150,14 @@ const ApplicationList = ({
               </DialogDescription>
             </DialogHeader>
             <ScrollArea className="max-h-[70vh]">
-              <div className="space-y-6 p-1">
+              <div id="application-list-div-7" data-testId="application-list-div-7" className="space-y-6 p-1">
                 {/* Personal Information */}
-                <div>
+                <div id="application-list-div-8" data-testId="application-list-div-8">
                   <h3 className="text-lg font-semibold mb-3">
                     Personal Information
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                    <div>
+                  <div id="application-list-grid-9" data-testId="application-list-grid-9" className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                    <div id="application-list-div-10" data-testId="application-list-div-10">
                       <label className="font-medium text-muted-foreground">
                         Admission ID
                       </label>
@@ -165,7 +165,7 @@ const ApplicationList = ({
                         {admission.admission_id}
                       </code>
                     </div>
-                    <div>
+                    <div id="application-list-div-11" data-testId="application-list-div-11">
                       <label className="font-medium text-muted-foreground">
                         Full Name
                       </label>
@@ -174,7 +174,7 @@ const ApplicationList = ({
                         {admission.lastName || "(No last name provided)"}
                       </p>
                     </div>
-                    <div className="sm:col-span-2">
+                    <div id="application-list-div-12" data-testId="application-list-div-12" className="sm:col-span-2">
                       <label className="font-medium text-muted-foreground">
                         Email
                       </label>
@@ -182,7 +182,7 @@ const ApplicationList = ({
                         {admission.user_email}
                       </p>
                     </div>
-                    <div>
+                    <div id="application-list-div-13" data-testId="application-list-div-13">
                       <label className="font-medium text-muted-foreground">
                         Contact Number
                       </label>
@@ -191,7 +191,7 @@ const ApplicationList = ({
                         {admission.contactNumber || "Not provided"}
                       </p>
                     </div>
-                    <div>
+                    <div id="application-list-div-14" data-testId="application-list-div-14">
                       <label className="font-medium text-muted-foreground">
                         Location
                       </label>
@@ -206,12 +206,12 @@ const ApplicationList = ({
                 <Separator />
 
                 {/* Profile Information */}
-                <div>
+                <div id="application-list-div-15" data-testId="application-list-div-15">
                   <h3 className="text-lg font-semibold mb-3">
                     Profile Information
                   </h3>
-                  <div className="space-y-4">
-                    <div className="flex flex-col sm:flex-row items-start gap-4">
+                  <div id="application-list-div-16" data-testId="application-list-div-16" className="space-y-4">
+                    <div id="application-list-flex-17" data-testId="application-list-flex-17" className="flex flex-col sm:flex-row items-start gap-4">
                       <Avatar className="h-16 w-16 shrink-0">
                         <AvatarImage
                           src={
@@ -225,7 +225,7 @@ const ApplicationList = ({
                           {admission.lastName?.[0] || ""}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="flex-1 min-w-0">
+                      <div id="application-list-div-18" data-testId="application-list-div-18" className="flex-1 min-w-0">
                         <label className="font-medium text-muted-foreground">
                           Bio
                         </label>
@@ -235,11 +235,11 @@ const ApplicationList = ({
                       </div>
                     </div>
 
-                    <div>
+                    <div id="application-list-div-19" data-testId="application-list-div-19">
                       <label className="font-medium text-muted-foreground">
                         Interests
                       </label>
-                      <div className="flex flex-wrap gap-2 mt-2">
+                      <div id="application-list-flex-20" data-testId="application-list-flex-20" className="flex flex-wrap gap-2 mt-2">
                         {admission.interests &&
                         admission.interests.length > 0 ? (
                           admission.interests.map((interest, index) => (
@@ -265,16 +265,16 @@ const ApplicationList = ({
                 <Separator />
 
                 {/* ID Verification */}
-                <div>
+                <div id="application-list-div-21" data-testId="application-list-div-21">
                   <h3 className="text-lg font-semibold mb-3">
                     ID Verification
                   </h3>
-                  <div className="border rounded-lg p-4 bg-muted/20">
-                    <div className="flex items-center gap-2 mb-3">
+                  <div id="application-list-div-22" data-testId="application-list-div-22" className="border rounded-lg p-4 bg-muted/20">
+                    <div id="application-list-flex-23" data-testId="application-list-flex-23" className="flex items-center gap-2 mb-3">
                       <ImageIcon className="h-4 w-4" />
                       <span className="font-medium">Uploaded ID Document</span>
                     </div>
-                    <div className="relative">
+                    <div id="application-list-div-24" data-testId="application-list-div-24" className="relative">
                       {admission.id_picture ? (
                         <img
                           src={admission.id_picture || "/placeholder.svg"}
@@ -282,7 +282,7 @@ const ApplicationList = ({
                           className="w-full max-w-md mx-auto rounded border"
                         />
                       ) : (
-                        <div className="w-full max-w-md mx-auto h-48 bg-muted rounded border flex items-center justify-center">
+                        <div id="application-list-flex-25" data-testId="application-list-flex-25" className="w-full max-w-md mx-auto h-48 bg-muted rounded border flex items-center justify-center">
                           <p className="text-muted-foreground text-center px-4">
                             No ID picture uploaded
                           </p>
@@ -295,12 +295,12 @@ const ApplicationList = ({
                 <Separator />
 
                 {/* Application Details */}
-                <div>
+                <div id="application-list-div-26" data-testId="application-list-div-26">
                   <h3 className="text-lg font-semibold mb-3">
                     Application Details
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                  <div id="application-list-grid-27" data-testId="application-list-grid-27" className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                    <div id="application-list-flex-28" data-testId="application-list-flex-28" className="flex flex-col sm:flex-row sm:items-center gap-2">
                       <label className="font-medium text-muted-foreground">
                         Role:
                       </label>
@@ -308,7 +308,7 @@ const ApplicationList = ({
                         {admission?.role}
                       </Badge>
                     </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <div id="application-list-flex-29" data-testId="application-list-flex-29" className="flex flex-col sm:flex-row sm:items-center gap-2">
                       <label className="font-medium text-muted-foreground">
                         Status:
                       </label>
@@ -316,7 +316,7 @@ const ApplicationList = ({
                         {admission.status}
                       </Badge>
                     </div>
-                    <div className="sm:col-span-2">
+                    <div id="application-list-div-30" data-testId="application-list-div-30" className="sm:col-span-2">
                       <label className="font-medium text-muted-foreground">
                         Submitted:
                       </label>

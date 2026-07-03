@@ -21,7 +21,7 @@ const UserSearchResult = ({ user }: UserProps) => {
     <Card key={user.id} className="hover:shadow-md transition-shadow">
       <CardContent className="p-4">
         <Link href={`/visit/user/${user.id}`} className="block">
-          <div className="text-center">
+          <div id="user-search-result-div-1" data-testId="user-search-result-div-1" className="text-center">
             <Avatar className="h-16 w-16 mx-auto mb-3">
               <AvatarImage src={user.profileImage || ""} />
               <AvatarFallback className="text-lg">
@@ -29,7 +29,7 @@ const UserSearchResult = ({ user }: UserProps) => {
               </AvatarFallback>
             </Avatar>
             <h3 className="font-medium mb-2">{getDisplayName(user)}</h3>
-            <div className="flex items-center justify-center gap-2 mb-2">
+            <div id="user-search-result-flex-2" data-testId="user-search-result-flex-2" className="flex items-center justify-center gap-2 mb-2">
               <Badge variant="secondary">{user.role}</Badge>
             </div>
             <p className="text-sm text-muted-foreground mb-3">
@@ -41,7 +41,7 @@ const UserSearchResult = ({ user }: UserProps) => {
               </p>
             )}
             {user.interests.length > 0 && (
-              <div className="flex gap-1 mt-2 flex-wrap justify-center">
+              <div id="user-search-result-flex-3" data-testId="user-search-result-flex-3" className="flex gap-1 mt-2 flex-wrap justify-center">
                 {user.interests.slice(0, 3).map((interest) => (
                   <Badge key={interest} variant="outline" className="text-xs">
                     {interest}

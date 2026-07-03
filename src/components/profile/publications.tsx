@@ -27,17 +27,17 @@ const ProfilePublications = ({
   handleDeletePublication,
 }: UserPublicationProps) => {
   return (
-    <div key={pub?.pubId}>
-      <div className="flex items-start space-x-3 sm:space-x-4">
-        <div className="p-2 bg-muted rounded-lg flex-shrink-0">
+    <div id="publications-div-1" data-testId="publications-div-1" key={pub?.pubId}>
+      <div id="publications-flex-2" data-testId="publications-flex-2" className="flex items-start space-x-3 sm:space-x-4">
+        <div id="publications-div-3" data-testId="publications-div-3" className="p-2 bg-muted rounded-lg flex-shrink-0">
           <FileText className="h-4 w-4" />
         </div>
-        <div className="flex-1 min-w-0">
+        <div id="publications-div-4" data-testId="publications-div-4" className="flex-1 min-w-0">
           <p className="text-sm">
             You <span className="font-medium">published</span>{" "}
             <span className="font-medium break-words">{pub?.title}</span>
           </p>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-muted-foreground">
+          <div id="publications-flex-5" data-testId="publications-flex-5" className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-muted-foreground">
             <Badge variant="outline" className="text-xs">
               {pub?.category}
             </Badge>
@@ -46,7 +46,7 @@ const ProfilePublications = ({
             <span>{pub?.pubLikes?.length || 0} likes</span>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+        <div id="publications-flex-6" data-testId="publications-flex-6" className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
           <Badge
             variant="secondary"
             className="bg-green-100 text-green-800 text-xs"

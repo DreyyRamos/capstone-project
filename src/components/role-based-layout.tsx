@@ -36,11 +36,11 @@ export function RoleBasedLayout({ children }: { children: React.ReactNode }) {
   }, [user, isAuthenticated]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div id="role-based-layout-div-1" data-testId="role-based-layout-div-1" className="min-h-screen bg-background">
       <Header />
       {navigationComponent}
       <main className="p-6">
-        <div className="max-w-7xl mx-auto">{children}</div>
+        <div id="role-based-layout-div-2" data-testId="role-based-layout-div-2" className="max-w-7xl mx-auto">{children}</div>
       </main>
     </div>
   );

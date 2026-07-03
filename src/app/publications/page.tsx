@@ -168,7 +168,7 @@ export default function PublicationsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div id="page-div-1" data-testId="page-div-1" className="space-y-6">
       <StatusModal />
       <AuthModal
         isOpen={isOpen}
@@ -177,8 +177,8 @@ export default function PublicationsPage() {
         redirectTo={redirectTo}
       />
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
+      <div id="page-flex-2" data-testId="page-flex-2" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div id="page-div-3" data-testId="page-div-3">
           <h1 className="text-3xl font-bold">Publications</h1>
           <p className="text-muted-foreground">
             Discover the latest news, articles, and updates from our school
@@ -196,8 +196,8 @@ export default function PublicationsPage() {
       {/* Filters */}
       <Card>
         <CardContent className="p-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
+          <div id="page-flex-4" data-testId="page-flex-4" className="flex flex-col sm:flex-row gap-4">
+            <div id="page-div-5" data-testId="page-div-5" className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search publications, authors, or tags..."
@@ -238,7 +238,7 @@ export default function PublicationsPage() {
       </Card>
 
       {/* Results count */}
-      <div className="flex items-center justify-between">
+      <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
           Showing {filteredAndSortedPubs.length} of {data?.posts?.length || 0}{" "}
           publications
@@ -251,7 +251,7 @@ export default function PublicationsPage() {
       </div>
 
       {/* Publications Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div id="page-grid-7" data-testId="page-grid-7" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredAndSortedPubs.map((publication: Publication) => (
           <PublicationGrid key={publication.pubId} publication={publication} />
         ))}
@@ -261,14 +261,14 @@ export default function PublicationsPage() {
       {filteredAndSortedPubs.length === 0 && !isLoading && (
         <Card>
           <CardContent className="p-12 text-center">
-            <div className="space-y-4">
+            <div id="page-div-8" data-testId="page-div-8" className="space-y-4">
               <h3 className="text-lg font-medium">No publications found</h3>
               <p className="text-muted-foreground">
                 {searchQuery || selectedCategory !== "all"
                   ? "No publications match your current filters. Try adjusting your search or category selection."
                   : "No publications have been created yet."}
               </p>
-              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+              <div id="page-flex-9" data-testId="page-flex-9" className="flex flex-col sm:flex-row gap-2 justify-center">
                 {(searchQuery || selectedCategory !== "all") && (
                   <Button
                     variant="outline"

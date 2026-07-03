@@ -24,10 +24,10 @@ import { UserCog, Info, Send } from "lucide-react";
 
 export default function RoleRequestLoading() {
   return (
-    <div className="max-w-2xl mx-auto space-y-6 animate-pulse">
+    <div id="loading-div-1" data-testId="loading-div-1" className="max-w-2xl mx-auto space-y-6 animate-pulse">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="flex items-center justify-center gap-2 mb-4">
+      <div id="loading-div-2" data-testId="loading-div-2" className="text-center space-y-2">
+        <div id="loading-flex-3" data-testId="loading-flex-3" className="flex items-center justify-center gap-2 mb-4">
           <Skeleton className="h-12 w-12 rounded-lg" />
         </div>
         <Skeleton className="h-9 w-64 mx-auto" />
@@ -43,8 +43,8 @@ export default function RoleRequestLoading() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
+          <div id="loading-flex-4" data-testId="loading-flex-4" className="flex items-center justify-between">
+            <div id="loading-div-5" data-testId="loading-div-5" className="space-y-1">
               <Skeleton className="h-5 w-40" />
               <Skeleton className="h-4 w-56" />
             </div>
@@ -61,7 +61,7 @@ export default function RoleRequestLoading() {
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Role Selection */}
-          <div className="space-y-2">
+          <div id="loading-div-6" data-testId="loading-div-6" className="space-y-2">
             <Label>Requested Role *</Label>
             <Select disabled>
               <SelectTrigger>
@@ -74,7 +74,7 @@ export default function RoleRequestLoading() {
           </div>
 
           {/* Reason */}
-          <div className="space-y-2">
+          <div id="loading-div-7" data-testId="loading-div-7" className="space-y-2">
             <Label>Reason for Role Change *</Label>
             <Textarea
               disabled
@@ -85,7 +85,7 @@ export default function RoleRequestLoading() {
           </div>
 
           {/* Additional Information */}
-          <div className="space-y-2">
+          <div id="loading-div-8" data-testId="loading-div-8" className="space-y-2">
             <Label>Additional Information</Label>
             <Textarea
               disabled
@@ -106,11 +106,11 @@ export default function RoleRequestLoading() {
       {/* Information Card */}
       <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
         <CardContent className="pt-4">
-          <div className="flex items-start gap-3">
+          <div id="loading-flex-9" data-testId="loading-flex-9" className="flex items-start gap-3">
             <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
-            <div className="space-y-2 flex-1">
+            <div id="loading-div-10" data-testId="loading-div-10" className="space-y-2 flex-1">
               <Skeleton className="h-4 w-40" />
-              <div className="space-y-1">
+              <div id="loading-div-11" data-testId="loading-div-11" className="space-y-1">
                 <Skeleton className="h-3 w-full" />
                 <Skeleton className="h-3 w-full" />
                 <Skeleton className="h-3 w-full" />

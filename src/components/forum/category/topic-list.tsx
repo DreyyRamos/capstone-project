@@ -42,9 +42,9 @@ const TopicList = ({ topic }: TopicListProps) => {
   return (
     <Card key={topic?.forumId} className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 md:p-6">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 min-w-0">
-          <div className="flex-1 min-w-0 space-y-3">
-            <div className="flex-1 min-w-0 items-center gap-2 w-full">
+        <div id="topic-list-flex-1" data-testId="topic-list-flex-1" className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 min-w-0">
+          <div id="topic-list-div-2" data-testId="topic-list-div-2" className="flex-1 min-w-0 space-y-3">
+            <div id="topic-list-div-3" data-testId="topic-list-div-3" className="flex-1 min-w-0 items-center gap-2 w-full">
               <h3 className="text-lg font-semibold leading-tight truncate break-all">
                 <Link
                   href={`/forum/topic/${topic?.forumId}`}
@@ -60,7 +60,7 @@ const TopicList = ({ topic }: TopicListProps) => {
             {/* </p> */}
 
             {topic.tags && topic.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1">
+              <div id="topic-list-flex-4" data-testId="topic-list-flex-4" className="flex flex-wrap gap-1">
                 {topic.tags.slice(0, 2).map((tag, index) => (
                   <Badge
                     key={index}
@@ -78,8 +78,8 @@ const TopicList = ({ topic }: TopicListProps) => {
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-              <div className="flex items-center gap-2">
+            <div id="topic-list-flex-5" data-testId="topic-list-flex-5" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <div id="topic-list-flex-6" data-testId="topic-list-flex-6" className="flex items-center gap-2">
                 <Avatar className="h-6 w-6">
                   <AvatarImage src={topic?.author?.profileImage ?? undefined} />
                   <AvatarFallback className="text-xs">
@@ -99,7 +99,7 @@ const TopicList = ({ topic }: TopicListProps) => {
               </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 md:gap-4 text-sm text-muted-foreground">
+            <div id="topic-list-flex-7" data-testId="topic-list-flex-7" className="flex flex-wrap items-center gap-3 md:gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <MessageSquare className="h-4 w-4" />
                 {topic?.forumComments?.length || 0} replies
@@ -115,7 +115,7 @@ const TopicList = ({ topic }: TopicListProps) => {
             </div>
           </div>
 
-          <div className="flex md:flex-col items-stretch md:items-end">
+          <div id="topic-list-flex-8" data-testId="topic-list-flex-8" className="flex md:flex-col items-stretch md:items-end">
             <Button
               asChild
               variant="outline"

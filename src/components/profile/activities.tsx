@@ -26,16 +26,16 @@ const Activities = ({
   visibleActivities,
 }: UserActivityProps) => {
   return (
-    <div key={index}>
-      <div className="flex items-start space-x-3 sm:space-x-4">
-        <div className="p-2 bg-muted rounded-lg flex-shrink-0">
+    <div id="activities-div-1" data-testId="activities-div-1" key={index}>
+      <div id="activities-flex-2" data-testId="activities-flex-2" className="flex items-start space-x-3 sm:space-x-4">
+        <div id="activities-div-3" data-testId="activities-div-3" className="p-2 bg-muted rounded-lg flex-shrink-0">
           {activity.type === "PUBLISHED" ? (
             <FileText className="h-4 w-4" />
           ) : (
             <MessageSquare className="h-4 w-4" />
           )}
         </div>
-        <div className="flex-1 min-w-0">
+        <div id="activities-div-4" data-testId="activities-div-4" className="flex-1 min-w-0">
           <p className="text-sm truncate max-w-[200px] sm:max-w-[300px]">
             {activity.type === "PUBLISHED" && (
               <>
@@ -50,7 +50,7 @@ const Activities = ({
               </>
             )}
           </p>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-muted-foreground">
+          <div id="activities-flex-5" data-testId="activities-flex-5" className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-muted-foreground">
             <span>{new Date(activity.createdAt).toLocaleString()}</span>
             {activity.type === "PUBLISHED" ? (
               <>

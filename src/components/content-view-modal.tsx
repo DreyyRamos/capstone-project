@@ -160,15 +160,15 @@ export function ContentViewModal({
         </DialogHeader>
 
         <ScrollArea className="flex-1 px-6 overflow-y-auto h-full">
-          <div className="space-y-6 pb-6">
+          <div id="content-view-modal-div-1" data-testId="content-view-modal-div-1" className="space-y-6 pb-6">
             {/* Report Information */}
-            <div className="border border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-950/20 rounded-lg p-4">
+            <div id="content-view-modal-div-2" data-testId="content-view-modal-div-2" className="border border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-950/20 rounded-lg p-4">
               <h3 className="text-lg font-semibold flex items-center gap-2 text-red-800 dark:text-red-300 mb-4">
                 <AlertTriangle className="h-5 w-5" />
                 Report Details
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
+              <div id="content-view-modal-grid-3" data-testId="content-view-modal-grid-3" className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div id="content-view-modal-div-4" data-testId="content-view-modal-div-4">
                   <p className="font-medium text-red-700 dark:text-red-300 mb-1">
                     Report Reason:
                   </p>
@@ -176,7 +176,7 @@ export function ContentViewModal({
                     {report.reason || "Not specified"}
                   </p>
                 </div>
-                <div>
+                <div id="content-view-modal-div-5" data-testId="content-view-modal-div-5">
                   <p className="font-medium text-red-700 dark:text-red-300 mb-1">
                     Priority:
                   </p>
@@ -192,7 +192,7 @@ export function ContentViewModal({
                     {report.priority || "MEDIUM"}
                   </Badge>
                 </div>
-                <div>
+                <div id="content-view-modal-div-6" data-testId="content-view-modal-div-6">
                   <p className="font-medium text-red-700 dark:text-red-300 mb-1">
                     Reported User:
                   </p>
@@ -200,7 +200,7 @@ export function ContentViewModal({
                     {report?.reportedUser}
                   </p>
                 </div>
-                <div>
+                <div id="content-view-modal-div-7" data-testId="content-view-modal-div-7">
                   <p className="font-medium text-red-700 dark:text-red-300 mb-1">
                     Status:
                   </p>
@@ -213,7 +213,7 @@ export function ContentViewModal({
                 </div>
               </div>
               {(report.description || report.reason) && (
-                <div className="mt-4">
+                <div id="content-view-modal-div-8" data-testId="content-view-modal-div-8" className="mt-4">
                   <p className="font-medium text-red-700 dark:text-red-300 mb-1">
                     Additional Details:
                   </p>
@@ -230,7 +230,7 @@ export function ContentViewModal({
             {/* Main Content Card */}
             <Card>
               <CardContent className="p-6">
-                <div className="flex items-center gap-2 mb-4">
+                <div id="content-view-modal-flex-9" data-testId="content-view-modal-flex-9" className="flex items-center gap-2 mb-4">
                   <content.icon className={`h-5 w-5 ${content.iconColor}`} />
                   <Badge variant="secondary">
                     {content.type
@@ -244,14 +244,14 @@ export function ContentViewModal({
 
                 <h2 className="text-xl font-semibold mb-4">{content.title}</h2>
 
-                <div className="flex items-center gap-3 mb-6">
+                <div id="content-view-modal-flex-10" data-testId="content-view-modal-flex-10" className="flex items-center gap-3 mb-6">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={content.reportedUser.avatar} />
                     <AvatarFallback>
                       {content.reportedUser.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
+                  <div id="content-view-modal-div-11" data-testId="content-view-modal-div-11">
                     <p className="font-medium text-sm">
                       {content.reportedUser.name}
                     </p>
@@ -259,21 +259,21 @@ export function ContentViewModal({
                       {content.reportedUser.role}
                     </p>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground ml-auto">
+                  <div id="content-view-modal-flex-12" data-testId="content-view-modal-flex-12" className="flex items-center gap-1 text-xs text-muted-foreground ml-auto">
                     <Clock className="h-3 w-3" />
                     {new Date(content.createdAt).toLocaleDateString()}
                   </div>
                 </div>
 
                 {/* Reported Content Section */}
-                <div className="border border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-950/20 rounded-lg p-4">
-                  <div className="flex items-start gap-2">
+                <div id="content-view-modal-div-13" data-testId="content-view-modal-div-13" className="border border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-950/20 rounded-lg p-4">
+                  <div id="content-view-modal-flex-14" data-testId="content-view-modal-flex-14" className="flex items-start gap-2">
                     <Flag className="h-4 w-4 text-red-600 mt-0.5 shrink-0" />
-                    <div className="flex-1">
+                    <div id="content-view-modal-div-15" data-testId="content-view-modal-div-15" className="flex-1">
                       <p className="text-sm font-medium text-red-800 dark:text-red-300 mb-2">
                         Reported Content:
                       </p>
-                      <div className="text-red-700 dark:text-red-400 leading-relaxed mb-2">
+                      <div id="content-view-modal-div-16" data-testId="content-view-modal-div-16" className="text-red-700 dark:text-red-400 leading-relaxed mb-2">
                         &quot;{content.reportedContent}&quot;
                       </div>
                       {content?.bodyOfContent && (
@@ -282,7 +282,7 @@ export function ContentViewModal({
                           <p className="text-sm font-medium text-red-800 dark:text-red-300 mb-2">
                             Reported Content Body:
                           </p>
-                          <div
+                          <div id="content-view-modal-div-17" data-testId="content-view-modal-div-17"
                             className="prose prose-lg max-w-none dark:prose-invert"
                             dangerouslySetInnerHTML={{
                               __html: content?.bodyOfContent,
@@ -300,24 +300,24 @@ export function ContentViewModal({
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Content Context</h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between items-center">
+                <div id="content-view-modal-div-18" data-testId="content-view-modal-div-18" className="space-y-3 text-sm">
+                  <div id="content-view-modal-flex-19" data-testId="content-view-modal-flex-19" className="flex justify-between items-center">
                     <span className="text-muted-foreground">Content Type:</span>
                     <span className="font-medium">{content.contentType}</span>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div id="content-view-modal-flex-20" data-testId="content-view-modal-flex-20" className="flex justify-between items-center">
                     <span className="text-muted-foreground">Reported By:</span>
                     <span className="font-medium">
                       {report.reportedBy || "System"}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div id="content-view-modal-flex-21" data-testId="content-view-modal-flex-21" className="flex justify-between items-center">
                     <span className="text-muted-foreground">Report Date:</span>
                     <span className="font-medium">
                       {new Date(content.createdAt).toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div id="content-view-modal-flex-22" data-testId="content-view-modal-flex-22" className="flex justify-between items-center">
                     <span className="text-muted-foreground">Content ID:</span>
                     <code className="bg-muted px-2 py-1 rounded text-xs font-mono">
                       {content.contentId || "N/A"}
@@ -329,7 +329,7 @@ export function ContentViewModal({
           </div>
         </ScrollArea>
 
-        <div className="shrink-0 p-6 pt-4 border-t bg-background flex justify-end gap-2">
+        <div id="content-view-modal-flex-23" data-testId="content-view-modal-flex-23" className="shrink-0 p-6 pt-4 border-t bg-background flex justify-end gap-2">
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>

@@ -238,7 +238,7 @@ export default function ForumPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div id="page-div-1" data-testId="page-div-1" className="space-y-6">
       <StatusModal />
       <AuthModal
         isOpen={isOpen}
@@ -247,8 +247,8 @@ export default function ForumPage() {
         redirectTo={redirectTo}
       />
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
+      <div id="page-flex-2" data-testId="page-flex-2" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div id="page-div-3" data-testId="page-div-3">
           <h1 className="text-3xl font-bold">Community Forum</h1>
           <p className="text-muted-foreground">
             Connect, discuss, and share with your school community
@@ -263,13 +263,13 @@ export default function ForumPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div id="page-grid-4" data-testId="page-grid-4" className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
           <Card key={index}>
             <CardContent className="p-4">
-              <div className="flex items-center gap-2">
+              <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center gap-2">
                 <stat.icon className="h-4 w-4 text-muted-foreground" />
-                <div>
+                <div id="page-div-6" data-testId="page-div-6">
                   <p className="text-2xl font-bold">{stat.value}</p>
                   <p className="text-xs text-muted-foreground">{stat.label}</p>
                 </div>
@@ -282,8 +282,8 @@ export default function ForumPage() {
       {/* Search */}
       <Card>
         <CardContent className="p-4">
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1">
+          <div id="page-flex-7" data-testId="page-flex-7" className="flex items-center gap-4">
+            <div id="page-div-8" data-testId="page-div-8" className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={`Search ${
@@ -311,8 +311,8 @@ export default function ForumPage() {
 
       {/* Search Results Summary */}
       {searchQuery && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <div>
+        <div id="page-flex-9" data-testId="page-flex-9" className="flex items-center justify-between text-sm text-muted-foreground">
+          <div id="page-div-10" data-testId="page-div-10">
             {activeTab === "categories" ? (
               <span>
                 Found {filteredCategories.length} categories matching &quot;
@@ -360,7 +360,7 @@ export default function ForumPage() {
           ) : (
             <Card>
               <CardContent className="p-12 text-center">
-                <div className="space-y-4">
+                <div id="page-div-11" data-testId="page-div-11" className="space-y-4">
                   <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground" />
                   <h3 className="text-lg font-medium">No categories found</h3>
                   <p className="text-muted-foreground">
@@ -390,7 +390,7 @@ export default function ForumPage() {
           ) : (
             <Card>
               <CardContent className="p-12 text-center">
-                <div className="space-y-4">
+                <div id="page-div-12" data-testId="page-div-12" className="space-y-4">
                   <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground" />
                   <h3 className="text-lg font-medium">No topics found</h3>
                   <p className="text-muted-foreground">
@@ -398,7 +398,7 @@ export default function ForumPage() {
                       ? `No topics match your search for "${searchQuery}".`
                       : "No forum topics available yet."}
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                  <div id="page-flex-13" data-testId="page-flex-13" className="flex flex-col sm:flex-row gap-2 justify-center">
                     {searchQuery && (
                       <Button
                         variant="outline"

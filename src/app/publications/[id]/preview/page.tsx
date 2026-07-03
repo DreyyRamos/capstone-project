@@ -92,10 +92,10 @@ export default function PublicationDetailPage({ params }: PageProps) {
   if (isLoading) {
     return <PublicationDetailLoading />;
   }
-  if (isError) return <div>Error loading publication.</div>;
+  if (isError) return <div id="page-div-1" data-testId="page-div-1">Error loading publication.</div>;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div id="page-div-2" data-testId="page-div-2" className="max-w-4xl mx-auto space-y-6">
       <StatusModal />
       <AuthModal
         isOpen={isOpen}
@@ -120,8 +120,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
       </Button>
 
       <article className="space-y-6">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 flex-wrap">
+        <div id="page-div-3" data-testId="page-div-3" className="space-y-4">
+          <div id="page-flex-4" data-testId="page-flex-4" className="flex items-center gap-2 flex-wrap">
             {publication?.tags?.map((tag: any) => (
               <Badge key={tag} variant="outline" className="text-xs">
                 {tag}
@@ -133,8 +133,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
             {publication?.title}
           </h1>
 
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
+          <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center justify-between flex-wrap gap-4">
+            <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center gap-4">
               <Avatar className="h-12 w-12">
                 <AvatarImage
                   src={publication.author?.profileImage || "/placeholder.svg"}
@@ -144,14 +144,14 @@ export default function PublicationDetailPage({ params }: PageProps) {
                   {publication.author?.lastName?.[0]}
                 </AvatarFallback>
               </Avatar>
-              <div>
+              <div id="page-div-7" data-testId="page-div-7">
                 <p className="font-medium">
                   {publication?.author.firstName} {publication?.author.lastName}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {publication?.author.role}
                 </p>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div id="page-flex-8" data-testId="page-flex-8" className="flex items-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     {new Date(publication?.createdAt).toLocaleDateString()}
@@ -160,7 +160,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div id="page-flex-9" data-testId="page-flex-9" className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -181,7 +181,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
         </div>
 
         {publication?.imageUrl && (
-          <div className="relative aspect-video rounded-lg overflow-hidden">
+          <div id="page-div-10" data-testId="page-div-10" className="relative aspect-video rounded-lg overflow-hidden">
             <img
               src={publication?.imageUrl || "/placeholder.svg"}
               alt={publication?.title}

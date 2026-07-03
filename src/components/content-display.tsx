@@ -14,7 +14,7 @@ const ContentDisplay = ({
   const sanitizedHtml = DOMPurify.sanitize(htmlContent);
 
   return (
-    <div
+    <div id="content-display-div-1" data-testId="content-display-div-1"
       className={`rounded-md min-h-[150px] border-input p-2 
           focus:outline-none
           [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4

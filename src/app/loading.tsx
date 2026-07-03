@@ -35,13 +35,13 @@ import {
 
 export default function DashboardLoading() {
   return (
-    <div className="space-y-8 animate-pulse">
+    <div id="loading-div-1" data-testId="loading-div-1" className="space-y-8 animate-pulse">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white">
-        <div className="relative z-10">
+      <div id="loading-div-2" data-testId="loading-div-2" className="relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white">
+        <div id="loading-div-3" data-testId="loading-div-3" className="relative z-10">
           <Skeleton className="h-10 w-96 mb-4" />
           <Skeleton className="h-6 w-full mb-6" />
-          <div className="flex gap-4">
+          <div id="loading-flex-4" data-testId="loading-flex-4" className="flex gap-4">
             <Button disabled size="lg" variant="secondary">
               Browse Publications
             </Button>
@@ -62,8 +62,8 @@ export default function DashboardLoading() {
         {[...Array(3)].map((_, i) => (
           <Card key={i}>
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-muted rounded-lg">
+              <div id="loading-flex-5" data-testId="loading-flex-5" className="flex items-center gap-4">
+                <div id="loading-div-6" data-testId="loading-div-6" className="p-3 bg-muted rounded-lg">
                   {i === 0 && (
                     <BookOpen className="h-6 w-6 text-muted-foreground" />
                   )}
@@ -74,7 +74,7 @@ export default function DashboardLoading() {
                     <Users className="h-6 w-6 text-muted-foreground" />
                   )}
                 </div>
-                <div>
+                <div id="loading-div-7" data-testId="loading-div-7">
                   <Skeleton className="h-7 w-12 mb-1" />
                   <Skeleton className="h-4 w-24" />
                 </div>
@@ -84,11 +84,11 @@ export default function DashboardLoading() {
         ))}
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div id="loading-grid-8" data-testId="loading-grid-8" className="grid gap-6 lg:grid-cols-2">
         {/* Featured Publications */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <div>
+            <div id="loading-div-9" data-testId="loading-div-9">
               <Skeleton className="h-6 w-48 mb-1" />
               <Skeleton className="h-4 w-64" />
             </div>
@@ -99,7 +99,7 @@ export default function DashboardLoading() {
           </CardHeader>
           <CardContent className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div
+              <div id="loading-flex-10" data-testId="loading-flex-10"
                 key={i}
                 className="flex items-start space-x-3 p-3 rounded-lg"
               >
@@ -108,22 +108,22 @@ export default function DashboardLoading() {
                     <Skeleton className="h-full w-full rounded-full" />
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 min-w-0 overflow-hidden">
+                <div id="loading-div-11" data-testId="loading-div-11" className="flex-1 min-w-0 overflow-hidden">
                   <Skeleton className="h-4 w-full mb-1" />
-                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  <div id="loading-flex-12" data-testId="loading-flex-12" className="flex items-center gap-2 mt-1 flex-wrap">
                     <Skeleton className="h-3 w-24" />
                     <Skeleton className="h-3 w-16 rounded-full" />
                   </div>
-                  <div className="flex items-center gap-4 mt-2 flex-wrap">
-                    <div className="flex items-center gap-1 flex-shrink-0">
+                  <div id="loading-flex-13" data-testId="loading-flex-13" className="flex items-center gap-4 mt-2 flex-wrap">
+                    <div id="loading-flex-14" data-testId="loading-flex-14" className="flex items-center gap-1 flex-shrink-0">
                       <Clock className="h-3 w-3 text-muted-foreground" />
                       <Skeleton className="h-3 w-28" />
                     </div>
-                    <div className="flex items-center gap-1 flex-shrink-0">
+                    <div id="loading-flex-15" data-testId="loading-flex-15" className="flex items-center gap-1 flex-shrink-0">
                       <MessageCircle className="h-3 w-3 text-muted-foreground" />
                       <Skeleton className="h-3 w-6" />
                     </div>
-                    <div className="flex items-center gap-1 flex-shrink-0">
+                    <div id="loading-flex-16" data-testId="loading-flex-16" className="flex items-center gap-1 flex-shrink-0">
                       <Heart className="h-3 w-3 text-muted-foreground" />
                       <Skeleton className="h-3 w-6" />
                     </div>
@@ -137,7 +137,7 @@ export default function DashboardLoading() {
         {/* Recent Forum Activity */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <div>
+            <div id="loading-div-17" data-testId="loading-div-17">
               <Skeleton className="h-6 w-48 mb-1" />
               <Skeleton className="h-4 w-56" />
             </div>
@@ -148,7 +148,7 @@ export default function DashboardLoading() {
           </CardHeader>
           <CardContent className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div
+              <div id="loading-flex-18" data-testId="loading-flex-18"
                 key={i}
                 className="flex items-start space-x-3 p-3 rounded-lg"
               >
@@ -157,18 +157,18 @@ export default function DashboardLoading() {
                     <Skeleton className="h-full w-full rounded-full" />
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 min-w-0 overflow-hidden">
+                <div id="loading-div-19" data-testId="loading-div-19" className="flex-1 min-w-0 overflow-hidden">
                   <Skeleton className="h-4 w-full mb-1" />
-                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  <div id="loading-flex-20" data-testId="loading-flex-20" className="flex items-center gap-2 mt-1 flex-wrap">
                     <Skeleton className="h-3 w-24" />
                     <Skeleton className="h-3 w-16 rounded-full" />
                   </div>
-                  <div className="flex items-center gap-4 mt-2 flex-wrap">
-                    <div className="flex items-center gap-1 flex-shrink-0">
+                  <div id="loading-flex-21" data-testId="loading-flex-21" className="flex items-center gap-4 mt-2 flex-wrap">
+                    <div id="loading-flex-22" data-testId="loading-flex-22" className="flex items-center gap-1 flex-shrink-0">
                       <MessageCircle className="h-3 w-3 text-muted-foreground" />
                       <Skeleton className="h-3 w-12" />
                     </div>
-                    <div className="flex items-center gap-1 flex-shrink-0">
+                    <div id="loading-flex-23" data-testId="loading-flex-23" className="flex items-center gap-1 flex-shrink-0">
                       <Clock className="h-3 w-3 text-muted-foreground" />
                       <Skeleton className="h-3 w-28" />
                     </div>
@@ -187,7 +187,7 @@ export default function DashboardLoading() {
           <Skeleton className="h-4 w-48" />
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div id="loading-grid-24" data-testId="loading-grid-24" className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {[...Array(3)].map((_, i) => (
               <Button
                 key={i}

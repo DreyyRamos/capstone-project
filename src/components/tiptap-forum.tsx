@@ -46,7 +46,7 @@ const Tiptap = ({
   });
 
   return (
-    <div className="flex flex-col justify-stretch gap-2">
+    <div id="tiptap-forum-flex-1" data-testId="tiptap-forum-flex-1" className="flex flex-col justify-stretch gap-2">
       <Toolbar editor={editor} />
       <EditorContent editor={editor} />
     </div>

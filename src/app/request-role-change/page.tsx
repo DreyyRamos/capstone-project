@@ -186,11 +186,11 @@ export default function RoleRequestPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div id="page-div-1" data-testId="page-div-1" className="max-w-2xl mx-auto space-y-6">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
+      <div id="page-div-2" data-testId="page-div-2" className="text-center space-y-2">
+        <div id="page-flex-3" data-testId="page-flex-3" className="flex items-center justify-center gap-2 mb-4">
+          <div id="page-flex-4" data-testId="page-flex-4" className="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
             <UserCog className="h-6 w-6 text-white" />
           </div>
         </div>
@@ -227,9 +227,9 @@ export default function RoleRequestPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
+          <div id="page-div-5" data-testId="page-div-5" className="space-y-4">
+            <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center justify-between">
+              <div id="page-div-7" data-testId="page-div-7">
                 <p className="font-medium">
                   {user?.userData?.firstName} {user?.userData?.lastName}
                 </p>
@@ -260,7 +260,7 @@ export default function RoleRequestPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Role Selection */}
-            <div className="space-y-2">
+            <div id="page-div-8" data-testId="page-div-8" className="space-y-2">
               <Label htmlFor="requestedRole">Requested Role *</Label>
               <Select
                 value={formData.requestedRole}
@@ -276,7 +276,7 @@ export default function RoleRequestPage() {
                 <SelectContent>
                   {roleOptions.map((role) => (
                     <SelectItem key={role.value} value={role.value}>
-                      <div className="flex flex-col">
+                      <div id="page-flex-9" data-testId="page-flex-9" className="flex flex-col">
                         <span className="font-medium">{role.label}</span>
                         <span className="text-xs text-muted-foreground">
                           {role.description}
@@ -293,9 +293,9 @@ export default function RoleRequestPage() {
 
             {/* Role Transition Preview */}
             {formData.requestedRole && (
-              <div className="bg-muted p-4 rounded-lg">
+              <div id="page-div-10" data-testId="page-div-10" className="bg-muted p-4 rounded-lg">
                 <p className="text-sm font-medium mb-2">Role Change Preview:</p>
-                <div className="flex items-center gap-2">
+                <div id="page-flex-11" data-testId="page-flex-11" className="flex items-center gap-2">
                   <Badge
                     className={getRoleBadgeColor(
                       user?.userData?.role || "student"
@@ -325,7 +325,7 @@ export default function RoleRequestPage() {
             )}
 
             {/* Reason */}
-            <div className="space-y-2">
+            <div id="page-div-12" data-testId="page-div-12" className="space-y-2">
               <Label htmlFor="reason">Reason for Role Change *</Label>
               <Textarea
                 id="reason"
@@ -335,7 +335,7 @@ export default function RoleRequestPage() {
                 className={errors.reason ? "border-red-500" : ""}
                 rows={5}
               />
-              <div className="flex justify-between items-center">
+              <div id="page-flex-13" data-testId="page-flex-13" className="flex justify-between items-center">
                 {errors.reason && (
                   <p className="text-xs text-red-600">{errors.reason}</p>
                 )}
@@ -346,7 +346,7 @@ export default function RoleRequestPage() {
             </div>
 
             {/* Additional Information */}
-            <div className="space-y-2">
+            <div id="page-div-14" data-testId="page-div-14" className="space-y-2">
               <Label htmlFor="additionalInfo">Additional Information</Label>
               <Textarea
                 id="additionalInfo"
@@ -367,7 +367,7 @@ export default function RoleRequestPage() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                  <div id="page-div-15" data-testId="page-div-15" className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
                   Submitting Request...
                 </>
               ) : (
@@ -384,9 +384,9 @@ export default function RoleRequestPage() {
       {/* Information Card */}
       <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
         <CardContent className="pt-4">
-          <div className="flex items-start gap-3">
+          <div id="page-flex-16" data-testId="page-flex-16" className="flex items-start gap-3">
             <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
-            <div className="space-y-2">
+            <div id="page-div-17" data-testId="page-div-17" className="space-y-2">
               <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
                 What happens next?
               </p>

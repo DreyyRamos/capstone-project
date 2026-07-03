@@ -22,7 +22,7 @@ export function Toolbar({ editor }: Props) {
   }
 
   return (
-    <div className="border border-input bg-transparent rounded-md p-1 flex flex-row items-center gap-1">
+    <div id="toolbar-flex-1" data-testId="toolbar-flex-1" className="border border-input bg-transparent rounded-md p-1 flex flex-row items-center gap-1">
       <Toggle
         size="sm"
         pressed={editor.isActive("bold")}

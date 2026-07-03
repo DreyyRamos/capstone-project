@@ -124,7 +124,7 @@ const LikeButton = ({ forum, token, forumId }: LikeButtonProps) => {
           likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <div className="relative group">
+        <div id="forum-like-button-div-1" data-testId="forum-like-button-div-1" className="relative group">
           {currentLikePostId === forum?.forumId ? (
             <Loader className="animate-spin" />
           ) : userLike && userLike?.isLiked ? (

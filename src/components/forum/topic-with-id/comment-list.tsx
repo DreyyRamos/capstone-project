@@ -134,21 +134,21 @@ const CommentList = ({
   return (
     <Card key={comment.commentId}>
       <CardContent className="p-2">
-        <div className="space-y-4">
-          <div className="flex items-start gap-4">
+        <div id="comment-list-div-1" data-testId="comment-list-div-1" className="space-y-4">
+          <div id="comment-list-flex-2" data-testId="comment-list-flex-2" className="flex items-start gap-4">
             <Avatar className="h-10 w-10">
               <AvatarImage
                 src={comment.author.profileImage || "/placeholder.svg"}
               />
               <AvatarFallback>{comment.author.firstName[0]}</AvatarFallback>
             </Avatar>
-            <div className="flex-1 space-y-3">
-              <div className="flex items-center justify-between">
-                <div>
+            <div id="comment-list-div-3" data-testId="comment-list-div-3" className="flex-1 space-y-3">
+              <div id="comment-list-flex-4" data-testId="comment-list-flex-4" className="flex items-center justify-between">
+                <div id="comment-list-div-5" data-testId="comment-list-div-5">
                   <p className="font-medium">
                     {comment.author.firstName} {comment.author.lastName}
                   </p>
-                  <div className="flex items-center gap-2">
+                  <div id="comment-list-flex-6" data-testId="comment-list-flex-6" className="flex items-center gap-2">
                     <Badge variant="outline" className="text-xs">
                       {comment.author.role}
                     </Badge>
@@ -200,14 +200,14 @@ const CommentList = ({
 
               {/* Comment content - editable if in edit mode */}
               {editingComment === comment.commentId ? (
-                <div className="space-y-2">
+                <div id="comment-list-div-7" data-testId="comment-list-div-7" className="space-y-2">
                   <Textarea
                     className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                     value={editCommentContent}
                     onChange={(e) => setEditCommentContent(e.target.value)}
                     rows={3}
                   />
-                  <div className="flex items-center gap-2">
+                  <div id="comment-list-flex-8" data-testId="comment-list-flex-8" className="flex items-center gap-2">
                     <Button
                       size="sm"
                       onClick={() => handleSaveEditComment(comment.commentId)}
@@ -230,7 +230,7 @@ const CommentList = ({
                 </p>
               )}
 
-              <div className="flex items-center gap-4">
+              <div id="comment-list-flex-9" data-testId="comment-list-flex-9" className="flex items-center gap-4">
                 <ForumCommentLikeButton
                   comment={comment}
                   token={token}
@@ -261,8 +261,8 @@ const CommentList = ({
           </div>
 
           {replyingTo === comment.commentId && (
-            <div className="ml-6 md:ml-14 space-y-3">
-              <div className="border-l-2 border-muted pl-2 md:pl-4">
+            <div id="comment-list-div-10" data-testId="comment-list-div-10" className="ml-6 md:ml-14 space-y-3">
+              <div id="comment-list-div-11" data-testId="comment-list-div-11" className="border-l-2 border-muted pl-2 md:pl-4">
                 <Textarea
                   placeholder="Write your reply..."
                   value={replyContent}
@@ -270,7 +270,7 @@ const CommentList = ({
                   rows={2}
                   className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                 />
-                <div className="flex items-center justify-end gap-2 mt-2">
+                <div id="comment-list-flex-12" data-testId="comment-list-flex-12" className="flex items-center justify-end gap-2 mt-2">
                   <Button variant="ghost" size="sm" onClick={handleCancelReply}>
                     Cancel
                   </Button>
@@ -289,9 +289,9 @@ const CommentList = ({
           )}
 
           {comment.replies && comment.replies.length > 0 && (
-            <div className="ml-6 md:ml-14 space-y-4 border-l-2 border-muted pl-2 md:pl-4">
+            <div id="comment-list-div-13" data-testId="comment-list-div-13" className="ml-6 md:ml-14 space-y-4 border-l-2 border-muted pl-2 md:pl-4">
               {comment.replies.map((reply: any) => (
-                <div key={reply.replyId} className="flex items-start gap-4">
+                <div id="comment-list-flex-14" data-testId="comment-list-flex-14" key={reply.replyId} className="flex items-start gap-4">
                   <Avatar className="h-8 w-8">
                     <AvatarImage
                       src={
@@ -304,9 +304,9 @@ const CommentList = ({
                       {reply.reply_author.firstName[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                  <div id="comment-list-div-15" data-testId="comment-list-div-15" className="flex-1 space-y-2">
+                    <div id="comment-list-flex-16" data-testId="comment-list-flex-16" className="flex items-center justify-between">
+                      <div id="comment-list-flex-17" data-testId="comment-list-flex-17" className="flex items-center gap-2">
                         <p className="font-medium text-sm">
                           {reply.reply_author.firstName}{" "}
                           {reply.reply_author.lastName}
@@ -355,14 +355,14 @@ const CommentList = ({
 
                     {/* Reply content - editable if in edit mode */}
                     {editingReply === reply.replyId ? (
-                      <div className="space-y-2">
+                      <div id="comment-list-div-18" data-testId="comment-list-div-18" className="space-y-2">
                         <Textarea
                           className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                           value={editReplyContent}
                           onChange={(e) => setEditReplyContent(e.target.value)}
                           rows={2}
                         />
-                        <div className="flex items-center gap-2">
+                        <div id="comment-list-flex-19" data-testId="comment-list-flex-19" className="flex items-center gap-2">
                           <Button
                             size="sm"
                             onClick={() =>
@@ -390,7 +390,7 @@ const CommentList = ({
                       </p>
                     )}
 
-                    <div className="flex items-center gap-4">
+                    <div id="comment-list-flex-20" data-testId="comment-list-flex-20" className="flex items-center gap-4">
                       <ForumCommentReplyLikeButton
                         reply={reply}
                         token={token}
@@ -421,8 +421,8 @@ const CommentList = ({
                     </div>
 
                     {replyingToSecondLevel === reply.replyId && (
-                      <div className="ml-3 md:ml-6 space-y-3">
-                        <div className="border-l-2 border-muted pl-2 md:pl-4 max-w-prose break-words">
+                      <div id="comment-list-div-21" data-testId="comment-list-div-21" className="ml-3 md:ml-6 space-y-3">
+                        <div id="comment-list-div-22" data-testId="comment-list-div-22" className="border-l-2 border-muted pl-2 md:pl-4 max-w-prose break-words">
                           <Textarea
                             placeholder="Write your reply..."
                             value={secondLevelReplyContent}
@@ -432,7 +432,7 @@ const CommentList = ({
                             rows={2}
                             className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                           />
-                          <div className="flex items-center justify-end gap-2 mt-2">
+                          <div id="comment-list-flex-23" data-testId="comment-list-flex-23" className="flex items-center justify-end gap-2 mt-2">
                             <Button
                               variant="ghost"
                               size="sm"
@@ -458,9 +458,9 @@ const CommentList = ({
                     )}
 
                     {reply.children && reply.children.length > 0 && (
-                      <div className="ml-3 md:ml-6 space-y-4 border-l-2 border-muted pl-2 md:pl-4 mt-4">
+                      <div id="comment-list-div-24" data-testId="comment-list-div-24" className="ml-3 md:ml-6 space-y-4 border-l-2 border-muted pl-2 md:pl-4 mt-4">
                         {reply.children.map((childReply: any) => (
-                          <div
+                          <div id="comment-list-flex-25" data-testId="comment-list-flex-25"
                             key={childReply.replyToReplyId}
                             className="flex items-start gap-4"
                           >
@@ -476,9 +476,9 @@ const CommentList = ({
                                 {childReply.reply_author.firstName[0]}
                               </AvatarFallback>
                             </Avatar>
-                            <div className="flex-1 space-y-2">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
+                            <div id="comment-list-div-26" data-testId="comment-list-div-26" className="flex-1 space-y-2">
+                              <div id="comment-list-flex-27" data-testId="comment-list-flex-27" className="flex items-center justify-between">
+                                <div id="comment-list-flex-28" data-testId="comment-list-flex-28" className="flex items-center gap-2">
                                   <p className="font-medium text-sm">
                                     {childReply.reply_author.firstName}{" "}
                                     {childReply.reply_author.lastName}
@@ -535,7 +535,7 @@ const CommentList = ({
                               {/* Nested reply content - editable if in edit mode */}
                               {editingNestedReply ===
                               childReply.replyToReplyId ? (
-                                <div className="space-y-2 max-w-prose">
+                                <div id="comment-list-div-29" data-testId="comment-list-div-29" className="space-y-2 max-w-prose">
                                   <Textarea
                                     value={editNestedReplyContent}
                                     onChange={(e) =>
@@ -544,7 +544,7 @@ const CommentList = ({
                                     rows={2}
                                     className="resize-none break-all overflow-hidden whitespace-pre-wrap"
                                   />
-                                  <div className="flex items-center gap-2">
+                                  <div id="comment-list-flex-30" data-testId="comment-list-flex-30" className="flex items-center gap-2">
                                     <Button
                                       size="sm"
                                       onClick={() =>
@@ -574,7 +574,7 @@ const CommentList = ({
                                 </p>
                               )}
 
-                              <div className="flex items-center gap-4">
+                              <div id="comment-list-flex-31" data-testId="comment-list-flex-31" className="flex items-center gap-4">
                                 <ForumReplyToReplyLikeButton
                                   replyToReply={childReply}
                                   token={token}

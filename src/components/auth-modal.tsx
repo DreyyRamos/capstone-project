@@ -51,8 +51,8 @@ export function AuthModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
+        <div id="auth-modal-div-1" data-testId="auth-modal-div-1" className="space-y-4">
+          <div id="auth-modal-div-2" data-testId="auth-modal-div-2" className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
             <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
               What you can do after signing in:
             </h4>
@@ -65,7 +65,7 @@ export function AuthModal({
             </ul>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div id="auth-modal-flex-3" data-testId="auth-modal-flex-3" className="flex flex-col gap-3">
             <Button onClick={handleSignIn} className="w-full">
               <LogIn className="mr-2 h-4 w-4" />
               Sign In
@@ -81,7 +81,7 @@ export function AuthModal({
             </Button>
           </div>
 
-          <div className="text-center">
+          <div id="auth-modal-div-4" data-testId="auth-modal-div-4" className="text-center">
             <Button variant="ghost" onClick={onClose} className="text-sm">
               Continue browsing without signing in
             </Button>

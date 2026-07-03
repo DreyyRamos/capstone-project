@@ -8,9 +8,9 @@ import { Search, User, FileText, MessageSquare, Filter } from "lucide-react";
 
 export default function SearchLoading() {
   return (
-    <div className="container mx-auto px-4 py-8 animate-pulse">
+    <div id="loading-container" data-testId="loading-container" className="container mx-auto px-4 py-8 animate-pulse">
       {/* Header */}
-      <div className="mb-8">
+      <div id="loading-div-2" data-testId="loading-div-2" className="mb-8">
         <Skeleton className="h-8 w-64 mb-2" />
         <Skeleton className="h-4 w-96" />
       </div>
@@ -49,7 +49,7 @@ export default function SearchLoading() {
         </TabsList>
 
         {/* Results Skeleton */}
-        <div className="mt-8 space-y-4">
+        <div id="loading-div-3" data-testId="loading-div-3" className="mt-8 space-y-4">
           {[...Array(5)].map((_, i) => (
             <Card key={i} className="hover:shadow-md transition-shadow">
               <CardHeader>

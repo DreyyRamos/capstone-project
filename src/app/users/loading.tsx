@@ -12,10 +12,10 @@ import { Search, Users, UserPlus, MoreHorizontal, BookOpen, MessageSquare, Trend
 
 export default function UsersLoading() {
   return (
-    <div className="space-y-6 animate-pulse">
+    <div id="loading-div-1" data-testId="loading-div-1" className="space-y-6 animate-pulse">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="space-y-2">
+      <div id="loading-flex-2" data-testId="loading-flex-2" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div id="loading-div-3" data-testId="loading-div-3" className="space-y-2">
           <Skeleton className="h-9 w-64" />
           <Skeleton className="h-5 w-96" />
         </div>
@@ -26,16 +26,16 @@ export default function UsersLoading() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div id="loading-grid-4" data-testId="loading-grid-4" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
             <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
+              <div id="loading-flex-5" data-testId="loading-flex-5" className="flex items-center justify-between">
+                <div id="loading-div-6" data-testId="loading-div-6" className="space-y-1">
                   <Skeleton className="h-7 w-12" />
                   <Skeleton className="h-4 w-32" />
                 </div>
-                <div className="flex items-center gap-2">
+                <div id="loading-flex-7" data-testId="loading-flex-7" className="flex items-center gap-2">
                   <Skeleton className="h-5 w-5" />
                   <Skeleton className="h-4 w-10 rounded-full" />
                 </div>
@@ -48,8 +48,8 @@ export default function UsersLoading() {
       {/* Filters */}
       <Card>
         <CardContent className="p-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
+          <div id="loading-flex-8" data-testId="loading-flex-8" className="flex flex-col sm:flex-row gap-4">
+            <div id="loading-div-9" data-testId="loading-div-9" className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input disabled placeholder="Search users..." className="pl-10" />
             </div>
@@ -79,19 +79,19 @@ export default function UsersLoading() {
           <Skeleton className="h-6 w-32" />
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div id="loading-div-10" data-testId="loading-div-10" className="space-y-4">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-4">
+              <div id="loading-flex-11" data-testId="loading-flex-11" key={i} className="flex items-center justify-between p-4 border rounded-lg">
+                <div id="loading-flex-12" data-testId="loading-flex-12" className="flex items-center gap-4">
                   <Skeleton className="h-12 w-12 rounded-full" />
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
+                  <div id="loading-div-13" data-testId="loading-div-13" className="space-y-2">
+                    <div id="loading-flex-14" data-testId="loading-flex-14" className="flex items-center gap-2">
                       <Skeleton className="h-5 w-40" />
                       <Skeleton className="h-5 w-16 rounded-full" />
                       <Skeleton className="h-5 w-20 rounded-full" />
                     </div>
                     <Skeleton className="h-4 w-56" />
-                    <div className="flex items-center gap-4">
+                    <div id="loading-flex-15" data-testId="loading-flex-15" className="flex items-center gap-4">
                       <Skeleton className="h-3 w-24" />
                       <Skeleton className="h-3 w-3" />
                       <Skeleton className="h-3 w-32" />
@@ -99,17 +99,17 @@ export default function UsersLoading() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6">
-                  <div className="hidden md:flex items-center gap-4">
-                    <div className="flex items-center gap-1">
+                <div id="loading-flex-16" data-testId="loading-flex-16" className="flex items-center gap-6">
+                  <div id="loading-div-17" data-testId="loading-div-17" className="hidden md:flex items-center gap-4">
+                    <div id="loading-flex-18" data-testId="loading-flex-18" className="flex items-center gap-1">
                       <BookOpen className="h-4 w-4 text-muted-foreground" />
                       <Skeleton className="h-4 w-6" />
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div id="loading-flex-19" data-testId="loading-flex-19" className="flex items-center gap-1">
                       <MessageSquare className="h-4 w-4 text-muted-foreground" />
                       <Skeleton className="h-4 w-6" />
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div id="loading-flex-20" data-testId="loading-flex-20" className="flex items-center gap-1">
                       <TrendingUp className="h-4 w-4 text-muted-foreground" />
                       <Skeleton className="h-4 w-6" />
                     </div>
@@ -130,7 +130,7 @@ export default function UsersLoading() {
             ))}
 
             {/* Empty State */}
-            <div className="text-center py-12">
+            <div id="loading-div-21" data-testId="loading-div-21" className="text-center py-12">
               <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <Skeleton className="h-5 w-48 mx-auto mb-2" />
               <Skeleton className="h-4 w-64 mx-auto" />

@@ -141,17 +141,17 @@ export default function CreateForumTopicPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div id="page-div-1" data-testId="page-div-1" className="max-w-4xl mx-auto space-y-6">
       <StatusModal />
       {/* Header */}
-      <div className="flex items-center gap-4">
+      <div id="page-flex-2" data-testId="page-flex-2" className="flex items-center gap-4">
         <Button asChild variant="ghost">
           <Link href="/forum">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Forum
           </Link>
         </Button>
-        <div>
+        <div id="page-div-3" data-testId="page-div-3">
           <h1 className="text-3xl font-bold">Start New Discussion</h1>
           <p className="text-muted-foreground">
             Create a new topic for the community to discuss
@@ -160,9 +160,9 @@ export default function CreateForumTopicPage() {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div id="page-grid-4" data-testId="page-grid-4" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div id="page-div-5" data-testId="page-div-5" className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Topic Details</CardTitle>
@@ -171,7 +171,7 @@ export default function CreateForumTopicPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
+                <div id="page-div-6" data-testId="page-div-6" className="space-y-2">
                   <Label htmlFor="topicTitle">Topic Title *</Label>
                   <p className="text-xs text-muted-foreground text-right">
                     {formData.topicTitle.length}/255
@@ -190,7 +190,7 @@ export default function CreateForumTopicPage() {
                   </p>
                 </div>
 
-                <div className="space-y-2">
+                <div id="page-div-7" data-testId="page-div-7" className="space-y-2">
                   <Label htmlFor="description">Description *</Label>
                   <TiptapForum
                     id="description"
@@ -208,14 +208,14 @@ export default function CreateForumTopicPage() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div id="page-div-8" data-testId="page-div-8" className="space-y-6">
             {/* Category & Settings */}
             <Card>
               <CardHeader>
                 <CardTitle>Topic Settings</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
+                <div id="page-div-9" data-testId="page-div-9" className="space-y-2">
                   <Label htmlFor="category">Category *</Label>
                   <Select
                     value={formData.category}
@@ -248,7 +248,7 @@ export default function CreateForumTopicPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex gap-2">
+                <div id="page-flex-10" data-testId="page-flex-10" className="flex gap-2">
                   <Input
                     placeholder="Add tag..."
                     value={newTag}
@@ -266,7 +266,7 @@ export default function CreateForumTopicPage() {
                 </div>
 
                 {tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
+                  <div id="page-flex-11" data-testId="page-flex-11" className="flex flex-wrap gap-2">
                     {tags.map((tag) => (
                       <Badge
                         key={tag}

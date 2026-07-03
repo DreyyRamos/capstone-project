@@ -15,16 +15,16 @@ interface ActivityProps {
 
 const RecentActivities = ({ activity, index, userActivity }: ActivityProps) => {
   return (
-    <div key={index}>
-      <div className="flex items-start space-x-4">
-        <div className="p-2 bg-muted rounded-lg">
+    <div id="recent-activities-div-1" data-testId="recent-activities-div-1" key={index}>
+      <div id="recent-activities-flex-2" data-testId="recent-activities-flex-2" className="flex items-start space-x-4">
+        <div id="recent-activities-div-3" data-testId="recent-activities-div-3" className="p-2 bg-muted rounded-lg">
           {activity.type === "PUBLISHED" ? (
             <FileText className="h-4 w-4" />
           ) : (
             <MessageSquare className="h-4 w-4" />
           )}
         </div>
-        <div className="flex-1 min-w-0">
+        <div id="recent-activities-div-4" data-testId="recent-activities-div-4" className="flex-1 min-w-0">
           <p className="text-sm">
             {activity.type === "PUBLISHED" && (
               <>
@@ -43,7 +43,7 @@ const RecentActivities = ({ activity, index, userActivity }: ActivityProps) => {
               </>
             )}
           </p>
-          <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
+          <div id="recent-activities-flex-5" data-testId="recent-activities-flex-5" className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
             <span>{new Date(activity.createdAt).toLocaleString()}</span>
             {activity.type === "PUBLISHED" ? (
               <>

@@ -42,10 +42,22 @@ export default function Dashboard() {
     return <HomePageLoading />;
   }
   return (
-    <div className="space-y-8">
+    <div
+      id="dashboard-container"
+      data-testId="dashboard-container"
+      className="space-y-8"
+    >
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white">
-        <div className="relative z-10">
+      <div
+        id="hero-section"
+        data-testId="hero-section"
+        className="relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white"
+      >
+        <div
+          id="hero-content"
+          data-testId="hero-content"
+          className="relative z-10"
+        >
           <h1 className="text-4xl font-bold mb-4">
             Welcome to Ramos School Publications
           </h1>
@@ -53,7 +65,11 @@ export default function Dashboard() {
             Stay connected with the latest news, articles, and discussions from
             our school community.
           </p>
-          <div className="flex gap-4">
+          <div
+            id="hero-buttons"
+            data-testId="hero-buttons"
+            className="flex gap-4"
+          >
             <Button size="lg" variant="secondary" asChild>
               <Link href="/publications">Browse Publications</Link>
             </Button>
@@ -74,11 +90,22 @@ export default function Dashboard() {
         <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
+              <div
+                id="stats-publications"
+                data-testId="stats-publications"
+                className="flex items-center gap-4"
+              >
+                <div
+                  id="stats-publications-icon"
+                  data-testId="stats-publications-icon"
+                  className="p-3 bg-blue-100 rounded-lg"
+                >
                   <BookOpen className="h-6 w-6 text-blue-600" />
                 </div>
-                <div>
+                <div
+                  id="stats-publications-text"
+                  data-testId="stats-publications-text"
+                >
                   <p className="text-2xl font-bold">
                     {publications?.posts?.length}
                   </p>
@@ -89,11 +116,19 @@ export default function Dashboard() {
           </Card>
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-green-100 rounded-lg">
+              <div
+                id="stats-forums"
+                data-testId="stats-forums"
+                className="flex items-center gap-4"
+              >
+                <div
+                  id="stats-forums-icon"
+                  data-testId="stats-forums-icon"
+                  className="p-3 bg-green-100 rounded-lg"
+                >
                   <MessageSquare className="h-6 w-6 text-green-600" />
                 </div>
-                <div>
+                <div id="stats-forums-text" data-testId="stats-forums-text">
                   <p className="text-2xl font-bold">{forums?.posts?.length}</p>
                   <p className="text-sm text-muted-foreground">Forum Topics</p>
                 </div>
@@ -102,11 +137,19 @@ export default function Dashboard() {
           </Card>
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-purple-100 rounded-lg">
+              <div
+                id="stats-users"
+                data-testId="stats-users"
+                className="flex items-center gap-4"
+              >
+                <div
+                  id="stats-users-icon"
+                  data-testId="stats-users-icon"
+                  className="p-3 bg-purple-100 rounded-lg"
+                >
                   <Users className="h-6 w-6 text-purple-600" />
                 </div>
-                <div>
+                <div id="stats-users-text" data-testId="stats-users-text">
                   <p className="text-2xl font-bold">{users?.count ?? 0}</p>
                   <p className="text-sm text-muted-foreground">Active Users</p>
                 </div>
@@ -116,11 +159,15 @@ export default function Dashboard() {
         </section>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div
+        id="content-grid"
+        data-testId="content-grid"
+        className="grid gap-6 lg:grid-cols-2"
+      >
         {/* Featured Publications */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <div>
+            <div id="featured-pub-header" data-testId="featured-pub-header">
               <CardTitle>Featured Publications</CardTitle>
               <CardDescription>
                 Latest articles from our school community
@@ -137,6 +184,8 @@ export default function Dashboard() {
             {featuredPublications?.length ? (
               featuredPublications.map((publication: any) => (
                 <div
+                  id={`featured-pub-item-${publication.pubId}`}
+                  data-testId={`featured-pub-item-${publication.pubId}`}
                   key={publication.pubId}
                   className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
                 >
@@ -147,7 +196,11 @@ export default function Dashboard() {
                       {publication?.author?.lastName[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 min-w-0 overflow-hidden">
+                  <div
+                    id={`featured-pub-content-${publication.pubId}`}
+                    data-testId={`featured-pub-content-${publication.pubId}`}
+                    className="flex-1 min-w-0 overflow-hidden"
+                  >
                     <Link
                       href={`/publications/${publication.pubId}`}
                       className="block"
@@ -159,7 +212,11 @@ export default function Dashboard() {
                         {publication?.title}
                       </h4>
                     </Link>
-                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <div
+                      id={`featured-pub-meta-${publication.pubId}`}
+                      data-testId={`featured-pub-meta-${publication.pubId}`}
+                      className="flex items-center gap-2 mt-1 flex-wrap"
+                    >
                       <span className="text-xs text-muted-foreground truncate">
                         by {publication?.author?.firstName}{" "}
                         {publication?.author?.lastName}
@@ -171,17 +228,33 @@ export default function Dashboard() {
                         {publication?.category}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
-                      <div className="flex items-center gap-1 flex-shrink-0">
+                    <div
+                      id={`featured-pub-stats-${publication.pubId}`}
+                      data-testId={`featured-pub-stats-${publication.pubId}`}
+                      className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap"
+                    >
+                      <div
+                        id="page-flex-1"
+                        data-testId="page-flex-1"
+                        className="flex items-center gap-1 flex-shrink-0"
+                      >
                         <Clock className="h-3 w-3" />
                         Date published:{" "}
                         {new Date(publication?.createdAt).toLocaleDateString()}
                       </div>
-                      <div className="flex items-center gap-1 flex-shrink-0">
+                      <div
+                        id="page-flex-2"
+                        data-testId="page-flex-2"
+                        className="flex items-center gap-1 flex-shrink-0"
+                      >
                         <MessageCircle className="h-3 w-3" />
                         {publication?.pubComments?.length}
                       </div>
-                      <div className="flex items-center gap-1 flex-shrink-0">
+                      <div
+                        id="page-flex-3"
+                        data-testId="page-flex-3"
+                        className="flex items-center gap-1 flex-shrink-0"
+                      >
                         <Heart className="h-3 w-3" />
                         {publication?.pubLikes?.length}
                       </div>
@@ -200,7 +273,7 @@ export default function Dashboard() {
         {/* Recent Forum Activity */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <div>
+            <div id="recent-forum-header" data-testId="recent-forum-header">
               <CardTitle>Recent Forum Activity</CardTitle>
               <CardDescription>Latest discussions and topics</CardDescription>
             </div>
@@ -214,6 +287,8 @@ export default function Dashboard() {
           <CardContent className="space-y-4">
             {forums?.posts?.slice(0, 3).map((topic: any, index: number) => (
               <div
+                id={`forum-topic-item-${index}`}
+                data-testId={`forum-topic-item-${index}`}
                 key={index}
                 className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
               >
@@ -223,7 +298,11 @@ export default function Dashboard() {
                     {topic?.author?.firstName[0]} {topic?.author?.lastName[0]}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 min-w-0 overflow-hidden">
+                <div
+                  id={`forum-content-${index}`}
+                  data-testId={`forum-content-${index}`}
+                  className="flex-1 min-w-0 overflow-hidden"
+                >
                   <Link
                     href={`/forum/topic/${topic.forumId}`}
                     className="block"
@@ -235,7 +314,11 @@ export default function Dashboard() {
                       {topic.topicTitle}
                     </h4>
                   </Link>
-                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  <div
+                    id={`forum-meta-${index}`}
+                    data-testId={`forum-meta-${index}`}
+                    className="flex items-center gap-2 mt-1 flex-wrap"
+                  >
                     <span className="text-xs text-muted-foreground truncate">
                       by {topic?.author?.firstName} {topic?.author?.lastName}
                     </span>
@@ -243,12 +326,24 @@ export default function Dashboard() {
                       {topic.category}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
-                    <div className="flex items-center gap-1 flex-shrink-0">
+                  <div
+                    id="page-flex-4"
+                    data-testId="page-flex-4"
+                    className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap"
+                  >
+                    <div
+                      id="page-flex-5"
+                      data-testId="page-flex-5"
+                      className="flex items-center gap-1 flex-shrink-0"
+                    >
                       <MessageCircle className="h-3 w-3" />
                       {topic?.forumComments?.length} comments
                     </div>
-                    <div className="flex items-center gap-1 flex-shrink-0">
+                    <div
+                      id="page-flex-6"
+                      data-testId="page-flex-6"
+                      className="flex items-center gap-1 flex-shrink-0"
+                    >
                       <Clock className="h-3 w-3" />
                       Date created:{" "}
                       {new Date(topic?.createdAt).toLocaleDateString()}
@@ -269,7 +364,11 @@ export default function Dashboard() {
             <CardDescription>Common tasks and shortcuts</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div
+              id="quick-actions-grid"
+              data-testId="quick-actions-grid"
+              className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"
+            >
               <Button
                 variant="outline"
                 className="h-20 flex-col gap-2 bg-transparent"

@@ -95,13 +95,13 @@ export default function LoginPage() {
 
 
   return (
-    <div className="min-h-screen flex">
+    <div id="page-flex-1" data-testId="page-flex-1" className="min-h-screen flex">
       {/* Left Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-6">
-          <div className="text-center space-y-2">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="h-10 w-10 bg-blue-600 rounded-lg flex items-center justify-center">
+      <div id="page-flex-2" data-testId="page-flex-2" className="flex-1 flex items-center justify-center p-8">
+        <div id="page-div-3" data-testId="page-div-3" className="w-full max-w-md space-y-6">
+          <div id="page-div-4" data-testId="page-div-4" className="text-center space-y-2">
+            <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center justify-center gap-2 mb-4">
+              <div id="page-flex-6" data-testId="page-flex-6" className="h-10 w-10 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">RS</span>
               </div>
               <span className="font-bold text-xl">Ramos School</span>
@@ -121,7 +121,7 @@ export default function LoginPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
+                <div id="page-div-7" data-testId="page-div-7" className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
@@ -134,9 +134,9 @@ export default function LoginPage() {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div id="page-div-8" data-testId="page-div-8" className="space-y-2">
                   <Label htmlFor="password">Password</Label>
-                  <div className="relative">
+                  <div id="page-div-9" data-testId="page-div-9" className="relative">
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
@@ -163,14 +163,14 @@ export default function LoginPage() {
                 </div>
 
                 {successMessage && (
-                  <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600 mr-2"></div>
+                  <div id="page-flex-10" data-testId="page-flex-10" className="text-sm text-green-600 bg-green-50 p-3 rounded-md flex items-center">
+                    <div id="page-div-11" data-testId="page-div-11" className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600 mr-2"></div>
                     {successMessage}
                   </div>
                 )}
 
                 {errorMessage && (
-                  <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+                  <div id="page-div-12" data-testId="page-div-12" className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
                     {errorMessage}
                   </div>
                 )}
@@ -180,7 +180,7 @@ export default function LoginPage() {
                 </Button>
               </form>
 
-              <div className="mt-4 text-center">
+              <div id="page-div-13" data-testId="page-div-13" className="mt-4 text-center">
                 {/* <Link
                   href="/forgot-password"
                   className="text-sm text-blue-600 hover:underline"
@@ -191,7 +191,7 @@ export default function LoginPage() {
             </CardContent>
           </Card>
 
-          <div className="text-center text-sm text-muted-foreground">
+          <div id="page-div-14" data-testId="page-div-14" className="text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="text-blue-600 hover:underline">
               Register here and check your email for account approval!
@@ -201,9 +201,9 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side - Features */}
-      <div className="hidden lg:flex flex-1 bg-blue-50 dark:bg-blue-950/20 items-center justify-center p-8">
-        <div className="max-w-md space-y-8">
-          <div className="text-center">
+      <div id="page-div-15" data-testId="page-div-15" className="hidden lg:flex flex-1 bg-blue-50 dark:bg-blue-950/20 items-center justify-center p-8">
+        <div id="page-div-16" data-testId="page-div-16" className="max-w-md space-y-8">
+          <div id="page-div-17" data-testId="page-div-17" className="text-center">
             <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-100 mb-4">
               Connect with your school community
             </h2>
@@ -213,12 +213,12 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="space-y-6">
-            <div className="flex items-start gap-4">
-              <div className="bg-blue-600 p-2 rounded-lg">
+          <div id="page-div-18" data-testId="page-div-18" className="space-y-6">
+            <div id="page-flex-19" data-testId="page-flex-19" className="flex items-start gap-4">
+              <div id="page-div-20" data-testId="page-div-20" className="bg-blue-600 p-2 rounded-lg">
                 <BookOpen className="h-5 w-5 text-white" />
               </div>
-              <div>
+              <div id="page-div-21" data-testId="page-div-21">
                 <h3 className="font-semibold text-blue-900 dark:text-blue-100">
                   School Publications
                 </h3>
@@ -228,11 +228,11 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-4">
-              <div className="bg-blue-600 p-2 rounded-lg">
+            <div id="page-flex-22" data-testId="page-flex-22" className="flex items-start gap-4">
+              <div id="page-div-23" data-testId="page-div-23" className="bg-blue-600 p-2 rounded-lg">
                 <MessageSquare className="h-5 w-5 text-white" />
               </div>
-              <div>
+              <div id="page-div-24" data-testId="page-div-24">
                 <h3 className="font-semibold text-blue-900 dark:text-blue-100">
                   Discussion Forums
                 </h3>
@@ -242,11 +242,11 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-4">
-              <div className="bg-blue-600 p-2 rounded-lg">
+            <div id="page-flex-25" data-testId="page-flex-25" className="flex items-start gap-4">
+              <div id="page-div-26" data-testId="page-div-26" className="bg-blue-600 p-2 rounded-lg">
                 <Users className="h-5 w-5 text-white" />
               </div>
-              <div>
+              <div id="page-div-27" data-testId="page-div-27">
                 <h3 className="font-semibold text-blue-900 dark:text-blue-100">
                   Community
                 </h3>

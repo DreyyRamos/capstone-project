@@ -59,8 +59,8 @@ function SearchResultsContent() {
 
   if (!query) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
+      <div id="page-container" data-testId="page-container" className="container mx-auto px-4 py-8">
+        <div id="page-div-2" data-testId="page-div-2" className="text-center">
           <Search className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
           <h1 className="text-2xl font-bold mb-2">Search</h1>
           <p className="text-muted-foreground">
@@ -77,8 +77,8 @@ function SearchResultsContent() {
   const forumsCount = results?.forums.length || 0;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
+    <div id="page-div-3" data-testId="page-div-3" className="container mx-auto px-4 py-8">
+      <div id="page-div-4" data-testId="page-div-4" className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Search Results</h1>
         <p className="text-muted-foreground">
           {isLoading
@@ -93,7 +93,7 @@ function SearchResultsContent() {
         className="w-full"
       >
         {/* Scrollable tabs container for mobile */}
-        <div className="overflow-x-auto pb-2 -mb-2 scrollbar-hide">
+        <div id="page-div-5" data-testId="page-div-5" className="overflow-x-auto pb-2 -mb-2 scrollbar-hide">
           <TabsList className="inline-flex w-auto min-w-full h-auto p-1 bg-muted/50">
             <TabsTrigger
               value="all"
@@ -134,7 +134,7 @@ function SearchResultsContent() {
         </div>
 
         {isLoading ? (
-          <div className="mt-8 space-y-4">
+          <div id="page-div-6" data-testId="page-div-6" className="mt-8 space-y-4">
             {[...Array(5)].map((_, i) => (
               <Card key={i}>
                 <CardHeader>
@@ -149,13 +149,13 @@ function SearchResultsContent() {
             ))}
           </div>
         ) : error ? (
-          <div className="mt-8 text-center">
+          <div id="page-div-7" data-testId="page-div-7" className="mt-8 text-center">
             <p className="text-red-500">
               Something went wrong. Please try again.
             </p>
           </div>
         ) : totalResults === 0 ? (
-          <div className="mt-8 text-center">
+          <div id="page-div-8" data-testId="page-div-8" className="mt-8 text-center">
             <Search className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
             <h2 className="text-xl font-semibold mb-2">No results found</h2>
             <p className="text-muted-foreground">
@@ -165,15 +165,15 @@ function SearchResultsContent() {
         ) : (
           <>
             <TabsContent value="all" className="mt-8">
-              <div className="space-y-6">
+              <div id="page-div-9" data-testId="page-div-9" className="space-y-6">
                 {/* Users Results */}
                 {usersCount > 0 && (
-                  <div>
+                  <div id="page-div-10" data-testId="page-div-10">
                     <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                       <User className="h-5 w-5" />
                       Users ({usersCount})
                     </h2>
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div id="page-grid-11" data-testId="page-grid-11" className="grid gap-4 md:grid-cols-2">
                       {results?.users.slice(0, 4).map((user) => (
                         <Card
                           key={user.id}
@@ -184,7 +184,7 @@ function SearchResultsContent() {
                               href={`/visit/user/${user.id}`}
                               className="block"
                             >
-                              <div className="flex items-center gap-3">
+                              <div id="page-flex-12" data-testId="page-flex-12" className="flex items-center gap-3">
                                 <Avatar className="h-12 w-12">
                                   <AvatarImage src={user.profileImage || ""} />
                                   <AvatarFallback>
@@ -193,11 +193,11 @@ function SearchResultsContent() {
                                       .toUpperCase()}
                                   </AvatarFallback>
                                 </Avatar>
-                                <div className="flex-1 min-w-0">
+                                <div id="page-div-13" data-testId="page-div-13" className="flex-1 min-w-0">
                                   <h3 className="font-medium truncate">
                                     {getDisplayName(user)}
                                   </h3>
-                                  <div className="flex items-center gap-2 mt-1">
+                                  <div id="page-flex-14" data-testId="page-flex-14" className="flex items-center gap-2 mt-1">
                                     <Badge variant="secondary">
                                       {user.role}
                                     </Badge>
@@ -231,12 +231,12 @@ function SearchResultsContent() {
 
                 {/* Publications Results */}
                 {publicationsCount > 0 && (
-                  <div>
+                  <div id="page-div-15" data-testId="page-div-15">
                     <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                       <FileText className="h-5 w-5" />
                       Publications ({publicationsCount})
                     </h2>
-                    <div className="space-y-4">
+                    <div id="page-div-16" data-testId="page-div-16" className="space-y-4">
                       {results?.publications.slice(0, 3).map((publication) => (
                         <Card
                           key={publication.pubId}
@@ -244,7 +244,7 @@ function SearchResultsContent() {
                         >
                           <CardContent className="p-6">
                             <Link href={`/publications/${publication.pubId}`}>
-                              <div className="flex gap-4">
+                              <div id="page-flex-17" data-testId="page-flex-17" className="flex gap-4">
                                 {publication.imageUrl && (
                                   <img
                                     src={publication.imageUrl}
@@ -252,8 +252,8 @@ function SearchResultsContent() {
                                     className="h-20 w-20 object-cover rounded-lg flex-shrink-0"
                                   />
                                 )}
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 mb-2">
+                                <div id="page-div-18" data-testId="page-div-18" className="flex-1 min-w-0">
+                                  <div id="page-flex-19" data-testId="page-flex-19" className="flex items-center gap-2 mb-2">
                                     <h3 className="font-semibold text-lg truncate">
                                       {publication.title}
                                     </h3>
@@ -266,8 +266,8 @@ function SearchResultsContent() {
                                   <p className="text-muted-foreground line-clamp-3 mb-3">
                                     {publication.excerpt}
                                   </p>
-                                  <div className="flex items-center justify-between text-sm text-muted-foreground flex-wrap gap-2">
-                                    <div className="flex items-center gap-2">
+                                  <div id="page-flex-20" data-testId="page-flex-20" className="flex items-center justify-between text-sm text-muted-foreground flex-wrap gap-2">
+                                    <div id="page-flex-21" data-testId="page-flex-21" className="flex items-center gap-2">
                                       <Avatar className="h-6 w-6">
                                         <AvatarImage
                                           src={
@@ -291,7 +291,7 @@ function SearchResultsContent() {
                                         {formatDate(publication.updatedAt)}
                                       </span>
                                     </div>
-                                    <div className="flex items-center gap-4">
+                                    <div id="page-flex-22" data-testId="page-flex-22" className="flex items-center gap-4">
                                       <span>
                                         {publication._count.pubLikes} likes
                                       </span>
@@ -302,7 +302,7 @@ function SearchResultsContent() {
                                     </div>
                                   </div>
                                   {publication.tags.length > 0 && (
-                                    <div className="flex gap-1 mt-2 flex-wrap">
+                                    <div id="page-flex-23" data-testId="page-flex-23" className="flex gap-1 mt-2 flex-wrap">
                                       {publication.tags
                                         .slice(0, 3)
                                         .map((tag) => (
@@ -345,12 +345,12 @@ function SearchResultsContent() {
 
                 {/* Forums Results */}
                 {forumsCount > 0 && (
-                  <div>
+                  <div id="page-div-24" data-testId="page-div-24">
                     <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                       <MessageSquare className="h-5 w-5" />
                       Forums ({forumsCount})
                     </h2>
-                    <div className="space-y-4">
+                    <div id="page-div-25" data-testId="page-div-25" className="space-y-4">
                       {results?.forums.slice(0, 3).map((forum) => (
                         <Card
                           key={forum.forumId}
@@ -358,7 +358,7 @@ function SearchResultsContent() {
                         >
                           <CardContent className="p-6">
                             <Link href={`/forum/topic/${forum.forumId}`}>
-                              <div className="flex gap-4">
+                              <div id="page-flex-26" data-testId="page-flex-26" className="flex gap-4">
                                 {forum.imageUrl && (
                                   <img
                                     src={forum.imageUrl}
@@ -366,15 +366,15 @@ function SearchResultsContent() {
                                     className="h-20 w-20 object-cover rounded-lg flex-shrink-0"
                                   />
                                 )}
-                                <div className="flex-1 min-w-0">
+                                <div id="page-div-27" data-testId="page-div-27" className="flex-1 min-w-0">
                                   <h3 className="font-semibold text-lg mb-2 truncate">
                                     {forum.topicTitle}
                                   </h3>
                                   <p className="text-muted-foreground line-clamp-3 mb-3">
                                     {forum.description}
                                   </p>
-                                  <div className="flex items-center justify-between text-sm text-muted-foreground flex-wrap gap-2">
-                                    <div className="flex items-center gap-2">
+                                  <div id="page-flex-28" data-testId="page-flex-28" className="flex items-center justify-between text-sm text-muted-foreground flex-wrap gap-2">
+                                    <div id="page-flex-29" data-testId="page-flex-29" className="flex items-center gap-2">
                                       <Avatar className="h-6 w-6">
                                         <AvatarImage
                                           src={forum.author?.profileImage || ""}
@@ -395,7 +395,7 @@ function SearchResultsContent() {
                                         {formatDate(forum.updatedAt)}
                                       </span>
                                     </div>
-                                    <div className="flex items-center gap-4">
+                                    <div id="page-flex-30" data-testId="page-flex-30" className="flex items-center gap-4">
                                       <span>
                                         {forum._count.forumLikes} likes
                                       </span>
@@ -405,7 +405,7 @@ function SearchResultsContent() {
                                     </div>
                                   </div>
                                   {forum.tags.length > 0 && (
-                                    <div className="flex gap-1 mt-2 flex-wrap">
+                                    <div id="page-flex-31" data-testId="page-flex-31" className="flex gap-1 mt-2 flex-wrap">
                                       {forum.tags.slice(0, 3).map((tag) => (
                                         <Badge
                                           key={tag}
@@ -447,7 +447,7 @@ function SearchResultsContent() {
             </TabsContent>
 
             <TabsContent value="users" className="mt-8">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div id="page-grid-32" data-testId="page-grid-32" className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {results?.users.map((user) => (
                   <UserSearchResult key={user.id} user={user} />
                 ))}
@@ -455,7 +455,7 @@ function SearchResultsContent() {
             </TabsContent>
 
             <TabsContent value="publications" className="mt-8">
-              <div className="space-y-4">
+              <div id="page-div-33" data-testId="page-div-33" className="space-y-4">
                 {results?.publications.map((publication) => (
                   <PubSearchResult
                     key={publication.pubId}
@@ -466,7 +466,7 @@ function SearchResultsContent() {
             </TabsContent>
 
             <TabsContent value="forums" className="mt-8">
-              <div className="space-y-4">
+              <div id="page-div-34" data-testId="page-div-34" className="space-y-4">
                 {results?.forums.map((forum) => (
                   <ForumSearchResult key={forum.forumId} forum={forum} />
                 ))}
@@ -483,11 +483,11 @@ export default function SearchPage() {
   return (
     <Suspense
       fallback={
-        <div className="container mx-auto px-4 py-8">
-          <div className="space-y-4">
+        <div id="page-div-35" data-testId="page-div-35" className="container mx-auto px-4 py-8">
+          <div id="page-div-36" data-testId="page-div-36" className="space-y-4">
             <Skeleton className="h-8 w-64" />
             <Skeleton className="h-4 w-96" />
-            <div className="space-y-4">
+            <div id="page-div-37" data-testId="page-div-37" className="space-y-4">
               {[...Array(3)].map((_, i) => (
                 <Card key={i}>
                   <CardHeader>

@@ -119,7 +119,7 @@ export const useUserStatusCheck = (
       <AlertDialog open={showModal} onOpenChange={setShowModal}>
         <AlertDialogContent className="max-w-md">
           <AlertDialogHeader>
-            <div className="flex items-center gap-2">
+            <div id="useUserStatusCheck-flex-1" data-testId="useUserStatusCheck-flex-1" className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-destructive" />
               <AlertDialogTitle className="text-destructive">
                 {modalContent.title}

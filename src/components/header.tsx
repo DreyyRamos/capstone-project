@@ -108,16 +108,16 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-6">
+        <div id="header-flex-1" data-testId="header-flex-1" className="max-w-7xl mx-auto flex h-16 items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div id="header-flex-2" data-testId="header-flex-2" className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">RS</span>
             </div>
             <span className="font-bold text-lg">Ramos School</span>
           </Link>
 
-          <div className="flex items-center gap-4">
-            <div className="relative hidden md:block">
+          <div id="header-flex-3" data-testId="header-flex-3" className="flex items-center gap-4">
+            <div id="header-div-4" data-testId="header-div-4" className="relative hidden md:block">
               <SearchBar className="hidden md:block" />
             </div>
 
@@ -145,7 +145,7 @@ export function Header() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-80">
-                    <div className="flex items-center justify-between px-2 py-1.5">
+                    <div id="header-flex-5" data-testId="header-flex-5" className="flex items-center justify-between px-2 py-1.5">
                       <DropdownMenuLabel className="p-0">
                         Notifications
                       </DropdownMenuLabel>
@@ -167,8 +167,8 @@ export function Header() {
                           onClick={() => handleNotificationClick(notif)}
                           className="w-full cursor-pointer"
                         >
-                          <div className="flex flex-col gap-1 w-full">
-                            <div className="flex items-center gap-2">
+                          <div id="header-flex-6" data-testId="header-flex-6" className="flex flex-col gap-1 w-full">
+                            <div id="header-flex-7" data-testId="header-flex-7" className="flex items-center gap-2">
                               {(notif.notifType === "reports" ||
                                 notif.notifTitle
                                   ?.toLowerCase()
@@ -227,7 +227,7 @@ export function Header() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-col space-y-1">
+                      <div id="header-flex-8" data-testId="header-flex-8" className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">
                           {user?.userData?.firstName || "User"}{" "}
                           {user?.userData?.lastName || "Lastname"}
@@ -292,7 +292,7 @@ export function Header() {
                 violations.
               </p>
               {selectedBanNotification && (
-                <div className="bg-red-50 dark:bg-red-950 p-3 rounded-md border border-red-200 dark:border-red-800">
+                <div id="header-div-9" data-testId="header-div-9" className="bg-red-50 dark:bg-red-950 p-3 rounded-md border border-red-200 dark:border-red-800">
                   <p className="font-medium text-red-800 dark:text-red-200">
                     {selectedBanNotification.notifTitle}
                   </p>

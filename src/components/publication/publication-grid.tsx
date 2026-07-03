@@ -40,7 +40,7 @@ const PublicationGrid = ({ publication }: PublicationProps) => {
       key={publication.pubId}
       className="overflow-hidden hover:shadow-lg transition-shadow"
     >
-      <div className="relative">
+      <div id="publication-grid-div-1" data-testId="publication-grid-div-1" className="relative">
         <img
           src={publication.imageUrl || "/placeholder.svg"}
           alt={publication.title}
@@ -70,7 +70,7 @@ const PublicationGrid = ({ publication }: PublicationProps) => {
 
         {/* Tags */}
         {publication.tags && publication.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-4">
+          <div id="publication-grid-flex-2" data-testId="publication-grid-flex-2" className="flex flex-wrap gap-1 mb-4">
             {publication.tags.slice(0, 3).map((tag, index) => (
               <Badge key={index} variant="outline" className="text-xs">
                 {tag}
@@ -84,7 +84,7 @@ const PublicationGrid = ({ publication }: PublicationProps) => {
           </div>
         )}
 
-        <div className="flex items-center gap-2 mb-4">
+        <div id="publication-grid-flex-3" data-testId="publication-grid-flex-3" className="flex items-center gap-2 mb-4">
           <Avatar className="h-8 w-8">
             <AvatarImage
               src={
@@ -97,7 +97,7 @@ const PublicationGrid = ({ publication }: PublicationProps) => {
               {publication.author?.lastName?.charAt(0)}
             </AvatarFallback>
           </Avatar>
-          <div>
+          <div id="publication-grid-div-4" data-testId="publication-grid-div-4">
             <p className="text-sm font-medium">
               {publication?.author?.firstName} {publication?.author?.lastName}
             </p>
@@ -108,8 +108,8 @@ const PublicationGrid = ({ publication }: PublicationProps) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <div className="flex items-center gap-4">
+        <div id="publication-grid-flex-5" data-testId="publication-grid-flex-5" className="flex items-center justify-between text-sm text-muted-foreground">
+          <div id="publication-grid-flex-6" data-testId="publication-grid-flex-6" className="flex items-center gap-4">
             {/* {publication.views && (
                         <span className="flex items-center gap-1">
                           <Eye className="h-4 w-4" />

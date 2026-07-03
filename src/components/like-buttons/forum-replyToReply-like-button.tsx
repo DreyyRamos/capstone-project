@@ -157,7 +157,7 @@ const ForumReplyToReplyLikeButton = ({
           likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <div className="relative group">
+        <div id="forum-replyToReply-like-button-div-1" data-testId="forum-replyToReply-like-button-div-1" className="relative group">
           {currentLikeReplyToReplyId === replyToReply?.replyToReplyId ? (
             <Loader className="animate-spin" />
           ) : userLike && userLike?.isLiked ? (

@@ -51,9 +51,9 @@ const Categories = ({ category }: CategoryProps) => {
   return (
     <Card key={category.id} className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 md:p-6">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+        <div id="categories-flex-1" data-testId="categories-flex-1" className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div id="categories-div-2" data-testId="categories-div-2" className="flex-1 min-w-0">
+            <div id="categories-flex-3" data-testId="categories-flex-3" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
               <h3 className="text-lg font-semibold truncate">
                 <Link
                   href={`/forum/category/${encodeURIComponent(category.name)}`}
@@ -69,7 +69,7 @@ const Categories = ({ category }: CategoryProps) => {
             <p className="text-muted-foreground mb-3 text-sm md:text-base">
               {category.description}
             </p>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
+            <div id="categories-flex-4" data-testId="categories-flex-4" className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <MessageSquare className="h-4 w-4 shrink-0" />
                 {category.topics} topics
@@ -84,7 +84,7 @@ const Categories = ({ category }: CategoryProps) => {
               </span>
             </div>
           </div>
-          <div className="w-full md:w-auto">
+          <div id="categories-div-5" data-testId="categories-div-5" className="w-full md:w-auto">
             <Button
               asChild
               variant="outline"

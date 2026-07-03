@@ -416,7 +416,7 @@ export default function ForumTopicPage({ params }: PageProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div id="page-div-1" data-testId="page-div-1" className="max-w-4xl mx-auto space-y-6">
       <AuthModal
         isOpen={isOpen}
         onClose={closeModal}
@@ -444,15 +444,15 @@ export default function ForumTopicPage({ params }: PageProps) {
       {/* Topic Header */}
       <Card>
         <CardContent className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
+          <div id="page-div-2" data-testId="page-div-2" className="space-y-4">
+            <div id="page-flex-3" data-testId="page-flex-3" className="flex items-center gap-2">
               {/* {topic.isPinned && <Pin className="h-4 w-4 text-blue-600" />} */}
               <Badge variant="secondary">{topic?.category}</Badge>
               <span className="text-sm text-muted-foreground">
                 {/* {topic.views} views */}
               </span>
             </div>
-            <div className="flex items-center gap-2 flex-wrap">
+            <div id="page-flex-4" data-testId="page-flex-4" className="flex items-center gap-2 flex-wrap">
               <span>Tags: </span>
               {topic?.tags?.map((tag: any) => (
                 <Badge key={tag} variant="outline" className="text-xs">
@@ -465,8 +465,8 @@ export default function ForumTopicPage({ params }: PageProps) {
               {topic?.topicTitle}
             </h1>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center justify-between">
+              <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
                   <AvatarImage
                     src={topic?.author?.profileImage || "/placeholder.svg"}
@@ -478,7 +478,7 @@ export default function ForumTopicPage({ params }: PageProps) {
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
-                <div>
+                <div id="page-div-7" data-testId="page-div-7">
                   <p className="font-medium">
                     {topic?.author?.firstName} {topic?.author?.lastName}
                   </p>
@@ -492,7 +492,7 @@ export default function ForumTopicPage({ params }: PageProps) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div id="page-flex-8" data-testId="page-flex-8" className="flex items-center gap-2">
                 <ForumLikeButton forum={topic} token={token} forumId={id} />
                 <Button variant="outline" size="sm" onClick={handleReportTopic}>
                   <Flag className="h-4 w-4" />
@@ -500,12 +500,12 @@ export default function ForumTopicPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="pt-4">
+            <div id="page-div-9" data-testId="page-div-9" className="pt-4">
               <ContentDisplay htmlContent={topic?.description} />
               {/* <p className="text-lg leading-relaxed">{topic?.description}</p> */}
             </div>
 
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div id="page-flex-10" data-testId="page-flex-10" className="flex items-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <MessageCircle className="h-4 w-4" />
                 {topic?.forumComments?.length} replies
@@ -516,13 +516,13 @@ export default function ForumTopicPage({ params }: PageProps) {
       </Card>
 
       {/* Replies */}
-      <div className="space-y-4">
+      <div id="page-div-11" data-testId="page-div-11" className="space-y-4">
         <h2 className="text-xl font-semibold">
           Replies ({topic?.forumComments?.length || 0})
         </h2>
 
         {topic?.forumComments?.length > 3 && (
-          <div className="group relative">
+          <div id="page-div-12" data-testId="page-div-12" className="group relative">
             <span
               className="text-muted-foreground text-sm cursor-pointer"
               onClick={() => setShowAll(!showAll)}
@@ -532,7 +532,7 @@ export default function ForumTopicPage({ params }: PageProps) {
                 : `View all ${topic?.forumComments?.length} replies.`}
             </span>
             {!showAll && (
-              <div className="absolute hidden bg-gray-100 p-2 rounded shadow">
+              <div id="page-div-13" data-testId="page-div-13" className="absolute hidden bg-gray-100 p-2 rounded shadow">
                 Click to view all replies.
               </div>
             )}
@@ -591,18 +591,18 @@ export default function ForumTopicPage({ params }: PageProps) {
       <Card>
         <CardContent className="p-6">
           <h3 className="text-lg font-semibold mb-4">Add a Reply</h3>
-          <div className="space-y-4">
+          <div id="page-div-14" data-testId="page-div-14" className="space-y-4">
             <Textarea
               placeholder="Share your thoughts or advice..."
               value={comment_content}
               onChange={(e) => setCommentContent(e.target.value)}
               rows={4}
             />
-            <div className="flex items-center justify-between">
+            <div id="page-flex-15" data-testId="page-flex-15" className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
                 Be respectful and constructive in your responses
               </p>
-              <div className="flex gap-2">
+              <div id="page-flex-16" data-testId="page-flex-16" className="flex gap-2">
                 <Button variant="outline" onClick={() => setCommentContent("")}>
                   Cancel
                 </Button>

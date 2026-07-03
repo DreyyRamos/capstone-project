@@ -75,10 +75,10 @@ export function EditorNavigation() {
 
   return (
     <nav className="sticky top-16 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-visible">
-      <div className="max-w-7xl mx-auto px-6">
+      <div id="editor-navigation-div-1" data-testId="editor-navigation-div-1" className="max-w-7xl mx-auto px-6">
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex h-14 items-center justify-between">
-          <div className="flex items-center space-x-6">
+        <div id="editor-navigation-div-2" data-testId="editor-navigation-div-2" className="hidden lg:flex h-14 items-center justify-between">
+          <div id="editor-navigation-flex-3" data-testId="editor-navigation-flex-3" className="flex items-center space-x-6">
             <Badge variant="secondary" className="bg-blue-100 text-blue-800">
               <Edit className="h-3 w-3 mr-1" />
               Editor
@@ -132,9 +132,9 @@ export function EditorNavigation() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="flex lg:hidden h-14 items-center justify-between">
+        <div id="editor-navigation-flex-4" data-testId="editor-navigation-flex-4" className="flex lg:hidden h-14 items-center justify-between">
           {/* Left side: Badge + Navigation (hidden when search is open) */}
-          <div className={cn(
+          <div id="editor-navigation-div-5" data-testId="editor-navigation-div-5" className={cn(
             "flex items-center space-x-2 transition-all duration-300",
             searchOpen ? "opacity-0 pointer-events-none w-0 overflow-hidden" : "opacity-100 flex-1"
           )}>
@@ -146,7 +146,7 @@ export function EditorNavigation() {
               <span className="hidden sm:inline">Editor</span>
             </Badge>
             
-            <div className="flex items-center space-x-1">
+            <div id="editor-navigation-flex-6" data-testId="editor-navigation-flex-6" className="flex items-center space-x-1">
               <Link
                 href="/"
                 className={cn(
@@ -183,13 +183,13 @@ export function EditorNavigation() {
           </div>
 
           {/* Search Area */}
-          <div className={cn(
+          <div id="editor-navigation-div-7" data-testId="editor-navigation-div-7" className={cn(
             "flex items-center transition-all duration-300",
             searchOpen ? "flex-1" : "shrink-0"
           )}>
             {searchOpen ? (
-              <div className="flex items-center gap-2 w-full animate-in fade-in slide-in-from-right-2 duration-200">
-                <div className="flex-1">
+              <div id="editor-navigation-flex-8" data-testId="editor-navigation-flex-8" className="flex items-center gap-2 w-full animate-in fade-in slide-in-from-right-2 duration-200">
+                <div id="editor-navigation-div-9" data-testId="editor-navigation-div-9" className="flex-1">
                   <SearchBar placeholder="Search..." autoFocus onClose={() => setSearchOpen(false)} />
                 </div>
                 <Button
@@ -214,7 +214,7 @@ export function EditorNavigation() {
           </div>
 
           {/* Mobile Menu (hidden when search is open) */}
-          <div className={cn(
+          <div id="editor-navigation-div-10" data-testId="editor-navigation-div-10" className={cn(
             "transition-all duration-300 shrink-0",
             searchOpen ? "opacity-0 pointer-events-none w-0 overflow-hidden ml-0" : "opacity-100 ml-2"
           )}>
@@ -232,9 +232,9 @@ export function EditorNavigation() {
                     Content creation and management tools
                   </SheetDescription>
                 </SheetHeader>
-                <div className="mt-6 space-y-6 pb-6">
+                <div id="editor-navigation-div-11" data-testId="editor-navigation-div-11" className="mt-6 space-y-6 pb-6">
                   {/* Main Navigation */}
-                  <div className="space-y-2">
+                  <div id="editor-navigation-div-12" data-testId="editor-navigation-div-12" className="space-y-2">
                     <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                       Main
                     </h3>
@@ -262,13 +262,13 @@ export function EditorNavigation() {
                   <Separator />
 
                   {/* Forum Categories */}
-                  <div className="space-y-2">
+                  <div id="editor-navigation-div-13" data-testId="editor-navigation-div-13" className="space-y-2">
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                       Forum Categories
                     </h3>
 
                     {/* scrollable area */}
-                    <div className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
+                    <div id="editor-navigation-div-14" data-testId="editor-navigation-div-14" className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
                       {forumCategories.map((category) => (
                         <Link
                           key={category.name}
@@ -365,10 +365,10 @@ export function EditorNavigation() {
 
 //   return (
 //     <nav className="sticky top-16 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-visible">
-//       <div className="max-w-7xl mx-auto px-6">
+//       <div id="editor-navigation-div-15" data-testId="editor-navigation-div-15" className="max-w-7xl mx-auto px-6">
 //         {/* Desktop Navigation */}
-//         <div className="hidden lg:flex h-14 items-center justify-between">
-//           <div className="flex items-center space-x-6">
+//         <div id="editor-navigation-div-16" data-testId="editor-navigation-div-16" className="hidden lg:flex h-14 items-center justify-between">
+//           <div id="editor-navigation-flex-17" data-testId="editor-navigation-flex-17" className="flex items-center space-x-6">
 //             <Badge variant="secondary" className="bg-blue-100 text-blue-800">
 //               <Edit className="h-3 w-3 mr-1" />
 //               Editor
@@ -422,8 +422,8 @@ export function EditorNavigation() {
 //         </div>
 
 //         {/* Mobile Navigation */}
-//         <div className="flex lg:hidden h-14 items-center justify-between">
-//           <div className="flex items-center space-x-2">
+//         <div id="editor-navigation-flex-18" data-testId="editor-navigation-flex-18" className="flex lg:hidden h-14 items-center justify-between">
+//           <div id="editor-navigation-flex-19" data-testId="editor-navigation-flex-19" className="flex items-center space-x-2">
 //             <Badge
 //               variant="secondary"
 //               className="bg-blue-100 text-blue-800 text-xs"
@@ -478,9 +478,9 @@ export function EditorNavigation() {
 //                   Content creation and management tools
 //                 </SheetDescription>
 //               </SheetHeader>
-//               <div className="mt-6 space-y-6 pb-6">
+//               <div id="editor-navigation-div-20" data-testId="editor-navigation-div-20" className="mt-6 space-y-6 pb-6">
 //                 {/* Main Navigation */}
-//                 <div className="space-y-2">
+//                 <div id="editor-navigation-div-21" data-testId="editor-navigation-div-21" className="space-y-2">
 //                   <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
 //                     Main
 //                   </h3>
@@ -508,13 +508,13 @@ export function EditorNavigation() {
 //                 <Separator />
 
 //                 {/* Forum Categories */}
-//                 <div className="space-y-2">
+//                 <div id="editor-navigation-div-22" data-testId="editor-navigation-div-22" className="space-y-2">
 //                   <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
 //                     Forum Categories
 //                   </h3>
 
 //                   {/* scrollable area */}
-//                   <div className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
+//                   <div id="editor-navigation-div-23" data-testId="editor-navigation-div-23" className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
 //                     {forumCategories.map((category) => (
 //                       <Link
 //                         key={category.name}

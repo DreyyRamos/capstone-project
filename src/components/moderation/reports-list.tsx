@@ -95,16 +95,16 @@ const ReportsList = ({
   return (
     <Card key={report.id} className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 sm:p-6">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
-              <div className="flex items-center gap-2">
+        <div id="reports-list-flex-1" data-testId="reports-list-flex-1" className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div id="reports-list-div-2" data-testId="reports-list-div-2" className="flex-1 min-w-0">
+            <div id="reports-list-flex-3" data-testId="reports-list-flex-3" className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
+              <div id="reports-list-flex-4" data-testId="reports-list-flex-4" className="flex items-center gap-2">
                 <TypeIcon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                 <h3 className="text-sm sm:text-lg font-semibold truncate">
                   {report.title}
                 </h3>
               </div>
-              <div className="flex flex-wrap gap-1">
+              <div id="reports-list-flex-5" data-testId="reports-list-flex-5" className="flex flex-wrap gap-1">
                 <Badge
                   className={
                     statusColors[report.status as keyof typeof statusColors]
@@ -124,7 +124,7 @@ const ReportsList = ({
               </div>
             </div>
 
-            <div className="bg-muted p-3 rounded-md mb-3">
+            <div id="reports-list-div-6" data-testId="reports-list-div-6" className="bg-muted p-3 rounded-md mb-3">
               <p className="text-sm italic break-words">
                 &quot;{report.contentPreview}&quot;
               </p>
@@ -135,35 +135,35 @@ const ReportsList = ({
             </p>
 
             {/* Mobile-friendly info layout */}
-            <div className="space-y-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-muted-foreground">
-                <div className="flex items-start gap-1">
+            <div id="reports-list-div-7" data-testId="reports-list-div-7" className="space-y-2">
+              <div id="reports-list-grid-8" data-testId="reports-list-grid-8" className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-muted-foreground">
+                <div id="reports-list-flex-9" data-testId="reports-list-flex-9" className="flex items-start gap-1">
                   <span className="font-medium flex-shrink-0">
                     Reported By:
                   </span>
                   <span className="truncate">{report.reportedBy}</span>
                 </div>
-                <div className="flex items-start gap-1">
+                <div id="reports-list-flex-10" data-testId="reports-list-flex-10" className="flex items-start gap-1">
                   <span className="font-medium flex-shrink-0">Against:</span>
                   <span className="truncate">{report.reportedUser}</span>
                 </div>
-                <div className="flex items-start gap-1">
+                <div id="reports-list-flex-11" data-testId="reports-list-flex-11" className="flex items-start gap-1">
                   <span className="font-medium flex-shrink-0">Reason:</span>
                   <span className="truncate">{report.reason}</span>
                 </div>
-                <div className="flex items-start gap-1">
+                <div id="reports-list-flex-12" data-testId="reports-list-flex-12" className="flex items-start gap-1">
                   <span className="font-medium flex-shrink-0">Category:</span>
                   <span className="truncate">{report.category}</span>
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
+              <div id="reports-list-flex-13" data-testId="reports-list-flex-13" className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
                 <Calendar className="h-4 w-4 flex-shrink-0" />
                 <span>{new Date(report.createdAt).toLocaleDateString()}</span>
               </div>
             </div>
           </div>
 
-          <div className="flex-shrink-0">
+          <div id="reports-list-div-14" data-testId="reports-list-div-14" className="flex-shrink-0">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

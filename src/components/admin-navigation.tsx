@@ -98,10 +98,10 @@ export function AdminNavigation() {
 
   return (
     <nav className="sticky top-16 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="max-w-7xl mx-auto px-1">
+      <div id="admin-navigation-div-1" data-testId="admin-navigation-div-1" className="max-w-7xl mx-auto px-1">
         {/* Desktop Navigation */}
-        <div className="hidden xl:flex h-14 items-center justify-between">
-          <div className="flex items-center space-x-4">
+        <div id="admin-navigation-div-2" data-testId="admin-navigation-div-2" className="hidden xl:flex h-14 items-center justify-between">
+          <div id="admin-navigation-flex-3" data-testId="admin-navigation-flex-3" className="flex items-center space-x-4">
             <Badge
               variant="secondary"
               className="bg-red-100 text-red-800 shrink-0"
@@ -191,7 +191,7 @@ export function AdminNavigation() {
           </div>
 
           {/* Quick Actions */}
-          <div className="flex items-center space-x-2">
+          <div id="admin-navigation-flex-4" data-testId="admin-navigation-flex-4" className="flex items-center space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button size="sm" className="flex items-center gap-1">
@@ -221,8 +221,8 @@ export function AdminNavigation() {
         </div>
 
         {/* Large Screen Navigation (but smaller than xl) */}
-        <div className="hidden lg:flex xl:hidden h-14 items-center justify-between">
-          <div className="flex items-center space-x-3">
+        <div id="admin-navigation-div-5" data-testId="admin-navigation-div-5" className="hidden lg:flex xl:hidden h-14 items-center justify-between">
+          <div id="admin-navigation-flex-6" data-testId="admin-navigation-flex-6" className="flex items-center space-x-3">
             <Badge
               variant="secondary"
               className="bg-red-100 text-red-800 shrink-0"
@@ -308,9 +308,9 @@ export function AdminNavigation() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="flex lg:hidden h-14 items-center justify-between px-3">
+        <div id="admin-navigation-flex-7" data-testId="admin-navigation-flex-7" className="flex lg:hidden h-14 items-center justify-between px-3">
           {/* Left side: Badge + Navigation (hidden when search is open) */}
-          <div
+          <div id="admin-navigation-div-8" data-testId="admin-navigation-div-8"
             className={cn(
               "flex items-center space-x-2 transition-all duration-300",
               searchOpen
@@ -326,7 +326,7 @@ export function AdminNavigation() {
               <span className="hidden sm:inline">Admin</span>
             </Badge>
 
-            <div className="flex items-center space-x-1">
+            <div id="admin-navigation-flex-9" data-testId="admin-navigation-flex-9" className="flex items-center space-x-1">
               {mainNavigation.slice(0, 2).map((item) => {
                 const isActive = pathname === item.href;
                 return (
@@ -349,15 +349,15 @@ export function AdminNavigation() {
           </div>
 
           {/* Search Area */}
-          <div
+          <div id="admin-navigation-div-10" data-testId="admin-navigation-div-10"
             className={cn(
               "flex items-center transition-all duration-300",
               searchOpen ? "flex-1" : "shrink-0",
             )}
           >
             {searchOpen ? (
-              <div className="flex items-center gap-2 w-full animate-in fade-in slide-in-from-right-2 duration-200">
-                <div className="flex-1">
+              <div id="admin-navigation-flex-11" data-testId="admin-navigation-flex-11" className="flex items-center gap-2 w-full animate-in fade-in slide-in-from-right-2 duration-200">
+                <div id="admin-navigation-div-12" data-testId="admin-navigation-div-12" className="flex-1">
                   <SearchBar
                     placeholder="Search..."
                     autoFocus
@@ -386,7 +386,7 @@ export function AdminNavigation() {
           </div>
 
           {/* Mobile Menu (hidden when search is open) */}
-          <div
+          <div id="admin-navigation-div-13" data-testId="admin-navigation-div-13"
             className={cn(
               "transition-all duration-300 shrink-0",
               searchOpen
@@ -408,9 +408,9 @@ export function AdminNavigation() {
                     Full administrative access
                   </SheetDescription>
                 </SheetHeader>
-                <div className="mt-6 space-y-6">
+                <div id="admin-navigation-div-14" data-testId="admin-navigation-div-14" className="mt-6 space-y-6">
                   {/* Main Navigation */}
-                  <div className="space-y-2">
+                  <div id="admin-navigation-div-15" data-testId="admin-navigation-div-15" className="space-y-2">
                     <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                       Main
                     </h3>
@@ -436,7 +436,7 @@ export function AdminNavigation() {
                   </div>
 
                   {/* Admin Navigation Items */}
-                  <div className="space-y-2">
+                  <div id="admin-navigation-div-16" data-testId="admin-navigation-div-16" className="space-y-2">
                     <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                       Admin Tools
                     </h3>
@@ -465,13 +465,13 @@ export function AdminNavigation() {
                   <Separator />
 
                   {/* Forum Categories */}
-                  <div className="space-y-2">
+                  <div id="admin-navigation-div-17" data-testId="admin-navigation-div-17" className="space-y-2">
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                       Forum Categories
                     </h3>
 
                     {/* scrollable area */}
-                    <div className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
+                    <div id="admin-navigation-div-18" data-testId="admin-navigation-div-18" className="max-h-56 overflow-y-auto pr-2 -mr-2 space-y-1">
                       {forumCategories.map((category) => (
                         <Link
                           key={category.name}
@@ -488,7 +488,7 @@ export function AdminNavigation() {
                   <Separator />
 
                   {/* Quick Actions */}
-                  <div className="space-y-2">
+                  <div id="admin-navigation-div-19" data-testId="admin-navigation-div-19" className="space-y-2">
                     <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                       Quick Actions
                     </h3>
