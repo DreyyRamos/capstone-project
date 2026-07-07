@@ -38,3 +38,32 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export async function POST(req: NextRequest) {
+  try {
+    const authResult = await authMiddleware(req);
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+    // const { id: authorId } = authResult.user;
+
+    const { user_email, firstName, lastName, password } = await req.json();
+
+    const newAdmission = await prisma.userAdmission.create({
+      data: {
+        user_email,
+        firstName,
+        lastName,
+        password,
+      },
+    });
+
+    return NextResponse.json({ admission: newAdmission }, { status: 201 });
+  } catch (error) {
+    console.error("Transaction failed:", error);
+    return NextResponse.json(
+      { message: "Failed to create publication and notify users." },
+      { status: 500 },
+    );
+  }
+}
