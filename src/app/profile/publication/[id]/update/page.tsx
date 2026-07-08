@@ -21,16 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Upload, X, Eye, Save } from "lucide-react";
+import { ArrowLeft, X, Eye } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  usePostQuery,
-  useFetchOnePostQuery,
-  usePostByIdQuery,
-} from "@/hooks/usePost";
+import { useFetchOnePostQuery } from "@/hooks/usePost";
 import { useUserPublicationQuery } from "@/hooks/useUser";
 import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
@@ -53,7 +48,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
   });
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-  const [isDraft, setIsDraft] = useState(true);
   const router = useRouter();
   const token = Cookies.get("token") || "";
   const { data: pubToUpdate, isLoading } = useFetchOnePostQuery(id);
@@ -86,9 +80,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
     }
   }, [pubToUpdate]);
 
-  console.log("Current category:", formData.category);
-  console.log("pubToUpdate:", pubToUpdate?.category);
-
   const handleAddTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
       setTags([...tags, newTag.trim()]);
@@ -117,7 +108,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
             toast("Publication updated successfully!");
             router.push(`/publications/${id}`);
           },
-        }
+        },
       );
     } catch (error: any) {
       console.error(error);
@@ -140,7 +131,7 @@ export default function UpdatePublicationPage({ params }: PageProps) {
   const handleContentChange = (richText: string) => {
     setFormData({
       ...formData,
-      content: richText, // Set the 'content' field with the new HTML
+      content: richText,
     });
   };
 
@@ -156,12 +147,28 @@ export default function UpdatePublicationPage({ params }: PageProps) {
   }
 
   return (
-    <div id="page-div-1" data-testId="page-div-1" className="max-w-4xl mx-auto space-y-6">
+    <div
+      id="page-div-1"
+      data-testId="page-div-1"
+      className="max-w-4xl mx-auto space-y-6"
+    >
       {/* Header */}
-      <div id="page-flex-2" data-testId="page-flex-2" className="flex items-center justify-between">
-        <div id="page-flex-3" data-testId="page-flex-3" className="flex items-center gap-4">
+      <div
+        id="page-flex-2"
+        data-testId="page-flex-2"
+        className="flex items-center justify-between"
+      >
+        <div
+          id="page-flex-3"
+          data-testId="page-flex-3"
+          className="flex items-center gap-4"
+        >
           <Button asChild variant="ghost">
-            <Link id="page-link-1" data-testId="page-link-1" href="/publications">
+            <Link
+              id="page-link-1"
+              data-testId="page-link-1"
+              href="/publications"
+            >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Link>
@@ -173,19 +180,19 @@ export default function UpdatePublicationPage({ params }: PageProps) {
             </p>
           </div>
         </div>
-        {/* save to drafat */}
-        {/* <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center gap-2">
-          <Button id="page-button-1" data-testId="page-button-1" variant="outline" onClick={() => handleSubmit(false)}>
-            <Save className="mr-2 h-4 w-4" />
-            Save Draft
-          </Button>
-          <Button id="page-button-2" data-testId="page-button-2" onClick={() => handleSubmit(true)}>Publish</Button>
-        </div> */}
       </div>
       <form onSubmit={handleSubmit}>
-        <div id="page-grid-6" data-testId="page-grid-6" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div
+          id="page-grid-6"
+          data-testId="page-grid-6"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        >
           {/* Main Content */}
-          <div id="page-div-7" data-testId="page-div-7" className="lg:col-span-2 space-y-6">
+          <div
+            id="page-div-7"
+            data-testId="page-div-7"
+            className="lg:col-span-2 space-y-6"
+          >
             {/* Basic Information */}
             <Card>
               <CardHeader>
@@ -195,7 +202,11 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div id="page-div-8" data-testId="page-div-8" className="space-y-2">
+                <div
+                  id="page-div-8"
+                  data-testId="page-div-8"
+                  className="space-y-2"
+                >
                   <Label htmlFor="title">Title *</Label>
                   <Input
                     id="title"
@@ -206,7 +217,11 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   />
                 </div>
 
-                <div id="page-div-9" data-testId="page-div-9" className="space-y-2">
+                <div
+                  id="page-div-9"
+                  data-testId="page-div-9"
+                  className="space-y-2"
+                >
                   <Label htmlFor="excerpt">Excerpt</Label>
                   <Textarea
                     id="excerpt"
@@ -234,13 +249,19 @@ export default function UpdatePublicationPage({ params }: PageProps) {
               </CardHeader>
               <CardContent>
                 {formData.imageUrl ? (
-                  <div id="page-div-10" data-testId="page-div-10" className="relative">
+                  <div
+                    id="page-div-10"
+                    data-testId="page-div-10"
+                    className="relative"
+                  >
                     <img
                       src={formData.imageUrl || "/placeholder.svg"}
                       alt="Cover"
                       className="w-full h-48 object-cover rounded-lg"
                     />
-                    <Button id="page-button-3" data-testId="page-button-3"
+                    <Button
+                      id="page-button-3"
+                      data-testId="page-button-3"
                       variant="destructive"
                       size="sm"
                       className="absolute top-2 right-2"
@@ -266,7 +287,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                       uploadIcon: "h-12 w-12 text-muted-foreground/50 mb-4",
                       label: "text-sm text-muted-foreground",
                       allowedContent: "text-xs text-muted-foreground",
-                      // Make the button and progress bar transparent
                       button:
                         "absolute inset-0 h-full w-full cursor-pointer bg-transparent text-transparent ut-uploading:bg-slate-900/50 ut-uploading:text-white",
                     }}
@@ -289,15 +309,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   onChange={handleContentChange}
                 />
               </CardContent>
-              {/* <Button id="page-button-4" data-testId="page-button-4"
-                type="submit"
-                variant="outline"
-                className="w-full bg-transparent"
-                disabled={isUpdating}
-              >
-                <Save className="mr-2 h-4 w-4" />
-                Update
-              </Button> */}
             </Card>
           </div>
 
@@ -309,7 +320,11 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 <CardTitle>Publication Settings</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div id="page-div-12" data-testId="page-div-12" className="space-y-2">
+                <div
+                  id="page-div-12"
+                  data-testId="page-div-12"
+                  className="space-y-2"
+                >
                   <Label htmlFor="category">Category *</Label>
                   <Select
                     key={formData.category} // Force re-render when category changes
@@ -328,16 +343,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                     </SelectContent>
                   </Select>
                 </div>
-
-                {/* <div id="page-flex-13" data-testId="page-flex-13" className="flex items-center justify-between">
-                  <div id="page-div-14" data-testId="page-div-14" className="space-y-0.5">
-                    <Label>Save as Draft</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Don&apos;t publish immediately
-                    </p>
-                  </div>
-                  <Switch checked={isDraft} onCheckedChange={setIsDraft} />
-                </div> */}
               </CardContent>
             </Card>
 
@@ -350,7 +355,11 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div id="page-flex-15" data-testId="page-flex-15" className="flex gap-2">
+                <div
+                  id="page-flex-15"
+                  data-testId="page-flex-15"
+                  className="flex gap-2"
+                >
                   <Input
                     placeholder="Add tag..."
                     value={newTag}
@@ -362,13 +371,23 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                       }
                     }}
                   />
-                  <Button id="page-button-5" data-testId="page-button-5" type="button" onClick={handleAddTag} size="sm">
+                  <Button
+                    id="page-button-5"
+                    data-testId="page-button-5"
+                    type="button"
+                    onClick={handleAddTag}
+                    size="sm"
+                  >
                     Add
                   </Button>
                 </div>
 
                 {tags.length > 0 && (
-                  <div id="page-flex-16" data-testId="page-flex-16" className="flex flex-wrap gap-2">
+                  <div
+                    id="page-flex-16"
+                    data-testId="page-flex-16"
+                    className="flex flex-wrap gap-2"
+                  >
                     {tags.map((tag) => (
                       <Badge
                         key={tag}
@@ -376,7 +395,9 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                         className="flex items-center gap-1"
                       >
                         {tag}
-                        <button id="page-button-6" data-testId="page-button-6"
+                        <button
+                          id="page-button-6"
+                          data-testId="page-button-6"
                           onClick={() => handleRemoveTag(tag)}
                           className="ml-1 hover:text-destructive"
                         >
@@ -395,7 +416,9 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 <CardTitle>Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button id="page-button-7" data-testId="page-button-7"
+                <Button
+                  id="page-button-7"
+                  data-testId="page-button-7"
                   type="submit"
                   variant="outline"
                   className="w-full bg-transparent"
@@ -404,10 +427,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   <Eye className="mr-2 h-4 w-4" />
                   Update
                 </Button>
-                {/* <Button id="page-button-8" data-testId="page-button-8" variant="outline" className="w-full bg-transparent">
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Draft
-                </Button> */}
               </CardContent>
             </Card>
           </div>

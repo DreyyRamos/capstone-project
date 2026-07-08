@@ -39,7 +39,6 @@ type PageProps = {
 export default function PublicationDetailPage({ params }: PageProps) {
   const { confirmDelete } = useConfirmation();
   const [comment_content, setCommentContent] = useState("");
-  const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
@@ -54,7 +53,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const [editingReply, setEditingReply] = useState<string | null>(null);
   const [editReplyContent, setEditReplyContent] = useState("");
   const [editingNestedReply, setEditingNestedReply] = useState<string | null>(
-    null
+    null,
   );
   const [editNestedReplyContent, setEditNestedReplyContent] = useState("");
 
@@ -74,7 +73,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
 
   const token = Cookies.get("token") || "";
   const { data: currentUser } = useUserQuery(token);
-  console.log("current user", currentUser);
   const { data: publication, isLoading, isError } = useFetchOnePostQuery(id);
   const { makeFeatured, isLoading: isCurrentlyLoading } = useIsFeatured(token);
   const {
@@ -90,19 +88,19 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const { mutate: addNestedReply } = useAddNestedReply(token);
   const { user } = useTokenUser();
   const userRole = user?.role || "STUDENT";
-  const { StatusModal, checkComment, checkLike, checkShare, checkAndExecute } =
-    useUserStatusCheck(currentUser?.userData?.status, {
+  const { StatusModal, checkAndExecute } = useUserStatusCheck(
+    currentUser?.userData?.status,
+    {
       onBlocked: (action, status) => {
         console.log(`User tried to ${action} but is ${status}`);
       },
-    });
+    },
+  );
 
-  // Helper function to check if current user owns the content
   const isCurrentUserContent = (authorId: string) => {
     return currentUser?.userData?.id === authorId;
   };
 
-  // Edit handlers
   const handleEditComment = (comment: any) => {
     setEditingComment(comment.commentId);
     setEditCommentContent(comment.comment_content);
@@ -121,16 +119,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const handleSaveEditComment = async (commentId: string) => {
     if (editCommentContent.trim()) {
       try {
-        // Add API call to update comment here
-        // await updateComment(commentId, editCommentContent);
         editComment({ comment: editCommentContent, commentId });
-        console.log("Updating comment:", commentId, editCommentContent);
 
         setEditingComment(null);
         setEditCommentContent("");
         toast.success("Comment updated successfully!");
-
-        // Refresh the data or update local state
       } catch (error) {
         toast.error("Failed to update comment");
         console.error("Error updating comment:", error);
@@ -141,16 +134,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const handleSaveEditReply = async (replyId: string, commentId: string) => {
     if (editReplyContent.trim()) {
       try {
-        // Add API call to update reply here
-        // await updateReply(replyId, editReplyContent);
         editReply({ comment: editReplyContent, commentId, replyId });
-        console.log("Updating reply:", replyId, editReplyContent);
 
         setEditingReply(null);
         setEditReplyContent("");
         toast.success("Reply updated successfully!");
-
-        // Refresh the data or update local state
       } catch (error) {
         toast.error("Failed to update reply");
         console.error("Error updating reply:", error);
@@ -165,25 +153,16 @@ export default function PublicationDetailPage({ params }: PageProps) {
   ) => {
     if (editNestedReplyContent.trim()) {
       try {
-        // Add API call to update nested reply here
-        // await updateNestedReply(nestedReplyId, editNestedReplyContent);
         editReplyToReply({
           comment: editNestedReplyContent,
           commentId,
           replyId,
           childId: nestedReplyId,
         });
-        console.log(
-          "Updating nested reply:",
-          nestedReplyId,
-          editNestedReplyContent,
-        );
 
         setEditingNestedReply(null);
         setEditNestedReplyContent("");
         toast.success("Reply updated successfully!");
-
-        // Refresh the data or update local state
       } catch (error) {
         toast.error("Failed to update reply");
         console.error("Error updating nested reply:", error);
@@ -200,17 +179,11 @@ export default function PublicationDetailPage({ params }: PageProps) {
     setEditNestedReplyContent("");
   };
 
-  // Delete handlers
   const handleDeleteComment = async (commentId: string) => {
     try {
-      // Add API call to delete comment here
-      // await deleteComment(commentId);
       deleteComment({ commentId });
-      console.log("Deleting comment:", commentId);
 
       toast.success("Comment deleted successfully!");
-
-      // Refresh the data or update local state
     } catch (error) {
       toast.error("Failed to delete comment");
       console.error("Error deleting comment:", error);
@@ -219,14 +192,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
 
   const handleDeleteReply = async (replyId: string, commentId: string) => {
     try {
-      // Add API call to delete reply here
-      // await deleteReply(replyId);
       deleteReply({ commentId, replyId });
-      console.log("Deleting reply:", replyId);
-
       toast.success("Reply deleted successfully!");
-
-      // Refresh the data or update local state
     } catch (error) {
       toast.error("Failed to delete reply");
       console.error("Error deleting reply:", error);
@@ -239,14 +206,8 @@ export default function PublicationDetailPage({ params }: PageProps) {
     replyId: string,
   ) => {
     try {
-      // Add API call to delete nested reply here
-      // await deleteNestedReply(nestedReplyId);
       deleteReplyToReply({ commentId, replyId, childId: nestedReplyId });
-      console.log("Deleting nested reply:", nestedReplyId);
-
       toast.success("Reply deleted successfully!");
-
-      // Refresh the data or update local state
     } catch (error) {
       toast.error("Failed to delete reply");
       console.error("Error deleting nested reply:", error);
@@ -263,7 +224,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
     checkAndExecute("comment", async () => {
       if (requireAuth("comment on this publication")) {
         if (comment_content.trim()) {
-          console.log("Adding comment:", comment_content);
           try {
             await commentToPost(comment_content, {
               onSuccess: () => {
@@ -312,7 +272,6 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const handleSubmitReply = async (commentId: string, pubId: string) => {
     if (requireAuth("submit reply")) {
       if (replyContent.trim()) {
-        console.log("Adding reply to comment:", commentId, replyContent);
         try {
           await addTopReply(
             { content: replyContent, pubId, commentId },
@@ -320,7 +279,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
               onSuccess: () => {
                 toast("Comment added successfully!");
               },
-            }
+            },
           );
           setReplyContent("");
           setReplyingTo(null);
@@ -336,15 +295,10 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const handleSubmitSecondLevelReply = async (
     pubId: string,
     replyId: string,
-    commentId: string
+    commentId: string,
   ) => {
     if (requireAuth("submit second-level reply")) {
       if (secondLevelReplyContent.trim()) {
-        console.log(
-          "Adding second-level reply to reply:",
-          replyId,
-          secondLevelReplyContent
-        );
         try {
           await addNestedReply(
             {
@@ -357,7 +311,7 @@ export default function PublicationDetailPage({ params }: PageProps) {
               onSuccess: () => {
                 toast("Comment added successfully!");
               },
-            }
+            },
           );
           setSecondLevelReplyContent("");
           setReplyingToSecondLevel(null);

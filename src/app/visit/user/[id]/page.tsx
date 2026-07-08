@@ -11,25 +11,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import {
   Mail,
   Phone,
   MapPin,
   Calendar,
   MessageSquare,
-  Trophy,
   Star,
   FileText,
-  Users,
-  Award,
 } from "lucide-react";
-import Cookies from "js-cookie";
 import {
   useUserVisitorQuery,
   useUserVisitingUserActivityQuery,
 } from "@/hooks/useUser";
-import { timeAgo } from "@/lib/timeAgo";
 import ProfilePageLoading from "./loading";
 import RecentActivities from "@/components/visit-user/recent-activities";
 import UserPublication from "@/components/visit-user/user-publication";
@@ -39,30 +33,10 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  contactNumber: string;
-  bio: string;
-  location: string;
-  profileImage: string;
-  interests: string[];
-}
-
 export default function ProfilePage({ params }: PageProps) {
   const { id } = use(params);
   const { data: user, isLoading } = useUserVisitorQuery(id);
   const { data: userActivity } = useUserVisitingUserActivityQuery(id);
-  console.log("user from visit", user);
-  console.log("user activity from visit", userActivity);
-
-  const stats = {
-    publications: 24,
-    forumPosts: 156,
-    reputation: 892,
-    achievements: 8,
-  };
 
   const getRoleColor = (role: string) => {
     switch (role.toUpperCase()) {

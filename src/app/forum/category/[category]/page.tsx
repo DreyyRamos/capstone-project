@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -19,11 +18,9 @@ import {
   Search,
   MessageSquare,
   Users,
-  Clock,
   TrendingUp,
   ArrowLeft,
   Plus,
-  Heart,
 } from "lucide-react";
 import Link from "next/link";
 import { useFetchForumByCategory } from "@/hooks/useForum";
@@ -70,19 +67,11 @@ export default function ForumCategoryPage({ params }: PageProps) {
 
   const { category: rawCategory } = use(params);
 
-  // Decode URL parameter and handle uncategorized case
   const decodedCategory = decodeURIComponent(rawCategory);
   const category =
     decodedCategory === "Uncategorized" ? "Uncategorized" : decodedCategory;
 
   const { data: topics, isLoading } = useFetchForumByCategory(category);
-
-  const truncate = (str: string, max = 100) =>
-    str?.length > max ? str.slice(0, max) + "…" : str;
-
-  console.log("category", topics);
-  console.log("decoded category", decodedCategory);
-  console.log("processed category", category);
 
   const startDiscussion = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -91,15 +80,12 @@ export default function ForumCategoryPage({ params }: PageProps) {
     }
   };
 
-  // Enhanced filtering and sorting logic
   const filteredAndSortedTopics = useMemo(() => {
     if (!topics || !Array.isArray(topics)) return [];
 
-    // Filter the topics
     const filtered = topics.filter((topic: ForumTopic) => {
       const searchLower = searchQuery.toLowerCase();
 
-      // Search across title, description, author name, and tags
       const matchesSearch =
         searchQuery === "" ||
         topic.topicTitle?.toLowerCase().includes(searchLower) ||
@@ -112,7 +98,6 @@ export default function ForumCategoryPage({ params }: PageProps) {
       return matchesSearch;
     });
 
-    // Sort the filtered results
     const sorted = [...filtered].sort((a: ForumTopic, b: ForumTopic) => {
       switch (sortBy) {
         case "recent":
@@ -142,7 +127,6 @@ export default function ForumCategoryPage({ params }: PageProps) {
       }
     });
 
-    // prioritize pinned topics
     return sorted.sort((a, b) => {
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
@@ -150,7 +134,6 @@ export default function ForumCategoryPage({ params }: PageProps) {
     });
   }, [topics, searchQuery, sortBy]);
 
-  // Calculate statistics from filtered topics
   const stats = useMemo(() => {
     const totalTopics = filteredAndSortedTopics.length;
     const totalPosts = filteredAndSortedTopics.reduce(

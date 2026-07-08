@@ -1,29 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
-  Trophy,
-  Medal,
-  Award,
-  Crown,
-  Star,
-  TrendingUp,
-  Users,
   BookOpen,
   MessageSquare,
   Calendar,
-  Info,
-  Plus,
-  Minus,
   MessageCircle,
-  Eye,
   Heart,
 } from "lucide-react";
-import { useFetchLeaderboard } from "@/hooks/usePublicData";
 
 interface LeaderboardProps {
   user: any;

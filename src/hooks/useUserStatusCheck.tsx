@@ -59,13 +59,11 @@ export const useUserStatusCheck = (
         return;
       }
 
-      // User is active, execute the action
       callback();
     },
     [userStatus, onBlocked]
   );
 
-  // Helper functions for common actions
   const checkComment = useCallback(
     (callback: () => void | Promise<void>) => {
       checkAndExecute("comment on this post", callback);
@@ -184,13 +182,13 @@ export const useUserStatusCheck = (
 
   return {
     StatusModal,
-    checkAndExecute, // Generic function for any action
-    checkComment, // Helper for commenting
-    checkLike, // Helper for liking
-    checkPost, // Helper for posting
-    checkShare, // Helper for sharing
-    checkFollow, // Helper for following
-    checkMessage, // Helper for messaging
+    checkAndExecute,
+    checkComment,
+    checkLike,
+    checkPost,
+    checkShare,
+    checkFollow,
+    checkMessage,
     isBlocked: userStatus === "BANNED" || userStatus === "SUSPENDED",
     userStatus: userStatus || "ACTIVE",
     showModal,

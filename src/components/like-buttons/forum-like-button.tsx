@@ -36,19 +36,15 @@ const LikeButton = ({ forum, token, forumId }: LikeButtonProps) => {
 
   const { isOpen, action, redirectTo, requireAuth, closeModal } =
     useAuthModal();
-  //  const [currentLikeCommentId, setCurrentLikeCommentId] = useState<
-  //     string | null
-  //   >(null);
   const userId = useUserId(token);
 
   const userLike = useMemo(() => {
     if (!userId || !forum?.forumLikes || forum?.forumLikes?.length === 0) {
-      console.log("No userId or no likes found for this comment");
       return undefined;
     }
 
     const found = forum?.forumLikes.find((like: any) => {
-      return like?.userId === userId; // Compare with decoded user ID
+      return like?.userId === userId;
     });
 
     return found;
@@ -57,7 +53,6 @@ const LikeButton = ({ forum, token, forumId }: LikeButtonProps) => {
   const likeCount = useMemo(() => {
     const count =
       forum?.forumLikes?.filter((like: any) => like?.isLiked).length || 0;
-    console.log("Like count calculation:", count);
     return count;
   }, [forum?.forumLikes]);
 
@@ -75,12 +70,10 @@ const LikeButton = ({ forum, token, forumId }: LikeButtonProps) => {
       setCurrentLikePostId(null);
       const currentForumId = forumId || forum?.forumId;
 
-      // Invalidate the specific forum query first
       queryClient.invalidateQueries({
         queryKey: ["forum", currentForumId],
       });
 
-      // Also invalidate broader forum queries
       queryClient.invalidateQueries({
         predicate: (query) =>
           query.queryKey[0] === "forum" ||
@@ -105,8 +98,6 @@ const LikeButton = ({ forum, token, forumId }: LikeButtonProps) => {
       }
     }
   }, [likeMutation, forum?.forumId]);
-
-  console.log("publication check for like", forum);
 
   return (
     <>

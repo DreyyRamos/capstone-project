@@ -6,10 +6,10 @@ enum Role {
 }
 
 enum UserStatus {
-  ACTIVE = "ACTIVE", // 0-2 warnings
-  WARNED = "WARNED", // 3-4 warnings
-  SUSPENDED = "SUSPENDED", // 5-9 warnings (temporary)
-  BANNED = "BANNED", // 10+ warnings (permanent)
+  ACTIVE = "ACTIVE",
+  WARNED = "WARNED",
+  SUSPENDED = "SUSPENDED",
+  BANNED = "BANNED",
 }
 
 export interface UserPayload {

@@ -111,12 +111,11 @@ model User {
   changeRoleRequests ChangeUserRole[]
 }
 
-// Simple user status enum
 enum UserStatus {
-  ACTIVE // 0-2 warnings
-  WARNED // 3-4 warnings  
-  SUSPENDED // 5-9 warnings (temporary)
-  BANNED // 10+ warnings (permanent)
+  ACTIVE
+  WARNED
+  SUSPENDED
+  BANNED
 }
 
 enum Role {
@@ -157,7 +156,7 @@ model Forum {
   notifications Notifications[]
   reports       Reports[]
 
-  // --- Updated Forum Relations ---
+  // Forum Relations
   forumLikes                    ForumLikes[]
   forumComments                 ForumComments[]
   forumCommentLikes             ForumCommentLikes[]
@@ -192,7 +191,7 @@ model ForumCommentReplies {
   commentId String?
   comment   ForumComments? @relation(fields: [commentId], references: [commentId], onDelete: Cascade)
 
-  // Link to child replies (parent -> children)
+  // Link to child replies
   children ForumCommentReplyToReplies[]
 
   reply_authorId String?
@@ -208,12 +207,12 @@ model ForumCommentReplies {
   updatedAt DateTime @updatedAt
 }
 
-// New model for second-level replies (replies to replies)
+// Model for second-level replies
 model ForumCommentReplyToReplies {
   replyToReplyId       String  @id @default(cuid())
   replyToReply_content String?
 
-  // Link to parent reply (child -> parent)
+  // Link to parent reply
   parentReplyId String
   parentReply   ForumCommentReplies @relation(fields: [parentReplyId], references: [replyId], onDelete: Cascade)
 
@@ -241,7 +240,7 @@ model ForumLikes {
   @@unique([forumId, userId])
 }
 
-// 2. Top-level comment likes
+// Top-level comment likes
 model ForumCommentLikes {
   commentLikeId String        @id @default(cuid())
   commentId     String
@@ -255,7 +254,7 @@ model ForumCommentLikes {
   @@unique([commentId, userId])
 }
 
-// 3. First-level reply likes
+// First-level reply likes
 model ForumCommentReplyLikes {
   commentReplyLikeId String              @id @default(cuid())
   replyId            String
@@ -269,7 +268,7 @@ model ForumCommentReplyLikes {
   @@unique([replyId, userId])
 }
 
-// 4. Second-level (children of replies) likes
+// Second-level (children of replies) likes
 model ForumCommentReplyToReplyLikes {
   commentReplyToReplyLikeId String                     @id @default(cuid())
   replyToReplyId            String
@@ -427,9 +426,9 @@ model Reports {
   reportId String @id @default(cuid())
 
   // Basic report information
-  reportedContent String // The actual content that was reported
-  reportReason    String // Reason for the report
-  description     String? // Optional additional description from reporter
+  reportedContent String
+  reportReason    String
+  description     String?
   notifications   Notifications[]
 
   // Reporter information
@@ -440,8 +439,8 @@ model Reports {
   reportedUserId String?
   reportedUser   User?   @relation("ReportedUser", fields: [reportedUserId], references: [id])
 
-  // Content type and references - ALL LEVELS
-  contentType ContentType // What type of content is being reported
+  // Content type and references
+  contentType ContentType
 
   // Main content references
   forumId     String?
@@ -449,7 +448,7 @@ model Reports {
   pubId       String?
   publication Publication? @relation(fields: [pubId], references: [pubId])
 
-  // Comment references (both forum and publication)
+  // Comment references
   forumCommentId String?
   forumComment   ForumComments?       @relation(fields: [forumCommentId], references: [commentId])
   pubCommentId   String?
@@ -461,7 +460,7 @@ model Reports {
   pubReplyId   String?
   pubReply     PublicationCommentReplies? @relation(fields: [pubReplyId], references: [replyId])
 
-  // Second-level reply references (reply-to-reply / children)
+  // Second-level reply references
   forumReplyToReplyId String?
   forumReplyToReply   ForumCommentReplyToReplies?       @relation(fields: [forumReplyToReplyId], references: [replyToReplyId])
   pubReplyToReplyId   String?
@@ -491,11 +490,11 @@ enum ContentType {
   FORUM_POST
   FORUM_COMMENT
   FORUM_REPLY
-  FORUM_REPLY_TO_REPLY // Children of replies
+  FORUM_REPLY_TO_REPLY
   PUBLICATION
   PUBLICATION_COMMENT
   PUBLICATION_REPLY
-  PUBLICATION_REPLY_TO_REPLY // Children of replies
+  PUBLICATION_REPLY_TO_REPLY
 }
 
 enum ReportStatus {

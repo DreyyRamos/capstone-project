@@ -8,20 +8,10 @@ import {
   deletePost,
 } from "@/services/editor";
 
-interface Publication {
-  title: string;
-  excerpt: string;
-  content: string;
-  imageUrl: string;
-  tags: string[];
-  category: string;
-}
 
-// Main hook for working with all posts
 export const useEditorQuery = (token: string) => {
   const queryClient = useQueryClient();
 
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["to-review"],
     queryFn: async () => await fetchToReviewPubs(token),
@@ -31,7 +21,6 @@ export const useEditorQuery = (token: string) => {
     refetchInterval: false,
   });
 
-  // Mutation to approve a new post
   const mutation = useMutation({
     mutationFn: async (postId: string) => await approvePost(token, postId),
     onSuccess: () => {
@@ -92,7 +81,6 @@ export const useEditorQuery = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -100,7 +88,6 @@ export const useEditorQuery = (token: string) => {
     isSuccess,
     refetch,
 
-    // Mutation functions
     approve: mutation.mutate,
     isCreating: mutation.isPending,
     createError: mutation.error,
@@ -112,7 +99,6 @@ export const useEditorQuery = (token: string) => {
     rejectingError: rejectMutation.error,
     rejectSuccess: rejectMutation.isSuccess,
 
-    // archive mutation function
     archive: archiveMutation.mutate,
     isArchiving: archiveMutation.isPending,
     archiveError: archiveMutation.error,

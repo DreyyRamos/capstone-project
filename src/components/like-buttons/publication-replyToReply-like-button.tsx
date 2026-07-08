@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { likeReplyToReplyPub } from "@/services/publication"; // You'll need to create this service
+import { likeReplyToReplyPub } from "@/services/publication";
 import { Button } from "@/components/ui/button";
 import { Heart, HeartOff, Loader } from "lucide-react";
 import { useUserId } from "@/hooks/useUserId";
@@ -63,14 +63,13 @@ const PublicationReplyToReplyLikeButton = ({
       !replyToReply?.publicationCommentReplyToReplyLikes ||
       replyToReply?.publicationCommentReplyToReplyLikes?.length === 0
     ) {
-      console.log("No userId or no likes found for this reply to reply");
       return undefined;
     }
 
     const found = replyToReply?.publicationCommentReplyToReplyLikes?.find(
       (like: ForumReplyToReplyLike) => {
         return like?.userId === userId;
-      }
+      },
     );
 
     return found;
@@ -79,9 +78,8 @@ const PublicationReplyToReplyLikeButton = ({
   const likeCount = useMemo(() => {
     const count =
       replyToReply?.publicationCommentReplyToReplyLikes?.filter(
-        (like: ForumReplyToReplyLike) => like?.isLiked
+        (like: ForumReplyToReplyLike) => like?.isLiked,
       ).length || 0;
-    console.log("Reply to reply like count calculation:", count);
     return count;
   }, [replyToReply?.publicationCommentReplyToReplyLikes]);
 
@@ -91,20 +89,18 @@ const PublicationReplyToReplyLikeButton = ({
         return await likeReplyToReplyPub(
           pubId,
           commentId,
-          replyToReply?.parentReplyId, // parent reply ID
+          replyToReply?.parentReplyId,
           replyToReplyId,
-          token
+          token,
         );
       },
-      [pubId, commentId, replyToReply?.parentReplyId, token]
+      [pubId, commentId, replyToReply?.parentReplyId, token],
     ),
     onMutate: (replyToReplyId: string) => {
       setCurrentLikeReplyToReplyId(replyToReplyId);
     },
     onSuccess: () => {
       setCurrentLikeReplyToReplyId(null);
-
-      // Invalidate the specific forum query
       queryClient.invalidateQueries({
         queryKey: ["pub", pubId],
       });
@@ -113,12 +109,6 @@ const PublicationReplyToReplyLikeButton = ({
         predicate: (query) => {
           const shouldInvalidate =
             query.queryKey[0] === "pub" || query.queryKey[0] === "pubs";
-          console.log(
-            "Query key:",
-            query.queryKey,
-            "Should invalidate:",
-            shouldInvalidate
-          );
           return shouldInvalidate;
         },
       });
@@ -149,7 +139,9 @@ const PublicationReplyToReplyLikeButton = ({
         action={action}
         redirectTo={redirectTo}
       />
-      <Button id="publication-replyToReply-like-button-button-1" data-testId="publication-replyToReply-like-button-button-1"
+      <Button
+        id="publication-replyToReply-like-button-button-1"
+        data-testId="publication-replyToReply-like-button-button-1"
         variant={"ghost"}
         onClick={handleLikeToggle}
         disabled={likeMutation.isPending}
@@ -157,7 +149,11 @@ const PublicationReplyToReplyLikeButton = ({
           likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <div id="publication-replyToReply-like-button-div-1" data-testId="publication-replyToReply-like-button-div-1" className="relative group">
+        <div
+          id="publication-replyToReply-like-button-div-1"
+          data-testId="publication-replyToReply-like-button-div-1"
+          className="relative group"
+        >
           {currentLikeReplyToReplyId === replyToReply?.replyToReplyId ? (
             <Loader className="animate-spin" />
           ) : userLike && userLike?.isLiked ? (
@@ -165,11 +161,21 @@ const PublicationReplyToReplyLikeButton = ({
           ) : (
             <Heart className="text-gray-500" />
           )}
-          <span id="publication-replyToReply-like-button-span-1" data-testId="publication-replyToReply-like-button-span-1" className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
+          <span
+            id="publication-replyToReply-like-button-span-1"
+            data-testId="publication-replyToReply-like-button-span-1"
+            className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10"
+          >
             {userLike && userLike?.isLiked ? "Unlike" : "Like"}
           </span>
         </div>
-        <span id="publication-replyToReply-like-button-span-2" data-testId="publication-replyToReply-like-button-span-2" className="text-gray-100 ml-1">{likeCount}</span>
+        <span
+          id="publication-replyToReply-like-button-span-2"
+          data-testId="publication-replyToReply-like-button-span-2"
+          className="text-gray-100 ml-1"
+        >
+          {likeCount}
+        </span>
       </Button>
     </>
   );

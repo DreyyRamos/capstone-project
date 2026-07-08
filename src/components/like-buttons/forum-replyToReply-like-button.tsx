@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { likeReplyToReplyForum } from "@/services/publication"; // You'll need to create this service
+import { likeReplyToReplyForum } from "@/services/publication";
 import { Button } from "@/components/ui/button";
 import { Heart, HeartOff, Loader } from "lucide-react";
 import { useUserId } from "@/hooks/useUserId";
@@ -63,14 +63,13 @@ const ForumReplyToReplyLikeButton = ({
       !replyToReply?.forumCommentReplyToReplyLikes ||
       replyToReply?.forumCommentReplyToReplyLikes?.length === 0
     ) {
-      console.log("No userId or no likes found for this reply to reply");
       return undefined;
     }
 
     const found = replyToReply?.forumCommentReplyToReplyLikes?.find(
       (like: ForumReplyToReplyLike) => {
         return like?.userId === userId;
-      }
+      },
     );
 
     return found;
@@ -79,9 +78,8 @@ const ForumReplyToReplyLikeButton = ({
   const likeCount = useMemo(() => {
     const count =
       replyToReply?.forumCommentReplyToReplyLikes?.filter(
-        (like: ForumReplyToReplyLike) => like?.isLiked
+        (like: ForumReplyToReplyLike) => like?.isLiked,
       ).length || 0;
-    console.log("Reply to reply like count calculation:", count);
     return count;
   }, [replyToReply?.forumCommentReplyToReplyLikes]);
 
@@ -91,12 +89,12 @@ const ForumReplyToReplyLikeButton = ({
         return await likeReplyToReplyForum(
           forumId,
           commentId,
-          replyToReply.parentReplyId, // parent reply ID
+          replyToReply.parentReplyId,
           replyToReplyId,
-          token
+          token,
         );
       },
-      [forumId, commentId, replyToReply.parentReplyId, token]
+      [forumId, commentId, replyToReply.parentReplyId, token],
     ),
     onMutate: (replyToReplyId: string) => {
       setCurrentLikeReplyToReplyId(replyToReplyId);
@@ -113,12 +111,6 @@ const ForumReplyToReplyLikeButton = ({
         predicate: (query) => {
           const shouldInvalidate =
             query.queryKey[0] === "forum" || query.queryKey[0] === "forums";
-          console.log(
-            "Query key:",
-            query.queryKey,
-            "Should invalidate:",
-            shouldInvalidate
-          );
           return shouldInvalidate;
         },
       });
@@ -149,7 +141,9 @@ const ForumReplyToReplyLikeButton = ({
         action={action}
         redirectTo={redirectTo}
       />
-      <Button id="forum-replyToReply-like-button-button-1" data-testId="forum-replyToReply-like-button-button-1"
+      <Button
+        id="forum-replyToReply-like-button-button-1"
+        data-testId="forum-replyToReply-like-button-button-1"
         variant={"ghost"}
         onClick={handleLikeToggle}
         disabled={likeMutation.isPending}
@@ -157,7 +151,11 @@ const ForumReplyToReplyLikeButton = ({
           likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <div id="forum-replyToReply-like-button-div-1" data-testId="forum-replyToReply-like-button-div-1" className="relative group">
+        <div
+          id="forum-replyToReply-like-button-div-1"
+          data-testId="forum-replyToReply-like-button-div-1"
+          className="relative group"
+        >
           {currentLikeReplyToReplyId === replyToReply?.replyToReplyId ? (
             <Loader className="animate-spin" />
           ) : userLike && userLike?.isLiked ? (
@@ -165,11 +163,21 @@ const ForumReplyToReplyLikeButton = ({
           ) : (
             <Heart className="text-gray-500" />
           )}
-          <span id="forum-replyToReply-like-button-span-1" data-testId="forum-replyToReply-like-button-span-1" className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
+          <span
+            id="forum-replyToReply-like-button-span-1"
+            data-testId="forum-replyToReply-like-button-span-1"
+            className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10"
+          >
             {userLike && userLike?.isLiked ? "Unlike" : "Like"}
           </span>
         </div>
-        <span id="forum-replyToReply-like-button-span-2" data-testId="forum-replyToReply-like-button-span-2" className="text-gray-100 ml-1">{likeCount}</span>
+        <span
+          id="forum-replyToReply-like-button-span-2"
+          data-testId="forum-replyToReply-like-button-span-2"
+          className="text-gray-100 ml-1"
+        >
+          {likeCount}
+        </span>
       </Button>
     </>
   );

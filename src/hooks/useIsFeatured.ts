@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeIsFeatured } from "@/services/publication";
 
 export const useIsFeatured = (token: string) => {
@@ -16,7 +16,6 @@ export const useIsFeatured = (token: string) => {
   });
 
   return {
-    // Mutation functions
     makeFeatured: mutation.mutate,
     isLoading: mutation.isPending,
     createError: mutation.error,

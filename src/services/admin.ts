@@ -1,23 +1,3 @@
-import { toast } from "sonner";
-import { Role, AdmissionStatus } from "@/generated/prisma";
-
-interface Admission {
-  admission_id: string;
-  user_email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  profileImage: string;
-  id_picture: string;
-  bio: string;
-  contactNumber: string;
-  location: string;
-  interests: string[];
-  role: Role;
-  createdAt: Date;
-  status: AdmissionStatus;
-}
-
 export const fetchAllUsers = async (token: string) => {
   const response = await fetch("/api/admin/fetch-users", {
     method: "GET",
@@ -81,7 +61,7 @@ export const rejectRoleChangeRequest = async (token: string, id: string) => {
 export const updateRole = async (
   token: string,
   id: string,
-  newRole: string
+  newRole: string,
 ) => {
   const response = await fetch(`/api/admin/fetch-users/${id}/update-role`, {
     method: "PUT",
@@ -109,7 +89,7 @@ export const approveAdmission = async (
     contactNumber: string;
     location: string;
     interests: string[];
-  }
+  },
 ) => {
   const res = await fetch(
     `/api/admin/user-admissions/${admission_id}/approve`,
@@ -120,7 +100,7 @@ export const approveAdmission = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
-    }
+    },
   );
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -144,7 +124,7 @@ export const deleteReportedContent = async (
   contentId: any,
   reportId: any,
   userId: string,
-  token: string
+  token: string,
 ) => {
   const response = await fetch("/api/reports/delete-content", {
     method: "DELETE",
@@ -162,7 +142,7 @@ export const restoreReportedContent = async (
   // contentType: any,
   // contentId: any,
   reportId: any,
-  token: string
+  token: string,
 ) => {
   const response = await fetch("/api/reports/resolve-report", {
     method: "PUT",
@@ -180,7 +160,7 @@ export const cleanupReports = async (
   // contentType: any,
   // contentId: any,
   // reportId: any,
-  token: string
+  token: string,
 ) => {
   const response = await fetch("/api/reports/cleanup-reports", {
     method: "DELETE",
@@ -208,7 +188,7 @@ export const fetchUsers = async (token: string) => {
 export const triggerAction = async (
   token: string,
   userId: any,
-  reportId: any
+  reportId: any,
 ) => {
   console.log("triggerAction called with:", { userId, reportId });
   const response = await fetch(`/api/moderator/initiate-actions`, {
@@ -263,7 +243,7 @@ export const likePub = async (postId: string, token: string) => {
 export const addCommentPub = async (
   token: string,
   postId: string,
-  comment: string
+  comment: string,
 ) => {
   const res = await fetch(`/api/publications/${postId}/comment`, {
     method: "POST",
@@ -289,7 +269,7 @@ export const createPost = async (token: string, newData: any) => {
 
 export const approvePost = async (
   token: string,
-  postId: string
+  postId: string,
   //   newData: any
 ) => {
   const response = await fetch(`/api/publications/editor/toReview/${postId}`, {
@@ -306,7 +286,7 @@ export const approvePost = async (
 
 export const archivePost = async (
   token: string,
-  postId: string
+  postId: string,
   //   newData: any
 ) => {
   const response = await fetch(
@@ -318,7 +298,7 @@ export const archivePost = async (
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ status: "ARCHIVED" }),
-    }
+    },
   );
   if (!response.ok) throw new Error("Error in updating post");
   return response.json();
@@ -326,7 +306,7 @@ export const archivePost = async (
 
 export const restoreArchivePost = async (
   token: string,
-  postId: string
+  postId: string,
   //   newData: any
 ) => {
   const response = await fetch(
@@ -338,7 +318,7 @@ export const restoreArchivePost = async (
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ status: "PENDING_REVIEW" }),
-    }
+    },
   );
   if (!response.ok) throw new Error("Error in updating post");
   return response.json();

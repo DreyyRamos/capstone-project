@@ -25,7 +25,6 @@ export function useConfirmationModal() {
   const closeModal = useCallback(() => {
     setIsOpen(false);
     setIsLoading(false);
-    // Clear options after a delay to prevent flash of old content
     setTimeout(() => setOptions({}), 200);
   }, []);
 
@@ -42,7 +41,6 @@ export function useConfirmationModal() {
     }
   }, [options.onConfirm, closeModal]);
 
-  // Predefined confirmation types for common use cases
   const confirmDelete = useCallback(
     (itemName: string, onConfirm: () => void | Promise<void>) => {
       openModal({
@@ -55,7 +53,7 @@ export function useConfirmationModal() {
         onConfirm,
       });
     },
-    [openModal]
+    [openModal],
   );
 
   const confirmAction = useCallback(
@@ -63,7 +61,7 @@ export function useConfirmationModal() {
       action: string,
       description: string,
       onConfirm: () => void | Promise<void>,
-      variant: "default" | "destructive" | "success" | "warning" = "default"
+      variant: "default" | "destructive" | "success" | "warning" = "default",
     ) => {
       openModal({
         title: `${action}?`,
@@ -75,7 +73,7 @@ export function useConfirmationModal() {
         onConfirm,
       });
     },
-    [openModal]
+    [openModal],
   );
 
   const confirmApprove = useCallback(
@@ -90,7 +88,7 @@ export function useConfirmationModal() {
         onConfirm,
       });
     },
-    [openModal]
+    [openModal],
   );
 
   const confirmReject = useCallback(
@@ -105,7 +103,7 @@ export function useConfirmationModal() {
         onConfirm,
       });
     },
-    [openModal]
+    [openModal],
   );
 
   return {
@@ -115,7 +113,6 @@ export function useConfirmationModal() {
     openModal,
     closeModal,
     handleConfirm,
-    // Predefined helpers
     confirmDelete,
     confirmAction,
     confirmApprove,

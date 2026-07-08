@@ -51,8 +51,6 @@ export function Header() {
   const { data: user } = useUserQuery(token);
   const { markAsRead, markAllAsRead } = useNotificationQuery(token);
 
-  console.log("current user", user);
-
   const handleMarkAllAsRead = () => {
     if (markAllAsRead) {
       markAllAsRead.mutate();

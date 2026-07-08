@@ -12,7 +12,7 @@ import { AuthModal } from "../auth-modal";
 interface ForumCommentLike {
   commentLikeId: string;
   commentId: string;
-  userId: string; // Changed from number to string (UUID)
+  userId: string;
   isLiked: boolean;
   forumId: string | null;
 }
@@ -34,12 +34,6 @@ interface ForumComment {
   forumCommentLikes: ForumCommentLike[];
 }
 
-interface ForumCommentLikeButtonProps {
-  comment: ForumComment;
-  token: string;
-  forumId?: string;
-}
-
 const ForumCommentReplyLikeButton = ({ reply, token, forumId }: any) => {
   const queryClient = useQueryClient();
   const [currentLikeCommentId, setCurrentLikeCommentId] = useState<
@@ -57,14 +51,13 @@ const ForumCommentReplyLikeButton = ({ reply, token, forumId }: any) => {
       !reply?.forumCommentReplyLikes ||
       reply?.forumCommentReplyLikes.length === 0
     ) {
-      console.log("No userId or no likes found for this comment");
       return undefined;
     }
 
     const found = reply?.forumCommentReplyLikes?.find(
       (like: ForumCommentLike) => {
-        return like?.userId === userId; // Compare with decoded user ID
-      }
+        return like?.userId === userId;
+      },
     );
 
     return found;
@@ -73,9 +66,8 @@ const ForumCommentReplyLikeButton = ({ reply, token, forumId }: any) => {
   const likeCount = useMemo(() => {
     const count =
       reply?.forumCommentReplyLikes?.filter(
-        (like: ForumCommentLike) => like?.isLiked
+        (like: ForumCommentLike) => like?.isLiked,
       ).length || 0;
-    console.log("Like count calculation:", count);
     return count;
   }, [reply?.forumCommentReplyLikes]);
 
@@ -86,10 +78,10 @@ const ForumCommentReplyLikeButton = ({ reply, token, forumId }: any) => {
           forumId || reply.forumId,
           commentId,
           reply?.replyId,
-          token
+          token,
         );
       },
-      [forumId, reply?.forumId, token]
+      [forumId, reply?.forumId, token],
     ),
     onMutate: (replyId: string) => {
       setCurrentLikeCommentId(replyId);
@@ -98,22 +90,14 @@ const ForumCommentReplyLikeButton = ({ reply, token, forumId }: any) => {
       setCurrentLikeCommentId(null);
       const currentCommentId = reply?.commentId || reply.forumId;
 
-      // Invalidate the specific forum query first
       queryClient.invalidateQueries({
         queryKey: ["forum", currentCommentId],
       });
 
-      // Also invalidate broader forum queries
       queryClient.invalidateQueries({
         predicate: (query) => {
           const shouldInvalidate =
             query.queryKey[0] === "forum" || query.queryKey[0] === "forums";
-          console.log(
-            "Query key:",
-            query.queryKey,
-            "Should invalidate:",
-            shouldInvalidate
-          );
           return shouldInvalidate;
         },
       });
@@ -144,7 +128,9 @@ const ForumCommentReplyLikeButton = ({ reply, token, forumId }: any) => {
         action={action}
         redirectTo={redirectTo}
       />
-      <Button id="forum-comment-reply-like-button-button-1" data-testId="forum-comment-reply-like-button-button-1"
+      <Button
+        id="forum-comment-reply-like-button-button-1"
+        data-testId="forum-comment-reply-like-button-button-1"
         variant={"ghost"}
         onClick={handleLikeToggle}
         disabled={likeMutation.isPending}
@@ -152,7 +138,11 @@ const ForumCommentReplyLikeButton = ({ reply, token, forumId }: any) => {
           likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <div id="forum-comment-reply-like-button-div-1" data-testId="forum-comment-reply-like-button-div-1" className="relative group">
+        <div
+          id="forum-comment-reply-like-button-div-1"
+          data-testId="forum-comment-reply-like-button-div-1"
+          className="relative group"
+        >
           {currentLikeCommentId === reply?.replyId ? (
             <Loader className="animate-spin" />
           ) : userLike && userLike?.isLiked ? (
@@ -160,11 +150,21 @@ const ForumCommentReplyLikeButton = ({ reply, token, forumId }: any) => {
           ) : (
             <Heart className="text-gray-500" />
           )}
-          <span id="forum-comment-reply-like-button-span-1" data-testId="forum-comment-reply-like-button-span-1" className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
+          <span
+            id="forum-comment-reply-like-button-span-1"
+            data-testId="forum-comment-reply-like-button-span-1"
+            className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10"
+          >
             {userLike && userLike?.isLiked ? "Unlike" : "Like"}
           </span>
         </div>
-        <span id="forum-comment-reply-like-button-span-2" data-testId="forum-comment-reply-like-button-span-2" className="text-gray-100 ml-1">{likeCount}</span>
+        <span
+          id="forum-comment-reply-like-button-span-2"
+          data-testId="forum-comment-reply-like-button-span-2"
+          className="text-gray-100 ml-1"
+        >
+          {likeCount}
+        </span>
       </Button>
     </>
   );

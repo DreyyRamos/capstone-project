@@ -6,7 +6,6 @@ export type AllowedRole = "ADMIN" | "STUDENT" | "MODERATOR" | "EDITOR";
 
 export function useRoleGate(allowedRoles: AllowedRole[], token: string) {
   const { data: user, isLoading } = useUserQuery(token);
-  console.log("check for user role", user);
   const router = useRouter();
 
   const role = user?.userData?.role as AllowedRole | undefined;

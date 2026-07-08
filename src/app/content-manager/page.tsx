@@ -21,7 +21,6 @@ import {
   XCircle,
   Edit,
   Plus,
-  Tag,
 } from "lucide-react";
 import ContentManagerLoading from "./loading";
 import { useEditorQuery } from "@/hooks/useEditor";
@@ -98,7 +97,6 @@ export default function ContentManagerPage() {
   const { data: rejectedPosts } = useRejectedPostsQuery(token);
   const { data: pubsCount } = useCountPubsQuery(token);
 
-  // Get unique categories from all content
   const categories = useMemo(() => {
     const allContent = [
       ...(toReview?.postToReview || []),
@@ -112,7 +110,6 @@ export default function ContentManagerPage() {
     return ["all", ...uniqueCategories];
   }, [toReview, publishedContent, archivedPost, rejectedPosts]);
 
-  // Filtering and sorting logic for drafts/review content
   const filteredDrafts = useMemo(() => {
     if (!toReview?.postToReview) return [];
 
@@ -120,7 +117,6 @@ export default function ContentManagerPage() {
       (publication: Publication) => {
         const searchLower = searchQuery.toLowerCase();
 
-        // Search filter
         const matchesSearch =
           searchQuery === "" ||
           publication.title?.toLowerCase().includes(searchLower) ||
@@ -130,10 +126,9 @@ export default function ContentManagerPage() {
             .toLowerCase()
             .includes(searchLower) ||
           publication.tags?.some((tag) =>
-            tag.toLowerCase().includes(searchLower)
+            tag.toLowerCase().includes(searchLower),
           );
 
-        // Status filter
         const matchesStatus =
           statusFilter === "all" ||
           (statusFilter === "draft" && publication.status === "DRAFT") ||
@@ -144,15 +139,13 @@ export default function ContentManagerPage() {
           (statusFilter === "archived" && publication.status === "ARCHIVED") ||
           (statusFilter === "rejected" && publication.status === "REJECTED");
 
-        // Category filter
         const matchesCategory =
           categoryFilter === "all" || publication.category === categoryFilter;
 
         return matchesSearch && matchesStatus && matchesCategory;
-      }
+      },
     );
 
-    // Sort the filtered results
     return filtered.sort((a: Publication, b: Publication) => {
       switch (sortBy) {
         case "newest":
@@ -181,7 +174,6 @@ export default function ContentManagerPage() {
     sortBy,
   ]);
 
-  // Filtering and sorting logic for published content
   const filteredPublished = useMemo(() => {
     if (!publishedContent?.posts) return [];
 
@@ -197,14 +189,14 @@ export default function ContentManagerPage() {
             .toLowerCase()
             .includes(searchLower) ||
           publication.tags?.some((tag) =>
-            tag.toLowerCase().includes(searchLower)
+            tag.toLowerCase().includes(searchLower),
           );
 
         const matchesCategory =
           categoryFilter === "all" || publication.category === categoryFilter;
 
         return matchesSearch && matchesCategory;
-      }
+      },
     );
 
     return filtered.sort((a: Publication, b: Publication) => {
@@ -233,7 +225,6 @@ export default function ContentManagerPage() {
     });
   }, [publishedContent?.posts, searchQuery, categoryFilter, sortBy]);
 
-  // Filtering and sorting logic for archived content
   const filteredArchived = useMemo(() => {
     if (!archivedPost) return [];
 
@@ -248,7 +239,7 @@ export default function ContentManagerPage() {
           .toLowerCase()
           .includes(searchLower) ||
         publication.tags?.some((tag) =>
-          tag.toLowerCase().includes(searchLower)
+          tag.toLowerCase().includes(searchLower),
         );
 
       const matchesCategory =
@@ -293,7 +284,7 @@ export default function ContentManagerPage() {
           .toLowerCase()
           .includes(searchLower) ||
         publication.tags?.some((tag) =>
-          tag.toLowerCase().includes(searchLower)
+          tag.toLowerCase().includes(searchLower),
         );
 
       const matchesCategory =
@@ -395,16 +386,28 @@ export default function ContentManagerPage() {
   return (
     <div id="page-div-1" data-testId="page-div-1" className="space-y-6">
       {/* Header */}
-      <div id="page-flex-2" data-testId="page-flex-2" className="flex flex-col gap-4">
+      <div
+        id="page-flex-2"
+        data-testId="page-flex-2"
+        className="flex flex-col gap-4"
+      >
         <div id="page-div-3" data-testId="page-div-3">
           <h1 className="text-3xl font-bold">Content Manager</h1>
           <p className="text-muted-foreground">
             Manage publications, drafts, and content categories
           </p>
         </div>
-        <div id="page-flex-4" data-testId="page-flex-4" className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2 sm:justify-end">
+        <div
+          id="page-flex-4"
+          data-testId="page-flex-4"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2 sm:justify-end"
+        >
           <Button asChild className="w-full sm:w-auto">
-            <Link id="page-link-1" data-testId="page-link-1" href="/publications/create">
+            <Link
+              id="page-link-1"
+              data-testId="page-link-1"
+              href="/publications/create"
+            >
               <Plus className="mr-2 h-4 w-4" />
               New Publication
             </Link>
@@ -457,8 +460,16 @@ export default function ContentManagerPage() {
         {/* Universal Filters */}
         <Card>
           <CardContent className="p-4 sm:p-6">
-            <div id="page-flex-5" data-testId="page-flex-5" className="flex flex-col gap-3 sm:gap-4">
-              <div id="page-div-6" data-testId="page-div-6" className="relative">
+            <div
+              id="page-flex-5"
+              data-testId="page-flex-5"
+              className="flex flex-col gap-3 sm:gap-4"
+            >
+              <div
+                id="page-div-6"
+                data-testId="page-div-6"
+                className="relative"
+              >
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder={`Search ${
@@ -470,7 +481,11 @@ export default function ContentManagerPage() {
                 />
               </div>
 
-              <div id="page-grid-7" data-testId="page-grid-7" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div
+                id="page-grid-7"
+                data-testId="page-grid-7"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
+              >
                 <Select
                   value={categoryFilter}
                   onValueChange={setCategoryFilter}
@@ -504,7 +519,9 @@ export default function ContentManagerPage() {
                   statusFilter !== "all" ||
                   categoryFilter !== "all" ||
                   sortBy !== "newest") && (
-                  <Button id="page-button-1" data-testId="page-button-1"
+                  <Button
+                    id="page-button-1"
+                    data-testId="page-button-1"
                     variant="outline"
                     onClick={clearFilters}
                     className="sm:col-span-1 bg-transparent"
@@ -521,7 +538,11 @@ export default function ContentManagerPage() {
         {(searchQuery ||
           statusFilter !== "all" ||
           categoryFilter !== "all") && (
-          <div id="page-flex-8" data-testId="page-flex-8" className="flex items-center justify-between text-sm text-muted-foreground">
+          <div
+            id="page-flex-8"
+            data-testId="page-flex-8"
+            className="flex items-center justify-between text-sm text-muted-foreground"
+          >
             <div id="page-div-9" data-testId="page-div-9">
               {activeTab === "drafts" && (
                 <span id="page-span-1" data-testId="page-span-1">
@@ -552,7 +573,11 @@ export default function ContentManagerPage() {
         )}
 
         <TabsContent value="drafts" className="space-y-6">
-          <div id="page-div-10" data-testId="page-div-10" className="space-y-4 mb-5.5">
+          <div
+            id="page-div-10"
+            data-testId="page-div-10"
+            className="space-y-4 mb-5.5"
+          >
             {filteredDrafts.length > 0 ? (
               filteredDrafts.map((publication: Publication) => {
                 return (
@@ -568,7 +593,11 @@ export default function ContentManagerPage() {
             ) : (
               <Card>
                 <CardContent className="p-12 text-center">
-                  <div id="page-div-11" data-testId="page-div-11" className="space-y-4">
+                  <div
+                    id="page-div-11"
+                    data-testId="page-div-11"
+                    className="space-y-4"
+                  >
                     <Clock className="mx-auto h-12 w-12 text-muted-foreground" />
                     <h3 className="text-lg font-medium">No drafts found</h3>
                     <p className="text-muted-foreground">
@@ -581,7 +610,12 @@ export default function ContentManagerPage() {
                     {(searchQuery ||
                       statusFilter !== "all" ||
                       categoryFilter !== "all") && (
-                      <Button id="page-button-2" data-testId="page-button-2" variant="outline" onClick={clearFilters}>
+                      <Button
+                        id="page-button-2"
+                        data-testId="page-button-2"
+                        variant="outline"
+                        onClick={clearFilters}
+                      >
                         Clear Filters
                       </Button>
                     )}
@@ -593,7 +627,11 @@ export default function ContentManagerPage() {
         </TabsContent>
 
         <TabsContent value="published" className="space-y-6">
-          <div id="page-div-12" data-testId="page-div-12" className="space-y-4 mb-5.5">
+          <div
+            id="page-div-12"
+            data-testId="page-div-12"
+            className="space-y-4 mb-5.5"
+          >
             {filteredPublished.length > 0 ? (
               filteredPublished.map((content: Publication) => (
                 <Published
@@ -605,7 +643,11 @@ export default function ContentManagerPage() {
             ) : (
               <Card>
                 <CardContent className="p-12 text-center">
-                  <div id="page-div-13" data-testId="page-div-13" className="space-y-4">
+                  <div
+                    id="page-div-13"
+                    data-testId="page-div-13"
+                    className="space-y-4"
+                  >
                     <CheckCircle className="mx-auto h-12 w-12 text-muted-foreground" />
                     <h3 className="text-lg font-medium">
                       No published content found
@@ -616,7 +658,12 @@ export default function ContentManagerPage() {
                         : "No published content available."}
                     </p>
                     {(searchQuery || categoryFilter !== "all") && (
-                      <Button id="page-button-3" data-testId="page-button-3" variant="outline" onClick={clearFilters}>
+                      <Button
+                        id="page-button-3"
+                        data-testId="page-button-3"
+                        variant="outline"
+                        onClick={clearFilters}
+                      >
                         Clear Filters
                       </Button>
                     )}
@@ -628,7 +675,11 @@ export default function ContentManagerPage() {
         </TabsContent>
 
         <TabsContent value="archived" className="space-y-6">
-          <div id="page-div-14" data-testId="page-div-14" className="space-y-4 mb-8">
+          <div
+            id="page-div-14"
+            data-testId="page-div-14"
+            className="space-y-4 mb-8"
+          >
             {filteredArchived.length > 0 ? (
               filteredArchived.map((publication: Publication) => {
                 return (
@@ -643,7 +694,11 @@ export default function ContentManagerPage() {
             ) : (
               <Card>
                 <CardContent className="p-12 text-center">
-                  <div id="page-div-15" data-testId="page-div-15" className="space-y-4">
+                  <div
+                    id="page-div-15"
+                    data-testId="page-div-15"
+                    className="space-y-4"
+                  >
                     <XCircle className="mx-auto h-12 w-12 text-muted-foreground" />
                     <h3 className="text-lg font-medium">
                       No archived content found
@@ -654,7 +709,12 @@ export default function ContentManagerPage() {
                         : "No archived content available."}
                     </p>
                     {(searchQuery || categoryFilter !== "all") && (
-                      <Button id="page-button-4" data-testId="page-button-4" variant="outline" onClick={clearFilters}>
+                      <Button
+                        id="page-button-4"
+                        data-testId="page-button-4"
+                        variant="outline"
+                        onClick={clearFilters}
+                      >
                         Clear Filters
                       </Button>
                     )}
@@ -666,7 +726,11 @@ export default function ContentManagerPage() {
         </TabsContent>
 
         <TabsContent value="rejected" className="space-y-6">
-          <div id="page-div-16" data-testId="page-div-16" className="space-y-4 mb-8">
+          <div
+            id="page-div-16"
+            data-testId="page-div-16"
+            className="space-y-4 mb-8"
+          >
             {filteredRejected.length > 0 ? (
               filteredRejected.map((publication: Publication) => {
                 return (
@@ -674,14 +738,17 @@ export default function ContentManagerPage() {
                     key={publication.pubId}
                     publication={publication}
                     deleteArchive={deleteArchive}
-                    // restoreArchive={restoreArchive}
                   />
                 );
               })
             ) : (
               <Card>
                 <CardContent className="p-12 text-center">
-                  <div id="page-div-17" data-testId="page-div-17" className="space-y-4">
+                  <div
+                    id="page-div-17"
+                    data-testId="page-div-17"
+                    className="space-y-4"
+                  >
                     <XCircle className="mx-auto h-12 w-12 text-muted-foreground" />
                     <h3 className="text-lg font-medium">
                       No rejected content found
@@ -692,7 +759,12 @@ export default function ContentManagerPage() {
                         : "No archived content available."}
                     </p>
                     {(searchQuery || categoryFilter !== "all") && (
-                      <Button id="page-button-5" data-testId="page-button-5" variant="outline" onClick={clearFilters}>
+                      <Button
+                        id="page-button-5"
+                        data-testId="page-button-5"
+                        variant="outline"
+                        onClick={clearFilters}
+                      >
                         Clear Filters
                       </Button>
                     )}
@@ -703,16 +775,28 @@ export default function ContentManagerPage() {
           </div>
         </TabsContent>
       </Tabs>
-      {/* Stats Cards - FIXED LAYOUT */}
+
       <h1 className="text-2xl font-bold">Publication Statistics</h1>
       <p className="text-muted-foreground">
         Number of publications approved, rejected, and archived
       </p>
-      <div id="page-grid-18" data-testId="page-grid-18" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+      <div
+        id="page-grid-18"
+        data-testId="page-grid-18"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3"
+      >
         <Card>
           <CardContent className="p-3 sm:p-6">
-            <div id="page-flex-19" data-testId="page-flex-19" className="flex items-center gap-3 sm:gap-4">
-              <div id="page-div-20" data-testId="page-div-20" className="p-2 sm:p-3 bg-blue-100 rounded-lg">
+            <div
+              id="page-flex-19"
+              data-testId="page-flex-19"
+              className="flex items-center gap-3 sm:gap-4"
+            >
+              <div
+                id="page-div-20"
+                data-testId="page-div-20"
+                className="p-2 sm:p-3 bg-blue-100 rounded-lg"
+              >
                 <FileText className="h-4 w-4 sm:h-6 sm:w-6 text-blue-600" />
               </div>
               <div id="page-div-21" data-testId="page-div-21">
@@ -726,8 +810,16 @@ export default function ContentManagerPage() {
         </Card>
         <Card>
           <CardContent className="p-3 sm:p-6">
-            <div id="page-flex-22" data-testId="page-flex-22" className="flex items-center gap-3 sm:gap-4">
-              <div id="page-div-23" data-testId="page-div-23" className="p-2 sm:p-3 bg-yellow-100 rounded-lg">
+            <div
+              id="page-flex-22"
+              data-testId="page-flex-22"
+              className="flex items-center gap-3 sm:gap-4"
+            >
+              <div
+                id="page-div-23"
+                data-testId="page-div-23"
+                className="p-2 sm:p-3 bg-yellow-100 rounded-lg"
+              >
                 <Clock className="h-4 w-4 sm:h-6 sm:w-6 text-yellow-600" />
               </div>
               <div id="page-div-24" data-testId="page-div-24">
@@ -743,8 +835,16 @@ export default function ContentManagerPage() {
         </Card>
         <Card>
           <CardContent className="p-3 sm:p-6">
-            <div id="page-flex-25" data-testId="page-flex-25" className="flex items-center gap-3 sm:gap-4">
-              <div id="page-div-26" data-testId="page-div-26" className="p-2 sm:p-3 bg-gray-100 rounded-lg">
+            <div
+              id="page-flex-25"
+              data-testId="page-flex-25"
+              className="flex items-center gap-3 sm:gap-4"
+            >
+              <div
+                id="page-div-26"
+                data-testId="page-div-26"
+                className="p-2 sm:p-3 bg-gray-100 rounded-lg"
+              >
                 <Edit className="h-4 w-4 sm:h-6 sm:w-6 text-gray-600" />
               </div>
               <div id="page-div-27" data-testId="page-div-27">
@@ -760,8 +860,16 @@ export default function ContentManagerPage() {
         </Card>
         <Card>
           <CardContent className="p-3 sm:p-6">
-            <div id="page-flex-28" data-testId="page-flex-28" className="flex items-center gap-3 sm:gap-4">
-              <div id="page-div-29" data-testId="page-div-29" className="p-2 sm:p-3 bg-green-100 rounded-lg">
+            <div
+              id="page-flex-28"
+              data-testId="page-flex-28"
+              className="flex items-center gap-3 sm:gap-4"
+            >
+              <div
+                id="page-div-29"
+                data-testId="page-div-29"
+                className="p-2 sm:p-3 bg-green-100 rounded-lg"
+              >
                 <CheckCircle className="h-4 w-4 sm:h-6 sm:w-6 text-green-600" />
               </div>
               <div id="page-div-30" data-testId="page-div-30">
@@ -777,8 +885,16 @@ export default function ContentManagerPage() {
         </Card>
         <Card>
           <CardContent className="p-3 sm:p-6">
-            <div id="page-flex-31" data-testId="page-flex-31" className="flex items-center gap-3 sm:gap-4">
-              <div id="page-div-32" data-testId="page-div-32" className="p-2 sm:p-3 bg-red-100 rounded-lg">
+            <div
+              id="page-flex-31"
+              data-testId="page-flex-31"
+              className="flex items-center gap-3 sm:gap-4"
+            >
+              <div
+                id="page-div-32"
+                data-testId="page-div-32"
+                className="p-2 sm:p-3 bg-red-100 rounded-lg"
+              >
                 <XCircle className="h-4 w-4 sm:h-6 sm:w-6 text-red-600" />
               </div>
               <div id="page-div-33" data-testId="page-div-33">

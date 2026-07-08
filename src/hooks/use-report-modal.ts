@@ -6,35 +6,34 @@ type ContentType =
   | "FORUM_POST"
   | "FORUM_COMMENT"
   | "FORUM_REPLY"
-  | "FORUM_REPLY_TO_REPLY" // Children of forum replies
+  | "FORUM_REPLY_TO_REPLY"
   | "PUBLICATION"
   | "PUBLICATION_COMMENT"
   | "PUBLICATION_REPLY"
-  | "PUBLICATION_REPLY_TO_REPLY"; // Children of publication replies
+  | "PUBLICATION_REPLY_TO_REPLY";
 
 interface ReportModalState {
   isModalOpen: boolean;
   contentType: ContentType;
   contentId: string;
   contentTitle?: string;
-  reportedUserId?: string; // for consistency with the modal component
+  reportedUserId?: string;
 }
 
 export function useReportModal() {
   const [state, setState] = useState<ReportModalState>({
     isModalOpen: false,
-    contentType: "PUBLICATION", // Default to a valid ContentType value
+    contentType: "PUBLICATION",
     contentId: "",
     contentTitle: "",
     reportedUserId: "",
   });
 
-  // Updated to use the complete ContentType enum
   const openReportModal = (
-    contentType: ContentType, // accepts all content types
+    contentType: ContentType,
     contentId: string,
     contentTitle?: string,
-    reportedUserId?: string // ID of user who created the content
+    reportedUserId?: string,
   ) => {
     setState({
       isModalOpen: true,

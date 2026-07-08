@@ -19,11 +19,9 @@ interface Forum {
   category: string;
 }
 
-// Main hook for working with all posts
 export const useForumQuery = (token: string) => {
   const queryClient = useQueryClient();
 
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["forum"],
     queryFn: async () => await fetchAllForums(token),
@@ -33,7 +31,6 @@ export const useForumQuery = (token: string) => {
     refetchInterval: false,
   });
 
-  // Mutation to create a new post
   const createForumQuery = useMutation({
     mutationFn: async (postData: Forum) => await createForum(token, postData),
     onSuccess: () => {
@@ -46,7 +43,6 @@ export const useForumQuery = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -54,7 +50,6 @@ export const useForumQuery = (token: string) => {
     isSuccess,
     refetch,
 
-    // Mutation functions
     createForum: createForumQuery.mutate,
     isCreatingForum: createForumQuery.isPending,
     forumCreationError: createForumQuery.error,
@@ -62,7 +57,6 @@ export const useForumQuery = (token: string) => {
   };
 };
 
-// Separate hook for fetching a single post by ID
 
 export const useFetchForumByCategory = (slug: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({

@@ -29,7 +29,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, X, Save, Eye } from "lucide-react";
 import Link from "next/link";
@@ -58,7 +57,6 @@ export default function CreatePublicationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-  const [isDraft, setIsDraft] = useState(true);
   const router = useRouter();
   const token = Cookies.get("token") || "";
   const { createPost, isCreating, isLoading } = usePostQuery(token);
@@ -152,7 +150,7 @@ export default function CreatePublicationPage() {
   const handleContentChange = (richText: string) => {
     setFormData({
       ...formData,
-      content: richText, // Set the 'content' field with the new HTML
+      content: richText,
     });
   };
 
@@ -168,13 +166,29 @@ export default function CreatePublicationPage() {
   }
 
   return (
-    <div id="page-div-1" data-testId="page-div-1" className="max-w-4xl mx-auto space-y-6">
+    <div
+      id="page-div-1"
+      data-testId="page-div-1"
+      className="max-w-4xl mx-auto space-y-6"
+    >
       <StatusModal />
       {/* Header */}
-      <div id="page-flex-2" data-testId="page-flex-2" className="flex items-center justify-between">
-        <div id="page-flex-3" data-testId="page-flex-3" className="flex items-center flex-wrap gap-4">
+      <div
+        id="page-flex-2"
+        data-testId="page-flex-2"
+        className="flex items-center justify-between"
+      >
+        <div
+          id="page-flex-3"
+          data-testId="page-flex-3"
+          className="flex items-center flex-wrap gap-4"
+        >
           <Button asChild variant="ghost">
-            <Link id="page-link-1" data-testId="page-link-1" href="/publications">
+            <Link
+              id="page-link-1"
+              data-testId="page-link-1"
+              href="/publications"
+            >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Link>
@@ -185,7 +199,11 @@ export default function CreatePublicationPage() {
               Share news, articles, and updates with the school community
             </p>
           </div>
-          <div id="page-div-5" data-testId="page-div-5" className="border rounded-md border-green-500 p-2">
+          <div
+            id="page-div-5"
+            data-testId="page-div-5"
+            className="border rounded-md border-green-500 p-2"
+          >
             <h3 className="text-md font-bold text-green-400">Note</h3>
             <p className="text-green-300">
               Submitted publications needs to be approved first before you can
@@ -195,9 +213,17 @@ export default function CreatePublicationPage() {
         </div>
       </div>
       <form onSubmit={handleSubmit}>
-        <div id="page-grid-6" data-testId="page-grid-6" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div
+          id="page-grid-6"
+          data-testId="page-grid-6"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        >
           {/* Main Content */}
-          <div id="page-div-7" data-testId="page-div-7" className="lg:col-span-2 space-y-6">
+          <div
+            id="page-div-7"
+            data-testId="page-div-7"
+            className="lg:col-span-2 space-y-6"
+          >
             {/* Basic Information */}
             <Card>
               <CardHeader>
@@ -207,7 +233,11 @@ export default function CreatePublicationPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div id="page-div-8" data-testId="page-div-8" className="space-y-2">
+                <div
+                  id="page-div-8"
+                  data-testId="page-div-8"
+                  className="space-y-2"
+                >
                   <Label htmlFor="title">Title *</Label>
                   <Input
                     id="title"
@@ -222,7 +252,11 @@ export default function CreatePublicationPage() {
                   </p>
                 </div>
 
-                <div id="page-div-9" data-testId="page-div-9" className="space-y-2">
+                <div
+                  id="page-div-9"
+                  data-testId="page-div-9"
+                  className="space-y-2"
+                >
                   <Label htmlFor="excerpt">Excerpt</Label>
                   <Textarea
                     id="excerpt"
@@ -250,13 +284,19 @@ export default function CreatePublicationPage() {
               </CardHeader>
               <CardContent>
                 {formData.imageUrl ? (
-                  <div id="page-div-10" data-testId="page-div-10" className="relative">
+                  <div
+                    id="page-div-10"
+                    data-testId="page-div-10"
+                    className="relative"
+                  >
                     <img
                       src={formData.imageUrl || "/placeholder.svg"}
                       alt="Cover"
                       className="w-full h-48 object-cover rounded-lg"
                     />
-                    <Button id="page-button-1" data-testId="page-button-1"
+                    <Button
+                      id="page-button-1"
+                      data-testId="page-button-1"
                       variant="destructive"
                       size="sm"
                       className="absolute top-2 right-2"
@@ -282,7 +322,6 @@ export default function CreatePublicationPage() {
                       uploadIcon: "h-12 w-12 text-muted-foreground/50 mb-4",
                       label: "text-sm text-muted-foreground",
                       allowedContent: "text-xs text-muted-foreground",
-                      // Make the button and progress bar transparent
                       button:
                         "absolute inset-0 h-full w-full cursor-pointer bg-transparent text-transparent ut-uploading:bg-slate-900/50 ut-uploading:text-white",
                     }}
@@ -316,7 +355,11 @@ export default function CreatePublicationPage() {
                 <CardTitle>Publication Settings</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div id="page-div-12" data-testId="page-div-12" className="space-y-2">
+                <div
+                  id="page-div-12"
+                  data-testId="page-div-12"
+                  className="space-y-2"
+                >
                   <Label htmlFor="category">Category *</Label>
                   <Select
                     value={formData.category}
@@ -335,29 +378,6 @@ export default function CreatePublicationPage() {
                     </SelectContent>
                   </Select>
                 </div>
-
-                {/* <div id="page-flex-13" data-testId="page-flex-13" className="flex items-center justify-between">
-                  <div id="page-div-14" data-testId="page-div-14" className="space-y-0.5">
-                    <Label>Featured Publication</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Show this publication prominently
-                    </p>
-                  </div>
-                  <Switch
-                    checked={formData.isFeatured}
-                    onCheckedChange={handleFeaturedChange}
-                  />
-                </div> */}
-
-                {/* <div id="page-flex-15" data-testId="page-flex-15" className="flex items-center justify-between">
-                  <div id="page-div-16" data-testId="page-div-16" className="space-y-0.5">
-                    <Label>Save as Draft</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Don&apos;t publish immediately
-                    </p>
-                  </div>
-                  <Switch checked={isDraft} onCheckedChange={setIsDraft} />
-                </div> */}
               </CardContent>
             </Card>
 
@@ -374,19 +394,31 @@ export default function CreatePublicationPage() {
               </CardHeader>
               <CardContent className="space-y-4 break-words">
                 {formData.title || formData.content ? (
-                  <div id="page-div-17" data-testId="page-div-17" className="space-y-3">
+                  <div
+                    id="page-div-17"
+                    data-testId="page-div-17"
+                    className="space-y-3"
+                  >
                     <div id="page-div-18" data-testId="page-div-18">
                       <h3 className="font-semibold text-lg">
                         {formData.title || "Untitled Publication"}
                       </h3>
-                      <div id="page-flex-19" data-testId="page-flex-19" className="flex gap-2 mt-2"></div>
+                      <div
+                        id="page-flex-19"
+                        data-testId="page-flex-19"
+                        className="flex gap-2 mt-2"
+                      ></div>
                     </div>
                     <ContentDisplay
                       htmlContent={formData.content || "No content yet..."}
                     />
 
                     {tags.length > 0 && (
-                      <div id="page-flex-20" data-testId="page-flex-20" className="flex flex-wrap gap-2">
+                      <div
+                        id="page-flex-20"
+                        data-testId="page-flex-20"
+                        className="flex flex-wrap gap-2"
+                      >
                         {tags.map((tag) => (
                           <Badge
                             key={tag}
@@ -400,7 +432,11 @@ export default function CreatePublicationPage() {
                     )}
                   </div>
                 ) : (
-                  <div id="page-div-21" data-testId="page-div-21" className="text-center py-8 text-muted-foreground">
+                  <div
+                    id="page-div-21"
+                    data-testId="page-div-21"
+                    className="text-center py-8 text-muted-foreground"
+                  >
                     <p className="text-sm">Start typing to see preview</p>
                   </div>
                 )}
@@ -416,7 +452,11 @@ export default function CreatePublicationPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div id="page-flex-22" data-testId="page-flex-22" className="flex gap-2">
+                <div
+                  id="page-flex-22"
+                  data-testId="page-flex-22"
+                  className="flex gap-2"
+                >
                   <Input
                     placeholder="Add tag..."
                     value={newTag}
@@ -428,13 +468,23 @@ export default function CreatePublicationPage() {
                       }
                     }}
                   />
-                  <Button id="page-button-2" data-testId="page-button-2" type="button" onClick={handleAddTag} size="sm">
+                  <Button
+                    id="page-button-2"
+                    data-testId="page-button-2"
+                    type="button"
+                    onClick={handleAddTag}
+                    size="sm"
+                  >
                     Add
                   </Button>
                 </div>
 
                 {tags.length > 0 && (
-                  <div id="page-flex-23" data-testId="page-flex-23" className="flex flex-wrap gap-2">
+                  <div
+                    id="page-flex-23"
+                    data-testId="page-flex-23"
+                    className="flex flex-wrap gap-2"
+                  >
                     {tags.map((tag) => (
                       <Badge
                         key={tag}
@@ -442,7 +492,9 @@ export default function CreatePublicationPage() {
                         className="flex items-center gap-1"
                       >
                         {tag}
-                        <button id="page-button-3" data-testId="page-button-3"
+                        <button
+                          id="page-button-3"
+                          data-testId="page-button-3"
                           onClick={() => handleRemoveTag(tag)}
                           className="ml-1 hover:text-destructive"
                         >
@@ -461,7 +513,9 @@ export default function CreatePublicationPage() {
                 <CardTitle>Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button id="page-button-4" data-testId="page-button-4"
+                <Button
+                  id="page-button-4"
+                  data-testId="page-button-4"
                   type="submit"
                   variant="outline"
                   className="w-full bg-transparent"
@@ -470,10 +524,6 @@ export default function CreatePublicationPage() {
                   <Save className="mr-2 h-4 w-4" />
                   Publish
                 </Button>
-                {/* <Button id="page-button-5" data-testId="page-button-5" variant="outline" className="w-full bg-transparent">
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Draft
-                </Button> */}
               </CardContent>
             </Card>
 

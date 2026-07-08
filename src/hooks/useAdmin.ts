@@ -18,12 +18,9 @@ interface Publication {
   tags: string[];
   category: string;
 }
-
-// Main hook for working with all posts
 export const useAdminQuery = (token: string) => {
   const queryClient = useQueryClient();
 
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["admin-side-users"],
     queryFn: async () => await fetchAllUsers(token),
@@ -40,7 +37,6 @@ export const useAdminQuery = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -50,22 +46,18 @@ export const useAdminQuery = (token: string) => {
 
     updateRole: updateUserRole.mutate,
     isUpdating: updateUserRole.isPending,
-    // createError: mutation.error,
     updateSuccess: updateUserRole.isSuccess,
-    // createReset: mutation.reset,
   };
 };
 
 export const useAdminUserAdmissionsQuery = (token: string) => {
   const queryClient = useQueryClient();
 
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["user-admissions"],
     queryFn: async () => await fetchAllUserAdmissions(token),
   });
 
-  // Mutation to approve admission
   const approveUser = useMutation({
     mutationFn: async ({
       admission_id,
@@ -127,7 +119,6 @@ export const useAdminUserAdmissionsQuery = (token: string) => {
 export const useAdminRoleChangeRequestsQuery = (token: string) => {
   const queryClient = useQueryClient();
 
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["role-change-requests"],
     queryFn: async () => await fetchRoleChangeRequests(token),
@@ -154,7 +145,6 @@ export const useAdminRoleChangeRequestsQuery = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -162,7 +152,6 @@ export const useAdminRoleChangeRequestsQuery = (token: string) => {
     isSuccess,
     refetch,
 
-    // Mutation functions
     approveRoleChange: approveRoleChange.mutate,
     isApproving: approveRoleChange.isPending,
     // createError: mutation.error,

@@ -21,7 +21,6 @@ export function middleware(request: NextRequest) {
     //  get user from session/JWT
     const userRole = request.headers.get("x-user-role") || "student";
 
-    // Check permissions (simplified - in production, verify JWT/session)
     const hasAccess = checkUserAccess(userRole, requiredPermissions);
 
     if (!hasAccess) {
@@ -34,9 +33,8 @@ export function middleware(request: NextRequest) {
 
 function checkUserAccess(
   userRole: string,
-  requiredPermissions: string[]
+  requiredPermissions: string[],
 ): boolean {
-  // Simplified check - in production, use proper permission checking
   const rolePermissions = {
     student: ["publications.create"],
     moderator: ["publications.create", "moderation.reports"],
@@ -53,7 +51,7 @@ function checkUserAccess(
     rolePermissions[userRole as keyof typeof rolePermissions] || [];
 
   return requiredPermissions.some((permission) =>
-    userPermissions.includes(permission)
+    userPermissions.includes(permission),
   );
 }
 

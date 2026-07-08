@@ -21,23 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Upload, X, Eye, Save, MessageSquare } from "lucide-react";
+import { ArrowLeft, X, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  usePostQuery,
-  useFetchOnePostQuery,
-  usePostByIdQuery,
-} from "@/hooks/usePost";
-import { useUserPublicationQuery } from "@/hooks/useUser";
 import { useFetchForumById } from "@/hooks/useForum";
 import { useUserForumQuery } from "@/hooks/useUser";
 import { useConfirmation } from "@/components/confirmation-provider";
-import { UploadDropzone } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
-import Tiptap from "@/components/tiptap";
 import { toast } from "sonner";
 import UpdateForumTopicLoading from "./loading";
 
@@ -51,19 +42,14 @@ export default function UpdatePublicationPage({ params }: PageProps) {
     topicTitle: "",
     description: "",
     category: "",
-    // imageUrl: "",
-    // isFeatured: false,
-    // category: "",
   });
   const { confirmDelete } = useConfirmation();
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-  const [isDraft, setIsDraft] = useState(true);
   const router = useRouter();
   const token = Cookies.get("token") || "";
   const { data: forumToUpdate, isLoading } = useFetchForumById(token, id);
   const { editForum, isEditing, deleteForum } = useUserForumQuery(token);
-  console.log("forum to update", forumToUpdate);
 
   const categories = [
     "General Discussion",
@@ -83,9 +69,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
         topicTitle: forumToUpdate.topicTitle || "",
         description: forumToUpdate.description || "",
         category: forumToUpdate.category || "",
-        // imageUrl: pubToUpdate.imageUrl || "",
-        // isFeatured: pubToUpdate.isFeatured ?? false,
-        // category: pubToUpdate.category || "",
       });
       setTags(forumToUpdate.tags || []);
     }
@@ -100,13 +83,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
 
   const handleRemoveTag = (tagToRemove: string) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
-
-  const handleFeaturedChange = (checked: boolean) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      isFeatured: checked,
-    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -125,17 +101,11 @@ export default function UpdatePublicationPage({ params }: PageProps) {
             toast("Publication updated successfully!");
             router.push(`/forum/topic/${id}`);
           },
-        }
+        },
       );
     } catch (error: any) {
       console.error(error);
     }
-  };
-
-  const handleDeletePublication = (pubId: string, title: string) => {
-    confirmDelete("forum", () => {
-      deleteForum(pubId);
-    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,12 +121,6 @@ export default function UpdatePublicationPage({ params }: PageProps) {
       [e.target.name]: e.target.value,
     });
   };
-  // const handleContentChange = (richText: string) => {
-  //   setFormData({
-  //     ...formData,
-  //     content: richText, // Set the 'content' field with the new HTML
-  //   });
-  // };
 
   const handleSelectChange = (value: string) => {
     setFormData({
@@ -170,9 +134,17 @@ export default function UpdatePublicationPage({ params }: PageProps) {
   }
 
   return (
-    <div id="page-div-1" data-testId="page-div-1" className="max-w-4xl mx-auto space-y-6">
+    <div
+      id="page-div-1"
+      data-testId="page-div-1"
+      className="max-w-4xl mx-auto space-y-6"
+    >
       {/* Header */}
-      <div id="page-flex-2" data-testId="page-flex-2" className="flex items-center gap-4">
+      <div
+        id="page-flex-2"
+        data-testId="page-flex-2"
+        className="flex items-center gap-4"
+      >
         <Button asChild variant="ghost">
           <Link id="page-link-1" data-testId="page-link-1" href="/forum">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -188,9 +160,17 @@ export default function UpdatePublicationPage({ params }: PageProps) {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div id="page-grid-4" data-testId="page-grid-4" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div
+          id="page-grid-4"
+          data-testId="page-grid-4"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        >
           {/* Main Content */}
-          <div id="page-div-5" data-testId="page-div-5" className="lg:col-span-2 space-y-6">
+          <div
+            id="page-div-5"
+            data-testId="page-div-5"
+            className="lg:col-span-2 space-y-6"
+          >
             <Card>
               <CardHeader>
                 <CardTitle>Topic Details</CardTitle>
@@ -199,7 +179,11 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div id="page-div-6" data-testId="page-div-6" className="space-y-2">
+                <div
+                  id="page-div-6"
+                  data-testId="page-div-6"
+                  className="space-y-2"
+                >
                   <Label htmlFor="topicTitle">Topic Title *</Label>
                   <Input
                     id="topicTitle"
@@ -214,7 +198,11 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                   </p>
                 </div>
 
-                <div id="page-div-7" data-testId="page-div-7" className="space-y-2">
+                <div
+                  id="page-div-7"
+                  data-testId="page-div-7"
+                  className="space-y-2"
+                >
                   <Label htmlFor="description">Description *</Label>
                   <Textarea
                     id="description"
@@ -242,7 +230,11 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 <CardTitle>Topic Settings</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div id="page-div-9" data-testId="page-div-9" className="space-y-2">
+                <div
+                  id="page-div-9"
+                  data-testId="page-div-9"
+                  className="space-y-2"
+                >
                   <Label htmlFor="category">Category *</Label>
                   <Select
                     value={formData.category}
@@ -275,7 +267,11 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div id="page-flex-10" data-testId="page-flex-10" className="flex gap-2">
+                <div
+                  id="page-flex-10"
+                  data-testId="page-flex-10"
+                  className="flex gap-2"
+                >
                   <Input
                     placeholder="Add tag..."
                     value={newTag}
@@ -287,13 +283,23 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                       }
                     }}
                   />
-                  <Button id="page-button-1" data-testId="page-button-1" type="button" onClick={handleAddTag} size="sm">
+                  <Button
+                    id="page-button-1"
+                    data-testId="page-button-1"
+                    type="button"
+                    onClick={handleAddTag}
+                    size="sm"
+                  >
                     Add
                   </Button>
                 </div>
 
                 {tags.length > 0 && (
-                  <div id="page-flex-11" data-testId="page-flex-11" className="flex flex-wrap gap-2">
+                  <div
+                    id="page-flex-11"
+                    data-testId="page-flex-11"
+                    className="flex flex-wrap gap-2"
+                  >
                     {tags.map((tag) => (
                       <Badge
                         key={tag}
@@ -301,7 +307,9 @@ export default function UpdatePublicationPage({ params }: PageProps) {
                         className="flex items-center gap-1"
                       >
                         {tag}
-                        <button id="page-button-2" data-testId="page-button-2"
+                        <button
+                          id="page-button-2"
+                          data-testId="page-button-2"
                           onClick={() => handleRemoveTag(tag)}
                           className="ml-1 hover:text-destructive"
                         >
@@ -335,7 +343,13 @@ export default function UpdatePublicationPage({ params }: PageProps) {
             {/* Actions */}
             <Card>
               <CardContent className="p-4">
-                <Button id="page-button-3" data-testId="page-button-3" type="submit" className="w-full" disabled={isEditing}>
+                <Button
+                  id="page-button-3"
+                  data-testId="page-button-3"
+                  type="submit"
+                  className="w-full"
+                  disabled={isEditing}
+                >
                   <MessageSquare className="mr-2 h-4 w-4" />
                   Update Topic
                 </Button>

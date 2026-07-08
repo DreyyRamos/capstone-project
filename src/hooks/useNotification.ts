@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { markAsRead, markAllAsRead } from "@/services/notification";
 
 export const useNotificationQuery = (token: string) => {
@@ -7,7 +7,6 @@ export const useNotificationQuery = (token: string) => {
   const markAsReadMutation = useMutation({
     mutationFn: (notificationId: string) => markAsRead(notificationId, token),
     onSuccess: () => {
-      // Invalidate the user query to refetch user data (including notifications)
       queryClient.invalidateQueries({ queryKey: ["users", token] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
@@ -19,12 +18,10 @@ export const useNotificationQuery = (token: string) => {
     },
   });
 
-  // Create a new mutation for marking all as read
   const markAllAsReadMutation = useMutation({
     mutationFn: () => markAllAsRead(token),
     onSuccess: () => {
       // toast.success("All notifications marked as read.");
-      // Invalidate the user query to refetch the user and their notifications
       queryClient.invalidateQueries({ queryKey: ["users", token] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["featured-pubs"] });
@@ -37,8 +34,7 @@ export const useNotificationQuery = (token: string) => {
   });
 
   return {
-    markAsRead: markAsReadMutation.mutate, // Keep existing function
-    markAllAsRead: markAllAsReadMutation, // Expose the new mutation object
+    markAsRead: markAsReadMutation.mutate,
+    markAllAsRead: markAllAsReadMutation,
   };
 };
-

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -15,12 +14,9 @@ import {
   Users,
   BookOpen,
   MessageSquare,
-  Calendar,
   Info,
   Plus,
-  Minus,
   MessageCircle,
-  Eye,
   Heart,
 } from "lucide-react";
 import { useFetchLeaderboard } from "@/hooks/usePublicData";
@@ -45,7 +41,6 @@ export default function LeaderboardPage() {
       "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
   };
 
-  // Calculate total comments for a user
   const getTotalComments = (user: any) => {
     const counts = user._count || {};
     return (
@@ -56,48 +51,6 @@ export default function LeaderboardPage() {
       (counts.publicationCommentReplyToReplies || 0) +
       (counts.forumCommentReplyToReplies || 0)
     );
-  };
-
-  const getRankIcon = (position: number) => {
-    switch (position) {
-      case 1:
-        return (
-          <span id="page-span-1" data-testId="page-span-1" className="text-lg font-bold h-6 w-6 text-yellow-500">
-            #{position}
-          </span>
-        );
-      case 2:
-        return (
-          <span id="page-span-2" data-testId="page-span-2" className="text-lg font-bold h-6 w-6 text-gray-500">
-            #{position}
-          </span>
-        );
-      case 3:
-        return (
-          <span id="page-span-3" data-testId="page-span-3" className="text-lg font-bold h-6 w-6 text-amber-600">
-            #{position}
-          </span>
-        );
-      default:
-        return (
-          <span id="page-span-4" data-testId="page-span-4" className="text-lg font-bold text-muted-foreground">
-            #{position}
-          </span>
-        );
-    }
-  };
-
-  const getRankStyle = (position: number) => {
-    switch (position) {
-      case 1:
-        return "bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200 dark:from-yellow-900/20 dark:to-yellow-800/20 dark:border-yellow-700";
-      case 2:
-        return "bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200 dark:from-gray-900/20 dark:to-gray-800/20 dark:border-gray-700";
-      case 3:
-        return "bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200 dark:from-amber-900/20 dark:to-amber-800/20 dark:border-amber-700";
-      default:
-        return "hover:bg-muted/50";
-    }
   };
 
   const stats = [

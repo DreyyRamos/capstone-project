@@ -21,7 +21,6 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("token")?.value;
 
-  // logged-in user on /login or /register
   if (GUEST_ONLY.includes(pathname) && token) {
     return NextResponse.redirect(new URL("/", req.url)); // send to the homepage
   }
@@ -32,7 +31,6 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  //everything else (including "/")
   return NextResponse.next();
 }
 

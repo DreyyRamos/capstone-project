@@ -19,7 +19,6 @@ import {
   MessageSquare,
   BookOpen,
   TrendingUp,
-  UserX,
 } from "lucide-react";
 
 interface UserProps {
@@ -94,7 +93,6 @@ const UsersList = ({
             >
               <Badge
                 className={roleColors[user.role as keyof typeof roleColors]}
-                // size="sm"
               >
                 {user.role}
               </Badge>
@@ -102,7 +100,6 @@ const UsersList = ({
                 className={
                   statusColors[user.status as keyof typeof statusColors]
                 }
-                // size="sm"
               >
                 {user.status}
               </Badge>
@@ -251,14 +248,6 @@ const UsersList = ({
               <Shield className="mr-2 h-4 w-4" />
               Edit Permissions
             </DropdownMenuItem>
-            {/* <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-red-600"
-              onClick={() => handleSuspendUser(user)}
-            >
-              <UserX className="mr-2 h-4 w-4" />
-              Suspend User
-            </DropdownMenuItem>*/}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

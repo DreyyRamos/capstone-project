@@ -12,17 +12,9 @@ import { useTokenUser } from "@/hooks/useTokenUser";
 export function RoleBasedLayout({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated } = useTokenUser();
 
-  console.log("Current user from token:", user); // Debug
-
   const navigationComponent = useMemo(() => {
     if (!isAuthenticated || !user) return <StudentNavigation />;
-
-    // 1. read the role (string | undefined)
-    const role = (user.role || "").toUpperCase(); // normalise case
-
-    console.log("Role from token:", role);
-
-    // 2. pick component
+    const role = (user.role || "").toUpperCase();
     switch (role) {
       case "ADMIN":
         return <AdminNavigation />;

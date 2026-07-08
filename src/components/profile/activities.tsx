@@ -3,17 +3,6 @@
 import { Separator } from "@/components/ui/separator";
 import { MessageSquare, FileText } from "lucide-react";
 
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  contactNumber: string;
-  bio: string;
-  location: string;
-  profileImage: string;
-  interests: string[];
-}
-
 interface UserActivityProps {
   activity: any;
   index: number;

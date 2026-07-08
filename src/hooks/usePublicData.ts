@@ -1,18 +1,13 @@
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchUserLeaderboard, fetchUsers } from "@/services/publicData";
 
-// Main hook for working with all posts
 export const useFetchLeaderboard = () => {
-  const queryClient = useQueryClient();
-
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess } = useQuery({
     queryKey: ["user-leaderboard"],
     queryFn: async () => await fetchUserLeaderboard(),
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -21,11 +16,7 @@ export const useFetchLeaderboard = () => {
   };
 };
 
-// Main hook for working with all posts
 export const useFetchUsers = () => {
-  const queryClient = useQueryClient();
-
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess } = useQuery({
     queryKey: ["users"],
     queryFn: async () => await fetchUsers(),

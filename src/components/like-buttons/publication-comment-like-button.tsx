@@ -5,7 +5,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { likeCommentPub } from "@/services/publication";
 import { Button } from "@/components/ui/button";
 import { Heart, HeartOff, Loader } from "lucide-react";
-import { jwtDecode } from "jwt-decode";
 import { useUserId } from "@/hooks/useUserId";
 import { useAuthModal } from "@/hooks/use-auth-modal";
 import { AuthModal } from "../auth-modal";
@@ -13,7 +12,7 @@ import { AuthModal } from "../auth-modal";
 interface ForumCommentLike {
   commentLikeId: string;
   commentId: string;
-  userId: string; // Changed from number to string (UUID)
+  userId: string;
   isLiked: boolean;
   forumId: string | null;
 }
@@ -62,12 +61,11 @@ const PublicationCommentLikeButton = ({
       !comment?.pubCommentLikes ||
       comment.pubCommentLikes?.length === 0
     ) {
-      console.log("No userId or no likes found for this comment");
       return undefined;
     }
 
     const found = comment?.pubCommentLikes?.find((like: ForumCommentLike) => {
-      return like?.userId === userId; // Compare with decoded user ID
+      return like?.userId === userId;
     });
 
     return found;
@@ -76,9 +74,8 @@ const PublicationCommentLikeButton = ({
   const likeCount = useMemo(() => {
     const count =
       comment?.pubCommentLikes?.filter(
-        (like: ForumCommentLike) => like?.isLiked
+        (like: ForumCommentLike) => like?.isLiked,
       ).length || 0;
-    console.log("Like count calculation:", count);
     return count;
   }, [comment?.pubCommentLikes]);
 
@@ -88,10 +85,10 @@ const PublicationCommentLikeButton = ({
         return await likeCommentPub(
           forumId || comment.forumId,
           commentId,
-          token
+          token,
         );
       },
-      [forumId, comment.forumId, token]
+      [forumId, comment.forumId, token],
     ),
     onMutate: (commentId: string) => {
       setCurrentLikeCommentId(commentId);
@@ -100,7 +97,6 @@ const PublicationCommentLikeButton = ({
       setCurrentLikeCommentId(null);
       const currentForumId = forumId || comment.forumId;
 
-      // Invalidate the specific forum query first
       queryClient.invalidateQueries({
         queryKey: ["pub", currentForumId],
       });
@@ -109,12 +105,6 @@ const PublicationCommentLikeButton = ({
         predicate: (query) => {
           const shouldInvalidate =
             query.queryKey[0] === "pub" || query.queryKey[0] === "pubs";
-          console.log(
-            "Query key:",
-            query.queryKey,
-            "Should invalidate:",
-            shouldInvalidate
-          );
           return shouldInvalidate;
         },
       });
@@ -145,7 +135,9 @@ const PublicationCommentLikeButton = ({
         action={action}
         redirectTo={redirectTo}
       />
-      <Button id="publication-comment-like-button-button-1" data-testId="publication-comment-like-button-button-1"
+      <Button
+        id="publication-comment-like-button-button-1"
+        data-testId="publication-comment-like-button-button-1"
         variant={"ghost"}
         onClick={handleLikeToggle}
         disabled={likeMutation.isPending}
@@ -153,7 +145,11 @@ const PublicationCommentLikeButton = ({
           likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <div id="publication-comment-like-button-div-1" data-testId="publication-comment-like-button-div-1" className="relative group">
+        <div
+          id="publication-comment-like-button-div-1"
+          data-testId="publication-comment-like-button-div-1"
+          className="relative group"
+        >
           {currentLikeCommentId === comment?.commentId ? (
             <Loader className="animate-spin" />
           ) : userLike && userLike?.isLiked ? (
@@ -161,11 +157,21 @@ const PublicationCommentLikeButton = ({
           ) : (
             <Heart className="text-gray-500" />
           )}
-          <span id="publication-comment-like-button-span-1" data-testId="publication-comment-like-button-span-1" className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
+          <span
+            id="publication-comment-like-button-span-1"
+            data-testId="publication-comment-like-button-span-1"
+            className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10"
+          >
             {userLike && userLike?.isLiked ? "Unlike" : "Like"}
           </span>
         </div>
-        <span id="publication-comment-like-button-span-2" data-testId="publication-comment-like-button-span-2" className="text-gray-100 ml-1">{likeCount}</span>
+        <span
+          id="publication-comment-like-button-span-2"
+          data-testId="publication-comment-like-button-span-2"
+          className="text-gray-100 ml-1"
+        >
+          {likeCount}
+        </span>
       </Button>
     </>
   );

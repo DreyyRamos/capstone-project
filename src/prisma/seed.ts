@@ -19,7 +19,6 @@ async function main() {
       role: Role.ADMIN,
     },
   });
-  console.log("Default admin created");
 }
 
 main()

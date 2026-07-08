@@ -44,7 +44,6 @@ export default function RoleRequestPage() {
     roleChange,
     isLoading: isUserLoading,
   } = useUserQuery(token);
-  console.log("user from request", user);
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -117,35 +116,28 @@ export default function RoleRequestPage() {
         additionalInfo: formData.additionalInfo,
       };
 
-      // Use the mutation properly
       await roleChange(requestData, {
         onSuccess: () => {
           toast(
-            "Your role change request has been submitted successfully! You will receive an email notification once it's reviewed by an administrator."
+            "Your role change request has been submitted successfully! You will receive an email notification once it's reviewed by an administrator.",
           );
           router.push("/");
         },
       });
 
       setSuccessMessage(
-        "Your role change request has been submitted successfully! You will receive an email notification once it's reviewed by an administrator."
+        "Your role change request has been submitted successfully! You will receive an email notification once it's reviewed by an administrator.",
       );
 
-      // Reset form
       setFormData({
         requestedRole: "",
         reason: "",
         additionalInfo: "",
       });
-
-      // Redirect after a delay
-      // setTimeout(() => {
-      //   router.push("/profile");
-      // }, 3000);
     } catch (error: any) {
       setErrorMessage(
         error.message ||
-          "Failed to submit your request. Please try again later."
+          "Failed to submit your request. Please try again later.",
       );
       console.error("Role request error:", error);
     } finally {
@@ -156,7 +148,6 @@ export default function RoleRequestPage() {
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }

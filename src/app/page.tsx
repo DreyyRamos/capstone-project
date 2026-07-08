@@ -14,10 +14,7 @@ import {
   BookOpen,
   MessageSquare,
   Users,
-  TrendingUp,
-  Calendar,
   Clock,
-  Eye,
   Heart,
   MessageCircle,
   ArrowRight,
@@ -33,8 +30,7 @@ export default function Dashboard() {
   const token = Cookies.get("token") || "";
 
   const { data: featuredPublications, isLoading } = useFeaturedPostsQuery();
-  const { data: publications, isLoading: publicationLoading } =
-    usePostQuery(token);
+  const { data: publications } = usePostQuery(token);
   const { data: forums } = useForumQuery(token);
   const { data: users } = useFetchUsers();
 
@@ -71,7 +67,13 @@ export default function Dashboard() {
             className="flex gap-4"
           >
             <Button size="lg" variant="secondary" asChild>
-              <Link id="page-link-1" data-testId="page-link-1" href="/publications">Browse Publications</Link>
+              <Link
+                id="page-link-1"
+                data-testId="page-link-1"
+                href="/publications"
+              >
+                Browse Publications
+              </Link>
             </Button>
             <Button
               size="lg"
@@ -79,7 +81,9 @@ export default function Dashboard() {
               className="border-white text-white hover:bg-white hover:text-blue-600 bg-transparent"
               asChild
             >
-              <Link id="page-link-2" data-testId="page-link-2" href="/forum">Join Forum</Link>
+              <Link id="page-link-2" data-testId="page-link-2" href="/forum">
+                Join Forum
+              </Link>
             </Button>
           </div>
         </div>
@@ -174,7 +178,11 @@ export default function Dashboard() {
               </CardDescription>
             </div>
             <Button variant="outline" size="sm" asChild>
-              <Link id="page-link-3" data-testId="page-link-3" href="/publications">
+              <Link
+                id="page-link-3"
+                data-testId="page-link-3"
+                href="/publications"
+              >
                 View All
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -189,7 +197,11 @@ export default function Dashboard() {
                   key={publication.pubId}
                   className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
                 >
-                  <Avatar id="page-a-1" data-testId="page-a-1" className="h-8 w-8 flex-shrink-0">
+                  <Avatar
+                    id="page-a-1"
+                    data-testId="page-a-1"
+                    className="h-8 w-8 flex-shrink-0"
+                  >
                     <AvatarImage src={publication?.author?.profileImage} />
                     <AvatarFallback id="page-a-2" data-testId="page-a-2">
                       {publication?.author?.firstName[0]}{" "}
@@ -201,7 +213,9 @@ export default function Dashboard() {
                     data-testId={`featured-pub-content-${publication.pubId}`}
                     className="flex-1 min-w-0 overflow-hidden"
                   >
-                    <Link id="page-link-4" data-testId="page-link-4"
+                    <Link
+                      id="page-link-4"
+                      data-testId="page-link-4"
                       href={`/publications/${publication.pubId}`}
                       className="block"
                     >
@@ -217,7 +231,11 @@ export default function Dashboard() {
                       data-testId={`featured-pub-meta-${publication.pubId}`}
                       className="flex items-center gap-2 mt-1 flex-wrap"
                     >
-                      <span id="page-span-1" data-testId="page-span-1" className="text-xs text-muted-foreground truncate">
+                      <span
+                        id="page-span-1"
+                        data-testId="page-span-1"
+                        className="text-xs text-muted-foreground truncate"
+                      >
                         by {publication?.author?.firstName}{" "}
                         {publication?.author?.lastName}
                       </span>
@@ -292,7 +310,11 @@ export default function Dashboard() {
                 key={index}
                 className="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
               >
-                <Avatar id="page-a-3" data-testId="page-a-3" className="h-8 w-8 flex-shrink-0">
+                <Avatar
+                  id="page-a-3"
+                  data-testId="page-a-3"
+                  className="h-8 w-8 flex-shrink-0"
+                >
                   <AvatarImage src={`/placeholder.svg?height=32&width=32`} />
                   <AvatarFallback id="page-a-4" data-testId="page-a-4">
                     {topic?.author?.firstName[0]} {topic?.author?.lastName[0]}
@@ -303,7 +325,9 @@ export default function Dashboard() {
                   data-testId={`forum-content-${index}`}
                   className="flex-1 min-w-0 overflow-hidden"
                 >
-                  <Link id="page-link-6" data-testId="page-link-6"
+                  <Link
+                    id="page-link-6"
+                    data-testId="page-link-6"
                     href={`/forum/topic/${topic.forumId}`}
                     className="block"
                   >
@@ -319,7 +343,11 @@ export default function Dashboard() {
                     data-testId={`forum-meta-${index}`}
                     className="flex items-center gap-2 mt-1 flex-wrap"
                   >
-                    <span id="page-span-2" data-testId="page-span-2" className="text-xs text-muted-foreground truncate">
+                    <span
+                      id="page-span-2"
+                      data-testId="page-span-2"
+                      className="text-xs text-muted-foreground truncate"
+                    >
                       by {topic?.author?.firstName} {topic?.author?.lastName}
                     </span>
                     <Badge variant="outline" className="text-xs flex-shrink-0">
@@ -374,7 +402,11 @@ export default function Dashboard() {
                 className="h-20 flex-col gap-2 bg-transparent"
                 asChild
               >
-                <Link id="page-link-7" data-testId="page-link-7" href="/publications/create">
+                <Link
+                  id="page-link-7"
+                  data-testId="page-link-7"
+                  href="/publications/create"
+                >
                   <BookOpen className="h-6 w-6" />
                   Create Publication
                 </Link>
@@ -384,7 +416,11 @@ export default function Dashboard() {
                 className="h-20 flex-col gap-2 bg-transparent"
                 asChild
               >
-                <Link id="page-link-8" data-testId="page-link-8" href="/forum/create">
+                <Link
+                  id="page-link-8"
+                  data-testId="page-link-8"
+                  href="/forum/create"
+                >
                   <MessageSquare className="h-6 w-6" />
                   Start Discussion
                 </Link>
@@ -394,7 +430,11 @@ export default function Dashboard() {
                 className="h-20 flex-col gap-2 bg-transparent"
                 asChild
               >
-                <Link id="page-link-9" data-testId="page-link-9" href="/profile">
+                <Link
+                  id="page-link-9"
+                  data-testId="page-link-9"
+                  href="/profile"
+                >
                   <Users className="h-6 w-6" />
                   Edit Profile
                 </Link>

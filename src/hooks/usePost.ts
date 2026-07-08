@@ -4,13 +4,10 @@ import {
   fetchPubById,
   fetchFeaturedPubs,
   fetchArchivedPubs,
-  likePub,
   addCommentPub,
   createPost,
   updatePost,
   deletePost,
-  replyToCommentPub,
-  replyToReplyCommentPub,
   editCommentPub,
   deleteCommentPub,
   editReplyPub,
@@ -30,11 +27,9 @@ interface Publication {
   category: string;
 }
 
-// Main hook for working with all posts
 export const usePostQuery = (token: string) => {
   const queryClient = useQueryClient();
 
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["pubs"],
     queryFn: async () => await fetchAllPubs(token),
@@ -79,10 +74,7 @@ export const usePostQuery = (token: string) => {
 
 export const useFeaturedPostsQuery = () => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    // A unique query key to cache this data separately from all posts
     queryKey: ["featured-pubs"],
-
-    // The query function is the service you already created
     queryFn: fetchFeaturedPubs,
 
     // refetchOnWindowFocus: false,
@@ -96,10 +88,7 @@ export const useFeaturedPostsQuery = () => {
 
 export const useArchivedPostsQuery = (token: string) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    // A unique query key to cache this data separately from all posts
     queryKey: ["archived-pubs"],
-
-    // The query function is the service you already created
     queryFn: async () => await fetchArchivedPubs(token),
 
     // refetchOnWindowFocus: false,
@@ -113,10 +102,7 @@ export const useArchivedPostsQuery = (token: string) => {
 
 export const useRejectedPostsQuery = (token: string) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    // A unique query key to cache this data separately from all posts
     queryKey: ["rejected-pubs"],
-
-    // The query function is the service you already created
     queryFn: async () => await fetchRejectedPubs(token),
 
     // refetchOnWindowFocus: false,
@@ -127,9 +113,6 @@ export const useRejectedPostsQuery = (token: string) => {
 
   return { data, isLoading, isError, error, refetch };
 };
-
-
-// Separate hook for fetching a single post by ID
 
 export const useFetchOnePostQuery = (postId: string) => {
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
@@ -150,16 +133,10 @@ export const useFetchOnePostQuery = (postId: string) => {
 
 export const usePostByIdQuery = (token: string, postId: string) => {
   const queryClient = useQueryClient();
-  // const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
-  //   queryKey: ["post", postId],
-  //   queryFn: () => fetchPubById(token, postId),
-  //   enabled: !!postId && !!token,
-  // });
 
   const updateMutation = useMutation({
     mutationFn: (postData: Publication) => updatePost(token, postId, postData),
     onSuccess: () => {
-      // Invalidate both the specific post and the posts list
       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -174,7 +151,6 @@ export const usePostByIdQuery = (token: string, postId: string) => {
   const deleteMutation = useMutation({
     mutationFn: () => deletePost(token, postId),
     onSuccess: () => {
-      // Invalidate both the specific post and the posts list
       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
       queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -235,7 +211,7 @@ export const usePostByIdQuery = (token: string, postId: string) => {
         postId,
         vars.commentId,
         vars.replyId,
-        vars.comment
+        vars.comment,
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
@@ -271,7 +247,7 @@ export const usePostByIdQuery = (token: string, postId: string) => {
         vars.commentId,
         vars.replyId,
         vars.childId,
-        vars.comment
+        vars.comment,
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
@@ -293,7 +269,7 @@ export const usePostByIdQuery = (token: string, postId: string) => {
         postId,
         vars.commentId,
         vars.replyId,
-        vars.childId
+        vars.childId,
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pub", postId] });
@@ -305,14 +281,6 @@ export const usePostByIdQuery = (token: string, postId: string) => {
   });
 
   return {
-    // Query results
-    // data,
-    // error,
-    // isLoading,
-    // isError,
-    // isSuccess,
-    // refetch,
-
     // Mutation functions
     updatePost: updateMutation.mutate,
     isUpdating: updateMutation.isPending,
@@ -352,11 +320,7 @@ export const usePostByIdQuery = (token: string, postId: string) => {
   };
 };
 
-
 export const useCountPubsQuery = (token: string) => {
-  const queryClient = useQueryClient();
-
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["count-pubs"],
     queryFn: async () => await fetchCountPubs(token),
@@ -367,7 +331,6 @@ export const useCountPubsQuery = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,

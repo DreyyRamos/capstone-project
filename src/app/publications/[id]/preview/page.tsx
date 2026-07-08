@@ -1,27 +1,22 @@
 "use client";
 
-import { useState, use } from "react";
+import { use } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Textarea } from "@/components/ui/textarea";
-import { Heart, Flag, ArrowLeft, Clock, Star } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { AuthModal } from "@/components/auth-modal";
 import { useAuthModal } from "@/hooks/use-auth-modal";
-import { useFetchOnePostQuery, usePostByIdQuery } from "@/hooks/usePost";
+import { useFetchOnePostQuery } from "@/hooks/usePost";
 import { useTokenUser } from "@/hooks/useTokenUser";
-import { useIsFeatured } from "@/hooks/useIsFeatured";
-import { useAddTopReply, useAddNestedReply } from "@/hooks/usePost";
 import Cookies from "js-cookie";
 import { ReportModal } from "@/components/report-modal";
 import { useReportModal } from "@/hooks/use-report-modal";
 import ContentDisplay from "@/components/content-display";
 import { useUserStatusCheck } from "@/hooks/useUserStatusCheck";
 import { useUserQuery } from "@/hooks/useUser";
-import { useConfirmation } from "@/components/confirmation-provider";
 import PublicationDetailLoading from "../loading";
 import { useEditorQuery } from "@/hooks/useEditor";
 import { useRoleGate } from "@/utils/userRoleGate";
@@ -33,14 +28,12 @@ type PageProps = {
 
 export default function PublicationDetailPage({ params }: PageProps) {
   const { id } = use(params);
-  const { isOpen, action, redirectTo, requireAuth, closeModal } =
-    useAuthModal();
+  const { isOpen, action, redirectTo, closeModal } = useAuthModal();
   const {
     isModalOpen,
     contentType,
     contentId,
     contentTitle,
-    openReportModal,
     closeReportModal,
     reportedUserId,
   } = useReportModal();
@@ -50,18 +43,14 @@ export default function PublicationDetailPage({ params }: PageProps) {
   const token = Cookies.get("token") || "";
   useRoleGate(["ADMIN", "EDITOR"], token);
   const { data: currentUser } = useUserQuery(token);
-  console.log("current user", currentUser);
   const { data: publication, isLoading, isError } = useFetchOnePostQuery(id);
-  const { user } = useTokenUser();
-  const userRole = user?.role || "STUDENT";
-  const { StatusModal, checkComment, checkLike, checkShare, checkAndExecute } =
-    useUserStatusCheck(currentUser?.userData?.status, {
-      onBlocked: (action, status) => {
-        console.log(`User tried to ${action} but is ${status}`);
-      },
-    });
+  const { StatusModal } = useUserStatusCheck(currentUser?.userData?.status, {
+    onBlocked: (action, status) => {
+      console.log(`User tried to ${action} but is ${status}`);
+    },
+  });
 
-  const { data: toReview, approve, reject } = useEditorQuery(token);
+  const { approve, reject } = useEditorQuery(token);
 
   const handleApprove = async (postId: string) => {
     try {
@@ -92,7 +81,12 @@ export default function PublicationDetailPage({ params }: PageProps) {
   if (isLoading) {
     return <PublicationDetailLoading />;
   }
-  if (isError) return <div id="page-div-1" data-testId="page-div-1">Error loading publication.</div>;
+  if (isError)
+    return (
+      <div id="page-div-1" data-testId="page-div-1">
+        Error loading publication.
+      </div>
+    );
 
   return (
     <div

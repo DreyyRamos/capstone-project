@@ -34,9 +34,6 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  ArrowRight,
-  MoreHorizontal,
-  Eye,
   Check,
   X,
   Phone,
@@ -44,12 +41,6 @@ import {
   MapPin,
   Calendar,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import Cookies from "js-cookie";
 import { useRoleGate } from "@/utils/userRoleGate";
 import { useAdminRoleChangeRequestsQuery } from "@/hooks/useAdmin";
@@ -67,7 +58,6 @@ export default function RoleRequestsPage() {
     approveRoleChange,
     rejectRoleChange,
   } = useAdminRoleChangeRequestsQuery(token);
-  console.log("requests from role change", roleChangeRequests?.roleRequests);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
@@ -75,7 +65,6 @@ export default function RoleRequestsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { openModal } = useConfirmation();
 
-  // Filter requests based on search and filters
   const filteredRequests = roleChangeRequests?.roleRequests?.filter(
     (request: any) => {
       const matchesSearch =
@@ -90,23 +79,22 @@ export default function RoleRequestsPage() {
         roleFilter === "all" || request.requestedRole === roleFilter;
 
       return matchesSearch && matchesStatus && matchesRole;
-    }
+    },
   );
 
-  // Calculate statistics
   const stats = {
     total: roleChangeRequests?.roleRequests.length || 0,
     pending:
       roleChangeRequests?.roleRequests.filter(
-        (r: any) => r.status === "PENDING"
+        (r: any) => r.status === "PENDING",
       ).length || 0,
     approved:
       roleChangeRequests?.roleRequests.filter(
-        (r: any) => r.status === "APPROVED"
+        (r: any) => r.status === "APPROVED",
       ).length || 0,
     rejected:
       roleChangeRequests?.roleRequests.filter(
-        (r: any) => r.status === "REJECTED"
+        (r: any) => r.status === "REJECTED",
       ).length || 0,
   };
 
@@ -118,7 +106,6 @@ export default function RoleRequestsPage() {
       variant: "success",
       icon: "success",
       onConfirm: async () => {
-        // Simulate API call
         await approveRoleChange(request?.request_id);
         toast("Role change request approved!");
       },
@@ -133,7 +120,6 @@ export default function RoleRequestsPage() {
       variant: "destructive",
       icon: "error",
       onConfirm: async () => {
-        // Simulate API call
         await rejectRoleChange(request?.request_id);
         toast("Role change request rejected!");
       },

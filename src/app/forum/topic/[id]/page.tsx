@@ -44,7 +44,6 @@ export default function ForumTopicPage({ params }: PageProps) {
   >(null);
   const [secondLevelReplyContent, setSecondLevelReplyContent] = useState("");
 
-  // Edit states
   const [editingComment, setEditingComment] = useState<string | null>(null);
   const [editCommentContent, setEditCommentContent] = useState("");
   const [editingReply, setEditingReply] = useState<string | null>(null);
@@ -71,12 +70,14 @@ export default function ForumTopicPage({ params }: PageProps) {
 
   const { data: currentUser } = useUserQuery(token);
 
-  const { StatusModal, checkComment, checkLike, checkShare, checkAndExecute } =
-    useUserStatusCheck(currentUser?.userData?.status, {
+  const { StatusModal, checkComment, checkAndExecute } = useUserStatusCheck(
+    currentUser?.userData?.status,
+    {
       onBlocked: (action, status) => {
         console.log(`User tried to ${action} but is ${status}`);
       },
-    });
+    },
+  );
 
   const {
     data: topic,
@@ -89,14 +90,10 @@ export default function ForumTopicPage({ params }: PageProps) {
     deleteReplyToReply,
   } = useFetchForumById(token, id);
 
-  console.log("forum to check", topic);
-
-  // Helper function to check if current user owns the content
   const isCurrentUserContent = (authorId: string) => {
     return currentUser?.userData?.id === authorId;
   };
 
-  // Edit handlers
   const handleEditComment = (comment: any) => {
     setEditingComment(comment.commentId);
     setEditCommentContent(comment.comment_content);
@@ -148,7 +145,7 @@ export default function ForumTopicPage({ params }: PageProps) {
     nestedReplyId: string,
     commentId: string,
     replyId: string,
-    childId: string
+    childId: string,
   ) => {
     if (editNestedReplyContent.trim()) {
       try {
@@ -158,11 +155,6 @@ export default function ForumTopicPage({ params }: PageProps) {
           replyId,
           childId,
         });
-        console.log(
-          "Updating nested reply:",
-          nestedReplyId,
-          editNestedReplyContent
-        );
 
         setEditingNestedReply(null);
         setEditNestedReplyContent("");
@@ -183,11 +175,9 @@ export default function ForumTopicPage({ params }: PageProps) {
     setEditNestedReplyContent("");
   };
 
-  // Delete handlers
   const handleDeleteComment = async (commentId: string) => {
     try {
       deleteComment({ commentId });
-      console.log("Deleting comment:", commentId);
 
       toast.success("Comment deleted successfully!");
     } catch (error) {
@@ -199,7 +189,6 @@ export default function ForumTopicPage({ params }: PageProps) {
   const handleDeleteReply = async (replyId: string, commentId: string) => {
     try {
       deleteReply({ commentId, replyId });
-      console.log("Deleting reply:", replyId);
 
       toast.success("Reply deleted successfully!");
     } catch (error) {
@@ -211,11 +200,10 @@ export default function ForumTopicPage({ params }: PageProps) {
   const handleDeleteNestedReply = async (
     nestedReplyId: string,
     commentId: string,
-    replyId: string
+    replyId: string,
   ) => {
     try {
       deleteReplyToReply({ commentId, replyId, childId: nestedReplyId });
-      console.log("Deleting nested reply:", nestedReplyId);
 
       toast.success("Reply deleted successfully!");
     } catch (error) {
@@ -228,7 +216,6 @@ export default function ForumTopicPage({ params }: PageProps) {
     checkComment(async () => {
       if (requireAuth("comment on this publication")) {
         if (comment_content.trim()) {
-          console.log("Adding comment:", comment_content);
           try {
             await commentToPost(
               { content: comment_content, forumId },
@@ -236,7 +223,7 @@ export default function ForumTopicPage({ params }: PageProps) {
                 onSuccess: () => {
                   toast.success("Comment added successfully!");
                 },
-              }
+              },
             );
             setCommentContent("");
             toast.success("Sending comment...");
@@ -280,7 +267,6 @@ export default function ForumTopicPage({ params }: PageProps) {
   const handleSubmitReply = async (forumId: string, commentId: string) => {
     if (requireAuth("submit reply")) {
       if (replyContent.trim()) {
-        console.log("Adding reply to comment:", commentId, replyContent);
         try {
           await addTopReply(
             { content: replyContent, forumId, commentId },
@@ -288,7 +274,7 @@ export default function ForumTopicPage({ params }: PageProps) {
               onSuccess: () => {
                 toast.success("Comment added successfully!");
               },
-            }
+            },
           );
           setReplyContent("");
           setReplyingTo(null);
@@ -303,15 +289,10 @@ export default function ForumTopicPage({ params }: PageProps) {
 
   const handleSubmitSecondLevelReply = async (
     replyId: string,
-    commentId: string
+    commentId: string,
   ) => {
     if (requireAuth("submit second-level reply")) {
       if (secondLevelReplyContent.trim()) {
-        console.log(
-          "Adding second-level reply to reply:",
-          replyId,
-          secondLevelReplyContent
-        );
         try {
           await addNestedReply(
             {
@@ -324,7 +305,7 @@ export default function ForumTopicPage({ params }: PageProps) {
               onSuccess: () => {
                 toast.success("Comment added successfully!");
               },
-            }
+            },
           );
           setSecondLevelReplyContent("");
           setReplyingToSecondLevel(null);
@@ -357,7 +338,7 @@ export default function ForumTopicPage({ params }: PageProps) {
           "FORUM_POST",
           topic?.forumId,
           topic?.topicTitle,
-          topic?.authorId
+          topic?.authorId,
         );
       }
     });
@@ -366,7 +347,7 @@ export default function ForumTopicPage({ params }: PageProps) {
   const handleReportForumComment = (
     commentId: string,
     commentContent: string,
-    authorId?: string
+    authorId?: string,
   ) => {
     checkAndExecute("report", () => {
       if (requireAuth("report this comment")) {
@@ -378,7 +359,7 @@ export default function ForumTopicPage({ params }: PageProps) {
   const handleReportForumReply = (
     replyId: string,
     replyContent: string,
-    authorId?: string
+    authorId?: string,
   ) => {
     checkAndExecute("report", () => {
       if (requireAuth("report this comment")) {
@@ -390,7 +371,7 @@ export default function ForumTopicPage({ params }: PageProps) {
   const handleReportForumNestedReply = (
     nestedReplyId: string,
     nestedReplyContent: string,
-    authorId?: string
+    authorId?: string,
   ) => {
     checkAndExecute("report", () => {
       if (requireAuth("report this comment")) {
@@ -398,7 +379,7 @@ export default function ForumTopicPage({ params }: PageProps) {
           "FORUM_REPLY_TO_REPLY",
           nestedReplyId,
           nestedReplyContent,
-          authorId
+          authorId,
         );
       }
     });
@@ -454,15 +435,12 @@ export default function ForumTopicPage({ params }: PageProps) {
               data-testId="page-flex-3"
               className="flex items-center gap-2"
             >
-              {/* {topic.isPinned && <Pin className="h-4 w-4 text-blue-600" />} */}
               <Badge variant="secondary">{topic?.category}</Badge>
               <span
                 id="page-span-1"
                 data-testId="page-span-1"
                 className="text-sm text-muted-foreground"
-              >
-                {/* {topic.views} views */}
-              </span>
+              ></span>
             </div>
             <div
               id="page-flex-4"
@@ -542,7 +520,6 @@ export default function ForumTopicPage({ params }: PageProps) {
 
             <div id="page-div-9" data-testId="page-div-9" className="pt-4">
               <ContentDisplay htmlContent={topic?.description} />
-              {/* <p className="text-lg leading-relaxed">{topic?.description}</p> */}
             </div>
 
             <div

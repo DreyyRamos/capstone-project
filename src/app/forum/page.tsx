@@ -7,20 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Search,
-  MessageSquare,
-  Users,
-  PlusCircle,
-  Pin,
-  TrendingUp,
-  Clock,
-  Eye,
-  Heart,
-} from "lucide-react";
-import Link from "next/link";
+import { Search, MessageSquare, Users, PlusCircle } from "lucide-react";
 import { useForumQuery } from "@/hooks/useForum";
 import { useFetchUsers } from "@/hooks/usePublicData";
 import Cookies from "js-cookie";
@@ -96,23 +84,18 @@ export default function ForumPage() {
   const categories = useMemo(() => {
     if (!rawForums?.posts?.length) return [];
 
-    // Group by category name
     const grouped = rawForums?.posts?.reduce((acc: any, forum: any) => {
       const cat = forum.category || "Uncategorized";
       (acc[cat] = acc[cat] || []).push(forum);
       return acc;
     }, {});
 
-    console.log("check forum from memo", grouped);
-
-    // Transform each group into the shape the UI expects
     return Object.entries(grouped).map(([name, forums]: any) => {
       const latest = forums.sort(
         (a: any, b: any) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       )[0];
 
-      // Calculate total replies
       const replies = forums.reduce(
         (sum: any, f: any) =>
           sum +
@@ -122,8 +105,6 @@ export default function ForumPage() {
           }, 0) || 0),
         0,
       );
-
-      console.log("check forum from memo 2", latest);
 
       return {
         id: name,
@@ -137,12 +118,11 @@ export default function ForumPage() {
         }-100 text-${
           ["blue", "green", "purple", "orange", "pink"][name.length % 5]
         }-800`,
-        forums, // Keep reference to forums for searching
+        forums,
       };
     });
   }, [rawForums]);
 
-  // Filtered categories based on search
   const filteredCategories = useMemo(() => {
     if (!searchQuery) return categories;
 
@@ -151,7 +131,6 @@ export default function ForumPage() {
       (category: Category) =>
         category.name.toLowerCase().includes(searchLower) ||
         category.description.toLowerCase().includes(searchLower) ||
-        // search within the topics in this category
         category.forums?.some(
           (topic: ForumTopic) =>
             topic.topicTitle?.toLowerCase().includes(searchLower) ||
@@ -164,7 +143,6 @@ export default function ForumPage() {
     );
   }, [categories, searchQuery]);
 
-  // Filtered recent topics based on search
   const filteredRecentTopics = useMemo(() => {
     if (!rawForums?.posts) return [];
 
@@ -184,19 +162,13 @@ export default function ForumPage() {
       );
     }
 
-    // Sort by most recent
     return topics.sort((a: ForumTopic, b: ForumTopic) => {
-      // Prioritize pinned topics
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
 
-      // Then by creation date
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
   }, [rawForums?.posts, searchQuery]);
-
-  console.log("categories to check", categories);
-  console.log("raw forum to check", rawForums);
 
   const startDiscussion = (e: React.MouseEvent<HTMLAnchorElement>) => {
     checkPost(async () => {
@@ -247,7 +219,11 @@ export default function ForumPage() {
         redirectTo={redirectTo}
       />
       {/* Header */}
-      <div id="page-flex-2" data-testId="page-flex-2" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div
+        id="page-flex-2"
+        data-testId="page-flex-2"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
         <div id="page-div-3" data-testId="page-div-3">
           <h1 className="text-3xl font-bold">Community Forum</h1>
           <p className="text-muted-foreground">
@@ -255,7 +231,12 @@ export default function ForumPage() {
           </p>
         </div>
         <Button asChild>
-          <a id="page-a-1" data-testId="page-a-1" className="cursor-pointer" onClick={startDiscussion}>
+          <a
+            id="page-a-1"
+            data-testId="page-a-1"
+            className="cursor-pointer"
+            onClick={startDiscussion}
+          >
             <PlusCircle className="mr-2 h-4 w-4" />
             Start Discussion
           </a>
@@ -263,11 +244,19 @@ export default function ForumPage() {
       </div>
 
       {/* Stats */}
-      <div id="page-grid-4" data-testId="page-grid-4" className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div
+        id="page-grid-4"
+        data-testId="page-grid-4"
+        className="grid grid-cols-2 md:grid-cols-4 gap-4"
+      >
         {stats.map((stat, index) => (
           <Card key={index}>
             <CardContent className="p-4">
-              <div id="page-flex-5" data-testId="page-flex-5" className="flex items-center gap-2">
+              <div
+                id="page-flex-5"
+                data-testId="page-flex-5"
+                className="flex items-center gap-2"
+              >
                 <stat.icon className="h-4 w-4 text-muted-foreground" />
                 <div id="page-div-6" data-testId="page-div-6">
                   <p className="text-2xl font-bold">{stat.value}</p>
@@ -282,8 +271,16 @@ export default function ForumPage() {
       {/* Search */}
       <Card>
         <CardContent className="p-4">
-          <div id="page-flex-7" data-testId="page-flex-7" className="flex items-center gap-4">
-            <div id="page-div-8" data-testId="page-div-8" className="relative flex-1">
+          <div
+            id="page-flex-7"
+            data-testId="page-flex-7"
+            className="flex items-center gap-4"
+          >
+            <div
+              id="page-div-8"
+              data-testId="page-div-8"
+              className="relative flex-1"
+            >
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={`Search ${
@@ -297,7 +294,9 @@ export default function ForumPage() {
               />
             </div>
             {searchQuery && (
-              <Button id="page-button-1" data-testId="page-button-1"
+              <Button
+                id="page-button-1"
+                data-testId="page-button-1"
                 variant="ghost"
                 size="sm"
                 onClick={() => setSearchQuery("")}
@@ -311,7 +310,11 @@ export default function ForumPage() {
 
       {/* Search Results Summary */}
       {searchQuery && (
-        <div id="page-flex-9" data-testId="page-flex-9" className="flex items-center justify-between text-sm text-muted-foreground">
+        <div
+          id="page-flex-9"
+          data-testId="page-flex-9"
+          className="flex items-center justify-between text-sm text-muted-foreground"
+        >
           <div id="page-div-10" data-testId="page-div-10">
             {activeTab === "categories" ? (
               <span id="page-span-1" data-testId="page-span-1">
@@ -360,7 +363,11 @@ export default function ForumPage() {
           ) : (
             <Card>
               <CardContent className="p-12 text-center">
-                <div id="page-div-11" data-testId="page-div-11" className="space-y-4">
+                <div
+                  id="page-div-11"
+                  data-testId="page-div-11"
+                  className="space-y-4"
+                >
                   <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground" />
                   <h3 className="text-lg font-medium">No categories found</h3>
                   <p className="text-muted-foreground">
@@ -369,7 +376,9 @@ export default function ForumPage() {
                       : "No forum categories available yet."}
                   </p>
                   {searchQuery && (
-                    <Button id="page-button-2" data-testId="page-button-2"
+                    <Button
+                      id="page-button-2"
+                      data-testId="page-button-2"
                       variant="outline"
                       onClick={() => setSearchQuery("")}
                     >
@@ -390,7 +399,11 @@ export default function ForumPage() {
           ) : (
             <Card>
               <CardContent className="p-12 text-center">
-                <div id="page-div-12" data-testId="page-div-12" className="space-y-4">
+                <div
+                  id="page-div-12"
+                  data-testId="page-div-12"
+                  className="space-y-4"
+                >
                   <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground" />
                   <h3 className="text-lg font-medium">No topics found</h3>
                   <p className="text-muted-foreground">
@@ -398,9 +411,15 @@ export default function ForumPage() {
                       ? `No topics match your search for "${searchQuery}".`
                       : "No forum topics available yet."}
                   </p>
-                  <div id="page-flex-13" data-testId="page-flex-13" className="flex flex-col sm:flex-row gap-2 justify-center">
+                  <div
+                    id="page-flex-13"
+                    data-testId="page-flex-13"
+                    className="flex flex-col sm:flex-row gap-2 justify-center"
+                  >
                     {searchQuery && (
-                      <Button id="page-button-3" data-testId="page-button-3"
+                      <Button
+                        id="page-button-3"
+                        data-testId="page-button-3"
                         variant="outline"
                         onClick={() => setSearchQuery("")}
                       >
@@ -408,7 +427,12 @@ export default function ForumPage() {
                       </Button>
                     )}
                     <Button asChild>
-                      <a id="page-a-2" data-testId="page-a-2" className="cursor-pointer" onClick={startDiscussion}>
+                      <a
+                        id="page-a-2"
+                        data-testId="page-a-2"
+                        className="cursor-pointer"
+                        onClick={startDiscussion}
+                      >
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Start the first discussion
                       </a>

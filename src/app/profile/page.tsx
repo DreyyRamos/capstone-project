@@ -16,35 +16,21 @@ import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Link from "next/link";
 import {
   Mail,
   Phone,
   MapPin,
   Calendar,
   Edit3,
-  Edit2,
-  Trash2,
   MessageSquare,
-  Trophy,
   Star,
   FileText,
-  Users,
-  Award,
   Camera,
-  MoreVertical,
 } from "lucide-react";
 import { UploadButton } from "@/utils/uploadthing";
 import Cookies from "js-cookie";
@@ -55,32 +41,18 @@ import {
 } from "@/hooks/useUser";
 import { useConfirmation } from "@/components/confirmation-provider";
 import { useUserForumQuery } from "@/hooks/useUser";
-import { timeAgo } from "@/lib/timeAgo";
 import ProfilePageLoading from "./loading";
 import Activities from "@/components/profile/activities";
 import ProfilePublications from "@/components/profile/publications";
 import UserForums from "@/components/profile/forums";
-
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  contactNumber: string;
-  bio: string;
-  location: string;
-  profileImage: string;
-  interests: string[];
-}
 
 export default function ProfilePage() {
   const token = Cookies.get("token") || "";
   const { confirmDelete } = useConfirmation();
   const { data: userActivity } = useUserActivityQuery(token);
   const { data: user, updateUser, isLoading } = useUserQuery(token);
-  const { deletePub, isDeletingPub } = useUserPublicationQuery(token);
-  const { deleteForum, isDeletingForum } = useUserForumQuery(token);
-  console.log("user profile", user);
-
+  const { deletePub } = useUserPublicationQuery(token);
+  const { deleteForum } = useUserForumQuery(token);
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     firstName: "",
@@ -94,11 +66,9 @@ export default function ProfilePage() {
     interests: [],
   });
 
-  // Pagination state for recent activity
   const [visibleActivityCount, setVisibleActivityCount] = useState(5);
   const ACTIVITY_INCREMENT = 5;
 
-  // Update profileData when user data changes
   useEffect(() => {
     if (user?.userData) {
       setProfileData({
@@ -113,7 +83,6 @@ export default function ProfilePage() {
         interests: user.userData.interests || [],
       });
 
-      // NEW: keep local editing array in sync
       setInterests(user.userData.interests || []);
     }
   }, [user]);
@@ -130,11 +99,10 @@ export default function ProfilePage() {
 
   const handleRemoveTag = (interestsToRemove: string) => {
     setInterests(
-      interests.filter((interest) => interest !== interestsToRemove)
+      interests.filter((interest) => interest !== interestsToRemove),
     );
   };
 
-  // Fixed: Use consistent field names that match your state
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProfileData((prev) => ({
@@ -151,13 +119,13 @@ export default function ProfilePage() {
     }));
   };
 
-  const handleDeletePublication = (pubId: string, title: string) => {
+  const handleDeletePublication = (pubId: string) => {
     confirmDelete("publication", () => {
       deletePub(pubId);
     });
   };
 
-  const handleDeleteForum = (forumId: string, title: string) => {
+  const handleDeleteForum = (forumId: string) => {
     confirmDelete("forum", () => {
       deleteForum(forumId);
     });
@@ -167,15 +135,7 @@ export default function ProfilePage() {
     setVisibleActivityCount((prev) => prev + ACTIVITY_INCREMENT);
   };
 
-  const stats = {
-    publications: 24,
-    forumPosts: 156,
-    reputation: 892,
-    achievements: 8,
-  };
-
   const handleSave = () => {
-    // Save to backend - need to pass the updated data
     updateUser({
       ...profileData,
       interests,
@@ -202,7 +162,6 @@ export default function ProfilePage() {
   const displayRole =
     String(rawRole).charAt(0).toUpperCase() + String(rawRole).slice(1);
 
-  // Get visible activities for pagination
   const visibleActivities = userActivity?.slice(0, visibleActivityCount) || [];
   const hasMoreActivities =
     userActivity && userActivity.length > visibleActivityCount;
@@ -268,8 +227,6 @@ export default function ProfilePage() {
                         button:
                           "h-8 w-8 rounded-full p-0 bg-transparent text-gray-600 border border-gray-500 hover:bg-gray-300 transition-colors shadow-sm",
                         allowedContent: "hidden",
-
-                        // container: "flex justify-center",
                       }}
                       content={{
                         button: <Camera className="h-4 w-4" />,
@@ -452,7 +409,7 @@ export default function ProfilePage() {
                         value={profileData.email}
                         name="email"
                         onChange={handleChange}
-                        disabled={true} // Keep disabled if email shouldn't be editable
+                        disabled={true}
                       />
                     </div>
                     <div

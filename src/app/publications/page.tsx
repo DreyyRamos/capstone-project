@@ -4,8 +4,6 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -13,14 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Search,
-  Calendar,
-  Eye,
-  Heart,
-  MessageCircle,
-  PlusCircle,
-} from "lucide-react";
+import { Search, PlusCircle } from "lucide-react";
 import { usePostQuery } from "@/hooks/usePost";
 import Cookies from "js-cookie";
 import Link from "next/link";
@@ -52,7 +43,6 @@ interface Publication {
   pubLikes: string[];
   pubComments: string[];
   isFeatured?: boolean;
-  // views?: number;
 }
 
 export default function PublicationsPage() {
@@ -74,8 +64,6 @@ export default function PublicationsPage() {
     },
   );
   const { data, isLoading } = usePostQuery(token);
-
-  console.log("data from puubs", data);
 
   const categories = [
     "all",
@@ -101,13 +89,11 @@ export default function PublicationsPage() {
     });
   };
 
-  // Improved filtering and sorting logic
   const filteredAndSortedPubs = useMemo(() => {
     if (!data?.posts) return [];
 
     // filter the publications
     const filtered = data.posts.filter((publication: Publication) => {
-      // Search filter - check title, excerpt, content, author name, and tags
       const searchLower = searchQuery.toLowerCase();
       const matchesSearch =
         searchQuery === "" ||
@@ -121,14 +107,12 @@ export default function PublicationsPage() {
           tag.toLowerCase().includes(searchLower),
         );
 
-      // Category filter
       const matchesCategory =
         selectedCategory === "all" || publication.category === selectedCategory;
 
       return matchesSearch && matchesCategory;
     });
 
-    // sort the filtered results
     const sorted = [...filtered].sort((a: Publication, b: Publication) => {
       switch (sortBy) {
         case "newest":
@@ -155,7 +139,6 @@ export default function PublicationsPage() {
       }
     });
 
-    // prioritize featured publications
     return sorted.sort((a, b) => {
       if (a.isFeatured && !b.isFeatured) return -1;
       if (!a.isFeatured && b.isFeatured) return 1;
@@ -177,7 +160,11 @@ export default function PublicationsPage() {
         redirectTo={redirectTo}
       />
       {/* Header */}
-      <div id="page-flex-2" data-testId="page-flex-2" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div
+        id="page-flex-2"
+        data-testId="page-flex-2"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
         <div id="page-div-3" data-testId="page-div-3">
           <h1 className="text-3xl font-bold">Publications</h1>
           <p className="text-muted-foreground">
@@ -186,7 +173,12 @@ export default function PublicationsPage() {
           </p>
         </div>
         <Button asChild>
-          <a id="page-a-1" data-testId="page-a-1" className="cursor-pointer" onClick={startDiscussion}>
+          <a
+            id="page-a-1"
+            data-testId="page-a-1"
+            className="cursor-pointer"
+            onClick={startDiscussion}
+          >
             <PlusCircle className="mr-2 h-4 w-4" />
             Create Publication
           </a>
@@ -196,8 +188,16 @@ export default function PublicationsPage() {
       {/* Filters */}
       <Card>
         <CardContent className="p-6">
-          <div id="page-flex-4" data-testId="page-flex-4" className="flex flex-col sm:flex-row gap-4">
-            <div id="page-div-5" data-testId="page-div-5" className="relative flex-1">
+          <div
+            id="page-flex-4"
+            data-testId="page-flex-4"
+            className="flex flex-col sm:flex-row gap-4"
+          >
+            <div
+              id="page-div-5"
+              data-testId="page-div-5"
+              className="relative flex-1"
+            >
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search publications, authors, or tags..."
@@ -238,20 +238,34 @@ export default function PublicationsPage() {
       </Card>
 
       {/* Results count */}
-      <div id="page-flex-6" data-testId="page-flex-6" className="flex items-center justify-between">
+      <div
+        id="page-flex-6"
+        data-testId="page-flex-6"
+        className="flex items-center justify-between"
+      >
         <p className="text-sm text-muted-foreground">
           Showing {filteredAndSortedPubs.length} of {data?.posts?.length || 0}{" "}
           publications
         </p>
         {searchQuery && (
-          <Button id="page-button-1" data-testId="page-button-1" variant="ghost" size="sm" onClick={() => setSearchQuery("")}>
+          <Button
+            id="page-button-1"
+            data-testId="page-button-1"
+            variant="ghost"
+            size="sm"
+            onClick={() => setSearchQuery("")}
+          >
             Clear search
           </Button>
         )}
       </div>
 
       {/* Publications Grid */}
-      <div id="page-grid-7" data-testId="page-grid-7" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        id="page-grid-7"
+        data-testId="page-grid-7"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
         {filteredAndSortedPubs.map((publication: Publication) => (
           <PublicationGrid key={publication.pubId} publication={publication} />
         ))}
@@ -268,9 +282,15 @@ export default function PublicationsPage() {
                   ? "No publications match your current filters. Try adjusting your search or category selection."
                   : "No publications have been created yet."}
               </p>
-              <div id="page-flex-9" data-testId="page-flex-9" className="flex flex-col sm:flex-row gap-2 justify-center">
+              <div
+                id="page-flex-9"
+                data-testId="page-flex-9"
+                className="flex flex-col sm:flex-row gap-2 justify-center"
+              >
                 {(searchQuery || selectedCategory !== "all") && (
-                  <Button id="page-button-2" data-testId="page-button-2"
+                  <Button
+                    id="page-button-2"
+                    data-testId="page-button-2"
                     variant="outline"
                     onClick={() => {
                       setSearchQuery("");
@@ -281,7 +301,11 @@ export default function PublicationsPage() {
                   </Button>
                 )}
                 <Button asChild>
-                  <Link id="page-link-1" data-testId="page-link-1" href="/publications/create">
+                  <Link
+                    id="page-link-1"
+                    data-testId="page-link-1"
+                    href="/publications/create"
+                  >
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Create Publication
                   </Link>

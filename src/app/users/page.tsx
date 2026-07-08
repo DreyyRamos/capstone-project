@@ -40,7 +40,6 @@ export default function UsersPage() {
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // Edit role modal state
   const [isEditRoleOpen, setIsEditRoleOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [newRole, setNewRole] = useState("");
@@ -48,8 +47,6 @@ export default function UsersPage() {
   const [isUpdating, setIsUpdating] = useState(false);
 
   const { openModal: openConfirmation } = useConfirmationModal();
-
-  console.log("user from admin side", users);
 
   const stats = [
     {
@@ -85,8 +82,6 @@ export default function UsersPage() {
     setIsEditRoleOpen(true);
   };
 
-  console.log("selected user: ", selectedUser);
-
   const handleRoleUpdate = async (user: any) => {
     if (!selectedUser || !newRole || !reason.trim()) {
       toast.error("Please select a role and provide a reason");
@@ -95,7 +90,6 @@ export default function UsersPage() {
 
     setIsUpdating(true);
     try {
-      // Simulate API call - replace with actual API call
       await updateRole({ id: user.id, newRole });
 
       await refetch();
@@ -122,7 +116,6 @@ export default function UsersPage() {
       icon: "error",
       onConfirm: async () => {
         try {
-          // Simulate API call
           await new Promise((resolve) => setTimeout(resolve, 1000));
           toast.success("User suspended successfully!");
           await refetch();

@@ -19,11 +19,9 @@ interface Publication {
   category: string;
 }
 
-// Main hook for working with all posts
 export const useModeratorQuery = (token: string) => {
   const queryClient = useQueryClient();
 
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["reported-contents"],
     queryFn: async () => await fetchReportedContents(token),
@@ -33,7 +31,6 @@ export const useModeratorQuery = (token: string) => {
     refetchInterval: false,
   });
 
-  // Mutation to delete a reported content
   const deleteReported = useMutation({
     mutationFn: async ({
       contentType,
@@ -54,12 +51,10 @@ export const useModeratorQuery = (token: string) => {
         token,
       ),
     onSuccess: (data, variables) => {
-      // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
 
-      // Only invalidate specific content type queries
       if (variables.contentType.includes("PUBLICATION")) {
         queryClient.invalidateQueries({ queryKey: ["pubs"] });
       } else if (variables.contentType.includes("FORUM")) {
@@ -72,7 +67,6 @@ export const useModeratorQuery = (token: string) => {
     mutationFn: async (reportId: string) =>
       await restoreReportedContent(reportId, token),
     onSuccess: (data, variables) => {
-      // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
@@ -82,7 +76,6 @@ export const useModeratorQuery = (token: string) => {
   const cleanupReport = useMutation({
     mutationFn: async () => await cleanupReports(token),
     onSuccess: (data, variables) => {
-      // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
@@ -90,7 +83,6 @@ export const useModeratorQuery = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -98,7 +90,6 @@ export const useModeratorQuery = (token: string) => {
     isSuccess,
     refetch,
 
-    // Mutation functions
     deleteReportedContent: deleteReported.mutate,
     isDeleting: deleteReported.isPending,
     // createError: mutation.error,
@@ -120,7 +111,6 @@ export const useModeratorQuery = (token: string) => {
 
 export const useFetchUsersModerator = (token: string) => {
   const queryClient = useQueryClient();
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["moderator-users"],
     queryFn: async () => await fetchUsers(token),
@@ -134,7 +124,6 @@ export const useFetchUsersModerator = (token: string) => {
     mutationFn: async ({ userId, reportId }: { userId: any; reportId: any }) =>
       await triggerAction(token, userId, reportId),
     onSuccess: (data, variables) => {
-      // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
@@ -145,7 +134,6 @@ export const useFetchUsersModerator = (token: string) => {
   const triggerLiftSuspensionAccount = useMutation({
     mutationFn: async (userId) => await triggerLiftSuspension(token, userId),
     onSuccess: (data, variables) => {
-      // Always invalidate reports
       queryClient.invalidateQueries({ queryKey: ["reported-contents"] });
       queryClient.invalidateQueries({ queryKey: ["to-review"] });
       queryClient.invalidateQueries({ queryKey: ["moderator-users"] });
@@ -154,7 +142,6 @@ export const useFetchUsersModerator = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -162,7 +149,6 @@ export const useFetchUsersModerator = (token: string) => {
     isSuccess,
     refetch,
 
-    // Mutation functions
     triggerBan: triggerUserStatus.mutate,
     isBanning: triggerUserStatus.isPending,
     // createError: mutation.error,
@@ -178,8 +164,6 @@ export const useFetchUsersModerator = (token: string) => {
 };
 
 export const useFetchReportCountQuery = (token: string) => {
-  const queryClient = useQueryClient();
-  // Query to fetch all posts
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["report-count"],
     queryFn: async () => await fetchReportCount(token),
@@ -190,7 +174,6 @@ export const useFetchReportCountQuery = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,

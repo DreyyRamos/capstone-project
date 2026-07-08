@@ -30,16 +30,6 @@ enum Roles {
   EDITOR,
 }
 
-interface RoleChange {
-  userId: string;
-  firstName: string;
-  lastName: string;
-  userEmail: string;
-  currentRole: Roles;
-  requestedRole: Roles;
-  reason: string;
-  additionalInfo: string;
-}
 
 interface Publication {
   title: string;
@@ -52,8 +42,6 @@ interface Publication {
 
 export const useUserQuery = (token: string) => {
   const queryClient = useQueryClient();
-
-  // Query to fetch user data
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["users", token],
     queryFn: async () => await fetchCurrentUser(token),
@@ -63,7 +51,6 @@ export const useUserQuery = (token: string) => {
     refetchInterval: false,
   });
 
-  // Mutation to edit user data
   const mutation = useMutation({
     mutationFn: async (userData: User) =>
       await editCurrentUser(token, userData),
@@ -75,24 +62,19 @@ export const useUserQuery = (token: string) => {
   });
 
   const roleChange = useMutation({
-    mutationFn: async (
-      newData: any // Changed from User type to any
-    ) => await requestRoleChange(token, newData),
+    mutationFn: async (newData: any) => await requestRoleChange(token, newData),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["pub"] });
       queryClient.invalidateQueries({ queryKey: ["pubs"] });
-      // Optional: You might want to show success message here
       console.log("Role change request submitted successfully:", data);
     },
     onError: (error: Error) => {
       console.error("Role change request failed:", error);
-      // Handle error state in your component
     },
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -100,7 +82,6 @@ export const useUserQuery = (token: string) => {
     isSuccess,
     refetch,
 
-    // Mutation functions
     updateUser: mutation.mutate,
     isUpdating: mutation.isPending,
     updateError: mutation.error,
@@ -115,7 +96,6 @@ export const useUserQuery = (token: string) => {
 };
 
 export const useUserActivityQuery = (token: string) => {
-  // Query to fetch user data
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["user-activity", token],
     queryFn: async () => await fetchCurrentUserActivity(token),
@@ -126,7 +106,6 @@ export const useUserActivityQuery = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -137,16 +116,12 @@ export const useUserActivityQuery = (token: string) => {
 };
 
 export const useUserVisitorQuery = (id: string) => {
-  const queryClient = useQueryClient();
-
-  // Query to fetch user data
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["visit-user"],
     queryFn: async () => await fetchVisitUser(id),
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -157,9 +132,6 @@ export const useUserVisitorQuery = (id: string) => {
 };
 
 export const useUserVisitingUserActivityQuery = (id: string) => {
-  const queryClient = useQueryClient();
-
-  // Query to fetch user data
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["visit-user-activity"],
     queryFn: async () => await fetchVisitingUserActivity(id),
@@ -178,8 +150,6 @@ export const useUserVisitingUserActivityQuery = (id: string) => {
 
 export const useUserPublicationQuery = (token: string) => {
   const queryClient = useQueryClient();
-
-  // Query to fetch user data
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["users", token],
     queryFn: async () => await fetchCurrentUser(token),
@@ -189,7 +159,6 @@ export const useUserPublicationQuery = (token: string) => {
     refetchInterval: false,
   });
 
-  // Mutation to edit user data
   const editPub = useMutation({
     mutationFn: async (vars: { newData: Publication; pubId: string }) =>
       await editUserPublication(token, vars.newData, vars.pubId),
@@ -214,7 +183,6 @@ export const useUserPublicationQuery = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,
@@ -235,8 +203,6 @@ export const useUserPublicationQuery = (token: string) => {
 
 export const useUserForumQuery = (token: string) => {
   const queryClient = useQueryClient();
-
-  // Query to fetch user data
   const { data, error, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: ["users", token],
     queryFn: async () => await fetchCurrentUser(token),
@@ -246,7 +212,6 @@ export const useUserForumQuery = (token: string) => {
     refetchInterval: false,
   });
 
-  // Mutation to edit user data
   const editForum = useMutation({
     mutationFn: async (vars: { newData: any; forumId: string }) =>
       await updateUserForum(token, vars.forumId, vars.newData),
@@ -271,7 +236,6 @@ export const useUserForumQuery = (token: string) => {
   });
 
   return {
-    // Query results
     data,
     error,
     isLoading,

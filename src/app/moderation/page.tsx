@@ -29,7 +29,6 @@ import {
   TriangleAlert,
   Filter,
 } from "lucide-react";
-import Link from "next/link";
 import {
   useModeratorQuery,
   useFetchUsersModerator,
@@ -90,18 +89,13 @@ export default function ModerationPage() {
     restoreContent,
     cleanupReport,
   } = useModeratorQuery(token);
-  console.log("reported contents", reportedContents);
-  const { data: reportCount } = useFetchReportCountQuery(token);
-  console.log("report count: ", reportCount);
 
   const {
     data: usersModerator,
     triggerBan,
     triggerLiftSuspension,
   } = useFetchUsersModerator(token);
-  console.log("users for moderation", usersModerator);
 
-  // Transform API data to match UI expectations
   const transformedReports: TransformedReport[] = useMemo(() => {
     return (
       reportedContents?.reports?.map((report: any) => ({
@@ -114,7 +108,6 @@ export default function ModerationPage() {
         reportedUser: `${report.reportedUser?.firstName || "Unknown"} ${
           report.reportedUser?.lastName || "User"
         }`,
-        // Keep the full objects for the modal
         reportedByUser: report.reportedBy,
         reportedUserObj: report.reportedUser,
         reason: report.reportReason,
@@ -132,7 +125,6 @@ export default function ModerationPage() {
         actionTaken: report?.actionTaken,
         forum: report?.forum,
         publication: report?.publication,
-        // Pass through all original report data
         originalReport: report,
       })) || []
     );
@@ -174,15 +166,12 @@ export default function ModerationPage() {
     );
   }
 
-  // Enhanced filtering and sorting logic
   const filteredAndSortedReports = useMemo(() => {
     if (!transformedReports.length) return [];
 
-    // Filter the reports
     const filtered = transformedReports.filter((report: TransformedReport) => {
       const searchLower = searchQuery.toLowerCase();
 
-      // Enhanced search across relevant fields
       const matchesSearch =
         searchQuery === "" ||
         report.title?.toLowerCase().includes(searchLower) ||
@@ -193,22 +182,18 @@ export default function ModerationPage() {
         report.contentPreview?.toLowerCase().includes(searchLower) ||
         report.category?.toLowerCase().includes(searchLower);
 
-      // Status filter
       const matchesStatus =
         statusFilter === "all" || report.status === statusFilter;
 
-      // Type filter
       const matchesType =
         typeFilter === "all" || report.contentType === typeFilter;
 
-      // Priority filter
       const matchesPriority =
         priorityFilter === "all" || report.priority === priorityFilter;
 
       return matchesSearch && matchesStatus && matchesType && matchesPriority;
     });
 
-    // Sort the filtered results
     return filtered.sort((a: TransformedReport, b: TransformedReport) => {
       switch (sortBy) {
         case "newest":
@@ -266,7 +251,6 @@ export default function ModerationPage() {
     );
   }, [usersModerator?.users, searchQuery]);
 
-  // Filtered actions
   const filteredActions = useMemo(() => {
     const actionsReports = transformedReports.filter(
       (report) => report.actionTaken,
@@ -284,9 +268,6 @@ export default function ModerationPage() {
     );
   }, [transformedReports, searchQuery]);
 
-  console.log("filtered reports", filteredAndSortedReports);
-
-  // Calculate stats from real data
   const reportsWithoutAction = transformedReports.filter(
     (r: TransformedReport) => !r.actionTaken,
   );

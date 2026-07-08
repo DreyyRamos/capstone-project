@@ -12,7 +12,6 @@ import EmailTrigger from "@/components/email-trigger";
 import { toast } from "sonner";
 import ApplicationList from "@/components/admissions/application-list";
 import { useRoleGate } from "@/utils/userRoleGate";
-import { useTokenUser } from "@/hooks/useTokenUser";
 
 interface Admission {
   admission_id: string;
@@ -56,7 +55,7 @@ export default function AdmissionsPage() {
         admission.user_email.toLowerCase().includes(searchTerm.toLowerCase());
 
       return matchesSearch;
-    }
+    },
   );
 
   const pendingOnly =
@@ -82,10 +81,9 @@ export default function AdmissionsPage() {
         },
         {
           onSuccess: () => {
-            // runs after the server call succeeds
             setSubmitSuccess(true);
           },
-        }
+        },
       );
     });
   };
@@ -95,7 +93,7 @@ export default function AdmissionsPage() {
     confirmReject(`${displayName}'s admission application`, async () => {
       await rejectUser(admission.admission_id);
       toast(
-        `Rejected admission for ${displayName}, Admission ID: ${admission.admission_id}`
+        `Rejected admission for ${displayName}, Admission ID: ${admission.admission_id}`,
       );
       console.log(`Rejected admission: ${admission.admission_id}`);
     });
@@ -112,7 +110,11 @@ export default function AdmissionsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div id="page-grid-3" data-testId="page-grid-3" className="grid gap-4 md:grid-cols-4">
+      <div
+        id="page-grid-3"
+        data-testId="page-grid-3"
+        className="grid gap-4 md:grid-cols-4"
+      >
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -121,7 +123,6 @@ export default function AdmissionsPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {/* <div id="page-div-4" data-testId="page-div-4" className="text-2xl font-bold">{stats.total}</div> */}
             <p className="text-xs text-muted-foreground">Awaiting approval</p>
           </CardContent>
         </Card>
@@ -133,9 +134,17 @@ export default function AdmissionsPage() {
           <CardTitle>Search Applications</CardTitle>
         </CardHeader>
         <CardContent>
-          <div id="page-flex-5" data-testId="page-flex-5" className="flex gap-4">
+          <div
+            id="page-flex-5"
+            data-testId="page-flex-5"
+            className="flex gap-4"
+          >
             <div id="page-div-6" data-testId="page-div-6" className="flex-1">
-              <div id="page-div-7" data-testId="page-div-7" className="relative">
+              <div
+                id="page-div-7"
+                data-testId="page-div-7"
+                className="relative"
+              >
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search by name or email..."
@@ -166,7 +175,11 @@ export default function AdmissionsPage() {
               />
             ))}
             {filteredAdmissions?.length === 0 && (
-              <div id="page-div-9" data-testId="page-div-9" className="text-center py-8 text-muted-foreground">
+              <div
+                id="page-div-9"
+                data-testId="page-div-9"
+                className="text-center py-8 text-muted-foreground"
+              >
                 No applications found.
               </div>
             )}
@@ -180,7 +193,7 @@ export default function AdmissionsPage() {
               emailType="confirmation"
               onSent={(res) => {
                 toast("Email Sent! " + res.status);
-                setSubmitSuccess(false); // unmount the trigger
+                setSubmitSuccess(false);
               }}
               onError={(err) => {
                 toast("Error Sent: " + err.text);
