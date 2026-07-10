@@ -145,24 +145,27 @@ export async function DELETE(
   // const resolvedParams = await params;
   // const pubId = resolvedParams.id;
 
-  const { id: pubId } = await params;
+  const { id: forumId } = await params;
 
-  if (!pubId) {
-    return NextResponse.json({ error: "Post ID is required" }, { status: 400 });
+  if (!forumId) {
+    return NextResponse.json(
+      { error: "Forum ID is required" },
+      { status: 400 },
+    );
   }
 
   try {
-    const deletePost = await prisma.publication.delete({
-      where: { pubId: pubId },
+    const deletePost = await prisma.forum.delete({
+      where: { forumId: forumId },
     });
 
-    console.log("post deleted");
+    console.log("forum deleted");
     return NextResponse.json(deletePost);
   } catch (error) {
     console.log(error);
     return NextResponse.json(
       { error: "An error occurred while deleting the post." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
