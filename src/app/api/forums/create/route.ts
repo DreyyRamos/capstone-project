@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
     const { topicTitle, description, tags, category } = await req.json();
 
-    const newPublication = await prisma.$transaction(async (tx) => {
+    const newForum = await prisma.$transaction(async (tx) => {
       //Create the publication
       const forum = await tx.forum.create({
         data: {
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
       return forum;
     });
 
-    return NextResponse.json({ publication: newPublication }, { status: 201 });
+    return NextResponse.json({ forum: newForum }, { status: 201 });
   } catch (error) {
     console.error("Transaction failed:", error);
     return NextResponse.json(

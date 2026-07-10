@@ -123,9 +123,10 @@ export default function CreateForumTopicPage() {
             tags,
           },
           {
-            onSuccess: () => {
+            onSuccess: (data) => {
               toast("Forum created!");
-              router.push("/forum");
+              console.log("created forum: ", data);
+              router.push(`/forum/topic/${data.forum.forumId}`);
             },
           },
         );
