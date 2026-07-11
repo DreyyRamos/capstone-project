@@ -119,10 +119,10 @@ export default function CreatePublicationPage() {
                 imageUrl: formData.imageUrl ?? "",
               },
               {
-                onSuccess: () => {
+                onSuccess: (data) => {
                   toast("Publication created and is pending for review!");
                   setIsModalOpen(true);
-                  router.push("/publications");
+                  router.push(`/publications/${data.publication.pubId}`);
                 },
               },
             );
