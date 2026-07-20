@@ -9,7 +9,7 @@ export async function DELETE(
 ) {
   const authResult = await authMiddleware(req);
   if (authResult instanceof NextResponse) return authResult;
-  const { user } = authResult;
+  //   const { user } = authResult;
 
   const { id: reportId } = await params;
 
