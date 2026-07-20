@@ -56,7 +56,6 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
-    // Log the cleanup action
     console.log(
       `Manual cleanup triggered by moderator ${moderatorId}: Deleted ${deletedOldReports.count} reports older than 15 days`
     );
