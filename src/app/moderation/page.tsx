@@ -314,11 +314,16 @@ export default function ModerationPage() {
     reportId: any,
     userId: any,
   ) => {
-    deleteReportedContent({ contentType, contentId, reportId, userId });
+    deleteReportedContent(
+      { contentType, contentId, reportId, userId },
+      { onSuccess: () => toast("Report deleted successfully!") },
+    );
   };
 
   const handleRestoreContent = (reportId: string) => {
-    restoreContent(reportId);
+    restoreContent(reportId, {
+      onSuccess: () => toast("Content restored successfully!"),
+    });
   };
 
   const handleCleanUp = () => {
