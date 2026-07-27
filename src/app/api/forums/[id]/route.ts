@@ -104,22 +104,21 @@ export async function PUT(
   // const resolvedParams = await params;
   // const pubId = resolvedParams.id;
 
-  const { id: pubId } = await params;
+  const { id: forumId } = await params;
 
-  if (!pubId) {
+  if (!forumId) {
     return NextResponse.json({ error: "Post ID is required" }, { status: 400 });
   }
-  const { title, content, imageUrl } = await req.json();
+  const { topicTitle, description } = await req.json();
 
   try {
-    const updatePost = await prisma.publication.update({
+    const updatePost = await prisma.forum.update({
       where: {
-        pubId: pubId,
+        forumId: forumId,
       },
       data: {
-        title,
-        content,
-        imageUrl,
+        topicTitle,
+        description,
       },
     });
 
@@ -129,7 +128,7 @@ export async function PUT(
     console.log(error);
     return NextResponse.json(
       { error: "An error occurred while updating the post." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
