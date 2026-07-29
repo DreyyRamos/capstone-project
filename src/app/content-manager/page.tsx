@@ -489,6 +489,7 @@ export default function ContentManagerPage() {
                 <Select
                   value={categoryFilter}
                   onValueChange={setCategoryFilter}
+                  data-testId="combobox-1"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Filter by category" />
@@ -502,7 +503,11 @@ export default function ContentManagerPage() {
                   </SelectContent>
                 </Select>
 
-                <Select value={sortBy} onValueChange={setSortBy}>
+                <Select
+                  value={sortBy}
+                  onValueChange={setSortBy}
+                  data-testId="combobox-2"
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Sort by" />
                   </SelectTrigger>

@@ -209,6 +209,7 @@ export default function PublicationsPage() {
             <Select
               value={selectedCategory}
               onValueChange={setSelectedCategory}
+              data-testId="combobox-1"
             >
               <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Category" />
@@ -221,7 +222,11 @@ export default function PublicationsPage() {
                 ))}
               </SelectContent>
             </Select>
-            <Select value={sortBy} onValueChange={setSortBy}>
+            <Select
+              data-testId="combobox-2"
+              value={sortBy}
+              onValueChange={setSortBy}
+            >
               <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>

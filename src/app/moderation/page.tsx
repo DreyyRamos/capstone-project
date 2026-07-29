@@ -507,7 +507,11 @@ export default function ModerationPage() {
                   data-testId="page-grid-9"
                   className="grid grid-cols-2 sm:grid-cols-4 gap-4"
                 >
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <Select
+                    value={statusFilter}
+                    onValueChange={setStatusFilter}
+                    data-testId="combobox-1"
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
@@ -521,7 +525,11 @@ export default function ModerationPage() {
                     </SelectContent>
                   </Select>
 
-                  <Select value={typeFilter} onValueChange={setTypeFilter}>
+                  <Select
+                    value={typeFilter}
+                    onValueChange={setTypeFilter}
+                    data-testId="combobox-2"
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
@@ -544,6 +552,7 @@ export default function ModerationPage() {
                   <Select
                     value={priorityFilter}
                     onValueChange={setPriorityFilter}
+                    data-testId="combobox-3"
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Priority" />
@@ -557,7 +566,11 @@ export default function ModerationPage() {
                     </SelectContent>
                   </Select>
 
-                  <Select value={sortBy} onValueChange={setSortBy}>
+                  <Select
+                    value={sortBy}
+                    onValueChange={setSortBy}
+                    data-testId="combobox-4"
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
