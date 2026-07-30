@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authMiddleware } from "@/app/api/(middlware)/authMiddleware";
 
 export async function GET(req: NextRequest) {
-  const authResult = await authMiddleware(req);
+  const authResult = await authMiddleware(req, ["ADMIN", "EDITOR"]);
   if (authResult instanceof NextResponse) return authResult;
   //   const { id } = authResult.user;
 
