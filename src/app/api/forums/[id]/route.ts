@@ -159,7 +159,7 @@ export async function DELETE(
     });
 
     console.log("forum deleted");
-    return NextResponse.json(deletePost);
+    return NextResponse.json({ status: 200, message: "Forum deleted" });
   } catch (error) {
     console.log(error);
     return NextResponse.json(
