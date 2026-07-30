@@ -8,6 +8,10 @@ export async function GET(req: NextRequest) {
   if (authResult instanceof NextResponse) return authResult;
   const { id } = authResult.user;
 
+  if (!id) {
+    return NextResponse.json({ status: 401, message: "No token provided!" });
+  }
+
   try {
     const userData = await prisma.user.findUnique({
       where: { id: id },
