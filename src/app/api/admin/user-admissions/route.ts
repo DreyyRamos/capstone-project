@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
   try {
-    const authResult = await authMiddleware(req);
+    const authResult = await authMiddleware(req, ["ADMIN"]);
     if (authResult instanceof NextResponse) {
       return authResult;
     }
