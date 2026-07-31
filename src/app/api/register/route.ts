@@ -57,28 +57,29 @@ export async function POST(req: Request) {
           status: 409,
           message: "E-mail already registered",
         },
-        { status: 409 }
+        { status: 409 },
       );
-    } else {
-      const user = await prisma.userAdmission.create({
-        data: {
-          user_email,
-          firstName,
-          lastName: lastName || "",
-          password: hashedPassword,
-          profileImage: profileImage || null,
-          id_picture: id_picture || null,
-          bio: bio || null,
-          contactNumber: contactNumber || null,
-          location: location || null,
-          interests: interests,
-        },
-      });
     }
 
-    return NextResponse.json({
-      message: "User registered successfully",
+    const user = await prisma.userAdmission.create({
+      data: {
+        user_email,
+        firstName,
+        lastName: lastName || "",
+        password: hashedPassword,
+        profileImage: profileImage || null,
+        id_picture: id_picture || null,
+        bio: bio || null,
+        contactNumber: contactNumber || null,
+        location: location || null,
+        interests: interests,
+        include: {
+          admission_id: true,
+        },
+      },
     });
+
+    return NextResponse.json({ user, message: "User registered successfully" });
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json(
