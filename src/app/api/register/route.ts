@@ -73,9 +73,6 @@ export async function POST(req: Request) {
         contactNumber: contactNumber || null,
         location: location || null,
         interests: interests,
-        include: {
-          admission_id: true,
-        },
       },
     });
 
