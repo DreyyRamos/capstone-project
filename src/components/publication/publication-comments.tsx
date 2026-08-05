@@ -603,7 +603,7 @@ const PublicationCommentsSection = ({
                               }
                               disabled={!secondLevelReplyContent.trim()}
                             >
-                              Reply
+                              Submit Reply
                             </Button>
                           </div>
                         </div>
