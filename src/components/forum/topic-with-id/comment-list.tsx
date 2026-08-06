@@ -524,7 +524,7 @@ const CommentList = ({
                       >
                         {replyingToSecondLevel === reply.replyId
                           ? "Cancel"
-                          : "Submit Reply"}
+                          : "Reply"}
                       </Button>
                       <Button
                         id="comment-list-button-12"
@@ -589,7 +589,7 @@ const CommentList = ({
                               }
                               disabled={!secondLevelReplyContent.trim()}
                             >
-                              Reply
+                              Submit Reply
                             </Button>
                           </div>
                         </div>
