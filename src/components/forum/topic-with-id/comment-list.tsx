@@ -524,7 +524,7 @@ const CommentList = ({
                       >
                         {replyingToSecondLevel === reply.replyId
                           ? "Cancel"
-                          : "Reply"}
+                          : "Submit Reply"}
                       </Button>
                       <Button
                         id="comment-list-button-12"
