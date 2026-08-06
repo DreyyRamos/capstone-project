@@ -347,7 +347,7 @@ const CommentList = ({
                     }
                     disabled={!replyContent.trim()}
                   >
-                    Reply
+                    Submit Reply
                   </Button>
                 </div>
               </div>
